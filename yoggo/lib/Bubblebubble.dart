@@ -23,7 +23,7 @@ class BubbleAnimationScreen extends StatefulWidget {
 
 class _BubbleAnimationScreenState extends State<BubbleAnimationScreen>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
