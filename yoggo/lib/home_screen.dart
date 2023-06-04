@@ -6,7 +6,7 @@ import 'package:yoggo/services/api_service.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  Future<List<WebtoonModel>> webtoons = ApiService.getTodaysToons();
+  Future<List<bookModel>> webtoons = ApiService.getTodaysToons();
 
   void pointFunction() {} // AppBar 아이콘클릭
 
@@ -66,29 +66,30 @@ class HomeScreen extends StatelessWidget {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         // 사용자가 보고 있지 않다면 메모리에서 삭제
-                        var webtoon = snapshot.data![index];
+                        var book = snapshot.data![index];
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => DetailScreens(
-                                      title: webtoon.title,
-                                      thumb: webtoon.thumb,
-                                      id: webtoon.id),
+                                      title: book.title,
+                                      thumb: book.thumb,
+                                      id: book.id,
+                                      summary: book.summary),
                                 ));
                           },
                           child: Column(
                             children: [
                               Hero(
-                                tag: webtoon.id,
+                                tag: book.id,
                                 child: Container(
                                   clipBehavior: Clip.hardEdge,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10)),
                                   height: 200,
                                   child: Image.network(
-                                    webtoon.thumb,
+                                    book.thumb,
                                     headers: const {
                                       "User-Agent":
                                           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
@@ -96,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Text(webtoon.title),
+                              Text(book.title),
                             ],
                           ),
                         );

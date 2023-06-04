@@ -1,42 +1,21 @@
 import 'package:flutter/material.dart';
 
 class DetailScreens extends StatelessWidget {
-  final String title, thumb, id;
+  final String title, thumb, summary;
+  final int id;
 
   const DetailScreens({
     super.key,
     required this.title,
     required this.thumb,
     required this.id,
+    required this.summary,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1ECC9).withOpacity(1),
-      // body: Column(
-      //   children: [
-      //     Padding(
-      //       padding: const EdgeInsets.all(8.0),
-      //       child: Positioned(
-      //           child: IconButton(
-      //         onPressed: () {
-      //           Navigator.of(context).pop();
-      //         },
-      //         icon: const Icon(Icons.close),
-      //       )),
-      //     ),
-      //     Hero(
-      //       tag: id,
-      //       child: Center(
-      //         child: Image.network(
-      //           thumb,
-      //           width: 200,
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
       body: Column(
         children: [
           Expanded(
@@ -65,8 +44,11 @@ class DetailScreens extends StatelessWidget {
                   flex: 5,
                   child: Container(
                     color: Colors.green,
-                    child: Center(
-                      child: Image.network(thumb),
+                    child: Hero(
+                      tag: id,
+                      child: Center(
+                        child: Image.network(thumb),
+                      ),
                     ),
                   ),
                 ),
@@ -87,7 +69,7 @@ class DetailScreens extends StatelessWidget {
                         const SizedBox(
                           height: 40,
                         ),
-                        const Text('줄거리'),
+                        Text(summary),
                       ],
                     ),
                   ),
