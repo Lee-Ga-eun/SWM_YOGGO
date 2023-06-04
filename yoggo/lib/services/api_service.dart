@@ -27,7 +27,7 @@ class ApiService {
       // dynamic: 어떤 타입이든 수용 가능
       final List<dynamic> books = jsonDecode(response.body);
       print(books[0]);
-      for (var book in books[0]) {
+      for (var book in books) {
         // webtoon을 넘겨줘서 webtoonModel을 만들자
         final bkmodel = bookModel.fromJson(book); //json넘겨주기
         print(bkmodel.title); //WebtoonModel 타입
