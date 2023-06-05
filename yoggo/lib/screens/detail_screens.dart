@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../home_screen.dart';
+import '../screens/reader.dart';
 
 class DetailScreens extends StatelessWidget {
   final String title, thumb, summary;
@@ -107,26 +109,32 @@ class DetailScreens extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 2,
-              child: Container(
-                //   color: Colors.blue,
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 50, bottom: 100),
-                  child: Positioned(
-                      child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
+                flex: 2,
+                child: Container(
+                  //   color: Colors.blue,
+                  // margin: const EdgeInsets.only(right: 50, bottom: 100),
+
+                  alignment: Alignment.topRight,
+                  // child: Padding(
+                  // padding: const EdgeInsets.only(right: 50, bottom: 100),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FairytalePage(),
+                          ));
                     },
-                    icon: const Icon(
+                    child: const Icon(
                       Icons.arrow_circle_right_outlined,
                       size: 50,
                       color: Colors.white,
                     ),
-                  )),
-                ),
-              ),
-            ),
+                  ),
+                )),
+            // ),
+            //),
+            //),
             //),
           ],
         ),
