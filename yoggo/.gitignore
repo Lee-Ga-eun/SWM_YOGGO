@@ -10,6 +10,9 @@
 .svn/
 migrate_working_dir/
 
+# projx
+# yoggo/ios/
+
 # IntelliJ related
 *.iml
 *.ipr
