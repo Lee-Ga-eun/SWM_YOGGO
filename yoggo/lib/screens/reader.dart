@@ -24,7 +24,7 @@ class _FairytalePageState extends State<FairytalePage> {
   // 체크표시로 변경되면 home screen으로 넘어감
 
   AudioPlayer audioPlayer = AudioPlayer();
-  String audioUrl = '';
+  Source audioUrl = UrlSource('');
 
   Future<void> fetchPageData() async {
     final url =
@@ -39,7 +39,7 @@ class _FairytalePageState extends State<FairytalePage> {
       final contentText = responseData['text'];
       print("position의 값");
       print(responseData['position']);
-      audioUrl = responseData['audioUrl'];
+      audioUrl = UrlSource(responseData['audioUrl']);
       last = responseData['last'];
       bookImage = responseData['imageUrl'];
       position = responseData['position'];
@@ -90,14 +90,14 @@ class _FairytalePageState extends State<FairytalePage> {
     stopAudio();
     //final player = AudioPlayer();
     //print(audioUrl);
-    int result = await audioPlayer.play(audioUrl);
-    if (result == 1) {
+    void result = await audioPlayer.play(audioUrl);
+    //if (result) {
       // success
-      print('Audio played successfully');
-    } else {
+    //  print('Audio played successfully');
+    //} else {
       // error
-      print('Error playing audio');
-    }
+      //print('Error playing audio');
+    //}
   }
 
   void stopAudio() async {
