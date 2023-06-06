@@ -19,6 +19,7 @@ class _FairytalePageState extends State<FairytalePage> {
   String text = '';
   String bookImage = '';
   int? position;
+  int? last;
   // current page 와 last page의 숫자가 같으면 체크표시로 아이콘 변경
   // 체크표시로 변경되면 home screen으로 넘어감
 
@@ -39,16 +40,15 @@ class _FairytalePageState extends State<FairytalePage> {
       print("position의 값");
       print(responseData['position']);
       audioUrl = responseData['audioUrl'];
-      print(audioUrl);
+      last = responseData['last'];
+      bookImage = responseData['imageUrl'];
 
       setState(() {
         text = contentText;
         audioUrl = audioUrl;
         playAudio();
       });
-    } else {
-      // Handle error case
-    }
+    } else {}
   }
 
   @override
@@ -60,6 +60,8 @@ class _FairytalePageState extends State<FairytalePage> {
 
   void nextPage() {
     setState(() {
+      // audioPlayer.stop();
+      stopAudio();
       currentPage++;
       fetchPageData();
     });
@@ -68,6 +70,9 @@ class _FairytalePageState extends State<FairytalePage> {
   void previousPage() {
     if (currentPage > 1) {
       setState(() {
+        //  dispose();
+        //  audioPlayer.stop();
+        stopAudio();
         currentPage--;
         fetchPageData();
       });
@@ -81,9 +86,10 @@ class _FairytalePageState extends State<FairytalePage> {
   }
 
   void playAudio() async {
-    final player = AudioPlayer();
-    print(audioUrl);
-    int result = await player.play(audioUrl);
+    stopAudio();
+    //final player = AudioPlayer();
+    //print(audioUrl);
+    int result = await audioPlayer.play(audioUrl);
     if (result == 1) {
       // success
       print('Audio played successfully');
@@ -152,10 +158,20 @@ class _FairytalePageState extends State<FairytalePage> {
                       onPressed: previousPage,
                     ),
                     const SizedBox(width: 16),
-                    IconButton(
-                      icon: const Icon(Icons.arrow_forward),
-                      onPressed: nextPage,
-                    ),
+                    currentPage != last
+                        ? IconButton(
+                            icon: const Icon(Icons.arrow_forward),
+                            onPressed: nextPage,
+                          )
+                        : IconButton(
+                            icon: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                              size: 40,
+                            ),
+                            onPressed: () =>
+                                {stopAudio(), Navigator.of(context).pop()},
+                          )
                   ],
                 ),
               ),
