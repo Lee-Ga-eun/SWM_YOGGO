@@ -13,18 +13,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   // actions: 오른쪽 사이드바, leading: 왼쪽 사이드바
-      //   elevation: 0, // 음영 제거
-      //   backgroundColor: const Color(0xFFFFE500).withOpacity(1), // App Bar 컬러지정
-      //   title: const Text(
-      //     "YOGGO",
-      //     style: TextStyle(
-      //       color: Colors.white,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      // ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -49,12 +37,6 @@ class HomeScreen extends StatelessWidget {
 
   Container bookList() {
     return Container(
-      // decoration: const BoxDecoration(
-      //   image: DecorationImage(
-      //     image: AssetImage('lib/images/bkground.png'),
-      //     fit: BoxFit.cover,
-      //   ),
-      // ),
       child: FutureBuilder(
           future: webtoons,
           builder: (context, snapshot) {
