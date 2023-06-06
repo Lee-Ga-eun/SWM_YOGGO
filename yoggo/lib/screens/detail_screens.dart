@@ -1,21 +1,61 @@
 import 'package:flutter/material.dart';
-import '../home_screen.dart';
 import '../screens/reader.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class DetailScreens extends StatelessWidget {
+class DetailScreens extends StatefulWidget {
   final String title, thumb, summary;
   final int id;
 
   const DetailScreens({
-    super.key,
+    // super.key,
+    Key? key,
     required this.title,
     required this.thumb,
     required this.id,
     required this.summary,
-  });
+  }) : super(key: key);
+
+  @override
+  _DetailScreensState createState() => _DetailScreensState();
+}
+
+class _DetailScreensState extends State<DetailScreens> {
+  bool isClicked = false;
+  String text = '';
+  int voiceId = 10;
+
+  Future<void> fetchPageData() async {
+    final url = 'https://yoggo-server.fly.dev/content/${widget.id}';
+    final response = await http.get(Uri.parse(url));
+    if (mounted) {
+      if (response.statusCode == 200) {
+        List<dynamic> responseData = jsonDecode(response.body);
+        print(responseData);
+        Map<String, dynamic> data = responseData[0];
+
+        final contentText = data['voice'][0]['voiceName'];
+        print('voiceName');
+        print(contentText);
+
+        setState(() {
+          text = contentText;
+          voiceId = data['voice'][0]['voiceId'];
+        });
+      } else {}
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPageData();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('vociceId');
+    print(voiceId);
     return Scaffold(
       backgroundColor: const Color(0xFFF1ECC9).withOpacity(1),
       body: Container(
@@ -58,7 +98,7 @@ class DetailScreens extends StatelessWidget {
                     child: Container(
                       // color: Colors.green,
                       child: Hero(
-                        tag: id,
+                        tag: widget.id,
                         child: Center(
                           child: Container(
                               decoration: BoxDecoration(
@@ -78,7 +118,7 @@ class DetailScreens extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Image.network(thumb))),
+                                  child: Image.network(widget.thumb))),
                         ),
                       ),
                     ),
@@ -91,16 +131,38 @@ class DetailScreens extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(
-                            height: 70,
+                            height: 30,
                           ),
                           Text(
-                            title,
+                            widget.title,
                             style: const TextStyle(fontSize: 40),
                           ),
                           const SizedBox(
-                            height: 40,
+                            height: 10,
                           ),
-                          Text(summary),
+                          Text(widget.summary),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isClicked = !isClicked; // 클릭 상태를 토글합니다.
+                              });
+                            },
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                child: Image.network(
+                                  'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',
+                                  width: 30,
+                                  color: isClicked
+                                      ? const Color.fromARGB(255, 255, 66, 129)
+                                      : null,
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -109,33 +171,33 @@ class DetailScreens extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 2,
-                child: Container(
-                  //   color: Colors.blue,
-                  // margin: const EdgeInsets.only(right: 50, bottom: 100),
+              flex: 1,
+              child: Container(
+                //   color: Colors.blue,
+                // margin: const EdgeInsets.only(right: 50, bottom: 100),
 
-                  alignment: Alignment.topRight,
-                  // child: Padding(
-                  // padding: const EdgeInsets.only(right: 50, bottom: 100),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FairytalePage(),
-                          ));
-                    },
-                    child: const Icon(
-                      Icons.arrow_circle_right_outlined,
-                      size: 50,
-                      color: Colors.white,
-                    ),
+                alignment: Alignment.topRight,
+                // child: Padding(
+                // padding: const EdgeInsets.only(right: 50, bottom: 100),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FairytalePage(
+                          voiceId: voiceId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Icon(
+                    Icons.arrow_circle_right_outlined,
+                    size: 50,
+                    color: Colors.white,
                   ),
-                )),
-            // ),
-            //),
-            //),
-            //),
+                ),
+              ),
+            ),
           ],
         ),
       ),
