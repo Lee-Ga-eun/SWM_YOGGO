@@ -22,10 +22,27 @@ class HomeScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
+            const SizedBox(
+              height: 10,
+            ),
             Expanded(
               flex: 1,
-              child: Container(
-                child: const Icon(Icons.play_arrow),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Fairy',
+                      style: TextStyle(fontFamily: 'BreeSerif', fontSize: 40),
+                    ),
+                    Image.network(
+                        'https://ulpaiggkhrfbfuvteqkq.supabase.co/storage/v1/object/sign/yoggo-storage/logo_v0.1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5b2dnby1zdG9yYWdlL2xvZ29fdjAuMS5wbmciLCJpYXQiOjE2ODYwNjQ4MTksImV4cCI6MTE2ODYwNjQ4MTh9.6EEFRhZZVyEDVbBt326I7lZBY439Ufagj_ou43986ys&t=2023-06-06T15%3A20%3A20.023Z'),
+                    const Text(
+                      'Tale',
+                      style: TextStyle(fontFamily: 'BreeSerif', fontSize: 40),
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(flex: 5, child: bookList()),
@@ -86,7 +103,14 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Text(book.title),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                book.title,
+                                style: const TextStyle(fontFamily: 'BreeSerif'),
+                                textAlign: TextAlign.center,
+                              ),
                             ],
                           ),
                         );

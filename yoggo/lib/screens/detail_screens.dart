@@ -40,7 +40,7 @@ class _DetailScreensState extends State<DetailScreens> {
 
         setState(() {
           text = contentText;
-          voiceId = data['voice'][0]['voiceId'];
+          voiceId = data['voice'][0]['contentVoiceId'];
         });
       } else {}
     }
@@ -128,19 +128,27 @@ class _DetailScreensState extends State<DetailScreens> {
                     flex: 5,
                     child: Container(
                       //   color: Colors.orange,
-                      child: Column(
+                      child: ListView(
                         children: [
                           const SizedBox(
-                            height: 30,
+                            height: 20,
                           ),
                           Text(
                             widget.title,
-                            style: const TextStyle(fontSize: 40),
+                            style: const TextStyle(
+                                fontSize: 40, fontFamily: 'BreeSerif'),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(widget.summary),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 40),
+                            child: Text(
+                              widget.summary,
+                              style: const TextStyle(
+                                  fontFamily: 'Prata', fontSize: 20),
+                            ),
+                          ),
                           const SizedBox(
                             height: 10,
                           ),
@@ -171,14 +179,14 @@ class _DetailScreensState extends State<DetailScreens> {
               ),
             ),
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Container(
                 //   color: Colors.blue,
                 // margin: const EdgeInsets.only(right: 50, bottom: 100),
 
                 alignment: Alignment.topRight,
-                // child: Padding(
-                // padding: const EdgeInsets.only(right: 50, bottom: 100),
+                //child: Padding(
+                //padding: const EdgeInsets.only(right: 30, bottom: 100),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -198,6 +206,7 @@ class _DetailScreensState extends State<DetailScreens> {
                 ),
               ),
             ),
+            //  ),
           ],
         ),
       ),

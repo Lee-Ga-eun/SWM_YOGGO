@@ -42,6 +42,7 @@ class _FairytalePageState extends State<FairytalePage> {
       audioUrl = responseData['audioUrl'];
       last = responseData['last'];
       bookImage = responseData['imageUrl'];
+      position = responseData['position'];
 
       setState(() {
         text = contentText;
@@ -106,77 +107,136 @@ class _FairytalePageState extends State<FairytalePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                color: Colors.orange,
-                alignment: Alignment.topLeft,
-                //color: Colors.red,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Positioned(
-                      child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(
-                      Icons.cancel,
-                      color: Colors.white,
-                      size: 40,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/bkground.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(
+                  //color: Colors.orange,
+                  alignment: Alignment.topLeft,
+                  //color: Colors.red,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 1.0,
                     ),
-                  )),
+                    child: Positioned(
+                        child: IconButton(
+                      onPressed: () {
+                        stopAudio();
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(
+                        Icons.cancel,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    )),
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 5,
-              // 본문 글자
-              child: Container(
-                color: Colors.yellow,
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                color: Colors.blue,
+              Expanded(
+                flex: 6,
+                // 본문 글자
                 child: Row(
-                  // 화살표
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: previousPage,
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        //color: position == 1 ? Colors.red : Colors.white,
+                        child: position == 1
+                            ? Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.circular(50), // 모서리를 원형으로 설정
+                                  child: Image.network(
+                                    bookImage,
+                                    fit: BoxFit.cover,
+                                    // 이미지를 컨테이너에 맞게 조정
+                                  ),
+                                ),
+                              ) // // 그림을 1번 화면에 배치
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 50, right: 10),
+                                child: Text(
+                                  text,
+                                  style: const TextStyle(
+                                      fontSize: 20, fontFamily: 'BreeSerif'),
+                                ),
+                              ), // 글자를 2번 화면에 배치
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    currentPage != last
-                        ? IconButton(
-                            icon: const Icon(Icons.arrow_forward),
-                            onPressed: nextPage,
-                          )
-                        : IconButton(
-                            icon: const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                              size: 40,
-                            ),
-                            onPressed: () =>
-                                {stopAudio(), Navigator.of(context).pop()},
-                          )
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        //color: position == 2 ? Colors.red : Colors.white,
+                        child: position == 2
+                            ? ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(50), // 모서리를 원형으로 설정
+                                child: Image.network(
+                                  bookImage,
+                                  fit: BoxFit.cover, // 이미지를 컨테이너에 맞게 조정
+                                ),
+                              ) // 그림을 2번 화면에 배치
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 50, left: 20),
+                                child: Text(
+                                  text,
+                                  style: const TextStyle(
+                                      fontSize: 20, fontFamily: 'BreeSerif'),
+                                ),
+                              ), // 글자를 1번 화면에 배치
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 1,
+                child: Container(
+                  // color: Colors.blue,
+                  child: Row(
+                    // 화살표
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: previousPage,
+                      ),
+                      const SizedBox(width: 16),
+                      currentPage != last
+                          ? IconButton(
+                              icon: const Icon(Icons.arrow_forward),
+                              onPressed: nextPage,
+                            )
+                          : IconButton(
+                              icon: const Icon(
+                                Icons.check,
+                                color: Colors.green,
+                                size: 40,
+                              ),
+                              onPressed: () =>
+                                  {stopAudio(), Navigator.of(context).pop()},
+                            )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
