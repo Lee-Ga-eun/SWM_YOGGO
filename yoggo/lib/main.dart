@@ -30,7 +30,7 @@ class _AppState extends State<App> {
   }
 
   Future<void> initialize() async {
-    await Future.delayed(const Duration(seconds: 5)); // 3초 동안 대기
+    await Future.delayed(const Duration(seconds: 6)); // 3초 동안 대기
     setState(() {
       _initialized = true; // 초기화 완료 상태 업데이트
     });
