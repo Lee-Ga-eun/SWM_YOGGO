@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
+
+//import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class FairytalePage extends StatefulWidget {
   final int voiceId;
@@ -18,6 +22,9 @@ class _FairytalePageState extends State<FairytalePage> {
   // current page 와 last page의 숫자가 같으면 체크표시로 아이콘 변경
   // 체크표시로 변경되면 home screen으로 넘어감
 
+  AudioPlayer audioPlayer = AudioPlayer();
+  String audioUrl = '';
+
   Future<void> fetchPageData() async {
     final url =
         'https://yoggo-server.fly.dev/content/page?contentVoiceId=${widget.voiceId}&order=$currentPage';
@@ -31,9 +38,13 @@ class _FairytalePageState extends State<FairytalePage> {
       final contentText = responseData['text'];
       print("position의 값");
       print(responseData['position']);
+      audioUrl = responseData['audioUrl'];
+      print(audioUrl);
 
       setState(() {
         text = contentText;
+        audioUrl = audioUrl;
+        playAudio();
       });
     } else {
       // Handle error case
@@ -44,6 +55,7 @@ class _FairytalePageState extends State<FairytalePage> {
   void initState() {
     super.initState();
     fetchPageData();
+    // playAudio();
   }
 
   void nextPage() {
@@ -60,6 +72,29 @@ class _FairytalePageState extends State<FairytalePage> {
         fetchPageData();
       });
     }
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.stop();
+    super.dispose();
+  }
+
+  void playAudio() async {
+    final player = AudioPlayer();
+    print(audioUrl);
+    int result = await player.play(audioUrl);
+    if (result == 1) {
+      // success
+      print('Audio played successfully');
+    } else {
+      // error
+      print('Error playing audio');
+    }
+  }
+
+  void stopAudio() async {
+    await audioPlayer.stop();
   }
 
   @override
