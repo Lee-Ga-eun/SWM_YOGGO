@@ -228,7 +228,7 @@ class _FairytalePageState extends State<FairytalePage> {
               ),
               Expanded(
                 flex: 1,
-                //child: Container(
+                child: Container(
                   // color: Colors.blue,
                   child: Row(
                     // 화살표
@@ -266,7 +266,7 @@ class _FairytalePageState extends State<FairytalePage> {
                     ],
                   ),
                 ),
-              //),
+              ),
             ],
           ),
         ),
