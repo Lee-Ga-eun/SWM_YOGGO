@@ -84,29 +84,37 @@ class _DetailScreensState extends State<DetailScreens> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
+        child:Padding(
+        padding: const EdgeInsets.only(
+          left: 10.0,
+          top: 10.0,
+        ),
+          child:Column(
           children: [
             Expanded(
               flex: 1,
               child: Container(
                 alignment: Alignment.topLeft,
                 //color: Colors.red,
+
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(
+                    left: 1.0,
+                  ),
                   child: Positioned(
                       child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(
-                      Icons.cancel,
-                      color: Colors.white,
-                      size: 40,
-                    ),
-                  )),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      )),
                 ),
               ),
-            ),
+        ),
             Expanded(
               flex: 7,
               child: Row(
@@ -257,6 +265,7 @@ class _DetailScreensState extends State<DetailScreens> {
             ),
             //  ),
           ],
+        ),
         ),
       ),
     );
