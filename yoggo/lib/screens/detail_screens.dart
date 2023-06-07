@@ -59,6 +59,18 @@ class _DetailScreensState extends State<DetailScreens> {
     fetchPageData();
   }
 
+  String _getImageForVoice(String voiceName) {
+    switch (voiceName) {
+      case 'Kelly':
+      return 'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png?width=75&height=110';
+      case 'Ethan':
+      return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273297997884/actor_ethan.png?width=112&height=110';
+      case 'Liam':
+      return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273604186202/actor_liam.png?width=119&height=108';
+      default:
+      return '';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     print('vociceId');
@@ -159,7 +171,7 @@ class _DetailScreensState extends State<DetailScreens> {
                           height: 10,
                         ),
                         // --------------------피그마 아이콘이랑 일치하는 것:: contentVoiceId 동적 기능 없음 ------------
-                        GestureDetector(
+                        /*GestureDetector(
                           onTap: () {
                             setState(() {
                               isClicked = !isClicked; // 클릭 상태를 토글합니다.
@@ -177,22 +189,24 @@ class _DetailScreensState extends State<DetailScreens> {
                               ),
                             ),
                           ),
-                        ),
+                        ),*/
                         // ----------------성우 리스트 수에 따라 아이콘 생성 시작-------------------
                         Row(
-                          children: voices.map((voices) {
-                            // for (var voice in voices)
+                          children: voices.map((voice) {
+                            bool isClicked = (cvi == voice['contentVoiceId']);
+                            //for (var voice in voices)
                             return GestureDetector(
                               onTap: () {
-                                cvi = voices['contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                cvi = voice['contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                 setState(() {
                                   isClicked = !isClicked; // 클릭 상태
                                 });
                               },
                               child: Column(
                                 children: [
-                                  Icon(
-                                    Icons.person, // Icons.person은 기본 제공되는 아이콘이다. 이걸 그림으로 바꾸려면 Icon()을 지우고
+                                    Image.network(
+                                    _getImageForVoice(voice['voiceName']),
+                                    //Icons.person, // Icons.person은 기본 제공되는 아이콘이다. 이걸 그림으로 바꾸려면 Icon()을 지우고
                                     //Image.network('https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',) 이렇게 처리를 해줘야 한다
                                     color: isClicked
                                         ? const Color.fromARGB( // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
@@ -200,7 +214,7 @@ class _DetailScreensState extends State<DetailScreens> {
                                         : null,
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(voices['voiceName']),
+                                  Text(voice['voiceName']),
                                 ],
                               ),
                             );
