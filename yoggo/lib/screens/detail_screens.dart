@@ -24,6 +24,9 @@ class _DetailScreensState extends State<DetailScreens> {
   bool isClicked = false;
   String text = '';
   int voiceId = 10;
+  //String voices='';
+  List<dynamic> voices = [];
+  int cvi = 0;
 
   Future<void> fetchPageData() async {
     final url = 'https://yoggo-server.fly.dev/content/${widget.id}';
@@ -36,8 +39,12 @@ class _DetailScreensState extends State<DetailScreens> {
 
         final contentText = data['voice'][0]['voiceName'];
         print('voiceName');
-        print(contentText);
-
+        //print(contentText);
+        voices = data['voice'];
+        print(voices);
+        for (var voice in voices) {
+          print(voice['voiceName']);
+        }
         setState(() {
           text = contentText;
           voiceId = data['voice'][0]['contentVoiceId'];
@@ -128,51 +135,79 @@ class _DetailScreensState extends State<DetailScreens> {
                     flex: 5,
                     child: Container(
                       //   color: Colors.orange,
-                      child: ListView(
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            widget.title,
+                      child: ListView(children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          widget.title,
+                          style: const TextStyle(
+                              fontSize: 40, fontFamily: 'BreeSerif'),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 40),
+                          child: Text(
+                            widget.summary,
                             style: const TextStyle(
-                                fontSize: 40, fontFamily: 'BreeSerif'),
+                                fontFamily: 'Prata', fontSize: 20),
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 40),
-                            child: Text(
-                              widget.summary,
-                              style: const TextStyle(
-                                  fontFamily: 'Prata', fontSize: 20),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isClicked = !isClicked; // 클릭 상태를 토글합니다.
-                              });
-                            },
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        // --------------------피그마 아이콘이랑 일치하는 것:: contentVoiceId 동적 기능 없음 ------------
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isClicked = !isClicked; // 클릭 상태를 토글합니다.
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.centerLeft,
                             child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                child: Image.network(
-                                  'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',
-                                  width: 30,
-                                  color: isClicked
-                                      ? const Color.fromARGB(255, 255, 66, 129)
-                                      : null,
-                                ),
+                              child: Image.network(
+                                'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',
+                                width: 30,
+                                color: isClicked
+                                    ? const Color.fromARGB(255, 255, 66, 129)
+                                    : null,
                               ),
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                        // ----------------성우 리스트 수에 따라 아이콘 생성 시작-------------------
+                        Row(
+                          children: voices.map((voices) {
+                            // for (var voice in voices)
+                            return GestureDetector(
+                              onTap: () {
+                                cvi = voices['contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                setState(() {
+                                  isClicked = !isClicked; // 클릭 상태
+                                });
+                              },
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.person, // Icons.person은 기본 제공되는 아이콘이다. 이걸 그림으로 바꾸려면 Icon()을 지우고
+                                    //Image.network('https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',) 이렇게 처리를 해줘야 한다
+                                    color: isClicked
+                                        ? const Color.fromARGB( // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
+                                            255, 255, 66, 129)
+                                        : null,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(voices['voiceName']),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        )
+                        // --------------------성우 아이콘 배치 완료  ---------
+                      ]),
                     ),
                   ),
                 ],
@@ -192,8 +227,8 @@ class _DetailScreensState extends State<DetailScreens> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => FairytalePage(
-                          voiceId: voiceId,
+                        builder: (context) => FairytalePage( // 다음 화면으로 contetnVoiceId를 가지고 이동
+                          voiceId: cvi,
                         ),
                       ),
                     );
