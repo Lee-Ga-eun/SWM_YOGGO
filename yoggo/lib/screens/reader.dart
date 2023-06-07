@@ -20,6 +20,7 @@ class _FairytalePageState extends State<FairytalePage> {
   String bookImage = '';
   int? position;
   int? last;
+  bool isPlaying = false;
   // current page 와 last page의 숫자가 같으면 체크표시로 아이콘 변경
   // 체크표시로 변경되면 home screen으로 넘어감
 
@@ -83,6 +84,7 @@ class _FairytalePageState extends State<FairytalePage> {
   @override
   void dispose() {
     audioPlayer.stop();
+    setState(() {isPlaying = false;});
     super.dispose();
   }
 
@@ -91,6 +93,9 @@ class _FairytalePageState extends State<FairytalePage> {
     //final player = AudioPlayer();
     //print(audioUrl);
     void result = await audioPlayer.play(audioUrl);
+    setState(() {
+      isPlaying = true;
+    });
     //if (result) {
       // success
     //  print('Audio played successfully');
@@ -102,6 +107,23 @@ class _FairytalePageState extends State<FairytalePage> {
 
   void stopAudio() async {
     await audioPlayer.stop();
+    setState(() {
+      isPlaying = false;
+    });
+  }
+
+  void pauseAudio() async {
+    await audioPlayer.pause();
+    setState(() {
+      isPlaying = false;
+    });
+  }
+
+  void resumeAudio() async {
+    await audioPlayer.resume();
+    setState(() {
+      isPlaying = true;
+    });
   }
 
   @override
@@ -206,7 +228,7 @@ class _FairytalePageState extends State<FairytalePage> {
               ),
               Expanded(
                 flex: 1,
-                child: Container(
+                //child: Container(
                   // color: Colors.blue,
                   child: Row(
                     // 화살표
@@ -216,7 +238,17 @@ class _FairytalePageState extends State<FairytalePage> {
                         icon: const Icon(Icons.arrow_back),
                         onPressed: previousPage,
                       ),
-                      const SizedBox(width: 16),
+                      //const SizedBox (width: 7),
+                      isPlaying
+                      ? IconButton (
+                        icon: const Icon(Icons.pause),
+                        onPressed: pauseAudio
+                      )
+                      : IconButton (
+                        icon: const Icon(Icons.play_arrow),
+                        onPressed: resumeAudio
+                      ),
+                      //const SizedBox(width: 7),*/
                       currentPage != last
                           ? IconButton(
                               icon: const Icon(Icons.arrow_forward),
@@ -234,7 +266,7 @@ class _FairytalePageState extends State<FairytalePage> {
                     ],
                   ),
                 ),
-              ),
+              //),
             ],
           ),
         ),

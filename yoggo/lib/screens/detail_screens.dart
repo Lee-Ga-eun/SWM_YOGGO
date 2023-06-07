@@ -61,11 +61,11 @@ class _DetailScreensState extends State<DetailScreens> {
 
   String _getImageForVoice(String voiceName) {
     switch (voiceName) {
-      case 'Kelly':
+      case 'Jolly':
       return 'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png?width=75&height=110';
-      case 'Ethan':
+      case 'Morgan':
       return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273297997884/actor_ethan.png?width=112&height=110';
-      case 'Liam':
+      case 'Eric':
       return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273604186202/actor_liam.png?width=119&height=108';
       default:
       return '';
