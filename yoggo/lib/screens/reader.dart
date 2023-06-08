@@ -20,7 +20,7 @@ class _FairytalePageState extends State<FairytalePage> {
   String bookImage = '';
   int? position;
   int? last;
-  bool isPlaying = false;
+  bool isPlaying = true;
   // current page 와 last page의 숫자가 같으면 체크표시로 아이콘 변경
   // 체크표시로 변경되면 home screen으로 넘어감
 
@@ -84,7 +84,7 @@ class _FairytalePageState extends State<FairytalePage> {
   @override
   void dispose() {
     audioPlayer.stop();
-    setState(() {isPlaying = false;});
+    // setState(() {isPlaying = false;});
     super.dispose();
   }
 
@@ -93,23 +93,23 @@ class _FairytalePageState extends State<FairytalePage> {
     //final player = AudioPlayer();
     //print(audioUrl);
     void result = await audioPlayer.play(audioUrl);
-    setState(() {
-      isPlaying = true;
-    });
+    // setState(() {
+    //   isPlaying = true;
+    // });
     //if (result) {
-      // success
+    // success
     //  print('Audio played successfully');
     //} else {
-      // error
-      //print('Error playing audio');
+    // error
+    //print('Error playing audio');
     //}
   }
 
   void stopAudio() async {
     await audioPlayer.stop();
-    setState(() {
-      isPlaying = false;
-    });
+    // setState(() {
+    //   isPlaying = false;
+    // });
   }
 
   void pauseAudio() async {
@@ -154,7 +154,7 @@ class _FairytalePageState extends State<FairytalePage> {
                     child: Positioned(
                         child: IconButton(
                       onPressed: () {
-                        stopAudio();
+                        pauseAudio();
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(
@@ -172,7 +172,7 @@ class _FairytalePageState extends State<FairytalePage> {
                 child: Row(
                   children: [
                     Expanded(
-                      flex: 1,
+                      flex: position == 1 ? 1 : 2,
                       child: Container(
                         //color: position == 1 ? Colors.red : Colors.white,
                         child: position == 1
@@ -180,10 +180,10 @@ class _FairytalePageState extends State<FairytalePage> {
                                 padding: const EdgeInsets.only(left: 20),
                                 child: ClipRRect(
                                   borderRadius:
-                                      BorderRadius.circular(50), // 모서리를 원형으로 설정
+                                      BorderRadius.circular(20), // 모서리를 원형으로 설정
                                   child: Image.network(
                                     bookImage,
-                                    fit: BoxFit.cover,
+                                    //fit: BoxFit.cover,
                                     // 이미지를 컨테이너에 맞게 조정
                                   ),
                                 ),
@@ -191,34 +191,52 @@ class _FairytalePageState extends State<FairytalePage> {
                             : Padding(
                                 padding:
                                     const EdgeInsets.only(left: 50, right: 10),
-                                child: Text(
-                                  text,
-                                  style: const TextStyle(
-                                      fontSize: 20, fontFamily: 'BreeSerif'),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        // textAlign: TextAlign.center,
+                                        text,
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: 'BreeSerif'),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ), // 글자를 2번 화면에 배치
                       ),
                     ),
                     Expanded(
-                      flex: 1,
+                      flex: position == 2 ? 1 : 2,
                       child: Container(
                         //color: position == 2 ? Colors.red : Colors.white,
                         child: position == 2
                             ? ClipRRect(
                                 borderRadius:
-                                    BorderRadius.circular(50), // 모서리를 원형으로 설정
+                                    BorderRadius.circular(20), // 모서리를 원형으로 설정
                                 child: Image.network(
                                   bookImage,
-                                  fit: BoxFit.cover, // 이미지를 컨테이너에 맞게 조정
+                                  // fit: BoxFit.cover, // 이미지를 컨테이너에 맞게 조정
                                 ),
                               ) // 그림을 2번 화면에 배치
                             : Padding(
                                 padding:
-                                    const EdgeInsets.only(right: 50, left: 20),
-                                child: Text(
-                                  text,
-                                  style: const TextStyle(
-                                      fontSize: 20, fontFamily: 'BreeSerif'),
+                                    const EdgeInsets.only(right: 20, left: 20),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        // textAlign: TextAlign.center,
+                                        text,
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: 'BreeSerif'),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ), // 글자를 1번 화면에 배치
                       ),
@@ -240,14 +258,12 @@ class _FairytalePageState extends State<FairytalePage> {
                       ),
                       //const SizedBox (width: 7),
                       isPlaying
-                      ? IconButton (
-                        icon: const Icon(Icons.pause),
-                        onPressed: pauseAudio
-                      )
-                      : IconButton (
-                        icon: const Icon(Icons.play_arrow),
-                        onPressed: resumeAudio
-                      ),
+                          ? IconButton(
+                              icon: const Icon(Icons.pause),
+                              onPressed: pauseAudio)
+                          : IconButton(
+                              icon: const Icon(Icons.play_arrow),
+                              onPressed: resumeAudio),
                       //const SizedBox(width: 7),*/
                       currentPage != last
                           ? IconButton(
