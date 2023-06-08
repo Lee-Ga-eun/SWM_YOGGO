@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/reader.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:yoggo/size_config.dart';
 
 class DetailScreens extends StatefulWidget {
   final String title, thumb, summary;
@@ -75,8 +76,7 @@ class _DetailScreensState extends State<DetailScreens> {
 
   @override
   Widget build(BuildContext context) {
-    print('vociceId');
-    print(voiceId);
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF1ECC9).withOpacity(1),
       body: Container(
@@ -87,32 +87,32 @@ class _DetailScreensState extends State<DetailScreens> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(
-            left: 10.0,
-            top: 10.0,
+          padding: EdgeInsets.only(
+            left: SizeConfig.defaultSize!,
+            top: SizeConfig.defaultSize!,
           ),
           child: Column(
             children: [
               Expanded(
                 flex: 1,
                 child: Container(
-                  alignment: Alignment.topLeft,
-                  //color: Colors.red,
+                    alignment: Alignment.topLeft,
+                    //color: Colors.red,
 
                     //child: Positioned(
-                      //  left: 1.0,
-                        child: IconButton(
+                    //  left: 1.0,
+                    child: IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.cancel,
                         color: Colors.white,
-                        size: 40,
+                        size: SizeConfig.defaultSize! * 4,
                       ),
                     )),
-                  ),
-                //),
+              ),
+              //),
 
               Expanded(
                 flex: 7,
@@ -155,16 +155,17 @@ class _DetailScreensState extends State<DetailScreens> {
                       child: Container(
                         //   color: Colors.orange,
                         child: ListView(children: [
-                          const SizedBox(
-                            height: 20,
+                          SizedBox(
+                            height: SizeConfig.defaultSize! * 2,
                           ),
                           Text(
                             widget.title,
-                            style: const TextStyle(
-                                fontSize: 40, fontFamily: 'BreeSerif'),
+                            style: TextStyle(
+                                fontSize: SizeConfig.defaultSize! * 3.5,
+                                fontFamily: 'BreeSerif'),
                           ),
-                          const SizedBox(
-                            height: 3,
+                          SizedBox(
+                            height: SizeConfig.defaultSize! * 0.3,
                           ),
                           Row(
                             //  mainAxisAlignment: MainAxisAlignment.center,
@@ -196,28 +197,31 @@ class _DetailScreensState extends State<DetailScreens> {
                                               255,
                                               66,
                                               129),
-                                      height: 65,
+                                      height: SizeConfig.defaultSize! * 6.5,
                                     ),
-                                    const SizedBox(height: 3),
+                                    SizedBox(
+                                        height: SizeConfig.defaultSize! * 0.3),
                                     Text(voice['voiceName']),
                                   ],
                                 ),
                               );
                             }).toList(),
                           ),
-                          const SizedBox(
-                            height: 1,
+                          SizedBox(
+                            height: SizeConfig.defaultSize! * 0.1,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 40),
+                            padding: EdgeInsets.only(
+                                right: SizeConfig.defaultSize! * 4),
                             child: Text(
                               widget.summary,
-                              style: const TextStyle(
-                                  fontFamily: 'Prata', fontSize: 20),
+                              style: TextStyle(
+                                  fontFamily: 'Prata',
+                                  fontSize: SizeConfig.defaultSize! * 2),
                             ),
                           ),
-                          const SizedBox(
-                            height: 10,
+                          SizedBox(
+                            height: SizeConfig.defaultSize!,
                           ),
                           // --------------------피그마 아이콘이랑 일치하는 것:: contentVoiceId 동적 기능 없음 ------------
                           /*GestureDetector(
@@ -386,7 +390,7 @@ class _DetailScreensState extends State<DetailScreens> {
                               )
                             : null;
                       },
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         //alignment: Alignment.topRight,
                         children: [
@@ -395,13 +399,14 @@ class _DetailScreensState extends State<DetailScreens> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 20),
+                                fontSize: SizeConfig.defaultSize! * 2),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(right: 20),
+                            padding: EdgeInsets.only(
+                                right: SizeConfig.defaultSize! * 2),
                             child: Icon(
                               Icons.arrow_circle_right_outlined,
-                              size: 50,
+                              size: SizeConfig.defaultSize! * 5,
                               color: Colors.white,
                             ),
                           ),

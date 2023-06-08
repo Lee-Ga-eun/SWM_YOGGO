@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import 'package:yoggo/size_config.dart';
 
 //import 'package:audioplayers/audioplayers.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -128,6 +129,7 @@ class _FairytalePageState extends State<FairytalePage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -137,32 +139,32 @@ class _FairytalePageState extends State<FairytalePage> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(SizeConfig.defaultSize!),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
                 flex: 1,
                 child: Container(
-                  //color: Colors.orange,
-                  alignment: Alignment.topLeft,
-                  //color: Colors.red,
+                    //color: Colors.orange,
+                    alignment: Alignment.topLeft,
+                    //color: Colors.red,
 
                     //child: Positioned(
-                      //  left: 1.0,
-                        child: IconButton(
+                    //  left: 1.0,
+                    child: IconButton(
                       onPressed: () {
                         stopAudio();
                         Navigator.of(context).pop();
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.cancel,
                         color: Colors.white,
-                        size: 40,
+                        size: SizeConfig.defaultSize! * 4,
                       ),
                     )),
-                  ),
-                //),
+              ),
+              //),
 
               Expanded(
                 flex: 6,
@@ -175,7 +177,8 @@ class _FairytalePageState extends State<FairytalePage> {
                         //color: position == 1 ? Colors.red : Colors.white,
                         child: position == 1
                             ? Padding(
-                                padding: const EdgeInsets.only(left: 20),
+                                padding: EdgeInsets.only(
+                                    left: SizeConfig.defaultSize! * 2),
                                 child: ClipRRect(
                                   borderRadius:
                                       BorderRadius.circular(20), // 모서리를 원형으로 설정
@@ -187,8 +190,9 @@ class _FairytalePageState extends State<FairytalePage> {
                                 ),
                               ) // // 그림을 1번 화면에 배치
                             : Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 50, right: 10),
+                                padding: EdgeInsets.only(
+                                    left: SizeConfig.defaultSize! * 5,
+                                    right: SizeConfig.defaultSize!),
                                 child: SingleChildScrollView(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -196,8 +200,9 @@ class _FairytalePageState extends State<FairytalePage> {
                                       Text(
                                         // textAlign: TextAlign.center,
                                         text,
-                                        style: const TextStyle(
-                                            fontSize: 20,
+                                        style: TextStyle(
+                                            fontSize:
+                                                SizeConfig.defaultSize! * 2,
                                             fontFamily: 'BreeSerif'),
                                       ),
                                     ],
@@ -220,8 +225,9 @@ class _FairytalePageState extends State<FairytalePage> {
                                 ),
                               ) // 그림을 2번 화면에 배치
                             : Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 20, left: 20),
+                                padding: EdgeInsets.only(
+                                    right: SizeConfig.defaultSize! * 2,
+                                    left: SizeConfig.defaultSize! * 2),
                                 child: SingleChildScrollView(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -229,8 +235,9 @@ class _FairytalePageState extends State<FairytalePage> {
                                       Text(
                                         // textAlign: TextAlign.center,
                                         text,
-                                        style: const TextStyle(
-                                            fontSize: 20,
+                                        style: TextStyle(
+                                            fontSize:
+                                                SizeConfig.defaultSize! * 2,
                                             fontFamily: 'BreeSerif'),
                                       ),
                                     ],
@@ -269,10 +276,10 @@ class _FairytalePageState extends State<FairytalePage> {
                               onPressed: nextPage,
                             )
                           : IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.check,
                                 color: Colors.green,
-                                size: 40,
+                                size: SizeConfig.defaultSize! * 4,
                               ),
                               onPressed: () =>
                                   {stopAudio(), Navigator.of(context).pop()},
