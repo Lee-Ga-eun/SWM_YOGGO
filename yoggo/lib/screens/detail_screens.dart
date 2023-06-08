@@ -27,6 +27,7 @@ class _DetailScreensState extends State<DetailScreens> {
   //String voices='';
   List<dynamic> voices = [];
   int cvi = 0;
+  bool canChanged = false;
 
   Future<void> fetchPageData() async {
     final url = 'https://yoggo-server.fly.dev/content/${widget.id}';
@@ -172,13 +173,16 @@ class _DetailScreensState extends State<DetailScreens> {
                             //  mainAxisAlignment: MainAxisAlignment.center,
                             children: voices.map((voice) {
                               bool isClicked = (cvi == voice['contentVoiceId']);
+
+                              print(isClicked);
                               //for (var voice in voices)
                               return GestureDetector(
                                 onTap: () {
                                   cvi = voice[
                                       'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                   setState(() {
-                                    isClicked = !isClicked; // 클릭 상태
+                                    isClicked = !isClicked;
+                                    canChanged = true; // 클릭 상태
                                   });
                                 },
                                 child: Column(
@@ -373,15 +377,17 @@ class _DetailScreensState extends State<DetailScreens> {
                     flex: 1,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FairytalePage(
-                              // 다음 화면으로 contetnVoiceId를 가지고 이동
-                              voiceId: cvi,
-                            ),
-                          ),
-                        );
+                        canChanged
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FairytalePage(
+                                    // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                    voiceId: cvi,
+                                  ),
+                                ),
+                              )
+                            : null;
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.end,
