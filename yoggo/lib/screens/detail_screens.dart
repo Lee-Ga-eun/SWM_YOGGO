@@ -62,15 +62,16 @@ class _DetailScreensState extends State<DetailScreens> {
   String _getImageForVoice(String voiceName) {
     switch (voiceName) {
       case 'Jolly':
-      return 'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png?width=75&height=110';
+        return 'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png?width=75&height=110';
       case 'Morgan':
-      return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273297997884/actor_ethan.png?width=112&height=110';
+        return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273297997884/actor_ethan.png?width=112&height=110';
       case 'Eric':
-      return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273604186202/actor_liam.png?width=119&height=108';
+        return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273604186202/actor_liam.png?width=119&height=108';
       default:
-      return '';
+        return '';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     print('vociceId');
@@ -84,102 +85,141 @@ class _DetailScreensState extends State<DetailScreens> {
             fit: BoxFit.cover,
           ),
         ),
-        child:Padding(
-        padding: const EdgeInsets.only(
-          left: 10.0,
-          top: 10.0,
-        ),
-          child:Column(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                alignment: Alignment.topLeft,
-                //color: Colors.red,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 10.0,
+            top: 10.0,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  //color: Colors.red,
 
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 1.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 1.0,
+                    ),
+                    child: Positioned(
+                        child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(
+                        Icons.cancel,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    )),
                   ),
-                  child: Positioned(
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.cancel,
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                      )),
                 ),
               ),
-        ),
-            Expanded(
-              flex: 7,
-              child: Row(
-                children: [
-                  Expanded(
-                    // 썸네일 사진
-                    flex: 5,
-                    child: Container(
-                      // color: Colors.green,
-                      child: Hero(
-                        tag: widget.id,
-                        child: Center(
-                          child: Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color:
-                                        Colors.grey.withOpacity(0.5), // 그림자 색상
-                                    spreadRadius: 5, // 그림자의 확산 범위
-                                    blurRadius: 7, // 그림자의 흐림 정도
-                                    offset:
-                                        const Offset(0, 3), // 그림자의 위치 (가로, 세로)
-                                  ),
-                                ],
-                              ),
-                              child: Container(
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Image.network(widget.thumb))),
+              Expanded(
+                flex: 7,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // 썸네일 사진
+                      flex: 5,
+                      child: Container(
+                        // color: Colors.green,
+                        child: Hero(
+                          tag: widget.id,
+                          child: Center(
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey
+                                          .withOpacity(0.5), // 그림자 색상
+                                      spreadRadius: 5, // 그림자의 확산 범위
+                                      blurRadius: 7, // 그림자의 흐림 정도
+                                      offset: const Offset(
+                                          0, 3), // 그림자의 위치 (가로, 세로)
+                                    ),
+                                  ],
+                                ),
+                                child: Container(
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Image.network(widget.thumb))),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    // 제목과 책 내용 요약
-                    flex: 5,
-                    child: Container(
-                      //   color: Colors.orange,
-                      child: ListView(children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          widget.title,
-                          style: const TextStyle(
-                              fontSize: 40, fontFamily: 'BreeSerif'),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 40),
-                          child: Text(
-                            widget.summary,
-                            style: const TextStyle(
-                                fontFamily: 'Prata', fontSize: 20),
+                    Expanded(
+                      // 제목과 책 내용 요약
+                      flex: 5,
+                      child: Container(
+                        //   color: Colors.orange,
+                        child: ListView(children: [
+                          const SizedBox(
+                            height: 20,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // --------------------피그마 아이콘이랑 일치하는 것:: contentVoiceId 동적 기능 없음 ------------
-                        /*GestureDetector(
+                          Text(
+                            widget.title,
+                            style: const TextStyle(
+                                fontSize: 40, fontFamily: 'BreeSerif'),
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Row(
+                            //  mainAxisAlignment: MainAxisAlignment.center,
+                            children: voices.map((voice) {
+                              bool isClicked = (cvi == voice['contentVoiceId']);
+                              //for (var voice in voices)
+                              return GestureDetector(
+                                onTap: () {
+                                  cvi = voice[
+                                      'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                  setState(() {
+                                    isClicked = !isClicked; // 클릭 상태
+                                  });
+                                },
+                                child: Column(
+                                  children: [
+                                    Image.network(
+                                      _getImageForVoice(voice['voiceName']),
+                                      //Icons.person, // Icons.person은 기본 제공되는 아이콘이다. 이걸 그림으로 바꾸려면 Icon()을 지우고
+                                      //Image.network('https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',) 이렇게 처리를 해줘야 한다
+                                      color: isClicked
+                                          ? null
+                                          : const Color.fromARGB(
+                                              // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
+                                              255,
+                                              255,
+                                              66,
+                                              129),
+                                      height: 65,
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(voice['voiceName']),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(
+                            height: 1,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 40),
+                            child: Text(
+                              widget.summary,
+                              style: const TextStyle(
+                                  fontFamily: 'Prata', fontSize: 20),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // --------------------피그마 아이콘이랑 일치하는 것:: contentVoiceId 동적 기능 없음 ------------
+                          /*GestureDetector(
                           onTap: () {
                             setState(() {
                               isClicked = !isClicked; // 클릭 상태를 토글합니다.
@@ -198,76 +238,193 @@ class _DetailScreensState extends State<DetailScreens> {
                             ),
                           ),
                         ),*/
-                        // ----------------성우 리스트 수에 따라 아이콘 생성 시작-------------------
-                        Row(
-                          children: voices.map((voice) {
-                            bool isClicked = (cvi == voice['contentVoiceId']);
-                            //for (var voice in voices)
-                            return GestureDetector(
-                              onTap: () {
-                                cvi = voice['contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
-                                setState(() {
-                                  isClicked = !isClicked; // 클릭 상태
-                                });
-                              },
-                              child: Column(
-                                children: [
-                                    Image.network(
-                                    _getImageForVoice(voice['voiceName']),
-                                    //Icons.person, // Icons.person은 기본 제공되는 아이콘이다. 이걸 그림으로 바꾸려면 Icon()을 지우고
-                                    //Image.network('https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',) 이렇게 처리를 해줘야 한다
-                                    color: isClicked
-                                        ? const Color.fromARGB( // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
-                                            255, 255, 66, 129)
-                                        : null,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(voice['voiceName']),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        )
-                        // --------------------성우 아이콘 배치 완료  ---------
-                      ]),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                //   color: Colors.blue,
-                // margin: const EdgeInsets.only(right: 50, bottom: 100),
-
-                alignment: Alignment.topRight,
-                //child: Padding(
-                //padding: const EdgeInsets.only(right: 30, bottom: 100),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FairytalePage( // 다음 화면으로 contetnVoiceId를 가지고 이동
-                          voiceId: cvi,
-                        ),
+                          // ----------------성우 리스트 수에 따라 아이콘 생성 시작-------------------
+                          // Row(
+                          //   children: voices.map((voice) {
+                          //     bool isClicked = (cvi == voice['contentVoiceId']);
+                          //     //for (var voice in voices)
+                          //     return GestureDetector(
+                          //       onTap: () {
+                          //         cvi = voice[
+                          //             'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                          //         setState(() {
+                          //           isClicked = !isClicked; // 클릭 상태
+                          //         });
+                          //       },
+                          //       child: Column(
+                          //         children: [
+                          //           Image.network(
+                          //             _getImageForVoice(voice['voiceName']),
+                          //             //Icons.person, // Icons.person은 기본 제공되는 아이콘이다. 이걸 그림으로 바꾸려면 Icon()을 지우고
+                          //             //Image.network('https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',) 이렇게 처리를 해줘야 한다
+                          //             color: isClicked
+                          //                 ? const Color.fromARGB(
+                          //                     // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
+                          //                     255,
+                          //                     255,
+                          //                     66,
+                          //                     129)
+                          //                 : null,
+                          //           ),
+                          //           const SizedBox(height: 8),
+                          //           Text(voice['voiceName']),
+                          //         ],
+                          //       ),
+                          //     );
+                          //   }).toList(),
+                          // )
+                          // --------------------성우 아이콘 배치 완료  ---------
+                        ]),
                       ),
-                    );
-                  },
-                  child: const Icon(
-                    Icons.arrow_circle_right_outlined,
-                    size: 50,
-                    color: Colors.white,
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            //  ),
-          ],
-        ),
+              // Expanded(
+              //   flex: 2,
+              //   child: Container(
+              //     color: Colors.blue,
+              //     // margin: const EdgeInsets.only(right: 50, bottom: 100),
+
+              //     alignment: Alignment.topRight,
+              //     //child: Padding(
+              //     //padding: const EdgeInsets.only(right: 30, bottom: 100),
+              //     child: GestureDetector(
+              //       onTap: () {
+              //         Navigator.push(
+              //           context,
+              //           MaterialPageRoute(
+              //             builder: (context) => FairytalePage(
+              //               // 다음 화면으로 contetnVoiceId를 가지고 이동
+              //               voiceId: cvi,
+              //             ),
+              //           ),
+              //         );
+              //       },
+              //       child: const Icon(
+              //         Icons.arrow_circle_right_outlined,
+              //         size: 50,
+              //         color: Colors.white,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+//추가
+              Expanded(
+                flex: 2,
+                child: Row(children: [
+                  Expanded(
+                    // 썸네일 사진
+                    flex: 1,
+                    child: Container(
+                        //color: Colors.white,
+                        ),
+                  ),
+                  Expanded(
+                      // 썸네일 사진
+                      flex: 1,
+                      child: Container()
+                      // Container(
+                      //   //  color: Colors.pink,
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: voices.map((voice) {
+                      //       bool isClicked = (cvi == voice['contentVoiceId']);
+                      //       //for (var voice in voices)
+                      //       return GestureDetector(
+                      //         onTap: () {
+                      //           cvi = voice[
+                      //               'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                      //           setState(() {
+                      //             isClicked = !isClicked; // 클릭 상태
+                      //           });
+                      //         },
+                      //         child: Column(
+                      //           children: [
+                      //             Image.network(
+                      //               _getImageForVoice(
+                      //                 voice['voiceName'],
+                      //               ),
+                      //               //Icons.person, // Icons.person은 기본 제공되는 아이콘이다. 이걸 그림으로 바꾸려면 Icon()을 지우고
+                      //               //Image.network('https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',) 이렇게 처리를 해줘야 한다
+                      //               color: isClicked
+                      //                   ? const Color.fromARGB(
+                      //                       // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
+                      //                       255,
+                      //                       255,
+                      //                       66,
+                      //                       129)
+                      //                   : null,
+                      //               height: 50,
+                      //             ),
+                      //             // const SizedBox(height: 8),
+                      //             Text(voice['voiceName']),
+                      //           ],
+                      //         ),
+                      //       );
+                      //     }).toList(),
+                      //   ),
+                      // )
+
+                      //color: Colors.green,),
+                      ),
+                  Expanded(
+                    // 제목과 책 내용 요약
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FairytalePage(
+                              // 다음 화면으로 contetnVoiceId를 가지고 이동
+                              voiceId: cvi,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        //alignment: Alignment.topRight,
+                        children: [
+                          Text(
+                            'Selected?',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: Icon(
+                              Icons.arrow_circle_right_outlined,
+                              size: 50,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ), // --------------------성우 아이콘 배치 완료  ---------
+                ]),
+              ),
+//추가
+
+              //  ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+
+
+
+
+//---
+       
+
+
+       
