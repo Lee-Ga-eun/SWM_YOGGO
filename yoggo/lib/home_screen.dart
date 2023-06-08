@@ -106,10 +106,15 @@ class HomeScreen extends StatelessWidget {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Text(
-                                book.title,
-                                style: const TextStyle(fontFamily: 'BreeSerif'),
-                                textAlign: TextAlign.center,
+                              SizedBox(
+                                width: 220,
+                                child: Text(
+                                  book.title,
+                                  style:
+                                      const TextStyle(fontFamily: 'BreeSerif'),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                ),
                               ),
                             ],
                           ),
