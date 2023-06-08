@@ -99,11 +99,8 @@ class _DetailScreensState extends State<DetailScreens> {
                   alignment: Alignment.topLeft,
                   //color: Colors.red,
 
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 1.0,
-                    ),
-                    child: Positioned(
+                    //child: Positioned(
+                      //  left: 1.0,
                         child: IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -115,8 +112,8 @@ class _DetailScreensState extends State<DetailScreens> {
                       ),
                     )),
                   ),
-                ),
-              ),
+                //),
+
               Expanded(
                 flex: 7,
                 child: Row(

@@ -147,11 +147,9 @@ class _FairytalePageState extends State<FairytalePage> {
                   //color: Colors.orange,
                   alignment: Alignment.topLeft,
                   //color: Colors.red,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 1.0,
-                    ),
-                    child: Positioned(
+
+                    //child: Positioned(
+                      //  left: 1.0,
                         child: IconButton(
                       onPressed: () {
                         stopAudio();
@@ -164,8 +162,8 @@ class _FairytalePageState extends State<FairytalePage> {
                       ),
                     )),
                   ),
-                ),
-              ),
+                //),
+
               Expanded(
                 flex: 6,
                 // 본문 글자
