@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './home_screen.dart';
 import './widgets/intro.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() {
   //runApp(const App());
@@ -34,6 +36,20 @@ class _AppState extends State<App> {
     setState(() {
       _initialized = true; // 초기화 완료 상태 업데이트
     });
+  }
+
+  Future<void> initializeFirebase() async {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      setState(() {
+        _initialized = true;
+      });
+    } catch (e) {
+      // Firebase 초기화 실패 시 에러 처리
+      print('Failed to initialize Firebase: $e');
+    }
   }
 
   @override

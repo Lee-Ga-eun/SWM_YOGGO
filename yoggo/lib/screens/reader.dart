@@ -154,7 +154,7 @@ class _FairytalePageState extends State<FairytalePage> {
                     child: Positioned(
                         child: IconButton(
                       onPressed: () {
-                        pauseAudio();
+                        stopAudio();
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(

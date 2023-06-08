@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "319250424761",
+    "project_id": "yoggo-52562",
+    "storage_bucket": "yoggo-52562.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319250424761:android:b8ca2f1c873bdd64ff0c68",
+        "android_client_info": {
+          "package_name": "com.example.yoggo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319250424761-p03t8iklngmsf390onfnm1v6e7okhmvb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6CrV3UOVYO_OPZLH6_JLxiTee17qibbA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "319250424761-p03t8iklngmsf390onfnm1v6e7okhmvb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "319250424761-8egfk3m4cld29b3is7bc7l3od1i30e5p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.yoggo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
