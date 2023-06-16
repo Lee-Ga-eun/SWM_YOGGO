@@ -4,16 +4,39 @@ import './widgets/intro.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
   //runApp(const App());
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['ANON_KEY']!,
+  );
+
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
     runApp(const App());
   });
 }
+
+final supabase = Supabase.instance.client; // 슈퍼베이스
+  var file; 
+  Future<void> downloadImage() async { // 이미지 다운로드 받기
+    final Uint8List files =
+        await supabase.storage.from('public/yoggo-storage').download('image.png');
+
+    if (files != null) {
+      file = files;
+      // 이곳에서 bytes를 원하는 방식으로 처리하거나 출력합니다.
+      print(file);
+    } else {
+      print('Failed to download image.');
+    }
+  }
 
 class App extends StatefulWidget {
   const App({super.key});
