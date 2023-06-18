@@ -24,19 +24,13 @@ void main() async {
 }
 
 final supabase = Supabase.instance.client; // 슈퍼베이스
-  var file; 
-  Future<void> downloadImage() async { // 이미지 다운로드 받기
-    final Uint8List files =
-        await supabase.storage.from('public/yoggo-storage').download('image.png');
 
-    if (files != null) {
-      file = files;
-      // 이곳에서 bytes를 원하는 방식으로 처리하거나 출력합니다.
-      print(file);
-    } else {
-      print('Failed to download image.');
-    }
-  }
+final String contentUrl =
+    supabase.storage.from('yoggo-storage').getPublicUrl('image'); // 책 목록 사진들
+
+// 이미지 다운로드 받기
+// final Uint8List file =
+//     supabase.storage.from('public/yoggo-storage').download('image.png');
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -79,7 +73,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: _initialized
-          ? HomeScreen()
+          ? const HomeScreen()
           : const SplashScreen(), // 초기화 상태에 따라 화면 표시
     );
   }
