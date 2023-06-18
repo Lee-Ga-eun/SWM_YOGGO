@@ -6,7 +6,7 @@ import 'package:yoggo/size_config.dart';
 import './main.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     webtoons = ApiService.getTodaysToons();
+    print(contentUrl); // 책 목록 image에서 마지막 파라미터만 빠진 url
   }
 
   void pointFunction() {
@@ -53,25 +54,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontFamily: 'BreeSerif',
                           fontSize: SizeConfig.defaultSize! * 4),
                     ),
-                    InkWell(
-                      // 테스트를 위해서 아이콘을 누르면 슈퍼베이스에 있는 사진을 불러게 함
-                      onTap: () async {
-                        await downloadImage();
-                        if (file != null) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: Image.memory(file!),
-                            ),
-                          );
-                        }
-                      },
-                      child: Image.network(
-                        'https://ulpaiggkhrfbfuvteqkq.supabase.co/storage/v1/object/sign/yoggo-storage/logo_v0.1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5b2dnby1zdG9yYWdlL2xvZ29fdjAuMS5wbmciLCJpYXQiOjE2ODYwNjQ4MTksImV4cCI6MTE2ODYwNjQ4MTh9.6EEFRhZZVyEDVbBt326I7lZBY439Ufagj_ou43986ys&t=2023-06-06T15%3A20%3A20.023Z',
-                      ),
-                    ),
-                    //  Image.network(
-                    //  'https://ulpaiggkhrfbfuvteqkq.supabase.co/storage/v1/object/sign/yoggo-storage/logo_v0.1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5b2dnby1zdG9yYWdlL2xvZ29fdjAuMS5wbmciLCJpYXQiOjE2ODYwNjQ4MTksImV4cCI6MTE2ODYwNjQ4MTh9.6EEFRhZZVyEDVbBt326I7lZBY439Ufagj_ou43986ys&t=2023-06-06T15%3A20%3A20.023Z'),
+                    // InkWell(
+                    //   // 테스트를 위해서 아이콘을 누르면 슈퍼베이스에 있는 사진을 불러게 함
+                    //   onTap: () {
+                    //     // await downloadImage();
+                    //     showDialog(
+                    //       context: context,
+                    //       builder: (context) => AlertDialog(
+                    //         content: Image.memory(file!),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Image.network(
+                    //     'https://ulpaiggkhrfbfuvteqkq.supabase.co/storage/v1/object/sign/yoggo-storage/logo_v0.1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5b2dnby1zdG9yYWdlL2xvZ29fdjAuMS5wbmciLCJpYXQiOjE2ODYwNjQ4MTksImV4cCI6MTE2ODYwNjQ4MTh9.6EEFRhZZVyEDVbBt326I7lZBY439Ufagj_ou43986ys&t=2023-06-06T15%3A20%3A20.023Z',
+                    //   ),
+                    // ),
+                  
                     Text(
                       'Tale',
                       style: TextStyle(
