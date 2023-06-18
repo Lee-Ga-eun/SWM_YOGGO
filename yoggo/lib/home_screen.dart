@@ -5,12 +5,26 @@ import 'package:yoggo/services/api_service.dart';
 import 'package:yoggo/size_config.dart';
 import './main.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
-  Future<List<bookModel>> webtoons = ApiService.getTodaysToons();
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
-  void pointFunction() {} // AppBar 아이콘클릭
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<bookModel>> webtoons;
+
+  @override
+  void initState() {
+    super.initState();
+    webtoons = ApiService.getTodaysToons();
+    print(contentUrl); // 책 목록 image에서 마지막 파라미터만 빠진 url
+  }
+
+  void pointFunction() {
+    // AppBar 아이콘 클릭
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,25 +54,22 @@ class HomeScreen extends StatelessWidget {
                           fontFamily: 'BreeSerif',
                           fontSize: SizeConfig.defaultSize! * 4),
                     ),
-                    InkWell(
-                      // 테스트를 위해서 아이콘을 누르면 슈퍼베이스에 있는 사진을 불러게 함
-                      onTap: () async {
-                        await downloadImage();
-                        if (file != null) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: Image.memory(file!),
-                            ),
-                          );
-                        }
-                      },
-                      child: Image.network(
-                        'https://ulpaiggkhrfbfuvteqkq.supabase.co/storage/v1/object/sign/yoggo-storage/logo_v0.1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5b2dnby1zdG9yYWdlL2xvZ29fdjAuMS5wbmciLCJpYXQiOjE2ODYwNjQ4MTksImV4cCI6MTE2ODYwNjQ4MTh9.6EEFRhZZVyEDVbBt326I7lZBY439Ufagj_ou43986ys&t=2023-06-06T15%3A20%3A20.023Z',
-                      ),
-                    ),
-                    //  Image.network(
-                    //  'https://ulpaiggkhrfbfuvteqkq.supabase.co/storage/v1/object/sign/yoggo-storage/logo_v0.1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5b2dnby1zdG9yYWdlL2xvZ29fdjAuMS5wbmciLCJpYXQiOjE2ODYwNjQ4MTksImV4cCI6MTE2ODYwNjQ4MTh9.6EEFRhZZVyEDVbBt326I7lZBY439Ufagj_ou43986ys&t=2023-06-06T15%3A20%3A20.023Z'),
+                    // InkWell(
+                    //   // 테스트를 위해서 아이콘을 누르면 슈퍼베이스에 있는 사진을 불러게 함
+                    //   onTap: () {
+                    //     // await downloadImage();
+                    //     showDialog(
+                    //       context: context,
+                    //       builder: (context) => AlertDialog(
+                    //         content: Image.memory(file!),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Image.network(
+                    //     'https://ulpaiggkhrfbfuvteqkq.supabase.co/storage/v1/object/sign/yoggo-storage/logo_v0.1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5b2dnby1zdG9yYWdlL2xvZ29fdjAuMS5wbmciLCJpYXQiOjE2ODYwNjQ4MTksImV4cCI6MTE2ODYwNjQ4MTh9.6EEFRhZZVyEDVbBt326I7lZBY439Ufagj_ou43986ys&t=2023-06-06T15%3A20%3A20.023Z',
+                    //   ),
+                    // ),
+                  
                     Text(
                       'Tale',
                       style: TextStyle(
@@ -78,7 +89,7 @@ class HomeScreen extends StatelessWidget {
 
   Container bookList() {
     return Container(
-      child: FutureBuilder(
+      child: FutureBuilder<List<bookModel>>(
           future: webtoons,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
