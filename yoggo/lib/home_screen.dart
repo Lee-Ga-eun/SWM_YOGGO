@@ -5,12 +5,25 @@ import 'package:yoggo/services/api_service.dart';
 import 'package:yoggo/size_config.dart';
 import './main.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key? key}) : super(key: key);
 
-  Future<List<bookModel>> webtoons = ApiService.getTodaysToons();
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
-  void pointFunction() {} // AppBar 아이콘클릭
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<bookModel>> webtoons;
+
+  @override
+  void initState() {
+    super.initState();
+    webtoons = ApiService.getTodaysToons();
+  }
+
+  void pointFunction() {
+    // AppBar 아이콘 클릭
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +91,7 @@ class HomeScreen extends StatelessWidget {
 
   Container bookList() {
     return Container(
-      child: FutureBuilder(
+      child: FutureBuilder<List<bookModel>>(
           future: webtoons,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
