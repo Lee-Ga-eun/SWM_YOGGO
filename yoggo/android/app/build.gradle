@@ -28,6 +28,13 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+// key store
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('app/key.properties')
+if (keystorePropertiesFile.exists()) {
+       keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} //keystore end
+
 android {
     namespace "com.example.yoggo"
     compileSdkVersion flutter.compileSdkVersion
@@ -51,7 +58,9 @@ android {
         applicationId "com.example.yoggo"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+
+        //minSdkVersion flutter.minSdkVersion  // 수정일: 2023년 6월 19일-- apk 생성시 16으로 세팅되어 19로 수정하라는 에러 생겨서 수정함
+        minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -59,13 +68,34 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-        }
-    }
+   signingConfigs { // release setting start
+       release {
+           keyAlias keystoreProperties['keyAlias']
+           keyPassword keystoreProperties['keyPassword']
+           storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+           storePassword keystoreProperties['storePassword']
+       }
+   }
+   buildTypes {
+       release {
+           signingConfig signingConfigs.release
+           minifyEnabled true //Shrinking your code with R8
+           shrinkResources true//Shrinking your code with R8
+            proguardFiles getDefaultProguardFile(//Shrinking your code with R8
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+
+       }
+   } // release setting end
+
+
+    // buildTypes { // 릴리즈 세팅할 때 위 코드로 대체함
+    //     release {
+    //         // TODO: Add your own signing config for the release build.
+    //         // Signing with the debug keys for now, so `flutter run --release` works.
+    //         signingConfig signingConfigs.debug
+    //     }
+    // }
 }
 
 flutter {
