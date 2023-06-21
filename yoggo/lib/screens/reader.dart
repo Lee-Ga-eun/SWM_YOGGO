@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:yoggo/size_config.dart';
+import '../main.dart';
 
 //import 'package:audioplayers/audioplayers.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -41,9 +42,9 @@ class _FairytalePageState extends State<FairytalePage> {
       final contentText = responseData['text'];
       print("position의 값");
       print(responseData['position']);
-      audioUrl = UrlSource(responseData['audioUrl']);
+      audioUrl = UrlSource(supabaseAudioUrl + responseData['audioUrl']);
       last = responseData['last'];
-      bookImage = responseData['imageUrl'];
+      bookImage = contentUrl + responseData['imageUrl'];
       position = responseData['position'];
 
       setState(() {
@@ -212,10 +213,10 @@ class _FairytalePageState extends State<FairytalePage> {
                       ),
                     ),
                     Expanded(
-                      flex: position == 2 ? 1 : 2,
+                      flex: position == 0 ? 1 : 2,
                       child: Container(
                         //color: position == 2 ? Colors.red : Colors.white,
-                        child: position == 2
+                        child: position == 0
                             ? ClipRRect(
                                 borderRadius:
                                     BorderRadius.circular(20), // 모서리를 원형으로 설정

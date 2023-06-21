@@ -26,7 +26,10 @@ void main() async {
 final supabase = Supabase.instance.client; // 슈퍼베이스
 
 final String contentUrl =
-    supabase.storage.from('yoggo-storage').getPublicUrl('image'); // 책 목록 사진들
+    supabase.storage.from('yoggo-storage').getPublicUrl('image/'); // 책 목록 사진들
+
+final String supabaseAudioUrl =
+    supabase.storage.from('yoggo-storage').getPublicUrl('audio/'); // 책 목록 사진들
 
 // 이미지 다운로드 받기
 // final Uint8List file =

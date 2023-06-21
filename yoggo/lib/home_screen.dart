@@ -54,22 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontFamily: 'BreeSerif',
                           fontSize: SizeConfig.defaultSize! * 4),
                     ),
-                    // InkWell(
-                    //   // 테스트를 위해서 아이콘을 누르면 슈퍼베이스에 있는 사진을 불러게 함
-                    //   onTap: () {
-                    //     // await downloadImage();
-                    //     showDialog(
-                    //       context: context,
-                    //       builder: (context) => AlertDialog(
-                    //         content: Image.memory(file!),
-                    //       ),
-                    //     );
-                    //   },
-                    //   child: Image.network(
-                    //     'https://ulpaiggkhrfbfuvteqkq.supabase.co/storage/v1/object/sign/yoggo-storage/logo_v0.1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5b2dnby1zdG9yYWdlL2xvZ29fdjAuMS5wbmciLCJpYXQiOjE2ODYwNjQ4MTksImV4cCI6MTE2ODYwNjQ4MTh9.6EEFRhZZVyEDVbBt326I7lZBY439Ufagj_ou43986ys&t=2023-06-06T15%3A20%3A20.023Z',
-                    //   ),
-                    // ),
-                  
                     Text(
                       'Tale',
                       style: TextStyle(
@@ -115,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => DetailScreens(
                                       title: book.title,
-                                      thumb: book.thumb,
+                                      thumb: contentUrl + book.thumb,
                                       id: book.id,
                                       summary: book.summary),
                                 ));
@@ -130,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(10)),
                                   height: 200,
                                   child: Image.network(
-                                    book.thumb,
+                                    contentUrl + book.thumb,
                                     headers: const {
                                       "User-Agent":
                                           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
