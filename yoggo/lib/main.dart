@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import './home_screen.dart';
 import './widgets/intro.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import './login_screen.dart';
 
 void main() async {
   //runApp(const App());
@@ -76,7 +76,8 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: _initialized
-          ? const HomeScreen()
+          //  ? const HomeScreen()
+          ? const LoginScreen()
           : const SplashScreen(), // 초기화 상태에 따라 화면 표시
     );
   }
