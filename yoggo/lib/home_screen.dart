@@ -4,6 +4,7 @@ import 'package:yoggo/screens/detail_screens.dart';
 import 'package:yoggo/services/api_service.dart';
 import 'package:yoggo/size_config.dart';
 import './main.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -113,12 +114,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10)),
                                   height: 200,
-                                  child: Image.network(
-                                    contentUrl + book.thumb,
-                                    headers: const {
-                                      "User-Agent":
-                                          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-                                    },
+                                  // child: Image.network(
+                                  //   contentUrl + book.thumb,
+                                  //   headers: const {
+                                  //     "User-Agent":
+                                  //         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+                                  //   },
+                                  // ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: CachedNetworkImage(
+                                      imageUrl: contentUrl + book.thumb,
+                                      httpHeaders: const {
+                                        "User-Agent":
+                                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
