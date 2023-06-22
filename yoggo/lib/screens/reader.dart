@@ -34,14 +34,10 @@ class _FairytalePageState extends State<FairytalePage> {
         'https://yoggo-server.fly.dev/content/page?contentVoiceId=${widget.voiceId}&order=$currentPage';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      //List<dynamic> responseData = jsonDecode(response.body);
       Map<String, dynamic> responseData = jsonDecode(response.body);
       print(responseData);
-      //Map<String, dynamic> data = responseData[0];
 
       final contentText = responseData['text'];
-      print("position의 값");
-      print(responseData['position']);
       audioUrl = UrlSource(supabaseAudioUrl + responseData['audioUrl']);
       last = responseData['last'];
       bookImage = contentUrl + responseData['imageUrl'];
@@ -51,6 +47,7 @@ class _FairytalePageState extends State<FairytalePage> {
         text = contentText;
         audioUrl = audioUrl;
         playAudio();
+        isPlaying = true;
       });
     } else {}
   }
@@ -59,12 +56,11 @@ class _FairytalePageState extends State<FairytalePage> {
   void initState() {
     super.initState();
     fetchPageData();
-    // playAudio();
   }
 
   void nextPage() {
     setState(() {
-      // audioPlayer.stop();
+      isPlaying = false;
       stopAudio();
       currentPage++;
       fetchPageData();
@@ -74,8 +70,7 @@ class _FairytalePageState extends State<FairytalePage> {
   void previousPage() {
     if (currentPage > 1) {
       setState(() {
-        //  dispose();
-        //  audioPlayer.stop();
+        isPlaying = false;
         stopAudio();
         currentPage--;
         fetchPageData();
@@ -85,33 +80,41 @@ class _FairytalePageState extends State<FairytalePage> {
 
   @override
   void dispose() {
-    audioPlayer.stop();
-    // setState(() {isPlaying = false;});
+    // audioPlayer.stop();
     super.dispose();
   }
 
+  // void playAudio() async {
+  //   stopAudio();
+  //   void result = await audioPlayer.play(audioUrl);
+
+  //   audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
+  //     if (state == PlayerState.stopped) {
+  //       isPlaying = false;
+  //     } else {
+  //       setState(() {
+  //         isPlaying = true;
+  //       });
+  //     }
+  //   });
+  // }
   void playAudio() async {
     stopAudio();
-    //final player = AudioPlayer();
-    //print(audioUrl);
-    void result = await audioPlayer.play(audioUrl);
-    // setState(() {
-    //   isPlaying = true;
-    // });
-    //if (result) {
-    // success
-    //  print('Audio played successfully');
-    //} else {
-    // error
-    //print('Error playing audio');
-    //}
+    audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
+      if (state == PlayerState.stopped) {
+        setState(() {
+          isPlaying = false;
+        });
+      }
+    });
+    await audioPlayer.play(audioUrl);
+    setState(() {
+      isPlaying = true;
+    });
   }
 
   void stopAudio() async {
     await audioPlayer.stop();
-    // setState(() {
-    //   isPlaying = false;
-    // });
   }
 
   void pauseAudio() async {
@@ -131,6 +134,7 @@ class _FairytalePageState extends State<FairytalePage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    print(isPlaying);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -276,15 +280,22 @@ class _FairytalePageState extends State<FairytalePage> {
                               icon: const Icon(Icons.arrow_forward),
                               onPressed: nextPage,
                             )
-                          : IconButton(
-                              icon: Icon(
-                                Icons.check,
-                                color: Colors.green,
-                                size: SizeConfig.defaultSize! * 4,
-                              ),
-                              onPressed: () =>
-                                  {stopAudio(), Navigator.of(context).pop()},
-                            )
+                          : (isPlaying != true
+                              ? IconButton(
+                                  icon: const Icon(Icons.arrow_forward),
+                                  onPressed: () => {},
+                                )
+                              : IconButton(
+                                  icon: Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                    size: SizeConfig.defaultSize! * 4,
+                                  ),
+                                  onPressed: () => {
+                                    stopAudio(),
+                                    Navigator.of(context).pop()
+                                  },
+                                ))
                     ],
                   ),
                 ),
