@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "319250424761-p03t8iklngmsf390onfnm1v6e7okhmvb.apps.googleusercontent.com",
+          "client_id": "319250424761-9llnsqoda3lvni07s1tahlb7bss1qoob.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yoggo",
+            "certificate_hash": "7b82cdbacd82b93d33e1cd40fc33a60ff8322ce1"
+          }
+        },
+        {
+          "client_id": "319250424761-d7sjn47cam2qf3261auemctmgrgcllgp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "319250424761-p03t8iklngmsf390onfnm1v6e7okhmvb.apps.googleusercontent.com",
+              "client_id": "319250424761-d7sjn47cam2qf3261auemctmgrgcllgp.apps.googleusercontent.com",
               "client_type": 3
             },
             {

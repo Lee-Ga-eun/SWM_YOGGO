@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:yoggo/login_screen.dart';
 import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/screens/detail_screens.dart';
 import 'package:yoggo/services/api_service.dart';
@@ -55,11 +57,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontFamily: 'BreeSerif',
                           fontSize: SizeConfig.defaultSize! * 4),
                     ),
-                    Text(
-                      'Tale',
-                      style: TextStyle(
-                          fontFamily: 'BreeSerif',
-                          fontSize: SizeConfig.defaultSize! * 4),
+                    TextButton(
+                      child: Text(
+                        'Tale',
+                        style: TextStyle(
+                            fontFamily: 'BreeSerif',
+                            fontSize: SizeConfig.defaultSize! * 4),
+                      ),
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
                     ),
                   ],
                 ),
