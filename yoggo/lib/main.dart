@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yoggo/home_screen.dart';
 import './widgets/intro.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,7 +16,7 @@ void main() async {
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['ANON_KEY']!,
   );
-
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
@@ -74,11 +75,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: _initialized
-          //  ? const HomeScreen()
-          ? const LoginScreen()
-          : const SplashScreen(), // 초기화 상태에 따라 화면 표시
-    );
+    return const MaterialApp(home: SplashScreen() // 초기화 상태에 따라 화면 표시
+        );
   }
 }
