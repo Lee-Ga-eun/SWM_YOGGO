@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../screens/reader_api_origin.dart';
 
 class DetailScreens extends StatefulWidget {
   final String title, thumb, summary;
@@ -24,6 +25,7 @@ class DetailScreens extends StatefulWidget {
 }
 
 class _DetailScreensState extends State<DetailScreens> {
+  bool isSelected=false;
   bool isClicked = false;
   String text = '';
   int voiceId = 10;
@@ -73,6 +75,7 @@ class _DetailScreensState extends State<DetailScreens> {
   void initState() {
     super.initState();
     fetchPageData();
+    //precacheImages(context);
   }
 
   String _getImageForVoice(String voiceName) {
@@ -257,8 +260,7 @@ class _DetailScreensState extends State<DetailScreens> {
                   Expanded(
                       // 썸네일 사진
                       flex: 1,
-                      child: Container()
-                      ),
+                      child: Container()),
                   Expanded(
                     // 제목과 책 내용 요약
                     flex: 1,
@@ -271,6 +273,8 @@ class _DetailScreensState extends State<DetailScreens> {
                                   builder: (context) => FairytalePage(
                                     // 다음 화면으로 contetnVoiceId를 가지고 이동
                                     voiceId: cvi,
+                                    lastPage: lastPage,
+                                    isSelected: isSelected,
                                   ),
                                 ),
                               )
