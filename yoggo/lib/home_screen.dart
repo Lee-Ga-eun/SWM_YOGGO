@@ -5,6 +5,7 @@ import 'package:yoggo/login_screen.dart';
 import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/screens/detail_screens.dart';
 import 'package:yoggo/services/api_service.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import './main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<bookModel>> webtoons;
-
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   @override
   void initState() {
     super.initState();
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
+    await _googleSignIn.disconnect();
   }
 
   void pointFunction() {
