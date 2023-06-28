@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoggo/login_screen.dart';
 import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/screens/detail_screens.dart';
 import 'package:yoggo/services/api_service.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import './main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,12 +19,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<bookModel>> webtoons;
-
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   @override
   void initState() {
     super.initState();
     webtoons = ApiService.getTodaysToons();
     print(contentUrl); // 책 목록 image에서 마지막 파라미터만 빠진 url
+  }
+
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await _googleSignIn.disconnect();
   }
 
   void pointFunction() {
@@ -55,11 +65,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontFamily: 'BreeSerif',
                           fontSize: SizeConfig.defaultSize! * 4),
                     ),
-                    Text(
-                      'Tale',
-                      style: TextStyle(
-                          fontFamily: 'BreeSerif',
-                          fontSize: SizeConfig.defaultSize! * 4),
+                    TextButton(
+                      child: Text(
+                        'Tale',
+                        style: TextStyle(
+                            fontFamily: 'BreeSerif',
+                            fontSize: SizeConfig.defaultSize! * 4),
+                      ),
+                      onPressed: () {
+                        logout();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
                     ),
                   ],
                 ),

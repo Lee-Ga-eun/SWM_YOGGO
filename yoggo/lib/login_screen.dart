@@ -25,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
         providerId: googleUser.id,
         provider: 'google',
       );
-
       var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
       print(json.encode(user.toJson()));
       var response = await http.post(url,
