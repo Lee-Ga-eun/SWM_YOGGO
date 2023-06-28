@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/login_screen.dart';
 import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/screens/detail_screens.dart';
@@ -23,6 +24,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     webtoons = ApiService.getTodaysToons();
     print(contentUrl); // 책 목록 image에서 마지막 파라미터만 빠진 url
+  }
+
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
   }
 
   void pointFunction() {
@@ -65,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: SizeConfig.defaultSize! * 4),
                       ),
                       onPressed: () {
-                        FirebaseAuth.instance.signOut();
+                        logout();
                         Navigator.push(
                             context,
                             MaterialPageRoute(

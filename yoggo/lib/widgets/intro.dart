@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:yoggo/home_screen.dart';
 import 'package:yoggo/login_screen.dart';
@@ -18,9 +19,12 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  String? token;
+
   @override
   void initState() {
     super.initState();
+    getToken();
     //navigateToHome(); // Call the navigateToHome function on initState
   }
 
@@ -31,6 +35,13 @@ class _SplashScreenState extends State<SplashScreen> {
       context,
       MaterialPageRoute(builder: (context) => HomeScreen()),
     );
+  }
+
+  Future<void> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('token');
+    });
   }
 
   @override
@@ -44,20 +55,22 @@ class _SplashScreenState extends State<SplashScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Builder(
-          builder: (BuildContext context) {
-            return StreamBuilder<firebase_auth.User?>(
-              stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<firebase_auth.User?> snapshot) {
-                if (!snapshot.hasData) {
-                  print("안녕하세요");
-                  return LoginScreen();
-                } else {
-                  print("로그인 햇는뎅?");
-                  print(snapshot);
-                  return HomeScreen();
-                  /*
+        child: Builder(builder: (BuildContext context) {
+          if (token != null) {
+            return HomeScreen();
+          } else {
+            return LoginScreen();
+          }
+        }
+            // return StreamBuilder<firebase_auth.User?>(
+            //   stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),
+            //   builder: (BuildContext context) {
+            //     if (!snapshot.hasData) {
+            //       return LoginScreen();
+            //     } else {
+            //       print(snapshot);
+            //       return HomeScreen();
+            /*
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -89,11 +102,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       ],
                     ),
                   );*/
-                }
-              },
-            );
-          },
-        ),
+            //  }
+            //     },
+            //   );
+            // },
+            ),
       ),
     );
   }
