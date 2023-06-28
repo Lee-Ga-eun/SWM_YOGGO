@@ -48,6 +48,7 @@ dependencies:
   cached_network_image: ^3.2.3
   firebase_auth: ^4.6.3
   google_sign_in: ^6.1.4
+  shared_preferences: ^2.1.2
   #audioplayers: ^0.18.3
 
 dev_dependencies:
