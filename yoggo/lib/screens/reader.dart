@@ -179,24 +179,56 @@ class _FairyTalePageState extends State<FairytalePage> {
             //     ? pages[currentPageIndex - 1]
             //     : pages[0]),
           ),
+          Positioned(
+              top: 5,
+              left: 10,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.cancel,
+                  color: Colors.white,
+                  size: 35,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )),
+
           // 오른쪽 화살표 버튼
           Positioned(
-            bottom: 0,
-            right: 0,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_forward),
-              onPressed: nextPage,
-            ),
+            bottom: 5,
+            right: 10,
+            child: currentPageIndex != widget.lastPage - 1
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_forward),
+                    onPressed: nextPage,
+                  )
+                : IconButton(
+                    icon: const Icon(
+                      Icons.check,
+                      color: Color.fromARGB(255, 77, 204, 81),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
           ),
           // 왼쪽 화살표 버튼
           Positioned(
-            bottom: 0,
-            left: 0,
+            bottom: 5,
+            left: 10,
             child: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: previousPage,
             ),
           ),
+          // 중간 스탑 버튼
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: IconButton(
+              icon: const Icon(Icons.pause),
+              onPressed: () => print("스탑버튼"),
+            ),
+          )
         ],
       ),
     );
@@ -252,32 +284,8 @@ class _PageWidgetState extends State<PageWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Expanded(
-              //   flex: 1,
-              //   child:
-              Container(
-                  color: Colors.orange,
-                  alignment: Alignment.topLeft,
-                  //color: Colors.red,
-
-                  //child: Positioned(
-                  //  left: 1.0,
-                  child: IconButton(
-                    onPressed: () {
-                      // stopAudio();
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.cancel,
-                      color: Colors.white,
-                      size: SizeConfig.defaultSize! * 4,
-                    ),
-                  )),
-              // ),
-              //),
-
               Expanded(
-                flex: 6,
+                //  flex: 6,
                 // 본문 글자
                 child: Row(
                   children: [
