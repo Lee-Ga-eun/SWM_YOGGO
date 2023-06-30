@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../screens/reader_api_origin.dart';
 
 class DetailScreens extends StatefulWidget {
   final String title, thumb, summary;
@@ -25,7 +24,7 @@ class DetailScreens extends StatefulWidget {
 }
 
 class _DetailScreensState extends State<DetailScreens> {
-  bool isSelected=false;
+  bool isSelected = false;
   bool isClicked = false;
   String text = '';
   int voiceId = 10;
@@ -63,12 +62,22 @@ class _DetailScreensState extends State<DetailScreens> {
     }
   }
 
+  // Future<void> precacheImages(BuildContext context) async {
+  //   for (int i = 1; i <= lastPage; i++) {
+  //     final imageUrl = '$contentUrl$contentId-${i.toString()}.png';
+  //     await precacheImage(CachedNetworkImageProvider(imageUrl), context);
+  //     print(imageUrl);
+  //   }
+  // }
   Future<void> precacheImages(BuildContext context) async {
-    for (int i = 1; i <= lastPage; i++) {
-      final imageUrl = '$contentUrl$contentId-${i.toString()}.png';
+    final precacheFutures =
+        List<Future<void>>.generate(lastPage, (index) async {
+      final imageUrl = '$contentUrl$contentId-${(index + 1).toString()}.png';
       await precacheImage(CachedNetworkImageProvider(imageUrl), context);
       print(imageUrl);
-    }
+    });
+
+    await Future.wait(precacheFutures);
   }
 
   @override
