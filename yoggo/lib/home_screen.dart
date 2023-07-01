@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/login_screen.dart';
 import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/screens/detail_screens.dart';
+import 'package:yoggo/screens/record_info.dart';
 import 'package:yoggo/services/api_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/images/bkground.png'),
+            image: AssetImage('lib/images/lovel_main.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -55,35 +55,88 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               flex: 1,
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Fairy',
-                      style: TextStyle(
-                          fontFamily: 'BreeSerif',
-                          fontSize: SizeConfig.defaultSize! * 4),
-                    ),
-                    TextButton(
-                      child: Text(
-                        'Tale',
+              child: Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Fairy',
                         style: TextStyle(
-                            fontFamily: 'BreeSerif',
-                            fontSize: SizeConfig.defaultSize! * 4),
+                          fontFamily: 'BreeSerif',
+                          fontSize: SizeConfig.defaultSize! * 4,
+                        ),
                       ),
-                      onPressed: () {
-                        logout();
-                        Navigator.push(
+                      TextButton(
+                        child: Text(
+                          'Tale',
+                          style: TextStyle(
+                            fontFamily: 'BreeSerif',
+                            fontSize: SizeConfig.defaultSize! * 4,
+                          ),
+                        ),
+                        onPressed: () {
+                          logout();
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    left: 20,
+                    child: IconButton(
+                      icon: const Icon(Icons.favorite),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RecordInfo(),
+                          ),
+                        );
                       },
+                      //color: Colors.red,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+            // Expanded(
+            //   flex: 1,
+            //   // child: Center(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Text(
+            //         'Fairy',
+            //         style: TextStyle(
+            //             fontFamily: 'BreeSerif',
+            //             fontSize: SizeConfig.defaultSize! * 4),
+            //       ),
+            //       TextButton(
+            //         child: Text(
+            //           'Tale',
+            //           style: TextStyle(
+            //               fontFamily: 'BreeSerif',
+            //               fontSize: SizeConfig.defaultSize! * 4),
+            //         ),
+            //         onPressed: () {
+            //           logout();
+            //           Navigator.push(
+            //               context,
+            //               MaterialPageRoute(
+            //                   builder: (context) => const LoginScreen()));
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            //  ),
             Expanded(flex: 5, child: bookList()),
           ],
         ),
