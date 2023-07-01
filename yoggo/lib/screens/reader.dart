@@ -27,9 +27,10 @@ class _FairyTalePageState extends State<FairytalePage> {
 
   int currentPageIndex = 0; // 현재 페이지 인덱스
   bool isPlaying = true;
+  bool pauseFunction = false;
 
   AudioPlayer audioPlayer = AudioPlayer();
-  Source audioUrl = UrlSource('');
+  // Source audioUrl = UrlSource('');
 
   @override
   void initState() {
@@ -57,8 +58,9 @@ class _FairyTalePageState extends State<FairytalePage> {
 
   void nextPage() {
     setState(() {
-      isPlaying = false;
+      isPlaying = true;
       stopAudio();
+      pauseFunction = false;
       if (currentPageIndex < widget.lastPage) {
         currentPageIndex++;
         if (currentPageIndex == widget.lastPage) {
@@ -72,24 +74,10 @@ class _FairyTalePageState extends State<FairytalePage> {
     setState(() {
       if (currentPageIndex > 0) {
         currentPageIndex--;
-        isPlaying = false;
+        isPlaying = true;
+        pauseFunction = false;
         stopAudio();
       }
-    });
-  }
-
-  void playAudio() async {
-    stopAudio();
-    audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
-      if (state == PlayerState.stopped) {
-        setState(() {
-          isPlaying = false;
-        });
-      }
-    });
-    await audioPlayer.play(audioUrl);
-    setState(() {
-      isPlaying = true;
     });
   }
 
@@ -98,17 +86,23 @@ class _FairyTalePageState extends State<FairytalePage> {
   }
 
   void pauseAudio() async {
-    await audioPlayer.pause();
-    setState(() {
-      isPlaying = false;
-    });
+    print("pause");
+    //  isPlaying = false;
+    await audioPlayer.stop();
+    // isPlaying = false;
+    // setState(() {
+    //   isPlaying = true;
+    // });
   }
 
   void resumeAudio() async {
+    print("resume");
+    //  isPlaying = true;
     await audioPlayer.resume();
-    setState(() {
-      isPlaying = true;
-    });
+    // isPlaying = true;
+    // setState(() {
+    //   isPlaying = false;
+    // });
   }
 
   @override
@@ -122,7 +116,6 @@ class _FairyTalePageState extends State<FairytalePage> {
     print(currentPageIndex);
     print(widget.lastPage);
     if (pages.isEmpty) {
-      // 데이터가 아직 불러와지지 않았을 경우 로딩 화면 등을 표시
       return const CircularProgressIndicator();
     }
     return Scaffold(
@@ -136,29 +129,24 @@ class _FairyTalePageState extends State<FairytalePage> {
                   ? pages[currentPageIndex]
                   : pages[widget.lastPage - 1],
               audioUrl: supabaseAudioUrl + pages[currentPageIndex]['audioUrl'],
-              isPlaying: isPlaying,
-              playAudio: playAudio,
-              stopAudio: stopAudio,
-              pauseAudio: pauseAudio,
-              resumeAudio: resumeAudio,
+              currentPage: currentPageIndex,
+              audioPlayer: audioPlayer,
+              pauseFunction: pauseFunction,
             ),
           ),
           // 다음 페이지 위젯
           Visibility(
             visible: false,
-            child: //PageWidget(page: pages[currentPageIndex + 1]),
-                PageWidget(
+            child: PageWidget(
               page: currentPageIndex < widget.lastPage
                   ? currentPageIndex == widget.lastPage - 1
                       ? pages[currentPageIndex]
                       : pages[currentPageIndex + 1]
                   : pages[widget.lastPage - 1],
               audioUrl: supabaseAudioUrl + pages[currentPageIndex]['audioUrl'],
-              isPlaying: isPlaying,
-              playAudio: playAudio,
-              stopAudio: stopAudio,
-              pauseAudio: pauseAudio,
-              resumeAudio: resumeAudio,
+              currentPage: currentPageIndex,
+              audioPlayer: audioPlayer,
+              pauseFunction: pauseFunction,
             ),
           ),
           // 이전 페이지 위젯
@@ -169,15 +157,10 @@ class _FairyTalePageState extends State<FairytalePage> {
                   ? pages[currentPageIndex - 1]
                   : pages[0],
               audioUrl: supabaseAudioUrl + pages[currentPageIndex]['audioUrl'],
-              isPlaying: isPlaying,
-              playAudio: playAudio,
-              stopAudio: stopAudio,
-              pauseAudio: pauseAudio,
-              resumeAudio: resumeAudio,
+              currentPage: currentPageIndex,
+              audioPlayer: audioPlayer,
+              pauseFunction: pauseFunction,
             ),
-            // page: currentPageIndex > 0
-            //     ? pages[currentPageIndex - 1]
-            //     : pages[0]),
           ),
           Positioned(
               top: 5,
@@ -189,6 +172,7 @@ class _FairyTalePageState extends State<FairytalePage> {
                   size: 35,
                 ),
                 onPressed: () {
+                  stopAudio();
                   Navigator.of(context).pop();
                 },
               )),
@@ -208,6 +192,7 @@ class _FairyTalePageState extends State<FairytalePage> {
                       color: Color.fromARGB(255, 77, 204, 81),
                     ),
                     onPressed: () {
+                      stopAudio();
                       Navigator.of(context).pop();
                     },
                   ),
@@ -223,12 +208,24 @@ class _FairyTalePageState extends State<FairytalePage> {
           ),
           // 중간 스탑 버튼
           Align(
-            alignment: Alignment.bottomCenter,
-            child: IconButton(
-              icon: const Icon(Icons.pause),
-              onPressed: () => print("스탑버튼"),
-            ),
-          )
+              alignment: Alignment.bottomCenter,
+              child: IconButton(
+                icon: isPlaying
+                    ? const Icon(Icons.pause)
+                    : const Icon(Icons.play_arrow),
+                onPressed: () {
+                  pauseFunction = true;
+                  if (isPlaying) {
+                    pauseAudio();
+                    //audioPlayer.stop();
+                  } else {
+                    resumeAudio();
+                  }
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                },
+              ))
         ],
       ),
     );
@@ -238,22 +235,17 @@ class _FairyTalePageState extends State<FairytalePage> {
 class PageWidget extends StatefulWidget {
   final Map<String, dynamic> page;
   final String audioUrl;
-  final bool isPlaying;
-  final VoidCallback playAudio;
-  final VoidCallback stopAudio;
-  final VoidCallback pauseAudio;
-  final VoidCallback resumeAudio;
-  // const PageWidget({Key? key, required this.page}) : super(key: key);
+  final int currentPage;
+  final AudioPlayer audioPlayer;
+  final bool pauseFunction;
 
   const PageWidget({
     Key? key,
     required this.page,
     required this.audioUrl,
-    required this.isPlaying,
-    required this.playAudio,
-    required this.stopAudio,
-    required this.pauseAudio,
-    required this.resumeAudio,
+    required this.currentPage,
+    required this.audioPlayer,
+    required this.pauseFunction,
   }) : super(key: key);
 
   @override
@@ -267,9 +259,18 @@ class _PageWidgetState extends State<PageWidget> {
     final text = widget.page['text'] as String;
     final imageUrl = contentUrl + widget.page['imageUrl'];
     final imagePostion = widget.page['position'];
-    print(widget.page);
-    print(widget.audioUrl);
-    print(widget.isPlaying);
+
+    widget.audioPlayer.stop();
+
+    void playAudio(String audioUrl) async {
+      print("설마?");
+      print("프린트 오디오 1");
+      await widget.audioPlayer.play(UrlSource(audioUrl));
+    }
+
+    if (widget.pauseFunction != true) { // 일시정지 버튼이 아닐 때만
+      playAudio(widget.audioUrl);
+    }
 
     return Scaffold(
       body: Container(
@@ -285,8 +286,6 @@ class _PageWidgetState extends State<PageWidget> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                //  flex: 6,
-                // 본문 글자
                 child: Row(
                   children: [
                     Expanded(
@@ -302,8 +301,6 @@ class _PageWidgetState extends State<PageWidget> {
                                       BorderRadius.circular(20), // 모서리를 원형으로 설정
                                   child: Image.network(
                                     imageUrl,
-                                    //fit: BoxFit.cover,
-                                    // 이미지를 컨테이너에 맞게 조정
                                   ),
                                 ),
                               ) // // 그림을 1번 화면에 배치
@@ -339,7 +336,6 @@ class _PageWidgetState extends State<PageWidget> {
                                     BorderRadius.circular(20), // 모서리를 원형으로 설정
                                 child: Image.network(
                                   imageUrl,
-                                  // fit: BoxFit.cover, // 이미지를 컨테이너에 맞게 조정
                                 ),
                               ) // 그림을 2번 화면에 배치
                             : Padding(
@@ -351,7 +347,6 @@ class _PageWidgetState extends State<PageWidget> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        // textAlign: TextAlign.center,
                                         text,
                                         style: TextStyle(
                                             fontSize:
