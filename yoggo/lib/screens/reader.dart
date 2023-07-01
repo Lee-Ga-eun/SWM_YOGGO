@@ -27,7 +27,7 @@ class _FairyTalePageState extends State<FairytalePage> {
 
   int currentPageIndex = 0; // 현재 페이지 인덱스
   bool isPlaying = true;
-  bool notPaused = true;
+  bool pauseFunction = false;
 
   AudioPlayer audioPlayer = AudioPlayer();
   // Source audioUrl = UrlSource('');
@@ -58,8 +58,9 @@ class _FairyTalePageState extends State<FairytalePage> {
 
   void nextPage() {
     setState(() {
-      isPlaying = false;
+      isPlaying = true;
       stopAudio();
+      pauseFunction = false;
       if (currentPageIndex < widget.lastPage) {
         currentPageIndex++;
         if (currentPageIndex == widget.lastPage) {
@@ -73,29 +74,35 @@ class _FairyTalePageState extends State<FairytalePage> {
     setState(() {
       if (currentPageIndex > 0) {
         currentPageIndex--;
-        isPlaying = false;
+        isPlaying = true;
+        pauseFunction = false;
         stopAudio();
       }
     });
   }
-
 
   void stopAudio() async {
     await audioPlayer.stop();
   }
 
   void pauseAudio() async {
-    await audioPlayer.pause();
-    setState(() {
-      isPlaying = true;
-    });
+    print("pause");
+    //  isPlaying = false;
+    await audioPlayer.stop();
+    // isPlaying = false;
+    // setState(() {
+    //   isPlaying = true;
+    // });
   }
 
   void resumeAudio() async {
+    print("resume");
+    //  isPlaying = true;
     await audioPlayer.resume();
-    setState(() {
-      isPlaying = false;
-    });
+    // isPlaying = true;
+    // setState(() {
+    //   isPlaying = false;
+    // });
   }
 
   @override
@@ -124,6 +131,7 @@ class _FairyTalePageState extends State<FairytalePage> {
               audioUrl: supabaseAudioUrl + pages[currentPageIndex]['audioUrl'],
               currentPage: currentPageIndex,
               audioPlayer: audioPlayer,
+              pauseFunction: pauseFunction,
             ),
           ),
           // 다음 페이지 위젯
@@ -138,6 +146,7 @@ class _FairyTalePageState extends State<FairytalePage> {
               audioUrl: supabaseAudioUrl + pages[currentPageIndex]['audioUrl'],
               currentPage: currentPageIndex,
               audioPlayer: audioPlayer,
+              pauseFunction: pauseFunction,
             ),
           ),
           // 이전 페이지 위젯
@@ -150,6 +159,7 @@ class _FairyTalePageState extends State<FairytalePage> {
               audioUrl: supabaseAudioUrl + pages[currentPageIndex]['audioUrl'],
               currentPage: currentPageIndex,
               audioPlayer: audioPlayer,
+              pauseFunction: pauseFunction,
             ),
           ),
           Positioned(
@@ -199,19 +209,23 @@ class _FairyTalePageState extends State<FairytalePage> {
           // 중간 스탑 버튼
           Align(
               alignment: Alignment.bottomCenter,
-              child: notPaused
-                  ? IconButton(
-                      icon: const Icon(Icons.pause),
-                      onPressed: () {
-                        stopAudio();
-                      })
-                  : IconButton(
-                      icon: const Icon(Icons.start),
-                      onPressed: () {
-                        resumeAudio();
-                        notPaused = !notPaused;
-                      },
-                    ))
+              child: IconButton(
+                icon: isPlaying
+                    ? const Icon(Icons.pause)
+                    : const Icon(Icons.play_arrow),
+                onPressed: () {
+                  pauseFunction = true;
+                  if (isPlaying) {
+                    pauseAudio();
+                    //audioPlayer.stop();
+                  } else {
+                    resumeAudio();
+                  }
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                },
+              ))
         ],
       ),
     );
@@ -223,6 +237,7 @@ class PageWidget extends StatefulWidget {
   final String audioUrl;
   final int currentPage;
   final AudioPlayer audioPlayer;
+  final bool pauseFunction;
 
   const PageWidget({
     Key? key,
@@ -230,6 +245,7 @@ class PageWidget extends StatefulWidget {
     required this.audioUrl,
     required this.currentPage,
     required this.audioPlayer,
+    required this.pauseFunction,
   }) : super(key: key);
 
   @override
@@ -243,16 +259,18 @@ class _PageWidgetState extends State<PageWidget> {
     final text = widget.page['text'] as String;
     final imageUrl = contentUrl + widget.page['imageUrl'];
     final imagePostion = widget.page['position'];
-    bool isPlaying;
 
     widget.audioPlayer.stop();
 
     void playAudio(String audioUrl) async {
+      print("설마?");
       print("프린트 오디오 1");
       await widget.audioPlayer.play(UrlSource(audioUrl));
     }
 
-    playAudio(widget.audioUrl);
+    if (widget.pauseFunction != true) { // 일시정지 버튼이 아닐 때만
+      playAudio(widget.audioUrl);
+    }
 
     return Scaffold(
       body: Container(
