@@ -263,8 +263,6 @@ class _PageWidgetState extends State<PageWidget> {
     widget.audioPlayer.stop();
 
     void playAudio(String audioUrl) async {
-      print("설마?");
-      print("프린트 오디오 1");
       await widget.audioPlayer.play(UrlSource(audioUrl));
     }
 

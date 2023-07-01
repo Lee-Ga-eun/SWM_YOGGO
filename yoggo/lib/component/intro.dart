@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:yoggo/home_screen.dart';
-import 'package:yoggo/login_screen.dart';
+import 'package:yoggo/component/home_screen.dart';
+import 'package:yoggo/component/login_screen.dart';
 
 // class SplashScreen extends StatelessWidget {
 //   const SplashScreen({super.key});

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:yoggo/home_screen.dart';
-import './widgets/intro.dart';
+import 'package:yoggo/component/home_screen.dart';
+import 'component/intro.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import './login_screen.dart';
+import 'component/login_screen.dart';
 
 void main() async {
   //runApp(const App());

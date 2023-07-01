@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/login_screen.dart';
+import 'package:yoggo/component/login_screen.dart';
 import 'package:yoggo/models/webtoon.dart';
-import 'package:yoggo/screens/detail_screens.dart';
-import 'package:yoggo/screens/record_info.dart';
+import 'package:yoggo/component/book_intro.dart';
+import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/services/api_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
-import './main.dart';
+import '../main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/images/lovel_main.png'),
+            image: AssetImage('lib/images/bkground.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -106,37 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            // Expanded(
-            //   flex: 1,
-            //   // child: Center(
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Text(
-            //         'Fairy',
-            //         style: TextStyle(
-            //             fontFamily: 'BreeSerif',
-            //             fontSize: SizeConfig.defaultSize! * 4),
-            //       ),
-            //       TextButton(
-            //         child: Text(
-            //           'Tale',
-            //           style: TextStyle(
-            //               fontFamily: 'BreeSerif',
-            //               fontSize: SizeConfig.defaultSize! * 4),
-            //         ),
-            //         onPressed: () {
-            //           logout();
-            //           Navigator.push(
-            //               context,
-            //               MaterialPageRoute(
-            //                   builder: (context) => const LoginScreen()));
-            //         },
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            //  ),
             Expanded(flex: 5, child: bookList()),
           ],
         ),
@@ -170,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DetailScreens(
+                                  builder: (context) => BookIntro(
                                       title: book.title,
                                       thumb: contentUrl + book.thumb,
                                       id: book.id,
@@ -186,13 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10)),
                                   height: 200,
-                                  // child: Image.network(
-                                  //   contentUrl + book.thumb,
-                                  //   headers: const {
-                                  //     "User-Agent":
-                                  //         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-                                  //   },
-                                  // ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: CachedNetworkImage(
