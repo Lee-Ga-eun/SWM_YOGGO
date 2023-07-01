@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yoggo/home_screen.dart';
+import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/size_config.dart';
 
 class RecordInfo extends StatefulWidget {

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:yoggo/main.dart';
-import '../screens/reader.dart';
+import '../component/reader.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class DetailScreens extends StatefulWidget {
+class BookIntro extends StatefulWidget {
   final String title, thumb, summary;
   final int id;
 
-  const DetailScreens({
+  const BookIntro({
     // super.key,
     Key? key,
     required this.title,
@@ -20,10 +20,10 @@ class DetailScreens extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _DetailScreensState createState() => _DetailScreensState();
+  _BookIntroState createState() => _BookIntroState();
 }
 
-class _DetailScreensState extends State<DetailScreens> {
+class _BookIntroState extends State<BookIntro> {
   bool isSelected = false;
   bool isClicked = false;
   String text = '';
@@ -41,16 +41,13 @@ class _DetailScreensState extends State<DetailScreens> {
     if (mounted) {
       if (response.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(response.body);
-        print(responseData);
         Map<String, dynamic> data = responseData[0];
 
         final contentText = data['voice'][0]['voiceName'];
-        print('voiceName');
         //print(contentText);
         voices = data['voice'];
         lastPage = data['last'];
         contentId = data['contentId'];
-        print(voices);
         for (var voice in voices) {
           print(voice['voiceName']);
         }
@@ -62,13 +59,6 @@ class _DetailScreensState extends State<DetailScreens> {
     }
   }
 
-  // Future<void> precacheImages(BuildContext context) async {
-  //   for (int i = 1; i <= lastPage; i++) {
-  //     final imageUrl = '$contentUrl$contentId-${i.toString()}.png';
-  //     await precacheImage(CachedNetworkImageProvider(imageUrl), context);
-  //     print(imageUrl);
-  //   }
-  // }
   Future<void> precacheImages(BuildContext context) async {
     final precacheFutures =
         List<Future<void>>.generate(lastPage, (index) async {
@@ -84,7 +74,6 @@ class _DetailScreensState extends State<DetailScreens> {
   void initState() {
     super.initState();
     fetchPageData();
-    //precacheImages(context);
   }
 
   String _getImageForVoice(String voiceName) {
@@ -325,13 +314,3 @@ class _DetailScreensState extends State<DetailScreens> {
     );
   }
 }
-
-
-
-
-
-//---
-       
-
-
-       
