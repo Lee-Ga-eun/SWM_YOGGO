@@ -3,14 +3,14 @@ import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
 
-class Payment extends StatefulWidget {
-  const Payment({super.key});
+class Purchase extends StatefulWidget {
+  const Purchase({super.key});
 
   @override
-  _PaymentState createState() => _PaymentState();
+  _PurchaseState createState() => _PurchaseState();
 }
 
-class _PaymentState extends State<Payment> {
+class _PurchaseState extends State<Purchase> {
   @override
   void initState() {
     super.initState();
