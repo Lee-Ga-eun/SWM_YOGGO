@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
@@ -14,7 +15,72 @@ class _PurchaseState extends State<Purchase> {
   @override
   void initState() {
     super.initState();
+    initInAppPurchases();
     // TODO: Add initialization code
+  }
+
+  Future<void> initInAppPurchases() async {
+    final bool available = await InAppPurchase.instance.isAvailable();
+    if (available) {
+      // 제품 정보를 로드
+      const Set<String> _products = <String>{'product1'};
+
+      await InAppPurchase.instance.restorePurchases();
+      await InAppPurchase.instance.queryProductDetails(_products);
+    }
+  }
+
+  void _handlePurchaseSuccess() {
+    // 결제 성공 시 페이지 전환을 처리하는 코드를 추가하세요.
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RecordInfo(), // 전환할 페이지로 변경해주세요.
+      ),
+    );
+  }
+
+  void _handlePurchaseError() {
+    // 결제 실패 시 처리하는 코드를 추가하세요.
+    // 예: 에러 메시지 표시, 다시 시도 유도 등
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Purchase(), // 전환할 페이지로 변경해주세요.
+      ),
+    );
+  }
+
+  Future<void> startPurchase() async {
+    const Set<String> _products = <String>{'product1'};
+    final ProductDetailsResponse response =
+        await InAppPurchase.instance.queryProductDetails(_products);
+    if (response.notFoundIDs.isNotEmpty) {
+      // 제품 정보를 찾을 수 없음
+      return;
+    }
+
+    final ProductDetails productDetails = response.productDetails.first;
+
+    final PurchaseParam purchaseParam = PurchaseParam(
+      productDetails: productDetails,
+      applicationUserName: null, // optional
+    );
+
+    InAppPurchase.instance
+        .buyNonConsumable(
+      purchaseParam: purchaseParam,
+    )
+        .then((bool success) {
+      if (success) {
+        // 결제 성공 시 처리
+        _handlePurchaseSuccess();
+      } else {
+        _handlePurchaseError();
+      }
+    }).catchError((error) {
+      _handlePurchaseError();
+    });
   }
 
   @override
@@ -74,7 +140,7 @@ class _PurchaseState extends State<Purchase> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: SingleChildScrollView(
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -160,13 +226,7 @@ class _PurchaseState extends State<Purchase> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  //결제가 끝나면 RecordInfo로 가야 함
-                  MaterialPageRoute(
-                    builder: (context) => const RecordInfo(),
-                  ),
-                );
+                startPurchase();
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
