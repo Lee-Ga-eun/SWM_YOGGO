@@ -83,7 +83,7 @@ class _ReaderEndState extends State<ReaderEnd> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: RichText(
