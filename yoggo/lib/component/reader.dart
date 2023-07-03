@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:yoggo/component/reader_end.dart';
 import 'dart:convert';
 import 'dart:async';
 import '../main.dart';
@@ -193,7 +194,17 @@ class _FairyTalePageState extends State<FairytalePage> {
                     ),
                     onPressed: () {
                       stopAudio();
-                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        //결제가 끝나면 RecordInfo로 가야 함
+                        MaterialPageRoute(
+                          builder: (context) => ReaderEnd(
+                            voiceId: widget.voiceId,
+                            lastPage: widget.lastPage,
+                            isSelected: widget.isSelected,
+                          ),
+                        ),
+                      );
                     },
                   ),
           ),
@@ -266,104 +277,106 @@ class _PageWidgetState extends State<PageWidget> {
       await widget.audioPlayer.play(UrlSource(audioUrl));
     }
 
-    if (widget.pauseFunction != true) { // 일시정지 버튼이 아닐 때만
+    if (widget.pauseFunction != true) {
+      // 일시정지 버튼이 아닐 때만
       playAudio(widget.audioUrl);
     }
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/images/bkground.png'),
-            fit: BoxFit.cover,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('lib/images/bkground.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.defaultSize!),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: imagePostion == 1 ? 1 : 2,
-                      child: Container(
-                        //color: position == 1 ? Colors.red : Colors.white,
-                        child: imagePostion == 1
-                            ? Padding(
-                                padding: EdgeInsets.only(
-                                    left: SizeConfig.defaultSize! * 2),
-                                child: ClipRRect(
+          child: Padding(
+            padding: EdgeInsets.all(SizeConfig.defaultSize!),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: imagePostion == 1 ? 1 : 2,
+                        child: Container(
+                          //color: position == 1 ? Colors.red : Colors.white,
+                          child: imagePostion == 1
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      left: SizeConfig.defaultSize! * 2),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        20), // 모서리를 원형으로 설정
+                                    child: Image.network(
+                                      imageUrl,
+                                    ),
+                                  ),
+                                ) // // 그림을 1번 화면에 배치
+                              : Padding(
+                                  padding: EdgeInsets.only(
+                                      left: SizeConfig.defaultSize! * 5,
+                                      right: SizeConfig.defaultSize!),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          // textAlign: TextAlign.center,
+                                          text,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  SizeConfig.defaultSize! * 2,
+                                              fontFamily: 'BreeSerif'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ), // 글자를 2번 화면에 배치
+                        ),
+                      ),
+                      Expanded(
+                        flex: imagePostion == 0 ? 1 : 2,
+                        child: Container(
+                          //color: position == 2 ? Colors.red : Colors.white,
+                          child: imagePostion == 0
+                              ? ClipRRect(
                                   borderRadius:
                                       BorderRadius.circular(20), // 모서리를 원형으로 설정
                                   child: Image.network(
                                     imageUrl,
                                   ),
-                                ),
-                              ) // // 그림을 1번 화면에 배치
-                            : Padding(
-                                padding: EdgeInsets.only(
-                                    left: SizeConfig.defaultSize! * 5,
-                                    right: SizeConfig.defaultSize!),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        // textAlign: TextAlign.center,
-                                        text,
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2,
-                                            fontFamily: 'BreeSerif'),
-                                      ),
-                                    ],
+                                ) // 그림을 2번 화면에 배치
+                              : Padding(
+                                  padding: EdgeInsets.only(
+                                      right: SizeConfig.defaultSize! * 2,
+                                      left: SizeConfig.defaultSize! * 2),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          text,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  SizeConfig.defaultSize! * 2,
+                                              fontFamily: 'BreeSerif'),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ), // 글자를 2번 화면에 배치
+                                ), // 글자를 1번 화면에 배치
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      flex: imagePostion == 0 ? 1 : 2,
-                      child: Container(
-                        //color: position == 2 ? Colors.red : Colors.white,
-                        child: imagePostion == 0
-                            ? ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(20), // 모서리를 원형으로 설정
-                                child: Image.network(
-                                  imageUrl,
-                                ),
-                              ) // 그림을 2번 화면에 배치
-                            : Padding(
-                                padding: EdgeInsets.only(
-                                    right: SizeConfig.defaultSize! * 2,
-                                    left: SizeConfig.defaultSize! * 2),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        text,
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2,
-                                            fontFamily: 'BreeSerif'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ), // 글자를 1번 화면에 배치
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
+              ],
+            ),
+          )),
     );
   }
 }

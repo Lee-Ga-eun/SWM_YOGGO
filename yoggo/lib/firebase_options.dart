@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,7 +28,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,41 +49,21 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAwRJVnu8etUI7Q7rG7fdAz5fU8I-41hGQ',
-    appId: '1:319250424761:web:5cc45bb05a2998a3ff0c68',
-    messagingSenderId: '319250424761',
-    projectId: 'yoggo-52562',
-    authDomain: 'yoggo-52562.firebaseapp.com',
-    storageBucket: 'yoggo-52562.appspot.com',
-    measurementId: 'G-7G410MS122',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB6CrV3UOVYO_OPZLH6_JLxiTee17qibbA',
-    appId: '1:319250424761:android:b8ca2f1c873bdd64ff0c68',
-    messagingSenderId: '319250424761',
-    projectId: 'yoggo-52562',
-    storageBucket: 'yoggo-52562.appspot.com',
+    apiKey: 'AIzaSyALewl_voCtUNwFIHApU8rOvK-1EBGrzz0',
+    appId: '1:127586410541:android:f0d6e0a409f5c2be5a18a4',
+    messagingSenderId: '127586410541',
+    projectId: 'lovel-a2507',
+    storageBucket: 'lovel-a2507.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC-p4eACfNA151rFQdQX4KWsG9Ojeoh_JU',
-    appId: '1:319250424761:ios:a2190473e27718ddff0c68',
-    messagingSenderId: '319250424761',
-    projectId: 'yoggo-52562',
-    storageBucket: 'yoggo-52562.appspot.com',
-    iosClientId: '319250424761-8egfk3m4cld29b3is7bc7l3od1i30e5p.apps.googleusercontent.com',
-    iosBundleId: 'com.example.yoggo',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyC-p4eACfNA151rFQdQX4KWsG9Ojeoh_JU',
-    appId: '1:319250424761:ios:f85f9af7b957777eff0c68',
-    messagingSenderId: '319250424761',
-    projectId: 'yoggo-52562',
-    storageBucket: 'yoggo-52562.appspot.com',
-    iosClientId: '319250424761-umudl2ujikcrapno02bvdu5dlkuoes70.apps.googleusercontent.com',
-    iosBundleId: 'com.example.yoggo.RunnerTests',
+    apiKey: 'AIzaSyBMf-2QU9mI-H4GNwR-eVOh99GOH1Ws3K0',
+    appId: '1:127586410541:ios:2d4f2ba269d6417e5a18a4',
+    messagingSenderId: '127586410541',
+    projectId: 'lovel-a2507',
+    storageBucket: 'lovel-a2507.appspot.com',
+    iosClientId: '127586410541-r15cjul2ouodd4feg8cm4sf2l08hbrui.apps.googleusercontent.com',
+    iosBundleId: 'com.sayit.yoggo',
   );
 }
