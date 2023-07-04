@@ -14,12 +14,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '2'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '2.0'
 }
 
 apply plugin: 'com.android.application'
@@ -63,8 +63,8 @@ android {
         //minSdkVersion flutter.minSdkVersion  // 수정일: 2023년 6월 19일-- apk 생성시 16으로 세팅되어 19로 수정하라는 에러 생겨서 수정함
         minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 4 //flutterVersionCode.toInteger()
+        versionName '1.1.2'//flutterVersionName
         // 
         vectorDrawables.useSupportLibrary = true
     }
