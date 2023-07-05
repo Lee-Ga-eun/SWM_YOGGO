@@ -77,10 +77,12 @@ class _AudioRecorderState extends State<AudioRecorder> {
         // final isRecording = await _audioRecorder.isRecording();
         var myAppDir = await getAppDirectory();
         var playerExtension =
-            Platform.isAndroid ? 'android_1.wav' : 'ios_1.m4a';
+            Platform.isAndroid ? 'android_1.wav' : 'ios_1.flac';
         await _audioRecorder.start(
           path: '$myAppDir/$playerExtension',
-          encoder: AudioEncoder.aacLc, // by default
+          encoder: Platform.isAndroid
+              ? AudioEncoder.wav
+              : AudioEncoder.flac, // by default
         );
 
         if (Platform.isAndroid) ('$myAppDir/$playerExtension');
