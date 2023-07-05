@@ -23,10 +23,10 @@ class _PurchaseState extends State<Purchase> {
     final bool available = await InAppPurchase.instance.isAvailable();
     if (available) {
       // 제품 정보를 로드
-      const Set<String> _products = <String>{'product1'};
+      const Set<String> products = <String>{'product1'};
 
       await InAppPurchase.instance.restorePurchases();
-      await InAppPurchase.instance.queryProductDetails(_products);
+      await InAppPurchase.instance.queryProductDetails(products);
     }
   }
 
@@ -35,7 +35,7 @@ class _PurchaseState extends State<Purchase> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RecordInfo(), // 전환할 페이지로 변경해주세요.
+        builder: (context) => const RecordInfo(), // 전환할 페이지로 변경해주세요.
       ),
     );
   }
@@ -46,15 +46,15 @@ class _PurchaseState extends State<Purchase> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Purchase(), // 전환할 페이지로 변경해주세요.
+        builder: (context) => const Purchase(), // 전환할 페이지로 변경해주세요.
       ),
     );
   }
 
   Future<void> startPurchase() async {
-    const Set<String> _products = <String>{'product1'};
+    const Set<String> products = <String>{'product1'};
     final ProductDetailsResponse response =
-        await InAppPurchase.instance.queryProductDetails(_products);
+        await InAppPurchase.instance.queryProductDetails(products);
     if (response.notFoundIDs.isNotEmpty) {
       // 제품 정보를 찾을 수 없음
       return;
@@ -226,7 +226,12 @@ class _PurchaseState extends State<Purchase> {
             ),
             TextButton(
               onPressed: () {
-                startPurchase();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RecordInfo(),
+                  ),
+                );
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
