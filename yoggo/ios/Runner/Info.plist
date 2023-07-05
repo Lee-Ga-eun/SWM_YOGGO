@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>NSMicrophoneUsageDescription</key>
-<string>We need to access to the microphone to record audio file</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -37,7 +35,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.319250424761-8egfk3m4cld29b3is7bc7l3od1i30e5p</string>
+				<string>com.googleusercontent.apps.127586410541-r15cjul2ouodd4feg8cm4sf2l08hbrui</string>
 			</array>
 		</dict>
 	</array>
@@ -45,6 +43,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need to access to the microphone to record audio file</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
