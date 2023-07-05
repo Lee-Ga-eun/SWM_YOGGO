@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/size_config.dart';
+import './record_page2.dart';
 
 class RecordInfo extends StatefulWidget {
   const RecordInfo({super.key});
