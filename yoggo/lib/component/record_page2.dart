@@ -76,15 +76,15 @@ class _AudioRecorderState extends State<AudioRecorder> {
         // final devs = await _audioRecorder.listInputDevices();
         // final isRecording = await _audioRecorder.isRecording();
         var myAppDir = await getAppDirectory();
+        var playerExtension =
+            Platform.isAndroid ? 'android_1.wav' : 'ios_1.m4a';
         await _audioRecorder.start(
-          encoder: AudioEncoder.aacLc,
-          path: '$myAppDir/android_15.wav',
-          samplingRate: 44100,
-          bitRate: 128000,
+          path: '$myAppDir/$playerExtension',
+          encoder: AudioEncoder.aacLc, // by default
         );
-        // encoder: AudioEncoder.aacLc);
-        sendPathToKotlin('$myAppDir/andriod_15.wav');
 
+        if (Platform.isAndroid) ('$myAppDir/$playerExtension');
+        _recordState = RecordState.record;
         _recordDuration = 0;
 
         _startTimer();
@@ -107,13 +107,16 @@ class _AudioRecorderState extends State<AudioRecorder> {
   Future<void> _stop() async {
     _timer?.cancel();
     _recordDuration = 0;
-    stopRecording();
+    print("종료함수 호출됨");
+    if (Platform.isAndroid) stopRecording();
     final path = await _audioRecorder.stop();
     //  sendPathToKotlin(path);
 
     print(path);
     if (path != null) {
-      File fileCheck = File(path.replaceFirst('file://', ''));
+      File fileCheck = Platform.isAndroid
+          ? File(path.replaceFirst('file://', ''))
+          : File(path.replaceFirst('file:///', ''));
       if (fileCheck.existsSync()) {
         print('File exists');
       } else {
@@ -123,14 +126,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
     // await _audioRecorder
     //     .setAudioSource(MediaRecorder.AudioSource.MIC); // 마이크 오디오 소스 설정
     // await _audioRecorder.setAudioEncoder(AudioEncoder.aacLc); // AAC LC 코덱 설정
-    getAppDirectory();
     if (path != null) {
       widget.onStop?.call(path);
       path_copy = path.split('/').last;
       await supabase.storage.from('yoggo-storage').upload(
             'record/$path_copy',
-            File(path),
-            //File(path.replaceFirst('file://', '')),
+            //File(path),
+            File(Platform.isIOS ? path.replaceFirst('file://', '') : path),
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
     }
