@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yoggo/size_config.dart';
 import './record_info.dart';
 import 'dart:async';
-import 'package:record/record.dart';
 
 class RecordPage1 extends StatefulWidget {
   const RecordPage1({super.key});
