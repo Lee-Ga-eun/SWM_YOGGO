@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/size_config.dart';
+import './record_page2.dart';
 
 class RecordInfo extends StatefulWidget {
   const RecordInfo({super.key});
@@ -8,6 +9,8 @@ class RecordInfo extends StatefulWidget {
   @override
   _RecordInfoState createState() => _RecordInfoState();
 }
+
+String mypath = '';
 
 class _RecordInfoState extends State<RecordInfo> {
   @override
@@ -46,7 +49,7 @@ class _RecordInfoState extends State<RecordInfo> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'LOVEL',
+                        'YOGGO',
                         style: TextStyle(
                           fontFamily: 'BreeSerif',
                           fontSize: SizeConfig.defaultSize! * 4,
@@ -140,7 +143,17 @@ class _RecordInfoState extends State<RecordInfo> {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AudioRecorder(
+                        // 다음 화면으로 contetnVoiceId를 가지고 이동
+
+                        ),
+                  ),
+                );
+              },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: const Color.fromARGB(255, 175, 101, 188),

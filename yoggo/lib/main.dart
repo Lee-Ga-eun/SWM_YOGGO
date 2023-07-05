@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:yoggo/component/home_screen.dart';
 import 'component/intro.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'component/login_screen.dart';
 
 void main() async {
   //runApp(const App());
@@ -46,6 +44,20 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   bool _initialized = false;
 
+  // static const platformChannel = MethodChannel('com.example.yoggo/channel');
+
+  // Future<void> sendMessageToKotlin() async {
+  //   try {
+  //     final String response =
+  //         await platformChannel.invokeMethod('sendMessage', {
+  //       'message': 'Hello from Flutter',
+  //     });
+  //     print('Received response from Kotlin: $response');
+  //   } catch (e) {
+  //     print('Error sending message to Kotlin: $e');
+  //   }
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +87,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    // sendMessageToKotlin();
     return const MaterialApp(home: SplashScreen() // 초기화 상태에 따라 화면 표시
         );
   }
