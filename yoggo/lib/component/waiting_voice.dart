@@ -4,6 +4,8 @@ import 'dart:async';
 import './check_voice.dart';
 
 class WaitingVoicePage extends StatefulWidget {
+  const WaitingVoicePage({super.key});
+
   @override
   _WaitingVoicePageState createState() => _WaitingVoicePageState();
 }
@@ -28,7 +30,7 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
   void startTimer() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 10),
+      duration: const Duration(seconds: 10),
     );
 
     _controller.addListener(() {
@@ -55,19 +57,27 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(
-              value: _progressValue,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Waiting for Voice...',
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/bkground.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                value: _progressValue,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Waiting for Voice...',
+                style: TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
         ),
       ),
     );
