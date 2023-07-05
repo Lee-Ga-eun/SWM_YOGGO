@@ -1,8 +1,24 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
+
+// final bool _kAutoConsume = Platform.isIOS || true;
+
+// const String _kConsumableId = 'consumable';
+// const String _kUpgradeId = 'upgrade';
+// const String _kSilverSubscriptionId = 'subscription_silver';
+// const String _kGoldSubscriptionId = 'subscription_gold';
+// const List<String> _kProductIds = <String>[
+//   _kConsumableId,
+//   _kUpgradeId,
+//   _kSilverSubscriptionId,
+//   _kGoldSubscriptionId,
+// ];
 
 class Purchase extends StatefulWidget {
   const Purchase({super.key});
@@ -12,51 +28,131 @@ class Purchase extends StatefulWidget {
 }
 
 class _PurchaseState extends State<Purchase> {
-  @override
-  void initState() {
-    super.initState();
-    initInAppPurchases();
-    // TODO: Add initialization code
-  }
+  final InAppPurchase _inAppPurchase = InAppPurchase.instance;
+  List<ProductDetails> view = [];
 
-  Future<void> initInAppPurchases() async {
+  Future fetch() async {
     final bool available = await InAppPurchase.instance.isAvailable();
     if (available) {
       // 제품 정보를 로드
-      const Set<String> products = <String>{'product1'};
+      const Set<String> ids = <String>{'product1'};
+      ProductDetailsResponse res =
+          await InAppPurchase.instance.queryProductDetails(ids);
+      this.view = res.productDetails;
 
-      await InAppPurchase.instance.restorePurchases();
-      await InAppPurchase.instance.queryProductDetails(products);
+      _inAppPurchase.purchaseStream.listen((List<PurchaseDetails> event) {
+        PurchaseDetails e = event[0];
+        print(
+            "📌 EVENT $e ${e.status} ${e.productID} ${e.pendingCompletePurchase}");
+
+        /// 구매 여부 pendingCompletePurchase - 승인 true / 취소 false
+        if (e.pendingCompletePurchase) {
+          if (!mounted) return;
+
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => RecordInfo()));
+        }
+      });
     }
+    if (!mounted) return;
+    setState(() {});
+  }
+  //   final bool isAvailable = await _inAppPurchase.isAvailable();
+  //   if (!isAvailable) {
+  //     setState(() {
+  //       _isAvailable = isAvailable;
+  //       _products = <ProductDetails>[];
+  //       _purchases = <PurchaseDetails>[];
+  //       _notFoundIds = <String>[];
+  //       _consumables = <String>[];
+  //       _purchasePending = false;
+  //       _loading = false;
+  //     });
+  //     return;
+  //   }
+  //   if (Platform.isIOS) {
+  //     // final InAppPurchaseStoreKitPlatformAddition iosPlatformAddition =
+  //     //     _inAppPurchase
+  //     //         .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
+  //     // await iosPlatformAddition.setDelegate(ExamplePaymentQueueDelegate());
+  //   }
+  //   final ProductDetailsResponse productDetailResponse =
+  //       await _inAppPurchase.queryProductDetails(_kProductIds.toSet());
+  //   if (productDetailResponse.error != null) {
+  //     setState(() {
+  //       _queryProductError = productDetailResponse.error!.message;
+  //       _isAvailable = isAvailable;
+  //       _products = productDetailResponse.productDetails;
+  //       _purchases = <PurchaseDetails>[];
+  //       _notFoundIds = productDetailResponse.notFoundIDs;
+  //       _consumables = <String>[];
+  //       _purchasePending = false;
+  //       _loading = false;
+  //     });
+  //     return;
+  //   }
+
+  // if (productDetailResponse.productDetails.isEmpty) {
+  //   setState(() {
+  //     _queryProductError = null;
+  //     _isAvailable = isAvailable;
+  //     _products = productDetailResponse.productDetails;
+  //     _purchases = <PurchaseDetails>[];
+  //     _notFoundIds = productDetailResponse.notFoundIDs;
+  //     _consumables = <String>[];
+  //     _purchasePending = false;
+  //     _loading = false;
+  //   });
+  //   return;
+  // }
+  //}
+  @override
+  void initState() {
+    Future(this.fetch);
+    super.initState();
+    // TODO: Add initialization code
   }
 
-  void _handlePurchaseSuccess() {
-    // 결제 성공 시 페이지 전환을 처리하는 코드를 추가하세요.
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const RecordInfo(), // 전환할 페이지로 변경해주세요.
-      ),
-    );
-  }
+  // void purchaseUpdatedListener(List<PurchaseDetails> purchaseDetailsList) {
+  //   // 결제 정보 업데이트 시 호출되는 콜백 함수
+  //   for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
+  //     if (purchaseDetails.status == PurchaseStatus.purchased) {
+  //       // 결제 완료
+  //       _handlePurchaseSuccess(purchaseDetails);
+  //     } else if (purchaseDetails.status == PurchaseStatus.error) {
+  //       // 결제 실패
+  //       _handlePurchaseError();
+  //     }
+  //   }
+  // }
 
-  void _handlePurchaseError() {
-    // 결제 실패 시 처리하는 코드를 추가하세요.
-    // 예: 에러 메시지 표시, 다시 시도 유도 등
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const Purchase(), // 전환할 페이지로 변경해주세요.
-      ),
-    );
-  }
+  // void _handlePurchaseSuccess(PurchaseDetails purchaseDetails) {
+  //   // 결제 성공 시 페이지 전환을 처리하는 코드를 추가하세요.
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => RecordInfo(), // 전환할 페이지로 변경해주세요.
+  //     ),
+  //   );
+  // }
+
+  // void _handlePurchaseError() {
+  //   // 결제 실패 시 처리하는 코드를 추가하세요.
+  //   // 예: 에러 메시지 표시, 다시 시도 유도 등
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => Purchase(), // 전환할 페이지로 변경해주세요.
+  //     ),
+  //   );
+  // }
 
   Future<void> startPurchase() async {
-    const Set<String> products = <String>{'product1'};
+    const Set<String> _products = {'product1'};
     final ProductDetailsResponse response =
-        await InAppPurchase.instance.queryProductDetails(products);
+        await InAppPurchase.instance.queryProductDetails(_products);
     if (response.notFoundIDs.isNotEmpty) {
-      // 제품 정보를 찾을 수 없음
+      print('제품이 없어요');
       return;
     }
 
@@ -64,28 +160,21 @@ class _PurchaseState extends State<Purchase> {
 
     final PurchaseParam purchaseParam = PurchaseParam(
       productDetails: productDetails,
-      applicationUserName: null, // optional
     );
-
-    InAppPurchase.instance
-        .buyNonConsumable(
-      purchaseParam: purchaseParam,
-    )
-        .then((bool success) {
-      if (success) {
-        // 결제 성공 시 처리
-        _handlePurchaseSuccess();
-      } else {
-        _handlePurchaseError();
-      }
-    }).catchError((error) {
-      _handlePurchaseError();
-    });
+    try {
+      final bool success = await InAppPurchase.instance.buyNonConsumable(
+        purchaseParam: purchaseParam,
+      );
+    } catch (error) {
+      // 결제 실패
+      print('결제 실패했어요');
+    }
   }
 
   @override
   void dispose() {
     // TODO: Add cleanup code
+    //_subscription.cancel();
     super.dispose();
   }
 
@@ -225,13 +314,8 @@ class _PurchaseState extends State<Purchase> {
               ),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RecordInfo(),
-                  ),
-                );
+              onPressed: () async {
+                await startPurchase();
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
