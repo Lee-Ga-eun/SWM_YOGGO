@@ -35,11 +35,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
     if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       UserModel user = UserModel(
-        name: googleUser.displayName!,
-        email: googleUser.email,
-        providerId: googleUser.id,
+        //name: googleUser.displayName!,
+        //email: googleUser.email,
+        //providerId: googleUser.id,
+        idToken: googleAuth.idToken!,
         provider: 'google',
       );
 
