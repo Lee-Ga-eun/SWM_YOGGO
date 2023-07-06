@@ -1,12 +1,12 @@
 class UserModel {
-  final String name;
-  final String email;
+  String ?name;
+  String ?email;
   final String providerId;
   final String provider;
 
   UserModel({
-    required this.name,
-    required this.email,
+    this.name,
+    this.email,
     required this.providerId,
     required this.provider,
   });
