@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:ffi';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/size_config.dart';
 import './record_info.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
@@ -22,6 +26,7 @@ class AudioRecorder extends StatefulWidget {
 }
 
 class _AudioRecorderState extends State<AudioRecorder> {
+  late String token;
   bool stopped = false;
   String path_copy = '';
   int _recordDuration = 0;
@@ -35,6 +40,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
   AudioPlayer audioPlayer = AudioPlayer();
 
   static const platformChannel = MethodChannel('com.sayit.yoggo/channel');
+
+  Future<void> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('token')!;
+    });
+  }
 
   void sendPathToKotlin(path) async {
     try {
@@ -63,7 +75,25 @@ class _AudioRecorderState extends State<AudioRecorder> {
         .onAmplitudeChanged(const Duration(milliseconds: 300))
         .listen((amp) => setState(() => _amplitude = amp));
 
+    getToken();
     super.initState();
+  }
+
+  Future<Int> getId() async {
+    var url = Uri.parse('https://yoggo-server.fly.dev/user/id');
+    var response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(token));
+    var responseData = json.decode(response.body);
+    var id = responseData['id'];
+    return id;
+  }
+
+  Future<void> sendRecord(recordUrl) async {
+    var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
+    var response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(recordUrl));
   }
 
   Future<void> _start() async {
@@ -78,8 +108,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
         // final devs = await _audioRecorder.listInputDevices();
         // final isRecording = await _audioRecorder.isRecording();
         var myAppDir = await getAppDirectory();
-        var playerExtension =
-            Platform.isAndroid ? 'android_1.wav' : 'ios_1.flac';
+        var id = await getId();
+        var playerExtension = Platform.isAndroid ? '{$id}.wav' : '{$id}.flac';
         await _audioRecorder.start(
           path: '$myAppDir/$playerExtension',
           encoder: Platform.isAndroid
@@ -133,6 +163,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     // await _audioRecorder
     //     .setAudioSource(MediaRecorder.AudioSource.MIC); // 마이크 오디오 소스 설정
     // await _audioRecorder.setAudioEncoder(AudioEncoder.aacLc); // AAC LC 코덱 설정
+
     if (path != null) {
       widget.onStop?.call(path);
       path_copy = path.split('/').last;
@@ -142,6 +173,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
             File(Platform.isIOS ? path.replaceFirst('file://', '') : path),
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
+      sendRecord(path_copy);
     }
   }
 
@@ -319,7 +351,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>  WaitingVoicePage()),
+                                builder: (context) => WaitingVoicePage()),
                           );
                         });
                       },
@@ -453,8 +485,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
             Future.delayed(const Duration(seconds: 1), () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => WaitingVoicePage()),
+                MaterialPageRoute(builder: (context) => WaitingVoicePage()),
               );
             });
           },
