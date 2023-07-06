@@ -81,9 +81,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   Future<Int> getId() async {
     var url = Uri.parse('https://yoggo-server.fly.dev/user/id');
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(token));
+    var response = await http.get(url,
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token',});
     var responseData = json.decode(response.body);
     var id = responseData['id'];
     return id;
@@ -92,9 +91,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
   Future<void> sendRecord(recordUrl) async {
     var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
     var response = await http.post(url,
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token',},
         body: json.encode(recordUrl));
   }
+
 
   Future<void> _start() async {
     try {
