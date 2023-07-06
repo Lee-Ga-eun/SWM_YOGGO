@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String generateNonce([int length = 32]) {
-    final charset =
+    const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = Random.secure();
     return List.generate(length, (_) => charset[random.nextInt(charset.length)])
@@ -75,31 +75,29 @@ class _LoginScreenState extends State<LoginScreen> {
       nonce: nonce,
     );
     print(appleCredential);
-    if (appleCredential != null) {
-      // UserModel user = UserModel(
-      //   name: appleCredential.email!,
-      //   email: appleCredential.fullName,
-      //   providerId: appleCredential.id,
-      //   provider: 'apple',
-      // );
-      // var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
-      // print(json.encode(user.toJson()));
-      // var response = await http.post(url,
-      //     headers: {'Content-Type': 'application/json'},
-      //     body: json.encode(user.toJson()));
+    UserModel user = UserModel(
+      name: appleCredential.givenName,
+      email: appleCredential.email,
+      providerId: appleCredential.userIdentifier!,
+      provider: 'apple',
+    );
+    var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
+    print(json.encode(user.toJson()));
+    var response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(user.toJson()));
 
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   // 로그인 성공
-      //   var responseData = json.decode(response.body);
-      //   var token = responseData['token'];
-      //   var prefs = await SharedPreferences.getInstance();
-      //   await prefs.setString('token', token);
-      //   await Navigator.push(context,
-      //       MaterialPageRoute(builder: (context) => const HomeScreen()));
-      // } else {
-      //   // 로그인 실패
-      //   print('로그인 실패. 상태 코드: ${response.statusCode}');
-      // }
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // 로그인 성공
+      var responseData = json.decode(response.body);
+      var token = responseData['token'];
+      var prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', token);
+      await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+    } else {
+      // 로그인 실패
+      print('로그인 실패. 상태 코드: ${response.statusCode}');
     }
   }
 
