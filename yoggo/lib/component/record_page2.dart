@@ -79,22 +79,26 @@ class _AudioRecorderState extends State<AudioRecorder> {
     super.initState();
   }
 
-  Future<Int> getId() async {
+  Future<int> getId() async {
     var url = Uri.parse('https://yoggo-server.fly.dev/user/id');
-    var response = await http.get(url,
-        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token',});
+    var response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
     var responseData = json.decode(response.body);
-    var id = responseData['id'];
+    var id = responseData[0];
     return id;
   }
 
   Future<void> sendRecord(recordUrl) async {
     var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
     var response = await http.post(url,
-        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token',},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
         body: json.encode(recordUrl));
   }
-
 
   Future<void> _start() async {
     try {
@@ -107,9 +111,12 @@ class _AudioRecorderState extends State<AudioRecorder> {
         }
         // final devs = await _audioRecorder.listInputDevices();
         // final isRecording = await _audioRecorder.isRecording();
+
         var myAppDir = await getAppDirectory();
+
         var id = await getId();
-        var playerExtension = Platform.isAndroid ? '{$id}.wav' : '{$id}.flac';
+        print(id);
+        var playerExtension = Platform.isAndroid ? '$id.wav' : '$id.flac';
         await _audioRecorder.start(
           path: '$myAppDir/$playerExtension',
           encoder: Platform.isAndroid
