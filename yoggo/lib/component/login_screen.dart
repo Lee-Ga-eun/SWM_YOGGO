@@ -68,43 +68,43 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> signInWithApple() async {
-    // Trigger the authentication flow
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: nonce,
-    );
-    print(appleCredential);
-    UserModel user = UserModel(
-      name: appleCredential.givenName,
-      email: appleCredential.email,
-      providerId: appleCredential.userIdentifier!,
-      provider: 'apple',
-    );
-    var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
-    print(json.encode(user.toJson()));
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(user.toJson()));
+  // Future<void> signInWithApple() async {
+  //   // Trigger the authentication flow
+  //   final rawNonce = generateNonce();
+  //   final nonce = sha256ofString(rawNonce);
+  //   final appleCredential = await SignInWithApple.getAppleIDCredential(
+  //     scopes: [
+  //       AppleIDAuthorizationScopes.email,
+  //       AppleIDAuthorizationScopes.fullName,
+  //     ],
+  //     nonce: nonce,
+  //   );
+  //   print(appleCredential);
+  //   UserModel user = UserModel(
+  //     name: appleCredential.givenName,
+  //     email: appleCredential.email,
+  //     providerId: appleCredential.userIdentifier!,
+  //     provider: 'apple',
+  //   );
+  //   var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
+  //   print(json.encode(user.toJson()));
+  //   var response = await http.post(url,
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: json.encode(user.toJson()));
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // 로그인 성공
-      var responseData = json.decode(response.body);
-      var token = responseData['token'];
-      var prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', token);
-      await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-    } else {
-      // 로그인 실패
-      print('로그인 실패. 상태 코드: ${response.statusCode}');
-    }
-  }
+  //   if (response.statusCode == 200 || response.statusCode == 201) {
+  //     // 로그인 성공
+  //     var responseData = json.decode(response.body);
+  //     var token = responseData['token'];
+  //     var prefs = await SharedPreferences.getInstance();
+  //     await prefs.setString('token', token);
+  //     await Navigator.push(
+  //         context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+  //   } else {
+  //     // 로그인 실패
+  //     print('로그인 실패. 상태 코드: ${response.statusCode}');
+  //   }
+  // }
 
   @override
   void initState() {
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
             top: 30 * SizeConfig.defaultSize!,
             left: MediaQuery.of(context).size.width / 2 - 95,
             child: GestureDetector(
-              onTap: signInWithApple,
+            //  onTap: signInWithApple,
               child: Image.asset(
                 'lib/images/apple_login.png',
               ),
