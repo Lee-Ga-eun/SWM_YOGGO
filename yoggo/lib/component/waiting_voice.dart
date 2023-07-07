@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'dart:async';
 import './check_voice.dart';
 
 class WaitingVoicePage extends StatefulWidget {
@@ -45,7 +43,7 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const checkVoice(),
+            builder: (context) =>  checkVoice(),
           ),
         );
       }
@@ -75,6 +73,11 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
               const Text(
                 'Waiting for Voice...',
                 style: TextStyle(fontSize: 20),
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                'Expecting 10s',
+                style: TextStyle(fontSize: 10),
               ),
             ],
           ),

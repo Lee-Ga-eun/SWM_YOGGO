@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yoggo/main.dart';
 import '../component/reader.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class BookIntro extends StatefulWidget {
   final String title, thumb, summary;
@@ -24,14 +22,14 @@ class BookIntro extends StatefulWidget {
 }
 
 class _BookIntroState extends State<BookIntro> {
-  bool isSelected = false;
+  bool isSelected = true;
   bool isClicked = false;
   String text = '';
   int voiceId = 10;
   //String voices='';
   List<dynamic> voices = [];
   int cvi = 0;
-  bool canChanged = false;
+  bool canChanged = true;
   int lastPage = 0;
   int contentId = 1;
 
@@ -41,16 +39,17 @@ class _BookIntroState extends State<BookIntro> {
     if (mounted) {
       if (response.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(response.body);
+        // print(responseData);
         Map<String, dynamic> data = responseData[0];
-
-        final contentText = data['voice'][0]['voiceName'];
-        //print(contentText);
         voices = data['voice'];
+        for (var voice in voices) {
+          if (voice['voiceId'] == 1) {
+            cvi = voice['contentVoiceId'];
+          }
+        }
+        final contentText = data['voice'][0]['voiceName'];
         lastPage = data['last'];
         contentId = data['contentId'];
-        for (var voice in voices) {
-          print(voice['voiceName']);
-        }
         setState(() {
           text = contentText;
           voiceId = data['voice'][0]['contentVoiceId'];
@@ -59,16 +58,16 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
-  Future<void> precacheImages(BuildContext context) async {
-    final precacheFutures =
-        List<Future<void>>.generate(lastPage, (index) async {
-      final imageUrl = '$contentUrl$contentId-${(index + 1).toString()}.png';
-      await precacheImage(CachedNetworkImageProvider(imageUrl), context);
-      print(imageUrl);
-    });
+  // Future<void> precacheImages(BuildContext context) async {
+  //   final precacheFutures =
+  //       List<Future<void>>.generate(lastPage, (index) async {
+  //     final imageUrl = '$contentUrl$contentId-${(index + 1).toString()}.png';
+  //     await precacheImage(CachedNetworkImageProvider(imageUrl), context);
+  //     print(imageUrl);
+  //   });
 
-    await Future.wait(precacheFutures);
-  }
+  //   await Future.wait(precacheFutures);
+  // }
 
   @override
   void initState() {
@@ -78,11 +77,11 @@ class _BookIntroState extends State<BookIntro> {
 
   String _getImageForVoice(String voiceName) {
     switch (voiceName) {
-      case 'Jolly':
+      case 'jolly':
         return 'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png?width=75&height=110';
-      case 'Morgan':
+      case 'morgan':
         return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273297997884/actor_ethan.png?width=112&height=110';
-      case 'Eric':
+      case 'eric':
         return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273604186202/actor_liam.png?width=119&height=108';
       default:
         return '';
@@ -91,8 +90,37 @@ class _BookIntroState extends State<BookIntro> {
 
   @override
   Widget build(BuildContext context) {
-    precacheImages(context);
+    // precacheImages(context);
     SizeConfig().init(context);
+    if (cvi == 0) {
+      return Scaffold(
+        //backgroundColor: Colors.yellow, // 노란색 배경 설정
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('lib/images/bkground.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
+                  strokeWidth: 5, // 동그라미 로딩의 크기 조정
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text('Loading a book'),
+            ],
+          ),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: const Color(0xFFF1ECC9).withOpacity(1),
       body: Container(
@@ -203,8 +231,6 @@ class _BookIntroState extends State<BookIntro> {
                                   children: [
                                     Image.network(
                                       _getImageForVoice(voice['voiceName']),
-                                      //Icons.person, // Icons.person은 기본 제공되는 아이콘이다. 이걸 그림으로 바꾸려면 Icon()을 지우고
-                                      //Image.network('https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png',) 이렇게 처리를 해줘야 한다
                                       color: isClicked
                                           ? null
                                           : const Color.fromARGB(
@@ -272,7 +298,7 @@ class _BookIntroState extends State<BookIntro> {
                                     // 다음 화면으로 contetnVoiceId를 가지고 이동
                                     voiceId: cvi,
                                     lastPage: lastPage,
-                                    isSelected: isSelected,
+                                    isSelected: true,
                                   ),
                                 ),
                               )
