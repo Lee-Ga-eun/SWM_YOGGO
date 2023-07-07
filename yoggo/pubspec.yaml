@@ -53,6 +53,7 @@ dependencies:
   sign_in_with_apple: ^4.3.0
   crypto: ^3.0.3
   record: ^4.4.4
+  logger: ^1.4.0
   #audioplayers: ^0.18.3
 
 dev_dependencies:
