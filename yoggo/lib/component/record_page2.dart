@@ -92,12 +92,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   Future<void> sendRecord(recordUrl) async {
     var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
+    var body = json.encode({'recordUrl': recordUrl});
     var response = await http.post(url,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: json.encode(recordUrl));
+        body: body);
   }
 
   Future<void> _start() async {
