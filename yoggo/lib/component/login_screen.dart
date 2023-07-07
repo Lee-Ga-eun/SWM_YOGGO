@@ -49,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       //googleUser.authentication.accessToken을 넘겨라 -> verify를 google에 해라. -> token을 다시 넘겨줘라
       var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
-      print(json.encode(user.toJson()));
       var response = await http.post(url,
           headers: {'Content-Type': 'application/json'},
           body: json.encode(user.toJson()));
