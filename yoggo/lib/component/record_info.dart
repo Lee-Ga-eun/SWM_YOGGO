@@ -49,7 +49,7 @@ class _RecordInfoState extends State<RecordInfo> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'YOGGO',
+                        'LOVEL',
                         style: TextStyle(
                           fontFamily: 'BreeSerif',
                           fontSize: SizeConfig.defaultSize! * 4,

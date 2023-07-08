@@ -189,29 +189,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Fairy',
+                        'LOVEL',
                         style: TextStyle(
                           fontFamily: 'BreeSerif',
                           fontSize: SizeConfig.defaultSize! * 4,
                         ),
-                      ),
-                      TextButton(
-                        child: Text(
-                          'Tale',
-                          style: TextStyle(
-                            fontFamily: 'BreeSerif',
-                            fontSize: SizeConfig.defaultSize! * 4,
-                          ),
-                        ),
-                        onPressed: () {
-                          logout();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
-                        },
                       ),
                     ],
                   ),
@@ -298,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => BookIntro(
                                       title: book.title,
-                                      thumb: contentUrl + book.thumb,
+                                      thumb: book.thumb,
                                       id: book.id,
                                       summary: book.summary),
                                 ));
@@ -315,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: CachedNetworkImage(
-                                      imageUrl: contentUrl + book.thumb,
+                                      imageUrl: book.thumb,
                                       httpHeaders: const {
                                         "User-Agent":
                                             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",

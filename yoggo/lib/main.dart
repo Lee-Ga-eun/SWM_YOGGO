@@ -3,17 +3,12 @@ import 'component/intro.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   //runApp(const App());
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['ANON_KEY']!,
-  );
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
@@ -21,18 +16,6 @@ void main() async {
     runApp(const App());
   });
 }
-
-final supabase = Supabase.instance.client; // 슈퍼베이스
-
-final String contentUrl =
-    supabase.storage.from('yoggo-storage').getPublicUrl('image/'); // 책 목록 사진들
-
-final String supabaseAudioUrl =
-    supabase.storage.from('yoggo-storage').getPublicUrl('audio/'); // 책 목록 사진들
-
-// 이미지 다운로드 받기
-// final Uint8List file =
-//     supabase.storage.from('public/yoggo-storage').download('image.png');
 
 class App extends StatefulWidget {
   const App({super.key});

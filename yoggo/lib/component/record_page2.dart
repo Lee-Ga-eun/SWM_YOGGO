@@ -36,7 +36,6 @@ class _AudioRecorderState extends State<AudioRecorder> {
   RecordState _recordState = RecordState.stop;
   //StreamSubscription<Amplitude>? _amplitudeSub;
   //Amplitude? _amplitude;
-  String supabasePath = '';
   AudioPlayer audioPlayer = AudioPlayer();
 
   static const platformChannel = MethodChannel('com.sayit.yoggo/channel');
@@ -166,13 +165,6 @@ class _AudioRecorderState extends State<AudioRecorder> {
       widget.onStop?.call(path);
       path_copy = path.split('/').last;
       sendRecord(path, path_copy);
-
-      await supabase.storage.from('yoggo-storage').upload(
-            'record/$path_copy',
-            //File(path),
-            File(Platform.isIOS ? path.replaceFirst('file://', '') : path),
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-          );
     }
   }
 
@@ -218,7 +210,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'YOGGO',
+                              'LOVEL',
                               style: TextStyle(
                                 fontFamily: 'BreeSerif',
                                 fontSize: SizeConfig.defaultSize! * 4,
