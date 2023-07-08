@@ -8,9 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
-import '../main.dart';
 import 'dart:io';
-import 'package:storage_client/storage_client.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import './waiting_voice.dart';
@@ -47,22 +45,22 @@ class _AudioRecorderState extends State<AudioRecorder> {
     });
   }
 
-  void sendPathToKotlin(path) async {
-    try {
-      await platformChannel.invokeMethod('setPath', {'path': path});
-    } catch (e) {
-      print('Error sending path to Kotlin: $e');
-    }
-  }
+  // void sendPathToKotlin(path) async {
+  //   try {
+  //     await platformChannel.invokeMethod('setPath', {'path': path});
+  //   } catch (e) {
+  //     print('Error sending path to Kotlin: $e');
+  //   }
+  // }
 
-  Future<void> stopRecording() async {
-    try {
-      await platformChannel.invokeMethod('stopRecording');
-      print('Recording stopped.'); // 녹음이 정상적으로 중지되었음을 출력합니다.
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
+  // Future<void> stopRecording() async {
+  //   try {
+  //     await platformChannel.invokeMethod('stopRecording');
+  //     print('Recording stopped.'); // 녹음이 정상적으로 중지되었음을 출력합니다.
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   @override
   void initState() {
@@ -142,7 +140,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     });
     _timer?.cancel();
     _recordDuration = 0;
-    if (Platform.isAndroid) stopRecording();
+    //  if (Platform.isAndroid) stopRecording();
     final path = await _audioRecorder.stop();
     //  sendPathToKotlin(path);
 

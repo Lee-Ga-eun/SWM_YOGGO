@@ -22,22 +22,32 @@ class FairytalePage extends StatefulWidget {
   _FairyTalePageState createState() => _FairyTalePageState();
 }
 
-class _FairyTalePageState extends State<FairytalePage> {
+class _FairyTalePageState extends State<FairytalePage>
+    with WidgetsBindingObserver {
   // List<BookPage> pages = []; // 책 페이지 데이터 리스트
   List<Map<String, dynamic>> pages = [];
 
   int currentPageIndex = 0; // 현재 페이지 인덱스
   bool isPlaying = true;
   bool pauseFunction = false;
-
   AudioPlayer audioPlayer = AudioPlayer();
-  // Source audioUrl = UrlSource('');
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // 앱이 백그라운드에 들어갔을 때 실행할 로직
+      audioPlayer.pause();
+    } else if (state == AppLifecycleState.resumed) {
+      // 앱이 포그라운드로 복귀했을 때 실행할 로직
+      resumeAudio();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     // 책 페이지 데이터 미리 불러오기
     fetchAllBookPages();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   Future<void> fetchAllBookPages() async {
@@ -49,7 +59,6 @@ class _FairyTalePageState extends State<FairytalePage> {
       if (jsonData is List<dynamic>) {
         setState(() {
           pages = List<Map<String, dynamic>>.from(jsonData);
-          // print(pages);
         });
       }
     } else {
@@ -57,10 +66,11 @@ class _FairyTalePageState extends State<FairytalePage> {
     }
   }
 
-  void nextPage() {
+  void nextPage() async {
+    await stopAudio();
     setState(() {
       isPlaying = true;
-      stopAudio();
+      //awiat stopAudio();
       pauseFunction = false;
       if (currentPageIndex < widget.lastPage) {
         currentPageIndex++;
@@ -82,7 +92,7 @@ class _FairyTalePageState extends State<FairytalePage> {
     });
   }
 
-  void stopAudio() async {
+  stopAudio() async {
     await audioPlayer.stop();
   }
 
@@ -109,6 +119,7 @@ class _FairyTalePageState extends State<FairytalePage> {
   @override
   void dispose() {
     // audioPlayer.stop();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -143,134 +154,140 @@ class _FairyTalePageState extends State<FairytalePage> {
         ),
       );
     }
-    return Scaffold(
-      body: Stack(
-        children: [
-          // 현재 페이지 위젯
-          Visibility(
-            visible: true,
-            child: PageWidget(
-              page: currentPageIndex < widget.lastPage
-                  ? pages[currentPageIndex]
-                  : pages[widget.lastPage - 1],
-              audioUrl: pages[currentPageIndex]['audioUrl'],
-              realCurrent: true,
-              currentPage: currentPageIndex,
-              audioPlayer: audioPlayer,
-              pauseFunction: pauseFunction,
+    return WillPopScope(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            // 현재 페이지 위젯
+            Visibility(
+              visible: true,
+              child: PageWidget(
+                page: currentPageIndex < widget.lastPage
+                    ? pages[currentPageIndex]
+                    : pages[widget.lastPage - 1],
+                audioUrl: pages[currentPageIndex]['audioUrl'],
+                realCurrent: true,
+                currentPage: currentPageIndex,
+                audioPlayer: audioPlayer,
+                pauseFunction: pauseFunction,
+              ),
             ),
-          ),
-          // 다음 페이지 위젯
-          Offstage(
-            offstage: true, // 화면에 보이지 않도록 설정
-            child: PageWidget(
-              page: currentPageIndex < widget.lastPage
-                  ? currentPageIndex == widget.lastPage - 1
-                      ? pages[currentPageIndex]
-                      : pages[currentPageIndex + 1]
-                  : pages[widget.lastPage - 1],
-              realCurrent: false,
-              audioUrl: currentPageIndex != widget.lastPage - 1
-                  ? pages[currentPageIndex + 1]['audioUrl']
-                  : pages[currentPageIndex]['audioUrl'],
-              currentPage: currentPageIndex != widget.lastPage - 1
-                  ? currentPageIndex + 1
-                  : currentPageIndex,
-              audioPlayer: audioPlayer,
-              pauseFunction: pauseFunction,
+            // 다음 페이지 위젯
+            Offstage(
+              offstage: true, // 화면에 보이지 않도록 설정
+              child: PageWidget(
+                page: currentPageIndex < widget.lastPage
+                    ? currentPageIndex == widget.lastPage - 1
+                        ? pages[currentPageIndex]
+                        : pages[currentPageIndex + 1]
+                    : pages[widget.lastPage - 1],
+                realCurrent: false,
+                audioUrl: currentPageIndex != widget.lastPage - 1
+                    ? pages[currentPageIndex + 1]['audioUrl']
+                    : pages[currentPageIndex]['audioUrl'],
+                currentPage: currentPageIndex != widget.lastPage - 1
+                    ? currentPageIndex + 1
+                    : currentPageIndex,
+                audioPlayer: audioPlayer,
+                pauseFunction: pauseFunction,
+              ),
             ),
-          ),
-          Offstage(
-            offstage: true, // 화면에 보이지 않도록 설정
-            child: PageWidget(
-              page: currentPageIndex != 0
-                  ? pages[currentPageIndex - 1]
-                  : pages[0],
-              realCurrent: false,
-              audioUrl: currentPageIndex != 0
-                  ? pages[currentPageIndex - 1]['audioUrl']
-                  : pages[0]['audioUrl'],
-              currentPage: currentPageIndex,
-              audioPlayer: audioPlayer,
-              pauseFunction: pauseFunction,
+            Offstage(
+              offstage: true, // 화면에 보이지 않도록 설정
+              child: PageWidget(
+                page: currentPageIndex != 0
+                    ? pages[currentPageIndex - 1]
+                    : pages[0],
+                realCurrent: false,
+                audioUrl: currentPageIndex != 0
+                    ? pages[currentPageIndex - 1]['audioUrl']
+                    : pages[0]['audioUrl'],
+                currentPage: currentPageIndex,
+                audioPlayer: audioPlayer,
+                pauseFunction: pauseFunction,
+              ),
             ),
-          ),
-          Positioned(
-              top: 5,
+            Positioned(
+                top: 5,
+                left: 10,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.cancel,
+                    color: Colors.white,
+                    size: 35,
+                  ),
+                  onPressed: () {
+                    stopAudio();
+                    Navigator.of(context).pop();
+                  },
+                )),
+
+            // 오른쪽 화살표 버튼
+            Positioned(
+              bottom: 5,
+              right: 10,
+              child: currentPageIndex != widget.lastPage - 1
+                  ? IconButton(
+                      icon: const Icon(Icons.arrow_forward),
+                      onPressed: nextPage,
+                    )
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.check,
+                        color: Color.fromARGB(255, 77, 204, 81),
+                      ),
+                      onPressed: () {
+                        stopAudio();
+                        Navigator.push(
+                          context,
+                          //결제가 끝나면 RecordInfo로 가야 함
+                          MaterialPageRoute(
+                            builder: (context) => ReaderEnd(
+                              voiceId: widget.voiceId,
+                              lastPage: widget.lastPage,
+                              isSelected: widget.isSelected,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+            // 왼쪽 화살표 버튼
+            Positioned(
+              bottom: 5,
               left: 10,
               child: IconButton(
-                icon: const Icon(
-                  Icons.cancel,
-                  color: Colors.white,
-                  size: 35,
-                ),
-                onPressed: () {
-                  stopAudio();
-                  Navigator.of(context).pop();
-                },
-              )),
-
-          // 오른쪽 화살표 버튼
-          Positioned(
-            bottom: 5,
-            right: 10,
-            child: currentPageIndex != widget.lastPage - 1
-                ? IconButton(
-                    icon: const Icon(Icons.arrow_forward),
-                    onPressed: nextPage,
-                  )
-                : IconButton(
-                    icon: const Icon(
-                      Icons.check,
-                      color: Color.fromARGB(255, 77, 204, 81),
-                    ),
-                    onPressed: () {
-                      stopAudio();
-                      Navigator.push(
-                        context,
-                        //결제가 끝나면 RecordInfo로 가야 함
-                        MaterialPageRoute(
-                          builder: (context) => ReaderEnd(
-                            voiceId: widget.voiceId,
-                            lastPage: widget.lastPage,
-                            isSelected: widget.isSelected,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-          ),
-          // 왼쪽 화살표 버튼
-          Positioned(
-            bottom: 5,
-            left: 10,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: previousPage,
+                icon: const Icon(Icons.arrow_back),
+                onPressed: previousPage,
+              ),
             ),
-          ),
-          // 중간 스탑 버튼
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: IconButton(
-                icon: isPlaying
-                    ? const Icon(Icons.pause)
-                    : const Icon(Icons.play_arrow),
-                onPressed: () {
-                  pauseFunction = true;
-                  if (isPlaying) {
-                    pauseAudio();
-                    //audioPlayer.stop();
-                  } else {
-                    resumeAudio();
-                  }
-                  setState(() {
-                    isPlaying = !isPlaying;
-                  });
-                },
-              ))
-        ],
+            // 중간 스탑 버튼
+            // Align(
+            //     alignment: Alignment.bottomCenter,
+            //     child: IconButton(
+            //       icon: isPlaying
+            //           ? const Icon(Icons.pause)
+            //           : const Icon(Icons.play_arrow),
+            //       onPressed: () {
+            //         pauseFunction = true;
+            //         if (isPlaying) {
+            //           pauseAudio();
+            //           //audioPlayer.stop();
+            //         } else {
+            //           resumeAudio();
+            //         }
+            //         setState(() {
+            //           isPlaying = !isPlaying;
+            //         });
+            //       },
+            //     ))
+          ],
+        ),
       ),
+      onWillPop: () {
+        stopAudio();
+        return Future.value(true);
+      },
     );
   }
 }
@@ -300,15 +317,6 @@ class PageWidget extends StatefulWidget {
 class _PageWidgetState extends State<PageWidget> {
   @override
   Widget build(BuildContext context) {
-    //   final pageNum = widget.page['pageNum'] as int;
-    final text = widget.page['text'] as String;
-    final imageUrl = widget.page['imageUrl'];
-    final imagePostion = widget.page['position'];
-
-    CachedNetworkImage(
-      imageUrl: imageUrl,
-    );
-
     void playAudio(String audioUrl) async {
       if (widget.realCurrent) {
         await widget.audioPlayer.stop();
@@ -316,11 +324,14 @@ class _PageWidgetState extends State<PageWidget> {
       }
     }
 
-    if (widget.pauseFunction != true) {
-      // 일시정지 버튼이 아닐 때만
-      playAudio(widget.audioUrl);
-    }
+    playAudio(widget.audioUrl);
+    final text = widget.page['text'] as String;
+    final imageUrl = widget.page['imageUrl'];
+    final imagePostion = widget.page['position'];
 
+    CachedNetworkImage(
+      imageUrl: imageUrl,
+    );
     return Scaffold(
       body: Container(
           decoration: const BoxDecoration(
