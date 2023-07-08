@@ -58,34 +58,10 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
-  // Future<void> precacheImages(BuildContext context) async {
-  //   final precacheFutures =
-  //       List<Future<void>>.generate(lastPage, (index) async {
-  //     final imageUrl = '$contentUrl$contentId-${(index + 1).toString()}.png';
-  //     await precacheImage(CachedNetworkImageProvider(imageUrl), context);
-  //     print(imageUrl);
-  //   });
-
-  //   await Future.wait(precacheFutures);
-  // }
-
   @override
   void initState() {
     super.initState();
     fetchPageData();
-  }
-
-  String _getImageForVoice(String voiceName) {
-    switch (voiceName) {
-      case 'jolly':
-        return 'https://media.discordapp.net/attachments/1114865651312508958/1115512272987623484/actor_kelly.png?width=75&height=110';
-      case 'morgan':
-        return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273297997884/actor_ethan.png?width=112&height=110';
-      case 'eric':
-        return 'https://media.discordapp.net/attachments/1114865651312508958/1115512273604186202/actor_liam.png?width=119&height=108';
-      default:
-        return '';
-    }
   }
 
   @override
@@ -141,10 +117,6 @@ class _BookIntroState extends State<BookIntro> {
                 flex: 1,
                 child: Container(
                     alignment: Alignment.topLeft,
-                    //color: Colors.red,
-
-                    //child: Positioned(
-                    //  left: 1.0,
                     child: IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -215,9 +187,9 @@ class _BookIntroState extends State<BookIntro> {
                             //  mainAxisAlignment: MainAxisAlignment.center,
                             children: voices.map((voice) {
                               bool isClicked = (cvi == voice['contentVoiceId']);
-
-                              print(isClicked);
-                              //for (var voice in voices)
+                              String voiceName = voice['voiceName'];
+                              String imageName =
+                                  'lib/images/$voiceName.png'; // 동적으로 파일 경로 설정
                               return GestureDetector(
                                 onTap: () {
                                   cvi = voice[
@@ -229,17 +201,21 @@ class _BookIntroState extends State<BookIntro> {
                                 },
                                 child: Column(
                                   children: [
-                                    Image.network(
-                                      _getImageForVoice(voice['voiceName']),
-                                      color: isClicked
-                                          ? null
-                                          : const Color.fromARGB(
-                                              // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
-                                              255,
-                                              255,
-                                              66,
-                                              129),
-                                      height: SizeConfig.defaultSize! * 6.5,
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Image.asset(
+                                        imageName,
+                                        color: isClicked
+                                            ? null
+                                            : const Color.fromARGB(
+                                                // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
+                                                255,
+                                                255,
+                                                66,
+                                                129),
+                                        height: SizeConfig.defaultSize! * 6.5,
+                                      ),
                                     ),
                                     SizedBox(
                                         height: SizeConfig.defaultSize! * 0.3),
