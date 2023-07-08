@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import './check_voice.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WaitingVoicePage extends StatefulWidget {
   const WaitingVoicePage({super.key});
@@ -12,11 +15,14 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   double _progressValue = 0.0;
+  late String token;
+  String completeInferenced = '';
 
   @override
   void initState() {
     super.initState();
     startTimer();
+    //  getToken();
   }
 
   @override
@@ -43,13 +49,41 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>  checkVoice(),
+            builder: (context) => const CheckVoice(),
           ),
         );
       }
     });
 
     _controller.forward();
+  }
+
+  Future<void> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('token')!;
+      inferenceResult(token);
+    });
+  }
+
+  Future<void> inferenceResult(String token) async {
+    while (true) {
+      var response = await http
+          .get(Uri.parse('https://yoggo-server.fly.dev/user/inference'));
+
+      if (response.statusCode == 200) {
+        // 데이터를 성공적으로 받아온 경우
+        var data = response.body;
+        // 원하는 데이터를 처리하는 로직을 추가
+        print(data);
+        completeInferenced = json.decode(data)['voice'];
+        break; // 데이터를 받아왔으므로 반복문 종료
+      } else {
+        // 데이터를 받아오지 못한 경우
+        print('Failed to fetch data. Retrying in 1 second...');
+        await Future.delayed(const Duration(seconds: 1)); // 1초간 대기 후 다시 요청
+      }
+    }
   }
 
   @override
