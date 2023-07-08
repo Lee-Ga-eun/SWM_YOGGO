@@ -22,6 +22,22 @@
           }
         },
         {
+          "client_id": "127586410541-803vqktk4iohkuuqgn2nuge0mdm09frt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sayit.yoggo",
+            "certificate_hash": "2fd1be0f65f1ff92e82f078887a2c2411ee87c2b"
+          }
+        },
+        {
+          "client_id": "127586410541-kojdlbe6qb7m9igsulv2043tqub52fpp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sayit.yoggo",
+            "certificate_hash": "b6242243e2688797678451f7201f26ae41972ffc"
+          }
+        },
+        {
           "client_id": "127586410541-ps35vifmv1ac2h6jst8ssnl672beu2l1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
