@@ -5,7 +5,7 @@ import './record_page2.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class CheckVoice extends StatefulWidget {
- // final String completeInferenced;
+  // final String completeInferenced;
 
   const CheckVoice({
     super.key,
@@ -47,7 +47,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'YOGGO',
+                      'LOVEL',
                       style: TextStyle(
                         fontFamily: 'BreeSerif',
                         fontSize: SizeConfig.defaultSize! * 4,
