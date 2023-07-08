@@ -2,17 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:yoggo/size_config.dart';
 import '../component/home_screen.dart';
 import './record_page2.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-class checkVoice extends StatefulWidget {
-  const checkVoice({
+class CheckVoice extends StatefulWidget {
+ // final String completeInferenced;
+
+  const CheckVoice({
     super.key,
+    //required this.completeInferenced,
   });
 
   @override
-  _checkVoiceState createState() => _checkVoiceState();
+  _CheckVoiceState createState() => _CheckVoiceState();
 }
 
-class _checkVoiceState extends State<checkVoice> {
+class _CheckVoiceState extends State<CheckVoice> {
+  AudioPlayer audioPlayer = AudioPlayer();
+
+  void playAudio(String audioUrl) async {
+    await audioPlayer.play(UrlSource(audioUrl));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,7 +216,7 @@ class _checkVoiceState extends State<checkVoice> {
                         color: Color.fromARGB(255, 194, 120, 209),
                       ),
                       onPressed: () {
-                        // 버튼 3의 동작 처리
+                        playAudio('data');
                       },
                     ),
                     const SizedBox(

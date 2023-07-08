@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/size_config.dart';
 import './record_info.dart';
@@ -15,6 +14,7 @@ import 'package:storage_client/storage_client.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import './waiting_voice.dart';
+import 'package:http_parser/http_parser.dart';
 
 class AudioRecorder extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -34,8 +34,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
   final _audioRecorder = Record();
   StreamSubscription<RecordState>? _recordSub;
   RecordState _recordState = RecordState.stop;
-  StreamSubscription<Amplitude>? _amplitudeSub;
-  Amplitude? _amplitude;
+  //StreamSubscription<Amplitude>? _amplitudeSub;
+  //Amplitude? _amplitude;
   String supabasePath = '';
   AudioPlayer audioPlayer = AudioPlayer();
 
@@ -71,9 +71,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
       setState(() => _recordState = recordState);
     });
 
-    _amplitudeSub = _audioRecorder
-        .onAmplitudeChanged(const Duration(milliseconds: 300))
-        .listen((amp) => setState(() => _amplitude = amp));
+    // _amplitudeSub = _audioRecorder
+    //     .onAmplitudeChanged(const Duration(milliseconds: 300))
+    //     .listen((amp) => setState(() => _amplitude = amp));
 
     getToken();
     super.initState();
@@ -90,33 +90,29 @@ class _AudioRecorderState extends State<AudioRecorder> {
     return id;
   }
 
-  Future<void> sendRecord(recordUrl) async {
+  Future<void> sendRecord(audioUrl, recordName) async {
     var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
-    var body = json.encode({'recordUrl': recordUrl});
-    var response = await http.post(url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: body);
+
+    var request = http.MultipartRequest('POST', url);
+    request.headers['Authorization'] = 'Bearer $token';
+    request.files.add(
+      await http.MultipartFile.fromPath('recordUrl', audioUrl,
+          contentType: MediaType('audio', 'x-wav')),
+    );
+    request.fields['recordName'] = recordName;
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print('Record sent successfully');
+    } else {
+      print('Failed to send record. Status code: ${response.statusCode}');
+    }
   }
 
   Future<void> _start() async {
     try {
       if (await _audioRecorder.hasPermission()) {
-        // We don't do anything with this but printing
-        final isSupported =
-            await _audioRecorder.isEncoderSupported(AudioEncoder.aacLc);
-        if (kDebugMode) {
-          print('${AudioEncoder.aacLc.name} supported: $isSupported');
-        }
-        // final devs = await _audioRecorder.listInputDevices();
-        // final isRecording = await _audioRecorder.isRecording();
-
         var myAppDir = await getAppDirectory();
-
         var id = await getId();
-        print(id);
         var playerExtension = Platform.isAndroid ? '$id.wav' : '$id.flac';
         await _audioRecorder.start(
           path: '$myAppDir/$playerExtension',
@@ -132,17 +128,12 @@ class _AudioRecorderState extends State<AudioRecorder> {
         _startTimer();
       }
     } catch (e) {
-      if (kDebugMode) {
-        //print(e);
-      }
-      // print('에러');
+      if (kDebugMode) {}
     }
   }
 
   Future<String> getAppDirectory() async {
     final directory = await getApplicationDocumentsDirectory();
-    print("getApplicationDocumentDirectory");
-    print(directory.path);
     return directory.path;
   }
 
@@ -152,7 +143,6 @@ class _AudioRecorderState extends State<AudioRecorder> {
     });
     _timer?.cancel();
     _recordDuration = 0;
-    print("종료함수 호출됨");
     if (Platform.isAndroid) stopRecording();
     final path = await _audioRecorder.stop();
     //  sendPathToKotlin(path);
@@ -175,13 +165,14 @@ class _AudioRecorderState extends State<AudioRecorder> {
     if (path != null) {
       widget.onStop?.call(path);
       path_copy = path.split('/').last;
+      sendRecord(path, path_copy);
+
       await supabase.storage.from('yoggo-storage').upload(
             'record/$path_copy',
             //File(path),
             File(Platform.isIOS ? path.replaceFirst('file://', '') : path),
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
-      sendRecord(path_copy);
     }
   }
 
@@ -202,8 +193,6 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   @override
   Widget build(BuildContext context) {
-    // playAudio(
-    //     '/Users/lucy/Library/Developer/CoreSimulator/Devices/777C9185-3249-4F70-B639-1F94CA8542B6/data/Containers/Data/Application/D680BA0A-DE2E-49A2-A99C-A89F36566717/tmp/71C617B0-6CFA-491B-A18F-5F5B0F19B341.m4a');
     return MaterialApp(
       home: Scaffold(
         body: Stack(
@@ -335,11 +324,6 @@ class _AudioRecorderState extends State<AudioRecorder> {
                           _buildText(),
                         ],
                       ),
-                      if (_amplitude != null) ...[
-                        // const SizedBox(height: 40),
-                        Text('Current: ${_amplitude?.current ?? 0.0}'),
-                        Text('Max: ${_amplitude?.max ?? 0.0}'),
-                      ],
                     ],
                   ),
                 ],
@@ -359,7 +343,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WaitingVoicePage()),
+                                builder: (context) => const WaitingVoicePage()),
                           );
                         });
                       },
@@ -379,7 +363,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   void dispose() {
     _timer?.cancel();
     _recordSub?.cancel();
-    _amplitudeSub?.cancel();
+    // _amplitudeSub?.cancel();
     _audioRecorder.dispose();
     super.dispose();
   }
@@ -475,31 +459,5 @@ class _AudioRecorderState extends State<AudioRecorder> {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       setState(() => _recordDuration++);
     });
-  }
-
-  Widget _stopRecording() {
-    // 정지 버튼을 누를 때 호출되는 함수
-    // 팝업 띄우기
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    return AlertDialog(
-      title: const Text('Record Complete'),
-      content: const Text('Your recording has been completed.'),
-      actions: [
-        TextButton(
-          onPressed: () {
-            // 1초 후에 다음 페이지로 이동
-            Future.delayed(const Duration(seconds: 1), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WaitingVoicePage()),
-              );
-            });
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    );
   }
 }
