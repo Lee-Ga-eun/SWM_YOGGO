@@ -10,6 +10,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import '../main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,11 +26,48 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late Future<List<bookModel>> webtoons;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  late String token;
+  String userName = '';
+  String userEmail = '';
+  bool showEmail = false;
+  bool showSignOutConfirmation = false;
+  double dropdownHeight = 0.0;
+
   @override
   void initState() {
     super.initState();
     webtoons = ApiService.getTodaysToons();
-    print(contentUrl); // 책 목록 image에서 마지막 파라미터만 빠진 url
+    getToken();
+  }
+
+  Future<void> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('token')!;
+      userInfo(token);
+      print(token);
+    });
+  }
+
+  Future<String> userInfo(String token) async {
+    var url = Uri.parse('https://yoggo-server.fly.dev/user/myInfo');
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      setState(() {
+        userName = json.decode(response.body)[0]['name'];
+      });
+      return response.body;
+    } else {
+      throw Exception('Failed to fetch data');
+    }
   }
 
   void logout() async {
@@ -46,32 +86,84 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
         child: ListView(
-          // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('lib/images/bkground.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
-              child: Text('Drawer Header'),
+              child: Row(
+                children: [
+                  const Icon(Icons.menu_book),
+                  const Text(
+                    ' Welcome! ',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text(userName),
+                ],
+              ),
             ),
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
+            Column(
+              children: [
+                // ListTile(
+                //   title: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       GestureDetector(
+                //         child: const Text('Signed as             '),
+                //         onTap: () {
+                //           setState(() {
+                //             showEmail = !showEmail; // dropdown 상태 토글
+                //           });
+                //         },
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // if (showEmail)
+                // ListTile(
+                //   title: Text(
+                //     userEmail,
+                //     style: const TextStyle(color: Colors.blue),
+                //   ),
+                // ),
+                ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        child: const Text('Sign out               '),
+                        onTap: () {
+                          setState(() {
+                            showSignOutConfirmation =
+                                !showSignOutConfirmation; // dropdown 상태 토글
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                if (showSignOutConfirmation)
+                  ListTile(
+                    title: const Text(
+                      'Wanna Sign out?',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onTap: () {
+                      logout();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                  ),
+              ],
             ),
           ],
         ),
@@ -182,42 +274,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _openDrawer(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          color: Colors.white,
-          height: 200,
-          child: ListView(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text('Home'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
-                  );
-                },
-              ),
-              // ...
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Container bookList() {
     return Container(
       child: FutureBuilder<List<bookModel>>(
           future: webtoons,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              //Listview: 많은 양을 연속적으로 보여주고 싶을 때 row, column비추.
               return Column(
                 children: [
                   const SizedBox(
@@ -225,12 +287,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                     child: ListView.separated(
-                      // ListView는 자동으로 스크롤뷰를 가져와줌
-                      // ListView.builder는 메모리 낭비하지 않게 해줌(사용자가 스크롤 할 때 데이터 로딩)
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        // 사용자가 보고 있지 않다면 메모리에서 삭제
                         var book = snapshot.data![index];
                         return GestureDetector(
                           onTap: () {
