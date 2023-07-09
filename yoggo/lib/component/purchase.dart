@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
@@ -30,6 +31,7 @@ class Purchase extends StatefulWidget {
 class _PurchaseState extends State<Purchase> {
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   List<ProductDetails> view = [];
+  late String token;
 
   Future fetch() async {
     final bool available = await InAppPurchase.instance.isAvailable();
@@ -48,7 +50,7 @@ class _PurchaseState extends State<Purchase> {
         /// 구매 여부 pendingCompletePurchase - 승인 true / 취소 false
         if (e.pendingCompletePurchase) {
           if (!mounted) return;
-
+          successPurchase();
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const RecordInfo()));
         }
@@ -110,42 +112,32 @@ class _PurchaseState extends State<Purchase> {
   void initState() {
     Future(fetch);
     super.initState();
+    getToken();
     // TODO: Add initialization code
   }
 
-  // void purchaseUpdatedListener(List<PurchaseDetails> purchaseDetailsList) {
-  //   // 결제 정보 업데이트 시 호출되는 콜백 함수
-  //   for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
-  //     if (purchaseDetails.status == PurchaseStatus.purchased) {
-  //       // 결제 완료
-  //       _handlePurchaseSuccess(purchaseDetails);
-  //     } else if (purchaseDetails.status == PurchaseStatus.error) {
-  //       // 결제 실패
-  //       _handlePurchaseError();
-  //     }
-  //   }
-  // }
+  Future<void> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('token')!;
+    });
+  }
 
-  // void _handlePurchaseSuccess(PurchaseDetails purchaseDetails) {
-  //   // 결제 성공 시 페이지 전환을 처리하는 코드를 추가하세요.
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => RecordInfo(), // 전환할 페이지로 변경해주세요.
-  //     ),
-  //   );
-  // }
-
-  // void _handlePurchaseError() {
-  //   // 결제 실패 시 처리하는 코드를 추가하세요.
-  //   // 예: 에러 메시지 표시, 다시 시도 유도 등
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => Purchase(), // 전환할 페이지로 변경해주세요.
-  //     ),
-  //   );
-  // }
+  Future<void> successPurchase() async {
+    var url = Uri.parse('https://yoggo-server.fly.dev/user/successPurchase');
+    var response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('정보 등록 완료');
+    } else {
+      throw Exception('Failed to start inference');
+    }
+  }
 
   Future<void> startPurchase() async {
     const Set<String> products = {'product1'};

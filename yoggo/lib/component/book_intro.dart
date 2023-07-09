@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/purchase.dart';
+import 'package:yoggo/component/record_info.dart';
 import '../component/reader.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -29,11 +30,13 @@ class BookIntro extends StatefulWidget {
 
 class _BookIntroState extends State<BookIntro> {
   bool isSelected = true;
-  bool isClicked0 = false;
+  bool isClicked0 = true;
   bool isClicked1 = false;
   bool isClicked2 = false;
   bool isPurchased = false;
   bool wantPurchase = false;
+  bool goRecord = false;
+  bool completeInference = true;
   late int inferenceId;
   late String token;
   String text = '';
@@ -85,6 +88,7 @@ class _BookIntroState extends State<BookIntro> {
     });
   }
 
+//구매한 사람인지, 이 책이 인퍼런스되어 있는지 확인
   Future<String> purchaseInfo(String token) async {
     var url = Uri.parse(
         'https://yoggo-server.fly.dev/user/purchaseInfo/${widget.id}');
@@ -97,12 +101,54 @@ class _BookIntroState extends State<BookIntro> {
     );
     if (response.statusCode == 200) {
       setState(() {
-        isPurchased = json.decode(response.body)[0]['purchase'];
-        inferenceId = json.decode(response.body)[0]['inference'];
+        isPurchased = json.decode(response.body)['purchase'];
+        inferenceId = json.decode(response.body)['inference'];
       });
       return response.body;
     } else {
       throw Exception('Failed to fetch data');
+    }
+  }
+
+//인퍼런스 안 되어 있다면 시작하도록
+  Future<void> startInference(String token) async {
+    var url = Uri.parse('https://yoggo-server.fly.dev/producer/book');
+    Map data = {'contentId': widget.id};
+    var response = await http.post(url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(data));
+    if (response.statusCode == 200) {
+      if (mounted) {
+        setState(() {
+          inferenceId = json.decode(response.body)['id'];
+        });
+      }
+    } else {
+      throw Exception('Failed to start inference');
+    }
+  }
+
+//인퍼런스 완료 되었는지 (ContentVoice) 확인
+  Future<bool> checkInference(String token) async {
+    var url = Uri.parse(
+        'https://yoggo-server.fly.dev/content/inference/${widget.id}');
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        completeInference = true;
+      });
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -233,9 +279,27 @@ class _BookIntroState extends State<BookIntro> {
                                   isPurchased
                                       ? GestureDetector(
                                           onTap: () {
-                                            inferenceId == 0
-                                                ? {} //인퍼런스 요청 보내기
-                                                : cvi = inferenceId;
+                                            setState(() {
+                                              isClicked0 = false;
+                                              isClicked1 = false;
+                                              isClicked2 = false;
+                                              canChanged = true;
+                                            });
+                                            widget.record!
+                                                ? inferenceId == 0
+                                                    ? {
+                                                        startInference(token),
+                                                        setState(() {
+                                                          cvi = inferenceId;
+                                                          canChanged = false;
+                                                          completeInference =
+                                                              false;
+                                                        }),
+                                                      } //인퍼런스 요청 보내기
+                                                    : cvi = inferenceId
+                                                : setState(() {
+                                                    goRecord = true;
+                                                  });
                                           },
                                           child: Column(
                                             children: [
@@ -482,22 +546,38 @@ class _BookIntroState extends State<BookIntro> {
                       // 제목과 책 내용 요약
                       flex: 1,
                       child: GestureDetector(
-                        onTap: () {
-                          canChanged
-                              ? Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FairytalePage(
-                                      // 다음 화면으로 contetnVoiceId를 가지고 이동
-                                      record: widget.record!,
-                                      purchase: widget.purchase!,
-                                      voiceId: cvi,
-                                      lastPage: lastPage,
-                                      isSelected: true,
-                                    ),
-                                  ),
-                                )
-                              : null;
+                        onTap: () async {
+                          (cvi == inferenceId)
+                              ? await checkInference(token)
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => FairytalePage(
+                                          // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                          voiceId: cvi,
+                                          lastPage: lastPage,
+                                          isSelected: true,
+                                        ),
+                                      ))
+                                  : setState(() {
+                                      completeInference = false;
+                                    })
+                              : canChanged
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => FairytalePage(
+                                          // 다음 화면으로 contetnVoiceId를 가지고 이동
+
+                                          record: widget.record!,
+                                          purchase: widget.purchase!,
+                                          voiceId: cvi,
+                                          lastPage: lastPage,
+                                          isSelected: true,
+                                        ),
+                                      ),
+                                    )
+                                  : null;
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -557,6 +637,60 @@ class _BookIntroState extends State<BookIntro> {
                       context,
                       MaterialPageRoute(builder: (context) => const Purchase()),
                     );
+                  });
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: goRecord,
+          child: AlertDialog(
+            title: const Text('Register your voice!'),
+            content: const Text(
+                'After registering your voice, listen to the book with your voice.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  // 1초 후에 다음 페이지로 이동
+                  Future.delayed(const Duration(seconds: 1), () {
+                    setState(() {
+                      goRecord = false;
+                    });
+                  });
+                },
+                child: const Text('later'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // 1초 후에 다음 페이지로 이동
+                  Future.delayed(const Duration(seconds: 1), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RecordInfo()),
+                    );
+                  });
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: !completeInference,
+          child: AlertDialog(
+            title: const Text('Please wait a minute.'),
+            content: const Text("We're making a book with your voice."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  // 1초 후에 다음 페이지로 이동
+                  Future.delayed(const Duration(seconds: 1), () {
+                    setState(() {
+                      completeInference = true;
+                    });
                   });
                 },
                 child: const Text('OK'),
