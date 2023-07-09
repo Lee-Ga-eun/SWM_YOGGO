@@ -10,12 +10,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 class FairytalePage extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
   final bool isSelected;
+  bool? purchase, record;
   final int lastPage;
-  const FairytalePage({
+  FairytalePage({
     super.key,
     required this.voiceId, // detail_screen에서 받아오는 것들 초기화
     required this.isSelected,
     required this.lastPage,
+    this.record,
+    this.purchase,
   });
 
   @override
@@ -26,7 +29,6 @@ class _FairyTalePageState extends State<FairytalePage>
     with WidgetsBindingObserver {
   // List<BookPage> pages = []; // 책 페이지 데이터 리스트
   List<Map<String, dynamic>> pages = [];
-
   int currentPageIndex = 0; // 현재 페이지 인덱스
   bool isPlaying = true;
   bool pauseFunction = false;
@@ -236,19 +238,30 @@ class _FairyTalePageState extends State<FairytalePage>
                         Icons.check,
                         color: Color.fromARGB(255, 77, 204, 81),
                       ),
+                      // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
+                      // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~
+                      // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
                       onPressed: () {
-                        stopAudio();
-                        Navigator.push(
-                          context,
-                          //결제가 끝나면 RecordInfo로 가야 함
-                          MaterialPageRoute(
-                            builder: (context) => ReaderEnd(
-                              voiceId: widget.voiceId,
-                              lastPage: widget.lastPage,
-                              isSelected: widget.isSelected,
+                        dispose();
+                        if (widget.record != null &&
+                            widget.record == true &&
+                            widget.purchase == true) {
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.push(
+                            context,
+                            //결제가 끝나면 RecordInfo로 가야 함
+                            MaterialPageRoute(
+                              builder: (context) => ReaderEnd(
+                                voiceId: widget.voiceId,
+                                lastPage: widget.lastPage,
+                                isSelected: widget.isSelected,
+                                record: widget.record,
+                                purchase: widget.purchase,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
                     ),
             ),
