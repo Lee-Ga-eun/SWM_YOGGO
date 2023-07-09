@@ -103,6 +103,12 @@ flutter:
     - family: Prata
       fonts:
         - asset: assets/fonts/Prata-Regular.ttf
+    - family : ChelaOne
+      fonts:
+        - asset: assets/fonts/ChelaOne-Regular.ttf
+    - family: Modak
+      fonts:
+        - asset: assets/fonts/Modak-Regular.ttf
         # Prata-Regular.ttf
     # - family: Schyler
     #   fonts:
