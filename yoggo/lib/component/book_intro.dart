@@ -9,14 +9,18 @@ import 'package:yoggo/size_config.dart';
 class BookIntro extends StatefulWidget {
   final String title, thumb, summary;
   final int id;
+  bool? record;
+  bool? purchase;
 
-  const BookIntro({
+  BookIntro({
     // super.key,
     Key? key,
     required this.title,
     required this.thumb,
     required this.id,
     required this.summary,
+    this.purchase,
+    this.record,
   }) : super(key: key);
 
   @override
@@ -485,6 +489,8 @@ class _BookIntroState extends State<BookIntro> {
                                   MaterialPageRoute(
                                     builder: (context) => FairytalePage(
                                       // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                      record: widget.record!,
+                                      purchase: widget.purchase!,
                                       voiceId: cvi,
                                       lastPage: lastPage,
                                       isSelected: true,
