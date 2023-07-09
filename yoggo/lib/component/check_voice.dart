@@ -49,8 +49,8 @@ class _CheckVoiceState extends State<CheckVoice> {
                     Text(
                       'LOVEL',
                       style: TextStyle(
-                        fontFamily: 'BreeSerif',
-                        fontSize: SizeConfig.defaultSize! * 4,
+                        fontFamily: 'Modak',
+                        fontSize: SizeConfig.defaultSize! * 5,
                       ),
                     ),
                   ],

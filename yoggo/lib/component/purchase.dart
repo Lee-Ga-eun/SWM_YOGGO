@@ -38,7 +38,7 @@ class _PurchaseState extends State<Purchase> {
       const Set<String> ids = <String>{'product1'};
       ProductDetailsResponse res =
           await InAppPurchase.instance.queryProductDetails(ids);
-      this.view = res.productDetails;
+      view = res.productDetails;
 
       _inAppPurchase.purchaseStream.listen((List<PurchaseDetails> event) {
         PurchaseDetails e = event[0];
@@ -49,8 +49,8 @@ class _PurchaseState extends State<Purchase> {
         if (e.pendingCompletePurchase) {
           if (!mounted) return;
 
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => RecordInfo()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const RecordInfo()));
         }
       });
     }
@@ -108,7 +108,7 @@ class _PurchaseState extends State<Purchase> {
   //}
   @override
   void initState() {
-    Future(this.fetch);
+    Future(fetch);
     super.initState();
     // TODO: Add initialization code
   }
@@ -148,9 +148,9 @@ class _PurchaseState extends State<Purchase> {
   // }
 
   Future<void> startPurchase() async {
-    const Set<String> _products = {'product1'};
+    const Set<String> products = {'product1'};
     final ProductDetailsResponse response =
-        await InAppPurchase.instance.queryProductDetails(_products);
+        await InAppPurchase.instance.queryProductDetails(products);
     if (response.notFoundIDs.isNotEmpty) {
       print('제품이 없어요');
       return;
@@ -204,8 +204,8 @@ class _PurchaseState extends State<Purchase> {
                       Text(
                         'LOVEL',
                         style: TextStyle(
-                          fontFamily: 'BreeSerif',
-                          fontSize: SizeConfig.defaultSize! * 4,
+                          fontFamily: 'Modak',
+                          fontSize: SizeConfig.defaultSize! * 5,
                         ),
                       ),
                     ],

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/login_screen.dart';
-import 'package:yoggo/component/purchase.dart';
-import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/component/book_intro.dart';
 import 'package:yoggo/services/api_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
-import '../main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -32,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showEmail = false;
   bool showSignOutConfirmation = false;
   double dropdownHeight = 0.0;
+  late final bool purchase;
+  late final bool record;
 
   @override
   void initState() {
@@ -45,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       token = prefs.getString('token')!;
       userInfo(token);
-      print(token);
     });
   }
 
@@ -60,9 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
       setState(() {
         userName = json.decode(response.body)[0]['name'];
+        purchase = json.decode(response.body)[0]['purchase'];
+        record = false;
       });
       return response.body;
     } else {
@@ -96,41 +95,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Row(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.menu_book),
                   const Text(
                     ' Welcome! ',
                     style: TextStyle(fontSize: 20),
                   ),
-                  Text(userName),
+                  SizedBox(height: SizeConfig.defaultSize! * 1),
+                  Text(
+                    userName,
+                  ),
                 ],
               ),
             ),
             Column(
               children: [
-                // ListTile(
-                //   title: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       GestureDetector(
-                //         child: const Text('Signed as             '),
-                //         onTap: () {
-                //           setState(() {
-                //             showEmail = !showEmail; // dropdown 상태 토글
-                //           });
-                //         },
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // if (showEmail)
-                // ListTile(
-                //   title: Text(
-                //     userEmail,
-                //     style: const TextStyle(color: Colors.blue),
-                //   ),
-                // ),
                 ListTile(
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,8 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         'LOVEL',
                         style: TextStyle(
-                          fontFamily: 'BreeSerif',
-                          fontSize: SizeConfig.defaultSize! * 4,
+                          fontFamily: 'Modak',
+                          fontSize: SizeConfig.defaultSize! * 5,
                         ),
                       ),
                     ],
@@ -213,39 +194,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       //color: Colors.red,
                     ),
                   ),
-                  Positioned(
-                    left: 45,
-                    child: IconButton(
-                      icon: const Icon(Icons.favorite),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Purchase(),
-                          ),
-                        );
-                      },
-                      //color: Colors.red,
-                    ),
-                  ),
-                  Positioned(
-                    left: 70,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RecordInfo(),
-                          ),
-                        );
-                      },
-                      //color: Colors.red,
-                    ),
-                  ),
+                  // Positioned(
+                  //   left: 45,
+                  //   child: IconButton(
+                  //     icon: const Icon(Icons.favorite),
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => const Purchase(),
+                  //         ),
+                  //       );
+                  //     },
+                  //     //color: Colors.red,
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   left: 70,
+                  //   child: IconButton(
+                  //     icon: const Icon(
+                  //       Icons.favorite,
+                  //       color: Colors.red,
+                  //     ),
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => const RecordInfo(),
+                  //         ),
+                  //       );
+                  //     },
+                  //     //color: Colors.red,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -279,10 +260,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BookIntro(
-                                      title: book.title,
-                                      thumb: book.thumb,
-                                      id: book.id,
-                                      summary: book.summary),
+                                    title: book.title,
+                                    thumb: book.thumb,
+                                    id: book.id,
+                                    summary: book.summary,
+                                    purchase: purchase,
+                                    record: record,
+                                  ),
                                 ));
                           },
                           child: Column(

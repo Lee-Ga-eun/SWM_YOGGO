@@ -143,22 +143,6 @@ class _AudioRecorderState extends State<AudioRecorder> {
     //  if (Platform.isAndroid) stopRecording();
     final path = await _audioRecorder.stop();
     //  sendPathToKotlin(path);
-
-    print(path);
-    if (path != null) {
-      File fileCheck = Platform.isAndroid
-          ? File(path.replaceFirst('file://', ''))
-          : File(path.replaceFirst('file:///', ''));
-      if (fileCheck.existsSync()) {
-        print('File exists');
-      } else {
-        print('File does not exist');
-      }
-    }
-    // await _audioRecorder
-    //     .setAudioSource(MediaRecorder.AudioSource.MIC); // 마이크 오디오 소스 설정
-    // await _audioRecorder.setAudioEncoder(AudioEncoder.aacLc); // AAC LC 코덱 설정
-
     if (path != null) {
       widget.onStop?.call(path);
       path_copy = path.split('/').last;
@@ -210,8 +194,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
                             Text(
                               'LOVEL',
                               style: TextStyle(
-                                fontFamily: 'BreeSerif',
-                                fontSize: SizeConfig.defaultSize! * 4,
+                                fontFamily: 'Modak',
+                                fontSize: SizeConfig.defaultSize! * 5,
                               ),
                             ),
                           ],

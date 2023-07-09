@@ -13,50 +13,52 @@ class WaitingVoicePage extends StatefulWidget {
 
 class _WaitingVoicePageState extends State<WaitingVoicePage>
     with TickerProviderStateMixin {
-  late AnimationController _controller;
-  double _progressValue = 0.0;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  //late AnimationController _controller;
+  //double _progressValue = 0.0;
   late String token;
   String completeInferenced = '';
 
   @override
   void initState() {
     super.initState();
-    startTimer();
-    //  getToken();
+    //startTimer();
+    getToken();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    //_controller.dispose();
     super.dispose();
   }
 
-  void startTimer() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 10),
-    );
+  // void startTimer() {
+  //   _controller = AnimationController(
+  //     vsync: this,
+  //     duration: const Duration(seconds: 10),
+  //   );
 
-    _controller.addListener(() {
-      setState(() {
-        _progressValue = _controller.value;
-      });
-    });
+  //   _controller.addListener(() {
+  //     setState(() {
+  //       _progressValue = _controller.value;
+  //     });
+  //   });
 
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // 10초 후에 complete_voice.dart 페이지로 이동
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const CheckVoice(),
-          ),
-        );
-      }
-    });
+  //   _controller.addStatusListener((status) {
+  //     if (status == AnimationStatus.completed) {
+  //       // 10초 후에 complete_voice.dart 페이지로 이동
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => const CheckVoice(),
+  //         ),
+  //       );
+  //     }
+  //   });
 
-    _controller.forward();
-  }
+  //   _controller.forward();
+  // }
 
   Future<void> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,8 +70,13 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
 
   Future<void> inferenceResult(String token) async {
     while (true) {
-      var response = await http
-          .get(Uri.parse('https://yoggo-server.fly.dev/user/inference'));
+      var response = await http.get(
+        Uri.parse('https://yoggo-server.fly.dev/user/inference'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
       if (response.statusCode == 200) {
         // 데이터를 성공적으로 받아온 경우
@@ -84,6 +91,13 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
         await Future.delayed(const Duration(seconds: 1)); // 1초간 대기 후 다시 요청
       }
     }
+    await Future.delayed(Duration.zero);
+    navigatorKey.currentState?.push(
+      //context,
+      MaterialPageRoute(
+        builder: (context) => const CheckVoice(),
+      ),
+    );
   }
 
   @override
@@ -96,20 +110,20 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
+        child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(
-                value: _progressValue,
-              ),
-              const SizedBox(height: 20),
-              const Text(
+                  // value: _progressValue,
+                  ),
+              SizedBox(height: 20),
+              Text(
                 'Waiting for Voice...',
                 style: TextStyle(fontSize: 20),
               ),
-              const SizedBox(height: 5),
-              const Text(
+              SizedBox(height: 5),
+              Text(
                 'Expecting 10s',
                 style: TextStyle(fontSize: 10),
               ),

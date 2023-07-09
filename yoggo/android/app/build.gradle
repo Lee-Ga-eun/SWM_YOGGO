@@ -67,6 +67,8 @@ android {
         versionName '1.1.2'//flutterVersionName
         // 
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true  
+
     }
 
    signingConfigs { // release setting start
@@ -106,4 +108,5 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.material:material:1.9.0'
+
 }
