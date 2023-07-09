@@ -120,7 +120,7 @@ class _FairyTalePageState extends State<FairytalePage>
 
   @override
   void dispose() {
-    // audioPlayer.stop();
+    stopAudio();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
