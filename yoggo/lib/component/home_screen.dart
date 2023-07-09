@@ -59,9 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (response.statusCode == 200) {
       setState(() {
-        userName = json.decode(response.body)[0]['name'];
-        purchase = json.decode(response.body)[0]['purchase'];
-        record = false;
+        final myJson = json.decode(response.body)[0];
+        userName = myJson['name'];
+        purchase = myJson['purchase'];
+        record = myJson['record'];
       });
       return response.body;
     } else {
