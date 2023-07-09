@@ -290,7 +290,6 @@ class _BookIntroState extends State<BookIntro> {
                                                     ? {
                                                         startInference(token),
                                                         setState(() {
-                                                          cvi = inferenceId;
                                                           canChanged = false;
                                                           completeInference =
                                                               false;
@@ -682,7 +681,8 @@ class _BookIntroState extends State<BookIntro> {
           visible: !completeInference,
           child: AlertDialog(
             title: const Text('Please wait a minute.'),
-            content: const Text("We're making a book with your voice."),
+            content: const Text(
+                "We're making a book with your voice. \nIf you want to read the book right now, please choose a different voice actor!"),
             actions: [
               TextButton(
                 onPressed: () {

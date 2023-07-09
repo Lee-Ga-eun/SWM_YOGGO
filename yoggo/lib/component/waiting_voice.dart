@@ -83,7 +83,7 @@ class _WaitingVoicePageState extends State<WaitingVoicePage>
         var data = response.body;
         // 원하는 데이터를 처리하는 로직을 추가
         print(data);
-        completeInferenced = json.decode(data)['voice'];
+        completeInferenced = json.decode(data)[0];
         break; // 데이터를 받아왔으므로 반복문 종료
       } else {
         // 데이터를 받아오지 못한 경우
