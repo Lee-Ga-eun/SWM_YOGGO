@@ -45,6 +45,8 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     initialize();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+
   }
 
   Future<void> initialize() async {

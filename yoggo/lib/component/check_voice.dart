@@ -5,11 +5,11 @@ import './record_page2.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class CheckVoice extends StatefulWidget {
-  // final String completeInferenced;
+  final String infenrencedVoice;
 
   const CheckVoice({
     super.key,
-    //required this.completeInferenced,
+    required this.infenrencedVoice,
   });
 
   @override
@@ -19,9 +19,9 @@ class CheckVoice extends StatefulWidget {
 class _CheckVoiceState extends State<CheckVoice> {
   AudioPlayer audioPlayer = AudioPlayer();
 
-  void playAudio(String audioUrl) async {
-    await audioPlayer.play(UrlSource(audioUrl));
-  }
+  // void playAudio(String audioUrl) async {
+  //   await audioPlayer.play(UrlSource(audioUrl));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +60,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                   child: IconButton(
                     icon: const Icon(Icons.cancel),
                     onPressed: () {
+                      audioPlayer.stop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -86,7 +87,7 @@ class _CheckVoiceState extends State<CheckVoice> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: SingleChildScrollView(
               child: RichText(
                 textAlign: TextAlign.center,
@@ -96,7 +97,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                       children: [
                         TextSpan(
                           text:
-                              'As she emerges from the sea onto the shore, she realizes that her \n',
+                              'This dialogue highlights the mermaid\'s realization of the value\n',
                           style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
@@ -104,7 +105,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         ),
                         TextSpan(
                           text:
-                              'voice is gone, but she still recognizes its immeasurable beauty and\n',
+                              'of her voice, its intangible beauty, and its role in her pursuit of\n',
                           style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
@@ -112,7 +113,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         ),
                         TextSpan(
                           text:
-                              'preciousness. She expresses it in the following way:\n ',
+                              'true love and self-discovery. Despite losing her voice, she finds \n ',
                           style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
@@ -120,7 +121,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         ),
                         TextSpan(
                           text:
-                              '"Voice is an ineffable beauty. It is the purest and most precious gift.\n',
+                              'the strength to communicate through her heart and believes that \n',
                           style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
@@ -128,7 +129,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         ),
                         TextSpan(
                           text:
-                              'Though I have lost this cherished gift, I will embark on a journey to find\n',
+                              'love goes beyond words. The journey becomes  an opportunity for her\n',
                           style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
@@ -136,36 +137,36 @@ class _CheckVoiceState extends State<CheckVoice> {
                         ),
                         TextSpan(
                           text:
-                              'true love through other means. Even without my voice, the emotions\n',
+                              'to uncover her true essence and understand the essence of love and freedom.\n',
                           style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
-                        TextSpan(
-                          text:
-                              'and passions within me will not easily fade away. Love transcends\n',
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text:
-                              'language. In this quest to reclaim my precious voice, I will discover my\n',
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text:
-                              'true self and learn the ways of love and freedom."',
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        // TextSpan(
+                        //   text:
+                        //       'and passions within me will not easily fade away. Love transcends\n',
+                        //   style: TextStyle(
+                        //       fontSize: 16.0,
+                        //       color: Colors.black,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
+                        // TextSpan(
+                        //   text:
+                        //       'language. In this quest to reclaim my precious voice, I will discover my\n',
+                        //   style: TextStyle(
+                        //       fontSize: 16.0,
+                        //       color: Colors.black,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
+                        // TextSpan(
+                        //   text:
+                        //       'true self and learn the ways of love and freedom."',
+                        //   style: TextStyle(
+                        //       fontSize: 16.0,
+                        //       color: Colors.black,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
                       ],
                     ),
                   ],
@@ -183,6 +184,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                   children: [
                     TextButton(
                       onPressed: () {
+                        audioPlayer.stop();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -216,7 +218,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         color: Color.fromARGB(255, 194, 120, 209),
                       ),
                       onPressed: () {
-                        playAudio('data');
+                        audioPlayer.play(UrlSource(widget.infenrencedVoice));
                       },
                     ),
                     const SizedBox(
@@ -224,6 +226,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                     ),
                     TextButton(
                       onPressed: () {
+                        audioPlayer.stop();
                         Navigator.push(
                           context,
                           MaterialPageRoute(

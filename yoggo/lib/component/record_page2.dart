@@ -313,7 +313,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                     TextButton(
                       onPressed: () {
                         // 1초 후에 다음 페이지로 이동
-                        Future.delayed(const Duration(seconds: 1), () {
+                        Future.delayed(const Duration(seconds: 3), () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
