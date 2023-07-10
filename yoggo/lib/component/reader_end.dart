@@ -159,7 +159,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                 'Did you enjoy the reading?',
                 style: TextStyle(
                     fontSize: 25,
-                    color: Color.fromARGB(255, 223, 140, 238),
+                    color: Color.fromARGB(255, 175, 101, 188),
                     fontFamily: 'BreeSerif'),
               ),
               const SizedBox(height: 30),
@@ -176,7 +176,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                   style: TextButton.styleFrom(
                       padding: const EdgeInsets.only(bottom: 15, top: 15),
                       foregroundColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 214, 150, 225),
+                      backgroundColor: const Color.fromARGB(255, 175, 101, 188),
                       // minimumSize: const Size(400, 40), // 버튼의 최소 크기를 지정
                       maximumSize: const Size(450, 100)),
                   child: const Row(
@@ -214,7 +214,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                 'Did you enjoy the reading?',
                 style: TextStyle(
                     fontSize: 25,
-                    color: Color.fromARGB(255, 223, 140, 238),
+                    color: Color.fromARGB(255, 175, 101, 188),
                     fontFamily: 'BreeSerif'),
               ),
               const SizedBox(height: 30),
@@ -231,7 +231,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                   style: TextButton.styleFrom(
                       padding: const EdgeInsets.only(bottom: 15, top: 15),
                       foregroundColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 214, 150, 225),
+                      backgroundColor: const Color.fromARGB(255, 175, 101, 188),
                       // minimumSize: const Size(400, 40), // 버튼의 최소 크기를 지정
                       maximumSize: const Size(450, 100)),
                   child: const Row(
