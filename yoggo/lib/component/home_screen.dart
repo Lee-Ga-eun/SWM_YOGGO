@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/login_screen.dart';
+import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/component/book_intro.dart';
 import 'package:yoggo/services/api_service.dart';
@@ -31,12 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
   double dropdownHeight = 0.0;
   late final bool purchase;
   late final bool record;
+  bool isDataFetched = false; // 데이터를 받아온 여부를 나타내는 플래그
 
   @override
   void initState() {
     super.initState();
     webtoons = ApiService.getTodaysToons();
-    getToken();
+    if (!isDataFetched) {
+      getToken();
+    }
   }
 
   Future<void> getToken() async {
@@ -60,10 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       setState(() {
         final myJson = json.decode(response.body)[0];
-        userName = myJson['name'];
         purchase = myJson['purchase'];
+        userName = myJson['name'];
         record = myJson['record'];
       });
+      isDataFetched = true;
       return response.body;
     } else {
       throw Exception('Failed to fetch data');
@@ -114,9 +119,34 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               children: [
                 ListTile(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RecordInfo(),
+                            ),
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                              width: 2,
+                              color: Color.fromARGB(
+                                  255, 234, 234, 234)), // 테두리 스타일 설정
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8), // 테두리의 모서리를 둥글게 설정
+                          ),
+                        ),
+                        child: const Text('about subscribe'),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       GestureDetector(
                         child: const Text('Sign out               '),
                         onTap: () {
