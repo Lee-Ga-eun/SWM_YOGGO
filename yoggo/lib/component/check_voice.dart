@@ -5,11 +5,11 @@ import './record_page2.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class CheckVoice extends StatefulWidget {
-  // final String completeInferenced;
+  final String infenrencedVoice;
 
   const CheckVoice({
     super.key,
-    //required this.completeInferenced,
+    required this.infenrencedVoice,
   });
 
   @override
@@ -19,12 +19,13 @@ class CheckVoice extends StatefulWidget {
 class _CheckVoiceState extends State<CheckVoice> {
   AudioPlayer audioPlayer = AudioPlayer();
 
-  void playAudio(String audioUrl) async {
-    await audioPlayer.play(UrlSource(audioUrl));
-  }
+  // void playAudio(String audioUrl) async {
+  //   await audioPlayer.play(UrlSource(audioUrl));
+  // }
 
   @override
   Widget build(BuildContext context) {
+    print(audioPlayer.play(UrlSource(widget.infenrencedVoice)));
     return Scaffold(
         body: Container(
       decoration: const BoxDecoration(
@@ -60,6 +61,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                   child: IconButton(
                     icon: const Icon(Icons.cancel),
                     onPressed: () {
+                      audioPlayer.stop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -183,6 +185,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                   children: [
                     TextButton(
                       onPressed: () {
+                        audioPlayer.stop();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -216,7 +219,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         color: Color.fromARGB(255, 194, 120, 209),
                       ),
                       onPressed: () {
-                        playAudio('data');
+                        audioPlayer.play(UrlSource(widget.infenrencedVoice));
                       },
                     ),
                     const SizedBox(
@@ -224,6 +227,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                     ),
                     TextButton(
                       onPressed: () {
+                        audioPlayer.stop();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
