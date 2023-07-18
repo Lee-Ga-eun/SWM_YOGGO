@@ -187,84 +187,52 @@ class _HomeScreenState extends State<HomeScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: SizeConfig.defaultSize!,
-            ),
-            Expanded(
-              flex: 1,
-              child: Stack(
-                alignment: Alignment.centerLeft,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'LOVEL',
-                        style: TextStyle(
-                          fontFamily: 'Modak',
-                          fontSize: SizeConfig.defaultSize! * 5,
+        child: SafeArea(
+          minimum: const EdgeInsets.only(left: 30),
+          child: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.defaultSize!,
+              ),
+              Expanded(
+                flex: 1,
+                child: Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'LOVEL',
+                          style: TextStyle(
+                            fontFamily: 'Modak',
+                            fontSize: SizeConfig.defaultSize! * 5,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      //left: 20,
+                      child: InkWell(
+                        onTap: () {
+                          _scaffoldKey.currentState?.openDrawer();
+                        },
+                        child: Image.asset(
+                          'lib/images/hamburger.png',
+                          width: 35, // 이미지의 폭 설정
+                          height: 35, // 이미지의 높이 설정
                         ),
                       ),
-                    ],
-                  ),
-                  Positioned(
-                    left: 20,
-                    child: IconButton(
-                      icon: const Icon(Icons.menu),
-                      onPressed: () {
-                        _scaffoldKey.currentState?.openDrawer();
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const Purchase(),
-                        //   ),
-                        // );
-                      },
-                      //color: Colors.red,
                     ),
-                  ),
-                  // Positioned(
-                  //   left: 45,
-                  //   child: IconButton(
-                  //     icon: const Icon(Icons.favorite),
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (context) => const Purchase(),
-                  //         ),
-                  //       );
-                  //     },
-                  //     //color: Colors.red,
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   left: 70,
-                  //   child: IconButton(
-                  //     icon: const Icon(
-                  //       Icons.favorite,
-                  //       color: Colors.red,
-                  //     ),
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (context) => const RecordInfo(),
-                  //         ),
-                  //       );
-                  //     },
-                  //     //color: Colors.red,
-                  //   ),
-                  // ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(flex: 5, child: bookList()),
-          ],
+              Expanded(flex: 5, child: bookList()),
+            ],
+          ),
         ),
       ),
+      //   ),
     );
   }
 
@@ -308,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   clipBehavior: Clip.hardEdge,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10)),
-                                  height: 200,
+                                  height: SizeConfig.defaultSize! * 22,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: CachedNetworkImage(
