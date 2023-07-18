@@ -110,6 +110,10 @@ flutter:
     - family: Modak
       fonts:
         - asset: assets/fonts/Modak-Regular.ttf
+    - family: Molengo
+      fonts:
+        - asset: assets/fonts/Molengo-Regular.ttf
+
         # Prata-Regular.ttf
     # - family: Schyler
     #   fonts:
