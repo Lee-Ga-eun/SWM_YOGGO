@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:yoggo/component/reader_end.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:yoggo/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import './reader_end.dart';
 
 class FairytalePage extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
@@ -119,8 +119,8 @@ class _FairyTalePageState extends State<FairytalePage>
   }
 
   @override
-  void dispose() {
-    stopAudio();
+  void dispose() async {
+    await stopAudio();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -129,7 +129,6 @@ class _FairyTalePageState extends State<FairytalePage>
   Widget build(BuildContext context) {
     if (pages.isEmpty) {
       return Scaffold(
-        //backgroundColor: Colors.yellow, // 노란색 배경 설정
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -172,6 +171,16 @@ class _FairyTalePageState extends State<FairytalePage>
                 currentPage: currentPageIndex,
                 audioPlayer: audioPlayer,
                 pauseFunction: pauseFunction,
+                previousPage: previousPage,
+                currentPageIndex: currentPageIndex,
+                nextPage: nextPage,
+                lastPage: widget.lastPage,
+                record: widget.record,
+                purchase: widget.purchase,
+                voiceId: widget.voiceId,
+                isSelected: widget.isSelected,
+                dispose: dispose,
+                stopAudio: stopAudio,
               ),
             ),
             // 다음 페이지 위젯
@@ -192,6 +201,16 @@ class _FairyTalePageState extends State<FairytalePage>
                     : currentPageIndex,
                 audioPlayer: audioPlayer,
                 pauseFunction: pauseFunction,
+                previousPage: previousPage,
+                currentPageIndex: currentPageIndex,
+                nextPage: nextPage,
+                lastPage: widget.lastPage,
+                record: widget.record,
+                purchase: widget.purchase,
+                voiceId: widget.voiceId,
+                isSelected: widget.isSelected,
+                dispose: dispose,
+                stopAudio: stopAudio,
               ),
             ),
             Offstage(
@@ -207,95 +226,21 @@ class _FairyTalePageState extends State<FairytalePage>
                 currentPage: currentPageIndex,
                 audioPlayer: audioPlayer,
                 pauseFunction: pauseFunction,
+                previousPage: previousPage,
+                currentPageIndex: currentPageIndex,
+                nextPage: nextPage,
+                lastPage: widget.lastPage,
+                record: widget.record,
+                purchase: widget.purchase,
+                voiceId: widget.voiceId,
+                isSelected: widget.isSelected,
+                dispose: dispose,
+                stopAudio: stopAudio,
               ),
             ),
-            Positioned(
-                top: 5,
-                left: 10,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.cancel,
-                    color: Colors.white,
-                    size: 35,
-                  ),
-                  onPressed: () {
-                    stopAudio();
-                    Navigator.of(context).pop();
-                  },
-                )),
-
-            // 오른쪽 화살표 버튼
-            Positioned(
-              bottom: 5,
-              right: 10,
-              child: currentPageIndex != widget.lastPage - 1
-                  ? IconButton(
-                      icon: const Icon(Icons.arrow_forward),
-                      onPressed: nextPage,
-                    )
-                  : IconButton(
-                      icon: const Icon(
-                        Icons.check,
-                        color: Color.fromARGB(255, 77, 204, 81),
-                      ),
-                      // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
-                      // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~
-                      // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
-                      onPressed: () {
-                        dispose();
-                        if (widget.record != null &&
-                            widget.record == true &&
-                            widget.purchase == true) {
-                          Navigator.pop(context);
-                        } else {
-                          Navigator.push(
-                            context,
-                            //결제가 끝나면 RecordInfo로 가야 함
-                            MaterialPageRoute(
-                              builder: (context) => ReaderEnd(
-                                voiceId: widget.voiceId,
-                                lastPage: widget.lastPage,
-                                isSelected: widget.isSelected,
-                                record: widget.record,
-                                purchase: widget.purchase,
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-            ),
-            // 왼쪽 화살표 버튼
-            Positioned(
-              bottom: 5,
-              left: 10,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: previousPage,
-              ),
-            ),
-            // 중간 스탑 버튼
-            // Align(
-            //     alignment: Alignment.bottomCenter,
-            //     child: IconButton(
-            //       icon: isPlaying
-            //           ? const Icon(Icons.pause)
-            //           : const Icon(Icons.play_arrow),
-            //       onPressed: () {
-            //         pauseFunction = true;
-            //         if (isPlaying) {
-            //           pauseAudio();
-            //           //audioPlayer.stop();
-            //         } else {
-            //           resumeAudio();
-            //         }
-            //         setState(() {
-            //           isPlaying = !isPlaying;
-            //         });
-            //       },
-            //     ))
           ],
         ),
+        // ),
       ),
       onWillPop: () {
         stopAudio();
@@ -312,6 +257,16 @@ class PageWidget extends StatefulWidget {
   final AudioPlayer audioPlayer;
   final bool pauseFunction;
   final bool realCurrent;
+  final previousPage;
+  final int currentPageIndex;
+  final nextPage;
+  final int lastPage;
+  final bool? purchase;
+  final bool? record;
+  final int voiceId; //detail_screen에서 받아오는 것들
+  final bool isSelected;
+  final dispose;
+  final stopAudio;
 
   const PageWidget({
     Key? key,
@@ -321,6 +276,16 @@ class PageWidget extends StatefulWidget {
     required this.audioPlayer,
     required this.pauseFunction,
     required this.realCurrent,
+    required this.previousPage,
+    required this.currentPageIndex,
+    required this.nextPage,
+    required this.lastPage,
+    this.purchase,
+    required this.voiceId,
+    required this.isSelected,
+    this.record,
+    required this.dispose,
+    required this.stopAudio,
   }) : super(key: key);
 
   @override
@@ -346,100 +311,172 @@ class _PageWidgetState extends State<PageWidget> {
       imageUrl: imageUrl,
     );
     return Scaffold(
-      body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('lib/images/bkground.png'),
-              fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/images/bkground.png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.defaultSize!),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: imagePostion == 1 ? 1 : 2,
-                        child: Container(
-                          //color: position == 1 ? Colors.red : Colors.white,
-                          child: imagePostion == 1
-                              ? Padding(
-                                  padding: EdgeInsets.only(
-                                      left: SizeConfig.defaultSize! * 2),
-                                  child: ClipRRect(
+          SafeArea(
+            top: false,
+            bottom: false,
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.defaultSize!),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    //top: 5,
+                    //  left: 10,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.cancel,
+                        color: Colors.white,
+                        size: 35,
+                      ),
+                      onPressed: () {
+                        // stopAudio();
+                        widget.dispose();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 8,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: imagePostion == 1 ? 1 : 2,
+                          child: Container(
+                            //  color: Colors.red,
+                            child: imagePostion == 1
+                                ? ClipRRect(
                                     borderRadius: BorderRadius.circular(
                                         20), // 모서리를 원형으로 설정
                                     child: Image.network(
                                       imageUrl,
+                                      fit: BoxFit.cover,
+                                      //height: SizeConfig.defaultSize! * 30,
+                                      //width: SizeConfig.defaultSize! * 30,
                                     ),
-                                  ),
-                                ) // // 그림을 1번 화면에 배치
-                              : Padding(
-                                  padding: EdgeInsets.only(
-                                      left: SizeConfig.defaultSize! * 5,
-                                      right: SizeConfig.defaultSize!),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          // textAlign: TextAlign.center,
-                                          text,
-                                          style: TextStyle(
-                                              fontSize:
-                                                  SizeConfig.defaultSize! * 2,
-                                              fontFamily: 'BreeSerif'),
-                                        ),
-                                      ],
+                                  )
+                                // ) // // 그림을 1번 화면에 배치
+                                : SingleChildScrollView(
+                                    child: Text(
+                                      // textAlign: TextAlign.center,
+                                      text,
+                                      style: TextStyle(
+                                          fontSize: SizeConfig.defaultSize! * 2,
+                                          fontFamily: 'BreeSerif'),
                                     ),
+                                    //    ],
+                                    //),
                                   ),
-                                ), // 글자를 2번 화면에 배치
+                            // ), // 글자를 2번 화면에 배치
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: imagePostion == 0 ? 1 : 2,
-                        child: Container(
-                          //color: position == 2 ? Colors.red : Colors.white,
-                          child: imagePostion == 0
-                              ? ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(20), // 모서리를 원형으로 설정
-                                  child: Image.network(
-                                    imageUrl,
-                                  ),
-                                ) // 그림을 2번 화면에 배치
-                              : Padding(
-                                  padding: EdgeInsets.only(
-                                      right: SizeConfig.defaultSize! * 2,
-                                      left: SizeConfig.defaultSize! * 2),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          text,
-                                          style: TextStyle(
-                                              fontSize:
-                                                  SizeConfig.defaultSize! * 2,
-                                              fontFamily: 'BreeSerif'),
-                                        ),
-                                      ],
+                        Expanded(
+                          flex: imagePostion == 0 ? 1 : 2,
+                          child: Container(
+                            //color: position == 2 ? Colors.red : Colors.white,
+                            child: imagePostion == 0
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        20), // 모서리를 원형으로 설정
+                                    child: Image.network(
+                                      imageUrl,
+                                      width: SizeConfig.defaultSize! * 22,
                                     ),
-                                  ),
-                                ), // 글자를 1번 화면에 배치
+                                  ) // 그림을 2번 화면에 배치
+                                : Padding(
+                                    padding: EdgeInsets.only(
+                                        right: SizeConfig.defaultSize! * 2,
+                                        left: SizeConfig.defaultSize! * 2),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            text,
+                                            style: TextStyle(
+                                                fontSize:
+                                                    SizeConfig.defaultSize! * 2,
+                                                fontFamily: 'BreeSerif'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ), // 글자를 1번 화면에 배치
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          // bottom: 5,
+                          // left: 10,
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            onPressed: widget.previousPage,
+                          ),
+                        ),
+                        Expanded(
+                          child: widget.currentPageIndex != widget.lastPage - 1
+                              ? IconButton(
+                                  icon: const Icon(Icons.arrow_forward),
+                                  onPressed: widget.nextPage,
+                                )
+                              : IconButton(
+                                  icon: const Icon(
+                                    Icons.check,
+                                    color: Color.fromARGB(255, 77, 204, 81),
+                                  ),
+                                  // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
+                                  // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~
+                                  // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
+                                  onPressed: () {
+                                    widget.dispose();
+                                    if (widget.record != null &&
+                                        widget.record == true &&
+                                        widget.purchase == true) {
+                                      Navigator.pop(context);
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        //결제가 끝나면 RecordInfo로 가야 함
+                                        MaterialPageRoute(
+                                          builder: (context) => ReaderEnd(
+                                            voiceId: widget.voiceId,
+                                            lastPage: widget.lastPage,
+                                            isSelected: widget.isSelected,
+                                            record: widget.record,
+                                            purchase: widget.purchase,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )),
+          ),
+        ],
+      ),
     );
   }
 }
