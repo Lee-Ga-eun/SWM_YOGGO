@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/size_config.dart';
-import './record_page2.dart';
 
 class RecordInfo extends StatefulWidget {
   const RecordInfo({super.key});
@@ -76,97 +75,110 @@ class _RecordInfoState extends State<RecordInfo> {
                 ],
               ),
             ),
+            SizedBox(
+              height: SizeConfig.defaultSize!,
+            ),
             Expanded(
-              flex: 2,
-              child: SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: const TextSpan(
-                        children: [
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    'Now it\'s your turn to make your voice heard!\n\n',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                              TextSpan(
-                                text:
-                                    'You can try again until you get a performance you like\n\n',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                              TextSpan(
-                                text:
-                                    'The best quality when recorded for about ',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: '40 seconds',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text:
-                                    '\nEliminate ambient noise and focus on your voice\n',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: 'The more of ',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: 'your voice without gaps',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: ', the better the quality.',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )),
+              flex: 1,
+              child: Text(
+                'Now it\'s your turn to make your voice heard!',
+                style: TextStyle(
+                  fontSize: SizeConfig.defaultSize! * 2,
+                  fontFamily: 'Molengo',
+                ),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AudioRecorder(
-                        // 다음 화면으로 contetnVoiceId를 가지고 이동
-
+            Expanded(
+                flex: 4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        const Image(
+                          image: AssetImage('lib/images/quite.png'),
                         ),
-                  ),
-                );
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color.fromARGB(255, 175, 101, 188),
-                minimumSize: const Size(400, 40), // 버튼의 최소 크기를 지정
-              ),
-              child: const Text(
-                "Let's make it",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            const Expanded(
-                child: Text(
-                    'Don’t worry! The recorded voice is never accessed by others.'))
+                        SizedBox(
+                          height: SizeConfig.defaultSize! * 2,
+                        ),
+                        Text(
+                          "Eliminate\nambient noise\nand focus on\nyour voice",
+                          style: TextStyle(
+                              fontSize: SizeConfig.defaultSize! * 2,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Molengo'),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: SizeConfig.defaultSize! * 4,
+                    ),
+                    Column(
+                      children: [
+                        const Image(
+                          image: AssetImage('lib/images/speach1.png'),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.defaultSize! * 2,
+                        ),
+                        Text(
+                          "The more of\n your voice \nwithout gaps \nthe better quality",
+                          style: TextStyle(
+                            fontSize: SizeConfig.defaultSize! * 2,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Molengo',
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: SizeConfig.defaultSize! * 4,
+                    ),
+                    Column(
+                      children: [
+                        const Image(
+                          image: AssetImage('lib/images/thumbsUp.png'),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.defaultSize! * 2,
+                        ),
+                        Text(
+                          "The best quality\nwhen recorded\nfor about\n40 seconds",
+                          style: TextStyle(
+                            fontSize: SizeConfig.defaultSize! * 2,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Molengo',
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: SizeConfig.defaultSize! * 4,
+                    ),
+                    Column(
+                      children: [
+                        const Image(
+                          image: AssetImage('lib/images/infinite.png'),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.defaultSize! * 2,
+                        ),
+                        Text(
+                          "You can try again\nuntil you want",
+                          style: TextStyle(
+                            fontSize: SizeConfig.defaultSize! * 2,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Molengo',
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ],
+                ))
           ],
         ),
       ),
