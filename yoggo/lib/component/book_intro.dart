@@ -369,7 +369,7 @@ class _BookIntroState extends State<BookIntro> {
                                             padding: const EdgeInsets.only(
                                                 right: 8.0),
                                             child: Image.asset(
-                                              '${'lib/images/' + voices[0]['voiceName']}.png',
+                                              'lib/images/jolly.png',
                                               color: isClicked0
                                                   ? null
                                                   : const Color.fromARGB(
@@ -406,7 +406,7 @@ class _BookIntroState extends State<BookIntro> {
                                             padding: const EdgeInsets.only(
                                                 right: 8.0),
                                             child: Image.asset(
-                                              '${'lib/images/' + voices[1]['voiceName']}.png',
+                                              'lib/images/morgan.png',
                                               color: isClicked1
                                                   ? null
                                                   : const Color.fromARGB(
@@ -443,7 +443,7 @@ class _BookIntroState extends State<BookIntro> {
                                             padding: const EdgeInsets.only(
                                                 right: 8.0),
                                             child: Image.asset(
-                                              '${'lib/images/' + voices[2]['voiceName']}.png',
+                                              'lib/images/eric.png',
                                               color: isClicked2
                                                   ? null
                                                   : const Color.fromARGB(
