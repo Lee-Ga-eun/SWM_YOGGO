@@ -188,6 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: SafeArea(
+          bottom: false,
+          top: false,
           minimum: const EdgeInsets.only(left: 30),
           child: Column(
             children: [
@@ -195,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: SizeConfig.defaultSize!,
               ),
               Expanded(
-                flex: 1,
+                flex: SizeConfig.defaultSize!.toInt(),
                 child: Stack(
                   alignment: Alignment.centerLeft,
                   children: [
@@ -227,7 +229,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              Expanded(flex: 5, child: bookList()),
+              Expanded(
+                  flex: SizeConfig.defaultSize!.toInt() * 4,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            height: SizeConfig.defaultSize! * 36,
+                            child: bookList()),
+                        // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
+                        // Container(
+                        //   color: Colors.yellow,
+                        //   height: 300,
+                        //   child: const Center(
+                        //     child: Text(
+                        //       'Scrollable Content 2',
+                        //       style: TextStyle(fontSize: 24),
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  )),
+              // Expanded(
+              //   child: bookList(),
+              // ),
             ],
           ),
         ),
@@ -289,15 +315,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                height: 10,
+                              SizedBox(
+                                height: SizeConfig.defaultSize!.toInt() * 1,
                               ),
                               SizedBox(
-                                width: 220,
+                                width: SizeConfig.defaultSize! * 20,
                                 child: Text(
                                   book.title,
-                                  style:
-                                      const TextStyle(fontFamily: 'BreeSerif'),
+                                  style: TextStyle(
+                                      fontFamily: 'BreeSerif',
+                                      fontSize: SizeConfig.defaultSize! * 2),
                                   textAlign: TextAlign.center,
                                   maxLines: 2,
                                 ),
