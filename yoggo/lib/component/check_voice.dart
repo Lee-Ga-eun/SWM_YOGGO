@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yoggo/size_config.dart';
 import '../component/home_screen.dart';
-import './record_page2.dart';
+import './record_retry.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class CheckVoice extends StatefulWidget {
@@ -188,7 +188,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AudioRecorder(
+                            builder: (context) => const AudioRecorderRetry(
                                 // rerecord: true,
                                 // mustDelete: widget.path,
                                 ),
