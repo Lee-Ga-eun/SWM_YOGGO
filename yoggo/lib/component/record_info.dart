@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yoggo/component/home_screen.dart';
 import 'package:yoggo/size_config.dart';
+import './record_page2.dart';
 
 class RecordInfo extends StatefulWidget {
   const RecordInfo({super.key});
@@ -89,96 +90,118 @@ class _RecordInfoState extends State<RecordInfo> {
               ),
             ),
             Expanded(
-                flex: 4,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        const Image(
-                          image: AssetImage('lib/images/quite.png'),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.defaultSize! * 2,
-                        ),
-                        Text(
-                          "Eliminate\nambient noise\nand focus on\nyour voice",
-                          style: TextStyle(
-                              fontSize: SizeConfig.defaultSize! * 2,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Molengo'),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      width: SizeConfig.defaultSize! * 4,
-                    ),
-                    Column(
-                      children: [
-                        const Image(
-                          image: AssetImage('lib/images/speach1.png'),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.defaultSize! * 2,
-                        ),
-                        Text(
-                          "The more of\n your voice \nwithout gaps \nthe better quality",
-                          style: TextStyle(
+              flex: 4,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      const Image(
+                        image: AssetImage('lib/images/quite.png'),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.defaultSize! * 2,
+                      ),
+                      Text(
+                        "Eliminate\nambient noise\nand focus on\nyour voice",
+                        style: TextStyle(
                             fontSize: SizeConfig.defaultSize! * 2,
                             fontWeight: FontWeight.w400,
-                            fontFamily: 'Molengo',
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      width: SizeConfig.defaultSize! * 4,
-                    ),
-                    Column(
-                      children: [
-                        const Image(
-                          image: AssetImage('lib/images/thumbsUp.png'),
+                            fontFamily: 'Molengo'),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 4,
+                  ),
+                  Column(
+                    children: [
+                      const Image(
+                        image: AssetImage('lib/images/speach1.png'),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.defaultSize! * 2,
+                      ),
+                      Text(
+                        "The more of\n your voice \nwithout gaps \nthe better quality",
+                        style: TextStyle(
+                          fontSize: SizeConfig.defaultSize! * 2,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Molengo',
                         ),
-                        SizedBox(
-                          height: SizeConfig.defaultSize! * 2,
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 4,
+                  ),
+                  Column(
+                    children: [
+                      const Image(
+                        image: AssetImage('lib/images/thumbsUp.png'),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.defaultSize! * 2,
+                      ),
+                      Text(
+                        "The best quality\nwhen recorded\nfor about\n40 seconds",
+                        style: TextStyle(
+                          fontSize: SizeConfig.defaultSize! * 2,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Molengo',
                         ),
-                        Text(
-                          "The best quality\nwhen recorded\nfor about\n40 seconds",
-                          style: TextStyle(
-                            fontSize: SizeConfig.defaultSize! * 2,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Molengo',
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      width: SizeConfig.defaultSize! * 4,
-                    ),
-                    Column(
-                      children: [
-                        const Image(
-                          image: AssetImage('lib/images/infinite.png'),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 4,
+                  ),
+                  Column(
+                    children: [
+                      const Image(
+                        image: AssetImage('lib/images/infinite.png'),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.defaultSize! * 2,
+                      ),
+                      Text(
+                        "You can try again\nuntil you want",
+                        style: TextStyle(
+                          fontSize: SizeConfig.defaultSize! * 2,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Molengo',
                         ),
-                        SizedBox(
-                          height: SizeConfig.defaultSize! * 2,
+                        textAlign: TextAlign.center,
+                      ),
+                      Positioned(
+                          child: IconButton(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.defaultSize! * 13,
+                            top: SizeConfig.defaultSize! * 2),
+                        icon: Icon(
+                          Icons.arrow_circle_right_outlined,
+                          size: SizeConfig.defaultSize! * 4,
+                          color: Colors.black,
                         ),
-                        Text(
-                          "You can try again\nuntil you want",
-                          style: TextStyle(
-                            fontSize: SizeConfig.defaultSize! * 2,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Molengo',
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ],
-                ))
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AudioRecorder(
+                                  // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                  ),
+                            ),
+                          );
+                        },
+                      ))
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

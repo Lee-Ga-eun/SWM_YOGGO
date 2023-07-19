@@ -331,13 +331,12 @@ class _PageWidgetState extends State<PageWidget> {
                 children: [
                   Expanded(
                     flex: 1,
-                    //top: 5,
-                    //  left: 10,
                     child: IconButton(
-                      icon: const Icon(
+                      alignment: Alignment.centerLeft,
+                      icon: Icon(
                         Icons.cancel,
                         color: Colors.white,
-                        size: 35,
+                        size: SizeConfig.defaultSize! * 3.5,
                       ),
                       onPressed: () {
                         // stopAudio();
@@ -426,20 +425,28 @@ class _PageWidgetState extends State<PageWidget> {
                           // bottom: 5,
                           // left: 10,
                           child: IconButton(
-                            icon: const Icon(Icons.arrow_back),
+                            icon: Icon(
+                              Icons.arrow_back,
+                              size: SizeConfig.defaultSize! * 3,
+                            ),
                             onPressed: widget.previousPage,
                           ),
                         ),
                         Expanded(
                           child: widget.currentPageIndex != widget.lastPage - 1
                               ? IconButton(
-                                  icon: const Icon(Icons.arrow_forward),
+                                  icon: Icon(
+                                    Icons.arrow_forward,
+                                    size: SizeConfig.defaultSize! * 3,
+                                  ),
                                   onPressed: widget.nextPage,
                                 )
                               : IconButton(
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.check,
-                                    color: Color.fromARGB(255, 77, 204, 81),
+                                    color:
+                                        const Color.fromARGB(255, 77, 204, 81),
+                                    size: SizeConfig.defaultSize! * 3,
                                   ),
                                   // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
                                   // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~
@@ -449,7 +456,19 @@ class _PageWidgetState extends State<PageWidget> {
                                     if (widget.record != null &&
                                         widget.record == true &&
                                         widget.purchase == true) {
-                                      Navigator.pop(context);
+                                      //Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ReaderEnd(
+                                            voiceId: widget.voiceId,
+                                            lastPage: widget.lastPage,
+                                            isSelected: widget.isSelected,
+                                            record: widget.record,
+                                            purchase: widget.purchase,
+                                          ),
+                                        ),
+                                      );
                                     } else {
                                       Navigator.push(
                                         context,
