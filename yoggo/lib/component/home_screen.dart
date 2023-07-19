@@ -193,9 +193,6 @@ class _HomeScreenState extends State<HomeScreen> {
           minimum: const EdgeInsets.only(left: 30),
           child: Column(
             children: [
-              SizedBox(
-                height: SizeConfig.defaultSize!,
-              ),
               Expanded(
                 flex: SizeConfig.defaultSize!.toInt(),
                 child: Stack(
@@ -215,6 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Positioned(
                       //left: 20,
+                      top: SizeConfig.defaultSize! * 2,
                       child: InkWell(
                         onTap: () {
                           _scaffoldKey.currentState?.openDrawer();
@@ -229,11 +227,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: SizeConfig.defaultSize! * 1.5,
+              ),
               Expanded(
                   flex: SizeConfig.defaultSize!.toInt() * 4,
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: SizeConfig.defaultSize! * 2,
+                              right: SizeConfig.defaultSize! * 2),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                color: Colors.white),
+                            // color: Colors.white,
+                            height: SizeConfig.defaultSize! * 4,
+                            child: const Center(
+                              child: Text(
+                                'Banner',
+                                style: TextStyle(fontSize: 24),
+                              ),
+                            ),
+                          ),
+                        ),
                         SizedBox(
                             height: SizeConfig.defaultSize! * 36,
                             child: bookList()),
@@ -316,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               SizedBox(
-                                height: SizeConfig.defaultSize!.toInt() * 1,
+                                height: SizeConfig.defaultSize! * 1,
                               ),
                               SizedBox(
                                 width: SizeConfig.defaultSize! * 20,
@@ -324,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   book.title,
                                   style: TextStyle(
                                       fontFamily: 'BreeSerif',
-                                      fontSize: SizeConfig.defaultSize! * 2),
+                                      fontSize: SizeConfig.defaultSize! * 1.6),
                                   textAlign: TextAlign.center,
                                   maxLines: 2,
                                 ),
