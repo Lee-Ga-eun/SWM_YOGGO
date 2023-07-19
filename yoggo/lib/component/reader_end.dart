@@ -68,77 +68,60 @@ class _ReaderEndState extends State<ReaderEnd> {
                       ),
                     ],
                   ),
-                  // Positioned(
-                  //   left: 20,
-                  //   child: IconButton(
-                  //     icon: const Icon(Icons.cancel),
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (context) => const HomeScreen(),
-                  //         ),
-                  //       );
-                  //     },
-                  //     //color: Colors.red,
-                  //   ),
-                  // ),
                 ],
               ),
             ),
             widget.purchase != null
                 ? (widget.purchase == true && widget.record == false
                     ? notRecordUser()
-                    : notPurchaseUser())
+                    : widget.purchase == true && widget.record == true
+                        ? allPass()
+                        : notPurchaseUser())
                 : Container(),
             Expanded(
                 flex: SizeConfig.defaultSize!.toInt(),
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Padding(
+                  IconButton(
                     padding:
-                        EdgeInsets.only(bottom: SizeConfig.defaultSize! * 5),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FairytalePage(
-                              // 다음 화면으로 contetnVoiceId를 가지고 이동
-                              voiceId: widget.voiceId,
-                              lastPage: widget.lastPage,
-                              isSelected: widget.isSelected,
-                              record: widget.record,
-                              purchase: widget.purchase,
-                            ),
+                        EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FairytalePage(
+                            // 다음 화면으로 contetnVoiceId를 가지고 이동
+                            voiceId: widget.voiceId,
+                            lastPage: widget.lastPage,
+                            isSelected: widget.isSelected,
+                            record: widget.record,
+                            purchase: widget.purchase,
                           ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.replay,
-                        size: SizeConfig.defaultSize! * 4,
-                      ),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.replay,
+                      size: SizeConfig.defaultSize! * 4,
                     ),
                   ),
                   SizedBox(
                     width: SizeConfig.defaultSize! * 2,
                   ),
-                  Padding(
+                  IconButton(
                     padding:
-                        EdgeInsets.only(bottom: SizeConfig.defaultSize! * 5),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.home,
-                        size: SizeConfig.defaultSize! * 4,
-                      ),
+                        EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomeScreen(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.home,
+                      size: SizeConfig.defaultSize! * 4,
                     ),
                   ),
                 ]))
@@ -146,6 +129,41 @@ class _ReaderEndState extends State<ReaderEnd> {
         ),
       ),
     );
+  }
+
+  Expanded allPass() {
+    return Expanded(
+        flex: SizeConfig.defaultSize!.toInt() * 3,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'lib/images/congratulate1.png',
+                    width: SizeConfig.defaultSize! * 5,
+                    alignment: Alignment.topCenter,
+                  ),
+                  Text(
+                    'Congratulations on \n completing the reading',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontFamily: 'Molengo',
+                        fontSize: SizeConfig.defaultSize! * 2.5),
+                  ),
+                  Image.asset(
+                    'lib/images/congratulate2.png',
+                    width: SizeConfig.defaultSize! * 5,
+                    alignment: Alignment.topCenter,
+                  )
+                ],
+              ),
+            ],
+          ),
+        ));
   }
 
   Expanded notPurchaseUser() {
