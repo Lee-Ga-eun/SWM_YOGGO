@@ -230,50 +230,77 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: SizeConfig.defaultSize! * 1.5,
-              ),
+              // SizedBox(
+              //   height: SizeConfig.defaultSize! * 1.5,
+              // ),
               Expanded(
-                  flex: SizeConfig.defaultSize!.toInt() * 4,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.defaultSize! * 2,
-                              right: SizeConfig.defaultSize! * 2),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                color: Colors.white),
-                            // color: Colors.white,
-                            height: SizeConfig.defaultSize! * 4,
-                            child: const Center(
-                              child: Text(
-                                'Banner',
-                                style: TextStyle(fontSize: 24),
-                              ),
-                            ),
+                flex: SizeConfig.defaultSize!.toInt() * 1,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.defaultSize! * 2,
+                          right: SizeConfig.defaultSize! * 2),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white),
+                        // color: Colors.white,
+                        height: SizeConfig.defaultSize! * 4,
+                        child: const Center(
+                          child: Text(
+                            'Banner',
+                            style: TextStyle(fontSize: 24),
                           ),
                         ),
-                        SizedBox(
-                            height: SizeConfig.defaultSize! * 36,
-                            child: bookList()),
-                        // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
-                        // Container(
-                        //   color: Colors.yellow,
-                        //   height: 300,
-                        //   child: const Center(
-                        //     child: Text(
-                        //       'Scrollable Content 2',
-                        //       style: TextStyle(fontSize: 24),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
+                      ),
                     ),
-                  )),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: SizeConfig.defaultSize!.toInt() * 4,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //       left: SizeConfig.defaultSize! * 2,
+                      //       right: SizeConfig.defaultSize! * 2),
+                      //   child: Container(
+                      //     decoration: const BoxDecoration(
+                      //         borderRadius:
+                      //             BorderRadius.all(Radius.circular(10)),
+                      //         color: Colors.white),
+                      //     // color: Colors.white,
+                      //     height: SizeConfig.defaultSize! * 4,
+                      //     child: const Center(
+                      //       child: Text(
+                      //         'Banner',
+                      //         style: TextStyle(fontSize: 24),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: SizeConfig.defaultSize! * 36,
+                        child: bookList(),
+                      ),
+                      // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
+                      // Container(
+                      //   color: Colors.yellow,
+                      //   height: 300,
+                      //   child: const Center(
+                      //     child: Text(
+                      //       'Scrollable Content 2',
+                      //       style: TextStyle(fontSize: 24),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
               // Expanded(
               //   child: bookList(),
               // ),
@@ -293,9 +320,9 @@ class _HomeScreenState extends State<HomeScreen> {
             if (snapshot.hasData) {
               return Column(
                 children: [
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  // const SizedBox(
+                  //   height: 40,
+                  // ),
                   Expanded(
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
