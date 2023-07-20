@@ -116,13 +116,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    ' Welcome! ',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(height: SizeConfig.defaultSize! * 1),
                   Text(
-                    userName,
+                    ' Welcome! ',
+                    style: TextStyle(
+                        fontSize: SizeConfig.defaultSize! * 1.8,
+                        fontFamily: 'Molengo'),
+                  ),
+                  SizedBox(height: SizeConfig.defaultSize!),
+                  Padding(
+                    padding: EdgeInsets.only(left: SizeConfig.defaultSize! * 1),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.account_circle,
+                          size: SizeConfig.defaultSize! * 2.3,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.defaultSize! * 0.5,
+                        ),
+                        Text(
+                          userName,
+                          style: TextStyle(
+                              fontSize: SizeConfig.defaultSize! * 1.4),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -134,34 +152,37 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => purchase
-                                  ? const RecordInfo()
-                                  : const Purchase(),
-                            ),
-                          );
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(
-                              width: 2,
-                              color: Color.fromARGB(
-                                  255, 234, 234, 234)), // 테두리 스타일 설정
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(8), // 테두리의 모서리를 둥글게 설정
-                          ),
-                        ),
-                        child: const Text('about subscribe'),
-                      ),
+                      // OutlinedButton(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => purchase
+                      //             ? const RecordInfo()
+                      //             : const Purchase(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   style: OutlinedButton.styleFrom(
+                      //     side: const BorderSide(
+                      //         width: 2,
+                      //         color: Color.fromARGB(
+                      //             255, 234, 234, 234)), // 테두리 스타일 설정
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius:
+                      //           BorderRadius.circular(8), // 테두리의 모서리를 둥글게 설정
+                      //     ),
+                      //   ),
+                      //   child: const Text('about subscribe'),
+                      // ),
                       const SizedBox(
                         height: 10,
                       ),
                       GestureDetector(
-                        child: const Text('Sign out               '),
+                        child: Text('Sign out               ',
+                            style: TextStyle(
+                                fontSize: SizeConfig.defaultSize! * 1.6,
+                                fontFamily: 'Molengo')),
                         onTap: () {
                           setState(() {
                             showSignOutConfirmation =
@@ -247,20 +268,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 flex: SizeConfig.defaultSize!.toInt() * 1,
                 child: Column(
                   children: [
+                    // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
                     Padding(
                       padding: EdgeInsets.only(
                           left: SizeConfig.defaultSize! * 2,
                           right: SizeConfig.defaultSize! * 2),
                       child: Container(
                         decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.white),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Color.fromARGB(255, 255, 201, 29),
+                          //   border: Border.all(
+                          //   color: const Color.fromARGB(255, 255, 169, 26)),
+                        ),
                         // color: Colors.white,
                         height: SizeConfig.defaultSize! * 4,
-                        child: const Center(
-                          child: Text(
-                            'Banner',
-                            style: TextStyle(fontSize: 24),
+                        child: Center(
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => purchase
+                                      ? const RecordInfo()
+                                      : const Purchase(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Want to read a book in your voice?',
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  fontFamily: 'Molengo',
+                                  color: Colors.black),
+                            ),
                           ),
                         ),
                       ),
