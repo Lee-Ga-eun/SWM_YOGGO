@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     webtoons = ApiService.getTodaysToons();
     if (!isDataFetched) {
       getToken();
+      getPurchase();
     }
   }
 
@@ -49,6 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       token = prefs.getString('token')!;
       userInfo(token);
+    });
+  }
+
+  Future<void> getPurchase() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('purchase')!;
     });
   }
 

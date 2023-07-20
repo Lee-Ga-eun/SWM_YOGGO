@@ -57,8 +57,11 @@ class _LoginScreenState extends State<LoginScreen> {
         // 로그인 성공
         var responseData = json.decode(response.body);
         var token = responseData['token'];
+        var purchase = responseData['purchase'];
         var prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
+        await prefs.setString('purchase', purchase);
+
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));
       } else {
@@ -138,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
             top: 30 * SizeConfig.defaultSize!,
             left: MediaQuery.of(context).size.width / 2 - 95,
             child: GestureDetector(
-            //  onTap: signInWithApple,
+              //  onTap: signInWithApple,
               child: Image.asset(
                 'lib/images/apple_login.png',
               ),
