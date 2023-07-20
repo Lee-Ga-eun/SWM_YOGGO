@@ -186,7 +186,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                     height: SizeConfig.defaultSize!,
                   ),
                   Expanded(
-                    flex: 1,
+                    flex: SizeConfig.defaultSize!.toInt(),
                     child: Stack(
                       alignment: Alignment.centerLeft,
                       children: [
@@ -203,9 +203,12 @@ class _AudioRecorderState extends State<AudioRecorder> {
                           ],
                         ),
                         Positioned(
-                          left: 20,
+                          left: SizeConfig.defaultSize! * 2,
                           child: IconButton(
-                            icon: const Icon(Icons.cancel),
+                            icon: Icon(
+                              Icons.cancel,
+                              size: SizeConfig.defaultSize! * 2.3,
+                            ),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -220,10 +223,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
                     ),
                   ),
                   Expanded(
-                    flex: 2,
+                    flex: SizeConfig.defaultSize!.toInt() * 2,
                     child: RichText(
                       textAlign: TextAlign.center,
-                      text: const TextSpan(
+                      text: TextSpan(
                         children: [
                           TextSpan(
                             children: [
@@ -231,55 +234,64 @@ class _AudioRecorderState extends State<AudioRecorder> {
                                 text:
                                     'As she emerges from the sea onto the shore, she realizes that her \n',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                 text:
                                     'voice is gone, but she still recognizes its immeasurable beauty and\n',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                 text:
                                     'preciousness. She expresses it in the following way:\n ',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                 text:
                                     '"Voice is an ineffable beauty. It is the purest and most precious gift.\n',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                 text:
                                     'Though I have lost this cherished gift, I will embark on a journey to find\n',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                 text:
                                     'true love through other means. Even without my voice, the emotions\n',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                 text:
                                     'and passions within me will not easily fade away. Love transcends\n',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                 text:
                                     'language. In this quest to reclaim my precious voice, I will discover my\n',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                 text:
                                     'true self and learn the ways of love and freedom."',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.black),
                               ),
                             ],
                           ),
@@ -287,20 +299,19 @@ class _AudioRecorderState extends State<AudioRecorder> {
                       ),
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          _buildRecordStopControl(),
-                          const SizedBox(width: 20),
-                          // _buildPauseResumeControl(),
-                          // const SizedBox(width: 20),
-                          _buildText(),
-                        ],
-                      ),
-                    ],
+                  Expanded(
+                    flex: SizeConfig.defaultSize!.toInt() * 1,
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buildRecordStopControl(),
+                        SizedBox(width: SizeConfig.defaultSize! * 3),
+                        // _buildPauseResumeControl(),
+                        // const SizedBox(width: 20),
+                        _buildText(),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -309,7 +320,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
               child: Visibility(
                 visible: stopped,
                 child: AlertDialog(
-                  title: const Text('Record Complete'),
+                  title: Text(
+                    'Record Complete',
+                    style: TextStyle(fontSize: SizeConfig.defaultSize! * 1.7),
+                  ),
                   content: const Text('Your recording has been completed.'),
                   actions: [
                     TextButton(
@@ -349,12 +363,14 @@ class _AudioRecorderState extends State<AudioRecorder> {
     late Color color;
 
     if (_recordState != RecordState.stop) {
-      icon = const Icon(Icons.stop, color: Colors.red, size: 30);
+      icon = Icon(Icons.stop,
+          color: Colors.red, size: SizeConfig.defaultSize! * 3);
       color = Colors.red.withOpacity(0.1);
     } else {
       //   _stopRecording();
       final theme = Theme.of(context);
-      icon = Icon(Icons.mic, color: theme.primaryColor, size: 30);
+      icon = Icon(Icons.mic,
+          color: theme.primaryColor, size: SizeConfig.defaultSize! * 3);
       color = theme.primaryColor.withOpacity(0.1);
     }
 
@@ -362,7 +378,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
       child: Material(
         color: color,
         child: InkWell(
-          child: SizedBox(width: 56, height: 56, child: icon),
+          child: SizedBox(
+              width: SizeConfig.defaultSize! * 5.6,
+              height: SizeConfig.defaultSize! * 5.6,
+              child: icon),
           onTap: () {
             (_recordState != RecordState.stop) ? _stop() : _start();
           },
@@ -407,7 +426,12 @@ class _AudioRecorderState extends State<AudioRecorder> {
       return _buildTimer();
     }
 
-    return const Text("Waiting to record");
+    return Text(
+      "Waiting to record",
+      style: TextStyle(
+        fontSize: SizeConfig.defaultSize! * 1.6,
+      ),
+    );
   }
 
   Widget _buildTimer() {
