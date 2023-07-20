@@ -58,9 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
         var responseData = json.decode(response.body);
         var token = responseData['token'];
         var purchase = responseData['purchase'];
+        var record = responseData['record'];
+        var username = responseData['username'];
         var prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
-        await prefs.setString('purchase', purchase);
+        await prefs.setBool('purchase', purchase);
+        await prefs.setBool('record', record);
+        await prefs.setString('username', username);
 
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));

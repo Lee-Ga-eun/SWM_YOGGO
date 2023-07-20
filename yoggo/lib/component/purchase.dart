@@ -123,6 +123,8 @@ class _PurchaseState extends State<Purchase> {
   }
 
   Future<void> successPurchase() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('purchase', true);
     var url = Uri.parse('https://yoggo-server.fly.dev/user/successPurchase');
     var response = await http.post(
       url,

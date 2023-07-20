@@ -26,13 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<bookModel>> webtoons;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late String token;
+  late bool purchase;
+  late bool record;
   String userName = '';
   String userEmail = '';
   bool showEmail = false;
   bool showSignOutConfirmation = false;
   double dropdownHeight = 0.0;
-  late final bool purchase;
-  late final bool record;
   bool isDataFetched = false; // 데이터를 받아온 여부를 나타내는 플래그
 
   @override
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     webtoons = ApiService.getTodaysToons();
     if (!isDataFetched) {
       getToken();
-      getPurchase();
+      getUserInfo();
     }
   }
 
@@ -53,10 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> getPurchase() async {
+  Future<void> getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      token = prefs.getString('purchase')!;
+      purchase = prefs.getBool('purchase')!;
+      record = prefs.getBool('record')!;
+      userName = prefs.getString('username')!;
     });
   }
 
