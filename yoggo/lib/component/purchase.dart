@@ -201,7 +201,7 @@ class _PurchaseState extends State<Purchase> {
                     ],
                   ),
                   Positioned(
-                    left: 20,
+                    left: 2 * SizeConfig.defaultSize!,
                     child: IconButton(
                       icon: const Icon(Icons.cancel),
                       onPressed: () {

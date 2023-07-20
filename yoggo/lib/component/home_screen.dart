@@ -175,8 +175,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       //   ),
                       //   child: const Text('about subscribe'),
                       // ),
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: 1 * SizeConfig.defaultSize!,
                       ),
                       GestureDetector(
                         child: Text('Sign out               ',
@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SafeArea(
           bottom: false,
           top: false,
-          minimum: const EdgeInsets.only(left: 30),
+          minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
           child: Column(
             children: [
               Expanded(
@@ -253,8 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: Image.asset(
                           'lib/images/hamburger.png',
-                          width: 35, // 이미지의 폭 설정
-                          height: 35, // 이미지의 높이 설정
+                          width: 3.5 * SizeConfig.defaultSize!, // 이미지의 폭 설정
+                          height: 3.5 * SizeConfig.defaultSize!, // 이미지의 높이 설정
                         ),
                       ),
                     ),
@@ -437,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                       separatorBuilder: (context, index) =>
-                          const SizedBox(width: 20),
+                          SizedBox(width: 2 * SizeConfig.defaultSize!),
                     ),
                   ),
                 ],

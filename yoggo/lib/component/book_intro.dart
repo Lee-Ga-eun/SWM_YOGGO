@@ -166,20 +166,21 @@ class _BookIntroState extends State<BookIntro> {
               fit: BoxFit.cover,
             ),
           ),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Center(
                 child: CircularProgressIndicator(
                   backgroundColor: Colors.white,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
-                  strokeWidth: 5, // 동그라미 로딩의 크기 조정
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(Colors.yellow),
+                  strokeWidth: 0.5 * SizeConfig.defaultSize!, // 동그라미 로딩의 크기 조정
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 1 * SizeConfig.defaultSize!,
               ),
-              Text('Loading a book'),
+              const Text('Loading a book'),
             ],
           ),
         ),
@@ -307,9 +308,10 @@ class _BookIntroState extends State<BookIntro> {
                                             child: Column(
                                               children: [
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 8.0),
+                                                  padding: EdgeInsets.only(
+                                                      right: 0.8 *
+                                                          SizeConfig
+                                                              .defaultSize!),
                                                   child: Image.asset(
                                                     'lib/images/mine.png',
                                                     height: SizeConfig
@@ -334,9 +336,10 @@ class _BookIntroState extends State<BookIntro> {
                                             child: Column(
                                               children: [
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 8.0),
+                                                  padding: EdgeInsets.only(
+                                                      right: 0.8 *
+                                                          SizeConfig
+                                                              .defaultSize!),
                                                   child: Image.asset(
                                                     'lib/images/lock.png',
                                                     height: SizeConfig
@@ -366,8 +369,9 @@ class _BookIntroState extends State<BookIntro> {
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
+                                            padding: EdgeInsets.only(
+                                                right: 0.8 *
+                                                    SizeConfig.defaultSize!),
                                             child: Image.asset(
                                               'lib/images/jolly.png',
                                               color: isClicked0
@@ -403,8 +407,9 @@ class _BookIntroState extends State<BookIntro> {
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
+                                            padding: EdgeInsets.only(
+                                                right: 0.8 *
+                                                    SizeConfig.defaultSize!),
                                             child: Image.asset(
                                               'lib/images/morgan.png',
                                               color: isClicked1
@@ -440,8 +445,9 @@ class _BookIntroState extends State<BookIntro> {
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
+                                            padding: EdgeInsets.only(
+                                                right: 0.8 *
+                                                    SizeConfig.defaultSize!),
                                             child: Image.asset(
                                               'lib/images/eric.png',
                                               color: isClicked2

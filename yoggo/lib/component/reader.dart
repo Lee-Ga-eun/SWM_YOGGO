@@ -136,18 +136,19 @@ class _FairyTalePageState extends State<FairytalePage>
               fit: BoxFit.cover,
             ),
           ),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Center(
                 child: CircularProgressIndicator(
                   backgroundColor: Colors.white,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
-                  strokeWidth: 5, // 동그라미 로딩의 크기 조정
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(Colors.yellow),
+                  strokeWidth: 0.5 * SizeConfig.defaultSize!, // 동그라미 로딩의 크기 조정
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 1 * SizeConfig.defaultSize!,
               ),
               Text('Loading a book'),
             ],
