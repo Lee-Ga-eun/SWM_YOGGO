@@ -41,7 +41,7 @@ class _RecordInfoState extends State<RecordInfo> {
               height: SizeConfig.defaultSize!,
             ),
             Expanded(
-              flex: 1,
+              flex: SizeConfig.defaultSize!.toInt() * 1,
               child: Stack(
                 alignment: Alignment.centerLeft,
                 children: [
@@ -58,9 +58,12 @@ class _RecordInfoState extends State<RecordInfo> {
                     ],
                   ),
                   Positioned(
-                    left: 20,
+                    left: SizeConfig.defaultSize! * 2,
                     child: IconButton(
-                      icon: const Icon(Icons.cancel),
+                      icon: Icon(
+                        Icons.cancel,
+                        size: SizeConfig.defaultSize! * 2.3,
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -80,7 +83,7 @@ class _RecordInfoState extends State<RecordInfo> {
               height: SizeConfig.defaultSize!,
             ),
             Expanded(
-              flex: 1,
+              flex: SizeConfig.defaultSize!.toInt(),
               child: Text(
                 'Now it\'s your turn to make your voice heard!',
                 style: TextStyle(
@@ -90,7 +93,7 @@ class _RecordInfoState extends State<RecordInfo> {
               ),
             ),
             Expanded(
-              flex: 4,
+              flex: SizeConfig.defaultSize!.toInt() * 4,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -176,32 +179,64 @@ class _RecordInfoState extends State<RecordInfo> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      Positioned(
-                          child: IconButton(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.defaultSize! * 13,
-                            top: SizeConfig.defaultSize! * 2),
-                        icon: Icon(
-                          Icons.arrow_circle_right_outlined,
-                          size: SizeConfig.defaultSize! * 4,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AudioRecorder(
-                                  // 다음 화면으로 contetnVoiceId를 가지고 이동
-                                  ),
-                            ),
-                          );
-                        },
-                      ))
+                      // Positioned(
+                      //     child: IconButton(
+                      //   padding: EdgeInsets.only(
+                      //       left: SizeConfig.defaultSize! * 13,
+                      //       top: SizeConfig.defaultSize! * 2),
+                      //   icon: Icon(
+                      //     Icons.arrow_circle_right_outlined,
+                      //     size: SizeConfig.defaultSize! * 4,
+                      //     color: Colors.black,
+                      //   ),
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => const AudioRecorder(
+                      //             // 다음 화면으로 contetnVoiceId를 가지고 이동
+                      //             ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ))
                     ],
                   ),
                 ],
               ),
             ),
+            Expanded(
+              flex: SizeConfig.defaultSize!.toInt() * 1,
+              //child:
+              //  Positioned(
+              child: Row(
+                children: [
+                  const Spacer(),
+                  IconButton(
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.only(
+                        //  left: SizeConfig.defaultSize! * 13,
+                        // top: SizeConfig.defaultSize! * 2,
+                        right: SizeConfig.defaultSize! * 4),
+                    icon: Icon(
+                      Icons.arrow_circle_right_outlined,
+                      size: SizeConfig.defaultSize! * 4,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AudioRecorder(
+                              // 다음 화면으로 contetnVoiceId를 가지고 이동
+                              ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ), //)
           ],
         ),
       ),
