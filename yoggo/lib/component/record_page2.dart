@@ -99,6 +99,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
     request.fields['recordName'] = recordName;
     var response = await request.send();
     if (response.statusCode == 200) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('record', true);
       print('Record sent successfully');
     } else {
       print('Failed to send record. Status code: ${response.statusCode}');
