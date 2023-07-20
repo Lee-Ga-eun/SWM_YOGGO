@@ -44,7 +44,9 @@ class _WaitingVoiceState extends State<WaitingVoicePage> {
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        print(data);
         if (data != [] && data.isNotEmpty) {
+          print('성공');
           // 데이터가 빈 값이 아닌 경우
           setState(() {
             isLoading = false;
@@ -64,11 +66,15 @@ class _WaitingVoiceState extends State<WaitingVoicePage> {
         // 데이터 요청이 실패한 경우
         // 오류 처리
         setState(() {
+          print('오류');
+
           isLoading = false;
         });
       }
     } catch (e) {
       // 네트워크 오류 등 예외 처리
+      print(e);
+
       setState(() {
         isLoading = false;
       });
