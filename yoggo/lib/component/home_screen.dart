@@ -264,50 +264,53 @@ class _HomeScreenState extends State<HomeScreen> {
               // SizedBox(
               //   height: SizeConfig.defaultSize! * 1.5,
               // ),
-              Expanded(
-                flex: SizeConfig.defaultSize!.toInt() * 1,
-                child: Column(
-                  children: [
-                    // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: SizeConfig.defaultSize! * 2,
-                          right: SizeConfig.defaultSize! * 2),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Color.fromARGB(255, 255, 201, 29),
-                          //   border: Border.all(
-                          //   color: const Color.fromARGB(255, 255, 169, 26)),
-                        ),
-                        // color: Colors.white,
-                        height: SizeConfig.defaultSize! * 4,
-                        child: Center(
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => purchase
-                                      ? const RecordInfo()
-                                      : const Purchase(),
+              record && purchase
+                  ? Container()
+                  : Expanded(
+                      flex: SizeConfig.defaultSize!.toInt() * 1,
+                      child: Column(
+                        children: [
+                          // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.defaultSize! * 2,
+                                right: SizeConfig.defaultSize! * 2),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                color: Color.fromARGB(255, 255, 201, 29),
+                                //   border: Border.all(
+                                //   color: const Color.fromARGB(255, 255, 169, 26)),
+                              ),
+                              // color: Colors.white,
+                              height: SizeConfig.defaultSize! * 4,
+                              child: Center(
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => purchase
+                                            ? const RecordInfo()
+                                            : const Purchase(),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Want to read a book in your voice?',
+                                    style: TextStyle(
+                                        fontSize: 2 * SizeConfig.defaultSize!,
+                                        fontFamily: 'Molengo',
+                                        color: Colors.black),
+                                  ),
                                 ),
-                              );
-                            },
-                            child: const Text(
-                              'Want to read a book in your voice?',
-                              style: TextStyle(
-                                  fontSize: 24,
-                                  fontFamily: 'Molengo',
-                                  color: Colors.black),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
               Expanded(
                 flex: SizeConfig.defaultSize!.toInt() * 4,
                 child: SingleChildScrollView(
