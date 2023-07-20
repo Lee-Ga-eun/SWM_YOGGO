@@ -114,6 +114,9 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     request.fields['recordName'] = recordName;
     var response = await request.send();
     if (response.statusCode == 200) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('record', true);
+      print(prefs.getBool('record'));
       print('Record sent successfully');
     } else {
       print('Failed to send record. Status code: ${response.statusCode}');
