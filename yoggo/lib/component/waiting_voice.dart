@@ -27,10 +27,13 @@ class _WaitingVoiceState extends State<WaitingVoicePage> {
     setState(() {
       token = prefs.getString('token')!;
     });
+    print('getToken');
     loadData(token);
   }
 
   Future<void> loadData(String token) async {
+    print('loadData');
+
     try {
       var response = await http.get(
         Uri.parse('https://yoggo-server.fly.dev/user/inference'),
@@ -40,8 +43,8 @@ class _WaitingVoiceState extends State<WaitingVoicePage> {
         },
       );
       if (response.statusCode == 200) {
-        final data = json.decode(response.body)[0];
-        if (data != null && data.isNotEmpty) {
+        final data = json.decode(response.body);
+        if (data != [] && data.isNotEmpty) {
           // 데이터가 빈 값이 아닌 경우
           setState(() {
             isLoading = false;
