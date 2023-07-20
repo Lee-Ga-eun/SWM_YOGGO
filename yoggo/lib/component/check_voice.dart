@@ -25,6 +25,7 @@ class _CheckVoiceState extends State<CheckVoice> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
         body: Container(
       decoration: const BoxDecoration(
@@ -56,7 +57,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                   ],
                 ),
                 Positioned(
-                  left: 20,
+                  left: 2 * SizeConfig.defaultSize!,
                   child: IconButton(
                     icon: const Icon(Icons.cancel),
                     onPressed: () {
@@ -74,13 +75,13 @@ class _CheckVoiceState extends State<CheckVoice> {
               ],
             ),
           ),
-          const Expanded(
+          Expanded(
             flex: 1,
             child: Text(
               'Complete! Here is your voice!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 3 * SizeConfig.defaultSize!,
                 color: Color.fromARGB(255, 194, 120, 209),
                 fontFamily: 'BreeSerif',
               ),
@@ -91,7 +92,7 @@ class _CheckVoiceState extends State<CheckVoice> {
             child: SingleChildScrollView(
               child: RichText(
                 textAlign: TextAlign.center,
-                text: const TextSpan(
+                text: TextSpan(
                   children: [
                     TextSpan(
                       children: [
@@ -99,7 +100,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                           text:
                               'This dialogue highlights the mermaid\'s realization of the value\n',
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 1.6 * SizeConfig.defaultSize!,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
@@ -107,7 +108,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                           text:
                               'of her voice, its intangible beauty, and its role in her pursuit of\n',
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 1.6 * SizeConfig.defaultSize!,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
@@ -115,7 +116,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                           text:
                               'true love and self-discovery. Despite losing her voice, she finds \n ',
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 1.6 * SizeConfig.defaultSize!,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
@@ -123,7 +124,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                           text:
                               'the strength to communicate through her heart and believes that \n',
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 1.6 * SizeConfig.defaultSize!,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
@@ -131,7 +132,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                           text:
                               'love goes beyond words. The journey becomes  an opportunity for her\n',
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 1.6 * SizeConfig.defaultSize!,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
@@ -139,7 +140,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                           text:
                               'to uncover her true essence and understand the essence of love and freedom.\n',
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 1.6 * SizeConfig.defaultSize!,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
@@ -208,21 +209,21 @@ class _CheckVoiceState extends State<CheckVoice> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    const SizedBox(
-                      width: 30,
+                    SizedBox(
+                      width: 3.0 * SizeConfig.defaultSize!,
                     ),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.play_arrow,
-                        size: 30,
+                        size: 3 * SizeConfig.defaultSize!,
                         color: Color.fromARGB(255, 194, 120, 209),
                       ),
                       onPressed: () {
                         audioPlayer.play(UrlSource(widget.infenrencedVoice));
                       },
                     ),
-                    const SizedBox(
-                      width: 30,
+                    SizedBox(
+                      width: 3 * SizeConfig.defaultSize!,
                     ),
                     TextButton(
                       onPressed: () {
