@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/login_screen.dart';
+import 'package:yoggo/component/purchase.dart';
 import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/component/book_intro.dart';
@@ -128,7 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const RecordInfo(),
+                              builder: (context) => purchase
+                                  ? const RecordInfo()
+                                  : const Purchase(),
                             ),
                           );
                         },
