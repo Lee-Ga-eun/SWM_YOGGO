@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -182,11 +181,8 @@ class _PurchaseState extends State<Purchase> {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: SizeConfig.defaultSize!,
-            ),
             Expanded(
-              flex: 1,
+              flex: SizeConfig.defaultSize!.toInt(),
               child: Stack(
                 alignment: Alignment.centerLeft,
                 children: [
@@ -221,107 +217,137 @@ class _PurchaseState extends State<Purchase> {
               ),
             ),
             Expanded(
-              flex: 3,
-              child: SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: const TextSpan(
+              flex: SizeConfig.defaultSize!.toInt() * 3,
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    'A fantastic experience of reading a storybook to your child with your voice\n\n',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                              TextSpan(
-                                text:
-                                    'Stimulate children\'s imaginations and create special moments together\n',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                              TextSpan(
-                                text:
-                                    'Unlimited provision of all fairy tales that are updated at all times!\n\n',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: 'OPENING SPECIAL\n',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: '70% ',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: 'OFF + 1 ',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: 'FREE ',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: 'MONTH\n',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: '\$5.99/month\n',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: '\$19.99/month\n',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.grey,
-                                    decoration: TextDecoration.lineThrough),
-                              ),
-                            ],
+                          Image.asset(
+                            'lib/images/rocket.png',
+                            width: SizeConfig.defaultSize! * 5,
+                            alignment: Alignment.topCenter,
                           ),
+                          Text(
+                            'Stimulate your children\'s imaginations \n Provide a fantastic reading experience \n Improve your bond with your children ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Molengo',
+                                fontSize: SizeConfig.defaultSize! * 2.3),
+                          ),
+                          Image.asset(
+                            'lib/images/horse.png',
+                            width: SizeConfig.defaultSize! * 5,
+                            alignment: Alignment.topCenter,
+                          )
                         ],
                       ),
-                    )),
-              ),
+                      SizedBox(
+                        height: SizeConfig.defaultSize! * 3,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: '\$19.99/month\n',
+                                      style: TextStyle(
+                                          fontSize: SizeConfig.defaultSize! * 2,
+                                          fontFamily: 'Molengo',
+                                          color: Colors.grey,
+                                          decoration:
+                                              TextDecoration.lineThrough),
+                                    ),
+                                    TextSpan(
+                                      text: '\$5.99/month\n',
+                                      style: TextStyle(
+                                          fontSize: SizeConfig.defaultSize! * 2,
+                                          color: Colors.black,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                    TextSpan(
+                                      text: '70% ',
+                                      style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.defaultSize! * 2.3,
+                                          color: Colors.red,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                    TextSpan(
+                                      text: 'OFF + 1 ',
+                                      style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.defaultSize! * 2.3,
+                                          color: Colors.black,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                    TextSpan(
+                                      text: 'FREE ',
+                                      style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.defaultSize! * 2.3,
+                                          color: Colors.red,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                    TextSpan(
+                                      text: 'MONTH\n',
+                                      style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.defaultSize! * 2.3,
+                                          color: Colors.black,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(),
+                          child: Container(
+                            width: SizeConfig.defaultSize! * 52.6,
+                            height: SizeConfig.defaultSize! * 4.5,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(152, 97, 1, 152),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(SizeConfig.defaultSize!)),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: SizeConfig.defaultSize! * 5,
+                                right: SizeConfig.defaultSize! * 5,
+                                // top: SizeConfig.defaultSize! * 0.2,
+                                // bottom: SizeConfig.defaultSize! * 0.2,
+                              ),
+                              child: TextButton(
+                                onPressed: () async {
+                                  await startPurchase();
+                                },
+                                child: Text(
+                                  'Go get unlimited access to all upcoming books',
+                                  style: TextStyle(
+                                    fontFamily: 'Molengo',
+                                    fontSize: SizeConfig.defaultSize! * 2.1,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ))
+                    ],
+                  )),
             ),
-            TextButton(
-              onPressed: () async {
-                await startPurchase();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color.fromARGB(255, 175, 101, 188),
-                minimumSize: const Size(400, 40), // 버튼의 최소 크기를 지정
-              ),
-              child: const Text(
-                "TRY IT FREE",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            const Expanded(
-                child: Text(
-                    'We’ll remind you 7 days before your trial ends · Cancel anytime'))
           ],
         ),
       ),
