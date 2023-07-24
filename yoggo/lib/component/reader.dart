@@ -120,7 +120,9 @@ class _FairyTalePageState extends State<FairytalePage>
 
   @override
   void dispose() async {
-    await stopAudio();
+    //await stopAudio();
+    audioPlayer.stop();
+    audioPlayer.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -150,7 +152,7 @@ class _FairyTalePageState extends State<FairytalePage>
               SizedBox(
                 height: 1 * SizeConfig.defaultSize!,
               ),
-              Text('Loading a book'),
+              const Text('Loading a book'),
             ],
           ),
         ),

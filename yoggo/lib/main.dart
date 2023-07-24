@@ -3,12 +3,11 @@ import 'component/intro.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   //runApp(const App());
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+// await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
@@ -46,7 +45,6 @@ class _AppState extends State<App> {
     super.initState();
     initialize();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
-
   }
 
   Future<void> initialize() async {

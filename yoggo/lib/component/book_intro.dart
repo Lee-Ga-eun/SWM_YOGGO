@@ -6,6 +6,7 @@ import '../component/reader.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class BookIntro extends StatefulWidget {
   final String title, thumb, summary;
@@ -37,7 +38,7 @@ class _BookIntroState extends State<BookIntro> {
   bool wantPurchase = false;
   bool goRecord = false;
   bool completeInference = true;
-  late int inferenceId;
+  late int inferenceId = 1000;
   late String token;
   String text = '';
   int voiceId = 10;
@@ -166,22 +167,11 @@ class _BookIntroState extends State<BookIntro> {
               fit: BoxFit.cover,
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(Colors.yellow),
-                  strokeWidth: 0.5 * SizeConfig.defaultSize!, // 동그라미 로딩의 크기 조정
-                ),
-              ),
-              SizedBox(
-                height: 1 * SizeConfig.defaultSize!,
-              ),
-              const Text('Loading a book'),
-            ],
+          child: Center(
+            child: LoadingAnimationWidget.fourRotatingDots(
+              color: Colors.white,
+              size: SizeConfig.defaultSize! * 16,
+            ),
           ),
         ),
       );
@@ -369,23 +359,36 @@ class _BookIntroState extends State<BookIntro> {
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(
-                                                right: 0.8 *
-                                                    SizeConfig.defaultSize!),
-                                            child: Image.asset(
-                                              'lib/images/jolly.png',
-                                              color: isClicked0
-                                                  ? null
-                                                  : const Color.fromARGB(
-                                                      // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
-                                                      255,
-                                                      255,
-                                                      66,
-                                                      129),
-                                              height:
-                                                  SizeConfig.defaultSize! * 6.5,
-                                            ),
-                                          ),
+                                              padding: EdgeInsets.only(
+                                                  right: 0.8 *
+                                                      SizeConfig.defaultSize!),
+                                              child: isClicked0
+                                                  ? Container(
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          6.6,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: const Color
+                                                                  .fromARGB(255,
+                                                              77, 252, 255),
+                                                          width: 3.0,
+                                                        ),
+                                                      ),
+                                                      child: Image.asset(
+                                                        'lib/images/jolly.png',
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            6.5,
+                                                      ),
+                                                    )
+                                                  : Image.asset(
+                                                      'lib/images/jolly.png',
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          6.5,
+                                                    )),
                                           SizedBox(
                                               height: SizeConfig.defaultSize! *
                                                   0.3),
@@ -407,23 +410,36 @@ class _BookIntroState extends State<BookIntro> {
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(
-                                                right: 0.8 *
-                                                    SizeConfig.defaultSize!),
-                                            child: Image.asset(
-                                              'lib/images/morgan.png',
-                                              color: isClicked1
-                                                  ? null
-                                                  : const Color.fromARGB(
-                                                      // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
-                                                      255,
-                                                      255,
-                                                      66,
-                                                      129),
-                                              height:
-                                                  SizeConfig.defaultSize! * 6.5,
-                                            ),
-                                          ),
+                                              padding: EdgeInsets.only(
+                                                  right: 0.8 *
+                                                      SizeConfig.defaultSize!),
+                                              child: isClicked1
+                                                  ? Container(
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          6.6,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: const Color
+                                                                  .fromARGB(255,
+                                                              77, 252, 255),
+                                                          width: 3.0,
+                                                        ),
+                                                      ),
+                                                      child: Image.asset(
+                                                        'lib/images/morgan.png',
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            6.5,
+                                                      ),
+                                                    )
+                                                  : Image.asset(
+                                                      'lib/images/morgan.png',
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          6.5,
+                                                    )),
                                           SizedBox(
                                               height: SizeConfig.defaultSize! *
                                                   0.3),
@@ -445,23 +461,36 @@ class _BookIntroState extends State<BookIntro> {
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(
-                                                right: 0.8 *
-                                                    SizeConfig.defaultSize!),
-                                            child: Image.asset(
-                                              'lib/images/eric.png',
-                                              color: isClicked2
-                                                  ? null
-                                                  : const Color.fromARGB(
-                                                      // 선택하면 색이 바껴야 하는데 전부 다 바껴서 문제
-                                                      255,
-                                                      255,
-                                                      66,
-                                                      129),
-                                              height:
-                                                  SizeConfig.defaultSize! * 6.5,
-                                            ),
-                                          ),
+                                              padding: EdgeInsets.only(
+                                                  right: 0.8 *
+                                                      SizeConfig.defaultSize!),
+                                              child: isClicked2
+                                                  ? Container(
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          6.6,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: const Color
+                                                                  .fromARGB(255,
+                                                              77, 252, 255),
+                                                          width: 3.0,
+                                                        ),
+                                                      ),
+                                                      child: Image.asset(
+                                                        'lib/images/eric.png',
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            6.5,
+                                                      ),
+                                                    )
+                                                  : Image.asset(
+                                                      'lib/images/eric.png',
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          6.5,
+                                                    )),
                                           SizedBox(
                                               height: SizeConfig.defaultSize! *
                                                   0.3),
@@ -513,7 +542,9 @@ class _BookIntroState extends State<BookIntro> {
                         flex: 1,
                         child: GestureDetector(
                           onTap: () async {
-                            (cvi == inferenceId)
+                            print('인퍼런스아이디');
+                            print(inferenceId);
+                            (cvi == inferenceId) // 원래는 cvi==inferenceId
                                 ? await checkInference(token)
                                     ? Navigator.push(
                                         context,
