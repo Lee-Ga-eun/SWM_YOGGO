@@ -12,6 +12,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../viewModel/home_screen_cubit.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -26,8 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<bookModel>> webtoons;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late String token;
-  late bool purchase;
-  late bool record;
+  late bool purchase = true;
+  late bool record = true;
   String userName = '';
   String userEmail = '';
   bool showEmail = false;
@@ -56,8 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      purchase = prefs.getBool('purchase')!;
-      record = prefs.getBool('record')!;
+      //purchase = prefs.getBool('purchase')!;
+      //record = prefs.getBool('record')!;
       userName = prefs.getString('username')!;
     });
   }
@@ -75,9 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       setState(() {
         final myJson = json.decode(response.body)[0];
-        purchase = myJson['purchase'];
+        // purchase = myJson['purchase'];
         userName = myJson['name'];
-        record = myJson['record'];
+        // record = myJson['record'];
       });
       isDataFetched = true;
       return response.body;
@@ -266,7 +270,9 @@ class _HomeScreenState extends State<HomeScreen> {
               // ),
               record && purchase
                   ? Container()
+                  //     : Expanded(
                   : Expanded(
+                      // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
                       flex: SizeConfig.defaultSize!.toInt() * 1,
                       child: Column(
                         children: [
@@ -310,34 +316,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                    ),
+                    ), // 배너 종료
               Expanded(
                 flex: SizeConfig.defaultSize!.toInt() * 4,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      // Padding(
-                      //   padding: EdgeInsets.only(
-                      //       left: SizeConfig.defaultSize! * 2,
-                      //       right: SizeConfig.defaultSize! * 2),
-                      //   child: Container(
-                      //     decoration: const BoxDecoration(
-                      //         borderRadius:
-                      //             BorderRadius.all(Radius.circular(10)),
-                      //         color: Colors.white),
-                      //     // color: Colors.white,
-                      //     height: SizeConfig.defaultSize! * 4,
-                      //     child: const Center(
-                      //       child: Text(
-                      //         'Banner',
-                      //         style: TextStyle(fontSize: 24),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       SizedBox(
                         height: SizeConfig.defaultSize! * 36,
-                        child: bookList(),
+                        child: BlocProvider(
+                          create: (context) =>
+                              DataCubit()..loadData(), // DataCubit 생성 및 데이터 로드
+                          child: DataList(
+                            record: record,
+                            purchase: purchase,
+                          ),
+                        ),
                       ),
                       // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
                       // Container(
@@ -354,9 +348,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // Expanded(
-              //   child: bookList(),
-              // ),
             ],
           ),
         ),
@@ -364,92 +355,113 @@ class _HomeScreenState extends State<HomeScreen> {
       //   ),
     );
   }
+}
 
-  Container bookList() {
-    return Container(
-      child: FutureBuilder<List<bookModel>>(
-          future: webtoons,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                children: [
-                  // const SizedBox(
-                  //   height: 40,
-                  // ),
-                  Expanded(
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        var book = snapshot.data![index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BookIntro(
-                                    title: book.title,
-                                    thumb: book.thumb,
-                                    id: book.id,
-                                    summary: book.summary,
-                                    purchase: purchase,
-                                    record: record,
-                                  ),
-                                ));
-                          },
-                          child: Column(
-                            children: [
-                              Hero(
-                                tag: book.id,
-                                child: Container(
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  height: SizeConfig.defaultSize! * 22,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: CachedNetworkImage(
-                                      imageUrl: book.thumb,
-                                      httpHeaders: const {
-                                        "User-Agent":
-                                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.defaultSize! * 1,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.defaultSize! * 20,
-                                child: Text(
-                                  book.title,
-                                  style: TextStyle(
-                                      fontFamily: 'BreeSerif',
-                                      fontSize: SizeConfig.defaultSize! * 1.6),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) =>
-                          SizedBox(width: 2 * SizeConfig.defaultSize!),
+class DataList extends StatelessWidget {
+  final bool record;
+  final bool purchase;
+  const DataList({Key? key, required this.record, required this.purchase})
+      : super(key: key);
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  static Future<void> _sendBookClickEvent(contentId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_click',
+        parameters: <String, dynamic>{'contentId': contentId},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 데이터 큐빗을 가져오기.
+    final dataCubit = BlocProvider.of<DataCubit>(context);
+
+    return BlocBuilder<DataCubit, List<BookModel>>(
+      builder: (context, state) {
+        if (state.isEmpty) {
+          return Center(
+            child: Center(
+              child: LoadingAnimationWidget.fourRotatingDots(
+                color: Colors.white,
+                size: SizeConfig.defaultSize! * 16,
+              ),
+            ),
+          );
+        } else {
+          return ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: state.length,
+            itemBuilder: (context, index) {
+              final book = state[index];
+              return InkWell(
+                onTap: () {
+                  _sendBookClickEvent(book.id);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BookIntro(
+                        title: book.title,
+                        thumb: book.thumbUrl,
+                        id: book.id,
+                        summary: book.summary,
+                        purchase: !purchase, // 임시로 지정 (전역으로 대체할 것임)
+                        record: !record, //임시로 지정 (전역으로 대체할 것임)
+                      ),
                     ),
-                  ),
-                ],
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.orange,
+                  );
+                },
+                child: Column(
+                  children: [
+                    Hero(
+                      tag: book.id,
+                      child: Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        height: SizeConfig.defaultSize! * 22,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: CachedNetworkImage(
+                            imageUrl: book.thumbUrl,
+                            // httpHeaders: const {
+                            //   "User-Agent":
+                            //       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+                            // },
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.defaultSize! * 1,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.defaultSize! * 20,
+                      child: Text(
+                        book.title,
+                        style: TextStyle(
+                          fontFamily: 'BreeSerif',
+                          fontSize: SizeConfig.defaultSize! * 1.6,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
                 ),
               );
-            }
-          }),
+            },
+            separatorBuilder: (context, index) =>
+                SizedBox(width: 2 * SizeConfig.defaultSize!),
+          );
+        }
+      },
     );
   }
 }
