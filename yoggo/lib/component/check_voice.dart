@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/size_config.dart';
 import 'home/view/home_screen.dart';
 import './record_retry.dart';
@@ -18,243 +21,537 @@ class CheckVoice extends StatefulWidget {
 
 class _CheckVoiceState extends State<CheckVoice> {
   AudioPlayer audioPlayer = AudioPlayer();
-
+  late String token;
+  late String voiceName = ""; //"Usery";
+  late String voiceIcon = ""; //\u{1f603}";
+  late String inferenceUrl = "";
   // void playAudio(String audioUrl) async {
   //   await audioPlayer.play(UrlSource(audioUrl));
   // }
+  void initState() {
+    super.initState();
+    getToken();
+  }
+
+  Future<void> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('token')!;
+      getVoiceInfo(token);
+    });
+  }
+
+  Future<String> getVoiceInfo(String token) async {
+    var url = Uri.parse('https://yoggo-server.fly.dev/user/myVoice');
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      final myJson = json.decode(response.body);
+      if (myJson != []) {
+        setState(() {
+          inferenceUrl = myJson[0]['inferenceUrl'];
+          voiceName = myJson[0]['name'];
+          voiceIcon = myJson[0]['icon'];
+        });
+      }
+      return response.body;
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        body: Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('lib/images/bkground.png'),
-          fit: BoxFit.cover,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/bkground.png'),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: SizeConfig.defaultSize!,
-          ),
-          Expanded(
-            flex: 1,
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: SafeArea(
+          bottom: false,
+          top: false,
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Stack(
+                  alignment: Alignment.centerLeft,
                   children: [
-                    Text(
-                      'LOVEL',
-                      style: TextStyle(
-                        fontFamily: 'Modak',
-                        fontSize: SizeConfig.defaultSize! * 5,
-                      ),
-                    ),
-                  ],
-                ),
-                Positioned(
-                  left: 2 * SizeConfig.defaultSize!,
-                  child: IconButton(
-                    icon: const Icon(Icons.cancel),
-                    onPressed: () {
-                      audioPlayer.stop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
-                        ),
-                      );
-                    },
-                    //color: Colors.red,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              'Complete! Here is your voice!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 3 * SizeConfig.defaultSize!,
-                color: const Color.fromARGB(255, 194, 120, 209),
-                fontFamily: 'BreeSerif',
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: SingleChildScrollView(
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextSpan(
-                          text:
-                              'This dialogue highlights the mermaid\'s realization of the value\n',
+                        Text(
+                          'LOVEL',
                           style: TextStyle(
-                              fontSize: 1.6 * SizeConfig.defaultSize!,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
+                            fontFamily: 'Modak',
+                            fontSize: SizeConfig.defaultSize! * 5,
+                          ),
                         ),
-                        TextSpan(
-                          text:
-                              'of her voice, its intangible beauty, and its role in her pursuit of\n',
-                          style: TextStyle(
-                              fontSize: 1.6 * SizeConfig.defaultSize!,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text:
-                              'true love and self-discovery. Despite losing her voice, she finds \n ',
-                          style: TextStyle(
-                              fontSize: 1.6 * SizeConfig.defaultSize!,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text:
-                              'the strength to communicate through her heart and believes that \n',
-                          style: TextStyle(
-                              fontSize: 1.6 * SizeConfig.defaultSize!,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text:
-                              'love goes beyond words. The journey becomes  an opportunity for her\n',
-                          style: TextStyle(
-                              fontSize: 1.6 * SizeConfig.defaultSize!,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text:
-                              'to uncover her true essence and understand the essence of love and freedom.\n',
-                          style: TextStyle(
-                              fontSize: 1.6 * SizeConfig.defaultSize!,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        // TextSpan(
-                        //   text:
-                        //       'and passions within me will not easily fade away. Love transcends\n',
-                        //   style: TextStyle(
-                        //       fontSize: 16.0,
-                        //       color: Colors.black,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
-                        // TextSpan(
-                        //   text:
-                        //       'language. In this quest to reclaim my precious voice, I will discover my\n',
-                        //   style: TextStyle(
-                        //       fontSize: 16.0,
-                        //       color: Colors.black,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
-                        // TextSpan(
-                        //   text:
-                        //       'true self and learn the ways of love and freedom."',
-                        //   style: TextStyle(
-                        //       fontSize: 16.0,
-                        //       color: Colors.black,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
                       ],
                     ),
+                    Positioned(
+                      left: 2 * SizeConfig.defaultSize!,
+                      child: IconButton(
+                        icon: const Icon(Icons.cancel),
+                        onPressed: () {
+                          audioPlayer.stop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                        },
+                        //color: Colors.red,
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              // Expanded(
+              //   flex: 1,
+              //   child: Text(
+              //     'Complete! Here is your voice!',
+              //     textAlign: TextAlign.center,
+              //     style: TextStyle(
+              //       fontSize: 3 * SizeConfig.defaultSize!,
+              //       color: const Color.fromARGB(255, 194, 120, 209),
+              //       fontFamily: 'BreeSerif',
+              //     ),
+              //   ),
+              // ),
+              Expanded(
+                flex: 3,
+                child: Row(
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        audioPlayer.stop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AudioRecorderRetry(
-                                // rerecord: true,
-                                // mustDelete: widget.path,
-                                ),
+                    // SizedBox(
+                    //   width: SizeConfig.defaultSize!,
+                    // ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 18 * SizeConfig.defaultSize!,
+                          height: 18 * SizeConfig.defaultSize!,
+                          margin: EdgeInsets.zero,
+                          padding: EdgeInsets.zero,
+                          decoration: ShapeDecoration(
+                            color: Colors.white.withOpacity(0.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           ),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(8.0), // 원하는 모양의 네모 박스로 변경
+                          child: Column(children: [
+                            SizedBox(
+                              height: SizeConfig.defaultSize! * 0.25,
+                            ),
+                            Text(
+                              voiceIcon,
+                              style: TextStyle(
+                                fontFamily: 'Molengo',
+                                fontSize: SizeConfig.defaultSize! * 13.5,
+                              ),
+                            ),
+                          ]),
                         ),
-                        backgroundColor:
-                            const Color.fromARGB(255, 194, 120, 209),
-                      ),
-                      child: const Text(
-                        ' Record Again ',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                        SizedBox(
+                          height: SizeConfig.defaultSize!,
+                        ),
+                        Container(
+                            width: 18 * SizeConfig.defaultSize!,
+                            height: 7.5 * SizeConfig.defaultSize!,
+                            decoration: ShapeDecoration(
+                              color: Colors.white.withOpacity(0.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            child: Center(
+                                child: Text(
+                              voiceName,
+                              style: TextStyle(
+                                fontFamily: 'Molengo',
+                                fontSize: SizeConfig.defaultSize! * 2.3,
+                              ),
+                            )))
+                      ],
                     ),
                     SizedBox(
-                      width: 3.0 * SizeConfig.defaultSize!,
+                      width: SizeConfig.defaultSize! * 2,
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.play_arrow,
-                        size: 3 * SizeConfig.defaultSize!,
-                        color: const Color.fromARGB(255, 194, 120, 209),
-                      ),
-                      onPressed: () {
-                        audioPlayer.play(UrlSource(widget.infenrencedVoice));
-                      },
-                    ),
-                    SizedBox(
-                      width: 3 * SizeConfig.defaultSize!,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        audioPlayer.stop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
+                    Column(children: [
+                      Container(
+                        width: 52.4 * SizeConfig.defaultSize!,
+                        height: 26.5 * SizeConfig.defaultSize!,
+                        margin: EdgeInsets.zero,
+                        decoration: ShapeDecoration(
+                          color: Colors.white.withOpacity(0.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(8.0), // 원하는 모양의 네모 박스로 변경
                         ),
-                        backgroundColor:
-                            const Color.fromARGB(255, 194, 120, 209),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 2 * SizeConfig.defaultSize!),
+                            Container(
+                                width: 50 * SizeConfig.defaultSize!,
+                                height: 16 * SizeConfig.defaultSize!,
+                                child: Center(
+                                  child: Text(
+                                    "This dialogue highlights the mermaid's realization\nof the value of her voice, its intangible beauty,\nand its role in her pursuit of true love and self-discovery.\nDespite losing her voice, she finds the strength to communicate\nthrough her heart and believes that love goes beyond words.\nThe journey becomes an opportunity for her to uncover\nher true essence and understand the essence of love and freedom.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 1.8 * SizeConfig.defaultSize!,
+                                      fontFamily: 'Molengo',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  // child: SingleChildScrollView(
+                                  //   child: RichText(
+                                  //     textAlign: TextAlign.center,
+                                  //     text: TextSpan(
+                                  //       children: [
+                                  //         TextSpan(
+                                  //           children: [
+                                  // TextSpan(
+                                  //   text:
+                                  //       'This dialogue highlights the mermaid\'s realization of the value\n',
+                                  //   style: TextStyle(
+                                  //       fontSize:
+                                  //           1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  // TextSpan(
+                                  //   text:
+                                  //       'of her voice, its intangible beauty, and its role in her pursuit of\n',
+                                  //   style: TextStyle(
+                                  //       fontSize:
+                                  //           1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  // TextSpan(
+                                  //   text:
+                                  //       'true love and self-discovery. Despite losing her voice, she finds \n ',
+                                  //   style: TextStyle(
+                                  //       fontSize:
+                                  //           1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  // TextSpan(
+                                  //   text:
+                                  //       'the strength to communicate through her heart and believes that \n',
+                                  //   style: TextStyle(
+                                  //       fontSize:
+                                  //           1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  // TextSpan(
+                                  //   text:
+                                  //       'love goes beyond words. The journey becomes  an opportunity for her\n',
+                                  //   style: TextStyle(
+                                  //       fontSize:
+                                  //           1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  // TextSpan(
+                                  //   text:
+                                  //       'to uncover her true essence and understand the essence of love and freedom.\n',
+                                  //   style: TextStyle(
+                                  //       fontSize:
+                                  //           1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  // TextSpan(
+                                  //   text:
+                                  //       'and passions within me will not easily fade away. Love transcends\n',
+                                  //   style: TextStyle(
+                                  //       fontSize: 1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  // TextSpan(
+                                  //   text:
+                                  //       'language. In this quest to reclaim my precious voice, I will discover my\n',
+                                  //   style: TextStyle(
+                                  //       fontSize: 1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  // TextSpan(
+                                  //   text:
+                                  //       'true self and learn the ways of love and freedom."',
+                                  //   style: TextStyle(
+                                  //       fontSize: 1.6 * SizeConfig.defaultSize!,
+                                  //       color: Colors.black,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  //           ],
+                                  //         ),
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                )),
+                            Expanded(
+                              child: Stack(
+                                alignment: Alignment.centerLeft,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          audioPlayer.stop();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AudioRecorderRetry(
+                                                      // rerecord: true,
+                                                      // mustDelete: widget.path,
+                                                      ),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 31.1 * SizeConfig.defaultSize!,
+                                          height: 4.5 * SizeConfig.defaultSize!,
+                                          decoration: ShapeDecoration(
+                                            color: Color(0xFFFFA91A),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              'Re-make your voice',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 2.3 *
+                                                    SizeConfig.defaultSize!,
+                                                fontFamily: 'Molengo',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5.3 * SizeConfig.defaultSize!,
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.play_arrow,
+                                          size: 3 * SizeConfig.defaultSize!,
+                                          // color: const Color.fromARGB(
+                                          //     255, 194, 120, 209),
+                                        ),
+                                        onPressed: () {
+                                          inferenceUrl == ""
+                                              ? null
+                                              : audioPlayer.play(
+                                                  UrlSource(inferenceUrl));
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                      child: const Text(
-                        '    I love it!    ',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    ])
                   ],
                 ),
-              ],
-            ),
-          )
-        ],
+              ),
+              //   Expanded(
+              //     flex: 2,
+              //     child: SingleChildScrollView(
+              //       child: RichText(
+              //         textAlign: TextAlign.center,
+              //         text: TextSpan(
+              //           children: [
+              //             TextSpan(
+              //               children: [
+              //                 TextSpan(
+              //                   text:
+              //                       'This dialogue highlights the mermaid\'s realization of the value\n',
+              //                   style: TextStyle(
+              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
+              //                       color: Colors.black,
+              //                       fontWeight: FontWeight.bold),
+              //                 ),
+              //                 TextSpan(
+              //                   text:
+              //                       'of her voice, its intangible beauty, and its role in her pursuit of\n',
+              //                   style: TextStyle(
+              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
+              //                       color: Colors.black,
+              //                       fontWeight: FontWeight.bold),
+              //                 ),
+              //                 TextSpan(
+              //                   text:
+              //                       'true love and self-discovery. Despite losing her voice, she finds \n ',
+              //                   style: TextStyle(
+              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
+              //                       color: Colors.black,
+              //                       fontWeight: FontWeight.bold),
+              //                 ),
+              //                 TextSpan(
+              //                   text:
+              //                       'the strength to communicate through her heart and believes that \n',
+              //                   style: TextStyle(
+              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
+              //                       color: Colors.black,
+              //                       fontWeight: FontWeight.bold),
+              //                 ),
+              //                 TextSpan(
+              //                   text:
+              //                       'love goes beyond words. The journey becomes  an opportunity for her\n',
+              //                   style: TextStyle(
+              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
+              //                       color: Colors.black,
+              //                       fontWeight: FontWeight.bold),
+              //                 ),
+              //                 TextSpan(
+              //                   text:
+              //                       'to uncover her true essence and understand the essence of love and freedom.\n',
+              //                   style: TextStyle(
+              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
+              //                       color: Colors.black,
+              //                       fontWeight: FontWeight.bold),
+              //                 ),
+              //                 // TextSpan(
+              //                 //   text:
+              //                 //       'and passions within me will not easily fade away. Love transcends\n',
+              //                 //   style: TextStyle(
+              //                 //       fontSize: 16.0,
+              //                 //       color: Colors.black,
+              //                 //       fontWeight: FontWeight.bold),
+              //                 // ),
+              //                 // TextSpan(
+              //                 //   text:
+              //                 //       'language. In this quest to reclaim my precious voice, I will discover my\n',
+              //                 //   style: TextStyle(
+              //                 //       fontSize: 16.0,
+              //                 //       color: Colors.black,
+              //                 //       fontWeight: FontWeight.bold),
+              //                 // ),
+              //                 // TextSpan(
+              //                 //   text:
+              //                 //       'true self and learn the ways of love and freedom."',
+              //                 //   style: TextStyle(
+              //                 //       fontSize: 16.0,
+              //                 //       color: Colors.black,
+              //                 //       fontWeight: FontWeight.bold),
+              //                 // ),
+              //               ],
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              //   Expanded(
+              //     flex: 1,
+              //     child: Stack(
+              //       alignment: Alignment.centerLeft,
+              //       children: [
+              //         Row(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             TextButton(
+              //               onPressed: () {
+              //                 audioPlayer.stop();
+              //                 Navigator.push(
+              //                   context,
+              //                   MaterialPageRoute(
+              //                     builder: (context) => const AudioRecorderRetry(
+              //                         // rerecord: true,
+              //                         // mustDelete: widget.path,
+              //                         ),
+              //                   ),
+              //                 );
+              //               },
+              //               style: TextButton.styleFrom(
+              //                 shape: RoundedRectangleBorder(
+              //                   borderRadius:
+              //                       BorderRadius.circular(8.0), // 원하는 모양의 네모 박스로 변경
+              //                 ),
+              //                 backgroundColor:
+              //                     const Color.fromARGB(255, 194, 120, 209),
+              //               ),
+              //               child: const Text(
+              //                 ' Re-make your voice ',
+              //                 style: TextStyle(color: Colors.white),
+              //               ),
+              //             ),
+              //             SizedBox(
+              //               width: 3.0 * SizeConfig.defaultSize!,
+              //             ),
+              //             IconButton(
+              //               icon: Icon(
+              //                 Icons.play_arrow,
+              //                 size: 3 * SizeConfig.defaultSize!,
+              //                 color: const Color.fromARGB(255, 194, 120, 209),
+              //               ),
+              //               onPressed: () {
+              //                 audioPlayer.play(UrlSource(widget.infenrencedVoice));
+              //               },
+              //             ),
+              //             // SizedBox(
+              //             //   width: 3 * SizeConfig.defaultSize!,
+              //             // ),
+              //             // TextButton(
+              //             //   onPressed: () {
+              //             //     audioPlayer.stop();
+              //             //     Navigator.push(
+              //             //       context,
+              //             //       MaterialPageRoute(
+              //             //         builder: (context) => const HomeScreen(),
+              //             //       ),
+              //             //     );
+              //             //   },
+              //             // style: TextButton.styleFrom(
+              //             //   shape: RoundedRectangleBorder(
+              //             //     borderRadius:
+              //             //         BorderRadius.circular(8.0), // 원하는 모양의 네모 박스로 변경
+              //             //   ),
+              //             //   backgroundColor:
+              //             //       const Color.fromARGB(255, 194, 120, 209),
+              //             // ),
+              //             // child: const Text(
+              //             //   '    I love it!    ',
+              //             //   style: TextStyle(color: Colors.white),
+              //             // ),
+              //             // ),
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //   )
+            ],
+          ),
+        ),
       ),
-    ));
+    );
   }
 }
