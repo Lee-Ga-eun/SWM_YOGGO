@@ -481,7 +481,7 @@ class _BookIntroState extends State<BookIntro> {
                                                             6.5,
                                                         colorBlendMode:
                                                             BlendMode.srcATop,
-                                                        color: isClicked0
+                                                        color: isClicked
                                                             ? null
                                                             : const Color
                                                                     .fromARGB(
