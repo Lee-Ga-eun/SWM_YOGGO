@@ -119,34 +119,38 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: Colors.yellow, // Set the background color to yellow
       body: Stack(
         children: [
+          // 배경 이미지
           Positioned.fill(
             child: Image.asset(
-              'lib/images/bkground.png',
+              'lib/images/bkground.png', // 배경 이미지 파일 경로 (PNG 형식)
               fit: BoxFit.cover,
             ),
           ),
-          Positioned(
-            top: 20 * SizeConfig.defaultSize!,
-            left: MediaQuery.of(context).size.width / 2 - 95,
-            child: GestureDetector(
-              onTap: signInWithGoogle,
-              child: Image.asset(
-                'lib/images/google_login.png',
-              ),
-            ),
-          ),
-          Positioned(
-            top: 30 * SizeConfig.defaultSize!,
-            left: MediaQuery.of(context).size.width / 2 - 95,
-            child: GestureDetector(
-              //  onTap: signInWithApple,
-              child: Image.asset(
-                'lib/images/apple_login.png',
+          Positioned.fill(
+            child: Container(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'LOVEL', // 원하는 텍스트를 여기에 입력하세요
+                    style: TextStyle(
+                      fontSize: 15 * SizeConfig.defaultSize!,
+                      color: Colors.black,
+                      fontFamily: 'modak',
+                    ),
+                  ),
+                  SizedBox(height: 0 * SizeConfig.defaultSize!),
+                  InkWell(
+                    onTap: signInWithGoogle,
+                    child: Image.asset(
+                      'lib/images/login_google.png', // 로그인 버튼 이미지 파일 경로 (PNG 형식)
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
