@@ -372,8 +372,8 @@ class _BookIntroState extends State<BookIntro> {
                                                         border: Border.all(
                                                           color: const Color
                                                                   .fromARGB(255,
-                                                              77, 252, 255),
-                                                          width: 3.0,
+                                                              255, 255, 255),
+                                                          width: 3.5,
                                                         ),
                                                       ),
                                                       child: Image.asset(
@@ -423,8 +423,8 @@ class _BookIntroState extends State<BookIntro> {
                                                         border: Border.all(
                                                           color: const Color
                                                                   .fromARGB(255,
-                                                              77, 252, 255),
-                                                          width: 3.0,
+                                                              255, 255, 255),
+                                                          width: 3.5,
                                                         ),
                                                       ),
                                                       child: Image.asset(
@@ -474,8 +474,8 @@ class _BookIntroState extends State<BookIntro> {
                                                         border: Border.all(
                                                           color: const Color
                                                                   .fromARGB(255,
-                                                              77, 252, 255),
-                                                          width: 3.0,
+                                                              255, 255, 255),
+                                                          width: 3.5,
                                                         ),
                                                       ),
                                                       child: Image.asset(
