@@ -196,10 +196,10 @@ class _BookIntroState extends State<BookIntro> {
               fit: BoxFit.cover,
             ),
           ),
-          child: Center(
+          child: Center( // 로딩 화면
             child: LoadingAnimationWidget.fourRotatingDots(
-              color: Colors.white,
-              size: SizeConfig.defaultSize! * 16,
+              color: Color.fromARGB(255, 255, 169, 26),
+              size: SizeConfig.defaultSize! * 10,
             ),
           ),
         ),
@@ -217,7 +217,7 @@ class _BookIntroState extends State<BookIntro> {
           ),
           child: Padding(
             padding: EdgeInsets.only(
-              left: SizeConfig.defaultSize!,
+              // left: 0.5 * SizeConfig.defaultSize!,
               top: SizeConfig.defaultSize!,
             ),
             child: SafeArea(
@@ -233,10 +233,11 @@ class _BookIntroState extends State<BookIntro> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          icon: Icon(
-                            Icons.cancel,
-                            color: Colors.white,
-                            size: SizeConfig.defaultSize! * 4,
+                          icon: Icon( // [X]
+                            // Icons.highlight_off,
+                            Icons.clear,
+                            color: Colors.black,
+                            size: 3.5 * SizeConfig.defaultSize!,
                           ),
                         )),
                   ),
@@ -248,32 +249,40 @@ class _BookIntroState extends State<BookIntro> {
                       children: [
                         Expanded(
                           // 썸네일 사진
-                          flex: 5,
+                          flex: 4,
                           child: Container(
                             // color: Colors.green,
                             child: Hero(
                               tag: widget.id,
                               child: Center(
                                 child: Container(
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey
-                                              .withOpacity(0.5), // 그림자 색상
-                                          spreadRadius: 5, // 그림자의 확산 범위
-                                          blurRadius: 7, // 그림자의 흐림 정도
-                                          offset: const Offset(
-                                              0, 3), // 그림자의 위치 (가로, 세로)
-                                        ),
-                                      ],
-                                    ),
-                                    child: Container(
+                                  // margin: EdgeInsets.only(top: SizeConfig.defaultSize! * 4),
+                                  // decoration: BoxDecoration(
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: Colors.grey
+                                    //         .withOpacity(0.5), // 그림자 색상
+                                    //     spreadRadius: 5, // 그림자의 확산 범위
+                                    //     blurRadius: 7, // 그림자의 흐림 정도
+                                    //     offset: const Offset(
+                                    //         0, 3), // 그림자의 위치 (가로, 세로)
+                                    //   ),
+                                    // ],
+                                  // ),
+                                  child: 
+                                    Column(children:[
+                                      SizedBox(
+                                        height: SizeConfig.defaultSize! * 2,
+                                      ),
+                                      Container(
+                                        width: SizeConfig.defaultSize! * 30,
+                                        height: SizeConfig.defaultSize! * 30,
                                         clipBehavior: Clip.hardEdge,
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                              BorderRadius.circular(20),
                                         ),
-                                        child: Image.network(widget.thumb))),
+                                        child: Image.network(widget.thumb))])),
                               ),
                             ),
                           ),
@@ -286,16 +295,16 @@ class _BookIntroState extends State<BookIntro> {
                             child: ListView(
                               children: [
                                 SizedBox(
-                                  height: SizeConfig.defaultSize! * 2,
+                                  height: SizeConfig.defaultSize! * 1.5,
                                 ),
                                 Text(
                                   widget.title,
                                   style: TextStyle(
                                       fontSize: SizeConfig.defaultSize! * 3.5,
-                                      fontFamily: 'BreeSerif'),
+                                      fontFamily: 'Molengo'),
                                 ),
                                 SizedBox(
-                                  height: SizeConfig.defaultSize! * 0.3,
+                                  height: SizeConfig.defaultSize! * 1.5,
                                 ),
                                 Row(
                                   //  mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +334,7 @@ class _BookIntroState extends State<BookIntro> {
                                                       goRecord = true;
                                                     });
                                             },
-                                            child: Column(
+                                            child: Column( // 결제 한 사람
                                               children: [
                                                 Padding(
                                                     padding: EdgeInsets.only(
@@ -390,28 +399,29 @@ class _BookIntroState extends State<BookIntro> {
                                                 wantPurchase = true;
                                               });
                                             },
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 0.8 *
-                                                          SizeConfig
-                                                              .defaultSize!),
-                                                  child: Image.asset(
-                                                    'lib/images/lock.png',
-                                                    height: SizeConfig
-                                                            .defaultSize! *
-                                                        6.5,
+                                            child: Center(
+                                              child: Column( // 결제 안 한 사람
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 0 * SizeConfig.defaultSize!,
+                                                        left: 0 * SizeConfig.defaultSize!),
+                                                    child: Image.asset(
+                                                      'lib/images/lock.png',
+                                                      height: SizeConfig.defaultSize! * 6.5),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                    height: SizeConfig
-                                                            .defaultSize! *
-                                                        0.3),
-                                                const Text('minemine'),
-                                              ],
-                                            ),
+                                                  SizedBox(
+                                                      height: SizeConfig.defaultSize! * 0.3),
+                                                  Text('Mine',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Molengo',
+                                                      fontSize: 1.5 * SizeConfig.defaultSize!))
+                                                ],
+                                              ),
+                                            )
                                           ),
+                                    SizedBox(width: 1.5 * SizeConfig.defaultSize!,),
+                                    // Jolly
                                     GestureDetector(
                                       onTap: () {
                                         cvi = voices[0][
@@ -424,46 +434,53 @@ class _BookIntroState extends State<BookIntro> {
                                           canChanged = true; // 클릭 상태
                                         });
                                       },
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  right: 0.8 *
-                                                      SizeConfig.defaultSize!),
-                                              child: isClicked0
-                                                  ? Container(
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          6.6,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: const Color
-                                                                  .fromARGB(255,
-                                                              77, 252, 255),
-                                                          width: 3.0,
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: 0 *
+                                                        SizeConfig.defaultSize!),
+                                                child: isClicked0
+                                                    ? Container(
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            6.6,
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          border: Border.all(
+                                                            color: const Color
+                                                                    .fromARGB(255,
+                                                                255, 255, 255),
+                                                            width: 3.5,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      child: Image.asset(
+                                                        child: Image.asset(
+                                                          'lib/images/jolly.png',
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              6.5,
+                                                        ),
+                                                      )
+                                                    : Image.asset(
                                                         'lib/images/jolly.png',
                                                         height: SizeConfig
                                                                 .defaultSize! *
                                                             6.5,
-                                                      ),
-                                                    )
-                                                  : Image.asset(
-                                                      'lib/images/jolly.png',
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          6.5,
-                                                    )),
-                                          SizedBox(
-                                              height: SizeConfig.defaultSize! *
-                                                  0.3),
-                                          Text(voices[0]['voiceName']),
-                                        ],
-                                      ),
+                                                      )),
+                                            SizedBox(
+                                                height: SizeConfig.defaultSize! *
+                                                    0.3),
+                                            Text(voices[0]['voiceName'],
+                                              style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize: 1.5 * SizeConfig.defaultSize!))
+                                          ],
+                                        ),
+                                      )
                                     ),
+                                    SizedBox(width: 1.5 * SizeConfig.defaultSize!,),
+                                    // Morgan
                                     GestureDetector(
                                       onTap: () {
                                         cvi = voices[1][
@@ -476,46 +493,53 @@ class _BookIntroState extends State<BookIntro> {
                                           canChanged = true; // 클릭 상태
                                         });
                                       },
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  right: 0.8 *
-                                                      SizeConfig.defaultSize!),
-                                              child: isClicked1
-                                                  ? Container(
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          6.6,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: const Color
-                                                                  .fromARGB(255,
-                                                              77, 252, 255),
-                                                          width: 3.0,
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: 0 *
+                                                        SizeConfig.defaultSize!),
+                                                child: isClicked1
+                                                    ? Container(
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            6.6,
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          border: Border.all(
+                                                            color: const Color
+                                                                    .fromARGB(255,
+                                                                255, 255, 255),
+                                                            width: 3.5,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      child: Image.asset(
+                                                        child: Image.asset(
+                                                          'lib/images/morgan.png',
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              6.5,
+                                                        ),
+                                                      )
+                                                    : Image.asset(
                                                         'lib/images/morgan.png',
                                                         height: SizeConfig
                                                                 .defaultSize! *
                                                             6.5,
-                                                      ),
-                                                    )
-                                                  : Image.asset(
-                                                      'lib/images/morgan.png',
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          6.5,
-                                                    )),
-                                          SizedBox(
-                                              height: SizeConfig.defaultSize! *
-                                                  0.3),
-                                          Text(voices[1]['voiceName']),
-                                        ],
-                                      ),
+                                                      )),
+                                            SizedBox(
+                                                height: SizeConfig.defaultSize! *
+                                                    0.3),
+                                            Text(voices[1]['voiceName'],
+                                              style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize: 1.5 * SizeConfig.defaultSize!))
+                                          ],
+                                        ),
+                                      )
                                     ),
+                                    SizedBox(width: 1.5 * SizeConfig.defaultSize!,),
+                                    // Eric
                                     GestureDetector(
                                       onTap: () {
                                         cvi = voices[2][
@@ -528,63 +552,63 @@ class _BookIntroState extends State<BookIntro> {
                                           canChanged = true; // 클릭 상태
                                         });
                                       },
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  right: 0.8 *
-                                                      SizeConfig.defaultSize!),
-                                              child: isClicked2
-                                                  ? Container(
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          6.6,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: const Color
-                                                                  .fromARGB(255,
-                                                              77, 252, 255),
-                                                          width: 3.0,
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: 0 *
+                                                        SizeConfig.defaultSize!),
+                                                child: isClicked2
+                                                    ? Container(
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            6.6,
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          border: Border.all(
+                                                            color: const Color
+                                                                    .fromARGB(255,
+                                                                255, 255, 255),
+                                                            width: 3.5,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      child: Image.asset(
+                                                        child: Image.asset(
+                                                          'lib/images/eric.png',
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              6.5,
+                                                        ),
+                                                      )
+                                                    : Image.asset(
                                                         'lib/images/eric.png',
                                                         height: SizeConfig
                                                                 .defaultSize! *
                                                             6.5,
-                                                      ),
-                                                    )
-                                                  : Image.asset(
-                                                      'lib/images/eric.png',
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          6.5,
-                                                    )),
-                                          SizedBox(
-                                              height: SizeConfig.defaultSize! *
-                                                  0.3),
-                                          Text(voices[2]['voiceName']),
-                                        ],
-                                      ),
+                                                      )),
+                                            SizedBox(
+                                                height: SizeConfig.defaultSize! *
+                                                    0.3),
+                                            Text(voices[2]['voiceName'],
+                                              style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize: 1.5 * SizeConfig.defaultSize!))
+                                          ],
+                                        ),
+                                      ) 
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: SizeConfig.defaultSize! * 0.1,
-                                ),
-                                Padding(
+                                Padding( // Summary
                                   padding: EdgeInsets.only(
-                                      right: SizeConfig.defaultSize! * 4),
+                                    right: 1 * SizeConfig.defaultSize!,
+                                    top: 1 * SizeConfig.defaultSize!),
                                   child: Text(
                                     widget.summary,
                                     style: TextStyle(
-                                        fontFamily: 'Prata',
-                                        fontSize: SizeConfig.defaultSize! * 2),
+                                        fontFamily: 'Molengo',
+                                        fontSize: SizeConfig.defaultSize! * 2.2),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.defaultSize!,
                                 ),
                               ],
                             ),
@@ -646,40 +670,31 @@ class _BookIntroState extends State<BookIntro> {
                                       )
                                     : null;
                           },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            //alignment: Alignment.topRight,
-                            children: [
-                              Text(
-                                'Selected?',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: SizeConfig.defaultSize! * 2),
-                              ),
-                              Padding(
+                          // next 화살표 시작
+                            child: Padding(
                                 padding: EdgeInsets.only(
-                                    right: SizeConfig.defaultSize! * 2),
+                                  bottom: 0 * SizeConfig.defaultSize!,
+                                  right: 0 * SizeConfig.defaultSize!,
+                                  left: 20 * SizeConfig.defaultSize!),
                                 child: Icon(
-                                  Icons.arrow_circle_right_outlined,
-                                  size: SizeConfig.defaultSize! * 5,
-                                  color: Colors.white,
+                                  Icons.arrow_forward,
+                                  size: SizeConfig.defaultSize! * 3.5,
+                                  color: Colors.black,
                                 ),
                               ),
-                            ],
-                          ),
+                            // next 화살표 끝
+                            )
+                    )
+                    ]        
+                    
                         ),
                       ), // --------------------성우 아이콘 배치 완료  ---------
                     ]),
                   ),
                   //추가
-
-                  //  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
+            
         Visibility(
           visible: wantPurchase,
           child: AlertDialog(
@@ -767,8 +782,9 @@ class _BookIntroState extends State<BookIntro> {
             ],
           ),
         ),
-      ]),
-      //),
+    ]
+    )
     );
+      
   }
 }
