@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
 import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
+import '../component/globalCubit/user/user_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,6 +19,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late UserCubit userCubit;
+
   String generateNonce([int length = 32]) {
     const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
@@ -31,7 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return digest.toString();
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
+    userCubit = context.read<UserCubit>();
+    //userCubit = context.watch<UserCubit>(listen: false);
+
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -65,52 +72,24 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setBool('record', record);
         await prefs.setString('username', username);
 
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        // await Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => const HomeScreen()));
+        //print(username); 기존 코드
+        await userCubit.login(username, 'email', purchase, record, false);
+
+        final state = userCubit.state;
+        if (state.isDataFetched) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
       } else {
         // 로그인 실패
         print('로그인 실패. 상태 코드: ${response.statusCode}');
       }
     }
   }
-
-  // Future<void> signInWithApple() async {
-  //   // Trigger the authentication flow
-  //   final rawNonce = generateNonce();
-  //   final nonce = sha256ofString(rawNonce);
-  //   final appleCredential = await SignInWithApple.getAppleIDCredential(
-  //     scopes: [
-  //       AppleIDAuthorizationScopes.email,
-  //       AppleIDAuthorizationScopes.fullName,
-  //     ],
-  //     nonce: nonce,
-  //   );
-  //   print(appleCredential);
-  //   UserModel user = UserModel(
-  //     name: appleCredential.givenName,
-  //     email: appleCredential.email,
-  //     providerId: appleCredential.userIdentifier!,
-  //     provider: 'apple',
-  //   );
-  //   var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
-  //   print(json.encode(user.toJson()));
-  //   var response = await http.post(url,
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: json.encode(user.toJson()));
-
-  //   if (response.statusCode == 200 || response.statusCode == 201) {
-  //     // 로그인 성공
-  //     var responseData = json.decode(response.body);
-  //     var token = responseData['token'];
-  //     var prefs = await SharedPreferences.getInstance();
-  //     await prefs.setString('token', token);
-  //     await Navigator.push(
-  //         context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-  //   } else {
-  //     // 로그인 실패
-  //     print('로그인 실패. 상태 코드: ${response.statusCode}');
-  //   }
-  // }
 
   @override
   void initState() {
@@ -146,7 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 0 * SizeConfig.defaultSize!),
                   InkWell(
-                    onTap: signInWithGoogle,
+                    onTap: () {
+                      signInWithGoogle(context);
+                    },
                     child: Image.asset(
                       'lib/images/login_google.png', // 로그인 버튼 이미지 파일 경로 (PNG 형식)
                     ),

@@ -3,9 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/login_screen.dart';
 import 'package:yoggo/component/purchase.dart';
 import 'package:yoggo/component/record_info.dart';
-import 'package:yoggo/models/webtoon.dart';
 import 'package:yoggo/component/book_intro.dart';
-import 'package:yoggo/services/api_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,6 +15,7 @@ import '../../check_voice.dart';
 import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import '../../globalCubit/user/user_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -28,7 +27,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late Future<List<bookModel>> webtoons;
+  // late Future<List<bookModel>> webtoons;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late String token;
   late bool purchase = true;
@@ -45,30 +44,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    webtoons = ApiService.getTodaysToons();
-    if (!isDataFetched) {
-      getToken();
-      getUserInfo();
-    }
+    //webtoons = ApiService.getTodaysToons();
+    // if (!isDataFetched) {
+    //getToken();
+    //getUserInfo();
+    //}
   }
 
   Future<void> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       token = prefs.getString('token')!;
-      userInfo(token);
+      //userInfo(token);
       getVoiceInfo(token);
     });
   }
 
-  Future<void> getUserInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      //purchase = prefs.getBool('purchase')!;
-      //record = prefs.getBool('record')!;
-      userName = prefs.getString('username')!;
-    });
-  }
+  // Future<void> getUserInfo() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     //purchase = prefs.getBool('purchase')!;
+  //     //record = prefs.getBool('record')!;
+  //     userName = prefs.getString('username')!;
+  //   });
+  // }
 
   Future<String> getVoiceInfo(String token) async {
     var url = Uri.parse('https://yoggo-server.fly.dev/user/myVoice');
@@ -94,29 +93,29 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<String> userInfo(String token) async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/myInfo');
-    var response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+  // Future<String> userInfo(String token) async {
+  //   var url = Uri.parse('https://yoggo-server.fly.dev/user/myInfo');
+  //   var response = await http.get(
+  //     url,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer $token',
+  //     },
+  //   );
 
-    if (response.statusCode == 200) {
-      setState(() {
-        final myJson = json.decode(response.body)[0];
-        // purchase = myJson['purchase'];
-        userName = myJson['name'];
-        // record = myJson['record'];
-      });
-      isDataFetched = true;
-      return response.body;
-    } else {
-      throw Exception('Failed to fetch data');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     setState(() {
+  //       final myJson = json.decode(response.body)[0];
+  //       // purchase = myJson['purchase'];
+  //       userName = myJson['name'];
+  //       // record = myJson['record'];
+  //     });
+  //     isDataFetched = true;
+  //     return response.body;
+  //   } else {
+  //     throw Exception('Failed to fetch data');
+  //   }
+  // }
 
   void logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -130,6 +129,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     SizeConfig().init(context);
     return Scaffold(
       key: _scaffoldKey,
@@ -174,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: SizeConfig.defaultSize! * 0.5,
                             ),
                             Text(
-                              userName,
+                              userState.userName,
                               style: TextStyle(
                                   fontSize: SizeConfig.defaultSize! * 1.4),
                             ),
@@ -234,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () {
                                 //이벤트 넣어보기
                               },
-                              child: Container(
+                              child: SizedBox(
                                 width: 25 * SizeConfig.defaultSize!,
                                 height: 12.5 * SizeConfig.defaultSize!,
                                 child: Stack(
@@ -307,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               height:
                                                   3 * SizeConfig.defaultSize!,
                                               decoration: ShapeDecoration(
-                                                color: Color(0xFFFFA91A),
+                                                color: const Color(0xFFFFA91A),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
@@ -352,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Icon(
                                     Icons.add,
                                     size: SizeConfig.defaultSize! * 2.5,
-                                    color: Color(0xFFFFA91A),
+                                    color: const Color(0xFFFFA91A),
                                   ))),
 
                       SizedBox(
@@ -398,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           'Do you want to Sign Out?',
                           style: TextStyle(
-                            color: Color(0xFF599FED),
+                            color: const Color(0xFF599FED),
                             fontSize: 1.2 * SizeConfig.defaultSize!,
                             fontFamily: 'Molengo',
                             fontWeight: FontWeight.w400,
@@ -470,7 +471,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // SizedBox(
               //   height: SizeConfig.defaultSize! * 1.5,
               // ),
-              record && purchase
+              userState.record && userState.purchase
                   ? Container()
                   //     : Expanded(
                   : Expanded(
@@ -582,7 +583,7 @@ class DataList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 데이터 큐빗을 가져오기.
-    final dataCubit = BlocProvider.of<DataCubit>(context);
+    //final dataCubit = BlocProvider.of<DataCubit>(context);
 
     return BlocBuilder<DataCubit, List<BookModel>>(
       builder: (context, state) {
@@ -590,7 +591,7 @@ class DataList extends StatelessWidget {
           return Center(
             child: Center(
               child: LoadingAnimationWidget.fourRotatingDots(
-                color: Color.fromARGB(255, 255, 169, 26),
+                color: const Color.fromARGB(255, 255, 169, 26),
                 size: SizeConfig.defaultSize! * 10,
               ),
             ),
