@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoggo/component/home/view/home_screen.dart';
 import '../component/check_voice.dart';
 
 class WaitingVoicePage extends StatefulWidget {
@@ -103,9 +104,9 @@ class _WaitingVoiceState extends State<WaitingVoicePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            CheckVoice(infenrencedVoice: completeInferenced),
-                      ),
+                          builder: (context) =>
+                              const HomeScreen() //CheckVoice(infenrencedVoice: completeInferenced),
+                          ),
                     );
                   },
                   icon: const Icon(Icons.check)),

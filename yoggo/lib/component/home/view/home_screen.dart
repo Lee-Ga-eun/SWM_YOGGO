@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../check_voice.dart';
 import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -34,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late bool record = true;
   String userName = '';
   String userEmail = '';
+  late String voiceIcon = "😃";
+  late String voiceName = "User";
   bool showEmail = false;
   bool showSignOutConfirmation = false;
   double dropdownHeight = 0.0;
@@ -54,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       token = prefs.getString('token')!;
       userInfo(token);
+      getVoiceInfo(token);
     });
   }
 
@@ -64,6 +68,30 @@ class _HomeScreenState extends State<HomeScreen> {
       //record = prefs.getBool('record')!;
       userName = prefs.getString('username')!;
     });
+  }
+
+  Future<String> getVoiceInfo(String token) async {
+    var url = Uri.parse('https://yoggo-server.fly.dev/user/myVoice');
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      final myJson = json.decode(response.body);
+      if (myJson != []) {
+        setState(() {
+          //inferenceUrl = myJson[0]['inferenceUrl'];
+          voiceName = myJson[0]['name'];
+          voiceIcon = myJson[0]['icon'];
+        });
+      }
+      return response.body;
+    } else {
+      throw Exception('Failed to fetch data');
+    }
   }
 
   Future<String> userInfo(String token) async {
@@ -106,49 +134,56 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
+          child: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/bkground.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('lib/images/bkground.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    ' Welcome! ',
-                    style: TextStyle(
-                        fontSize: SizeConfig.defaultSize! * 1.8,
-                        fontFamily: 'Molengo'),
+            Container(
+                width: 30 * SizeConfig.defaultSize!,
+                height: 11 * SizeConfig.defaultSize!,
+                decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
+                child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: SizeConfig.defaultSize! * 3),
+                      Text(
+                        ' Welcome! ',
+                        style: TextStyle(
+                            fontSize: SizeConfig.defaultSize! * 1.8,
+                            fontFamily: 'Molengo'),
+                      ),
+                      SizedBox(height: SizeConfig.defaultSize!),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: SizeConfig.defaultSize! * 1),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.account_circle,
+                              size: SizeConfig.defaultSize! * 2.3,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.defaultSize! * 0.5,
+                            ),
+                            Text(
+                              userName,
+                              style: TextStyle(
+                                  fontSize: SizeConfig.defaultSize! * 1.4),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: SizeConfig.defaultSize!),
-                  Padding(
-                    padding: EdgeInsets.only(left: SizeConfig.defaultSize! * 1),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.account_circle,
-                          size: SizeConfig.defaultSize! * 2.3,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.defaultSize! * 0.5,
-                        ),
-                        Text(
-                          userName,
-                          style: TextStyle(
-                              fontSize: SizeConfig.defaultSize! * 1.4),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                )),
             Column(
               children: [
                 ListTile(
@@ -180,13 +215,171 @@ class _HomeScreenState extends State<HomeScreen> {
                       //   child: const Text('about subscribe'),
                       // ),
                       SizedBox(
+                        height: 2 * SizeConfig.defaultSize!,
+                      ),
+                      Text(
+                        'Voice Profile',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 1.8 * SizeConfig.defaultSize!,
+                          fontFamily: 'Molengo',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(
                         height: 1 * SizeConfig.defaultSize!,
                       ),
+                      record && purchase
+                          ? GestureDetector(
+                              onTap: () {
+                                //이벤트 넣어보기
+                              },
+                              child: Container(
+                                width: 25 * SizeConfig.defaultSize!,
+                                height: 12.5 * SizeConfig.defaultSize!,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      child: Container(
+                                        width: 25 * SizeConfig.defaultSize!,
+                                        height: 12.5 * SizeConfig.defaultSize!,
+                                        decoration: ShapeDecoration(
+                                          color: Colors.white.withOpacity(0.5),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                        left: 1 * SizeConfig.defaultSize!,
+                                        top: 1.1 * SizeConfig.defaultSize!,
+                                        child: Transform.translate(
+                                            offset: Offset(0.5,
+                                                -0.7 * SizeConfig.defaultSize!),
+                                            child: Text(
+                                              voiceIcon,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize:
+                                                    9 * SizeConfig.defaultSize!,
+                                                fontFamily: 'Molengo',
+                                              ),
+                                            ))),
+                                    Positioned(
+                                      left: 11 * SizeConfig.defaultSize!,
+                                      top: 2.8 * SizeConfig.defaultSize!,
+                                      child: SizedBox(
+                                        width: 12.2 * SizeConfig.defaultSize!,
+                                        height: 2 * SizeConfig.defaultSize!,
+                                        child: Text(
+                                          voiceName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize:
+                                                2 * SizeConfig.defaultSize!,
+                                            fontFamily: 'Molengo',
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 11.7 * SizeConfig.defaultSize!,
+                                      top: 6.7 * SizeConfig.defaultSize!,
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CheckVoice(
+                                                  infenrencedVoice: '48',
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                              width:
+                                                  11 * SizeConfig.defaultSize!,
+                                              height:
+                                                  3 * SizeConfig.defaultSize!,
+                                              decoration: ShapeDecoration(
+                                                color: Color(0xFFFFA91A),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                'Edit this voice',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 1.4 *
+                                                      SizeConfig.defaultSize!,
+                                                  fontFamily: 'Molengo',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              )))),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => purchase
+                                        ? const RecordInfo()
+                                        : const Purchase(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                  width: 27 * SizeConfig.defaultSize!,
+                                  height: 4 * SizeConfig.defaultSize!,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    size: SizeConfig.defaultSize! * 2.5,
+                                    color: Color(0xFFFFA91A),
+                                  ))),
+
+                      SizedBox(
+                        height: 2 * SizeConfig.defaultSize!,
+                      ),
+                      // IconButton(
+                      //     onPressed: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //           builder: (context) => CheckVoice(
+                      //             infenrencedVoice: '48',
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //     icon: const Icon(Icons.check)),
                       GestureDetector(
-                        child: Text('Sign out               ',
-                            style: TextStyle(
-                                fontSize: SizeConfig.defaultSize! * 1.6,
-                                fontFamily: 'Molengo')),
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 1.8 * SizeConfig.defaultSize!,
+                            fontFamily: 'Molengo',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                         onTap: () {
                           setState(() {
                             showSignOutConfirmation =
@@ -198,11 +391,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 if (showSignOutConfirmation)
-                  ListTile(
-                    title: const Text(
-                      'Wanna Sign out?',
-                      style: TextStyle(color: Colors.blue),
-                    ),
+                  GestureDetector(
+                    child: Transform.translate(
+                        offset: Offset(-2 * SizeConfig.defaultSize!,
+                            0.5 * SizeConfig.defaultSize!),
+                        child: Text(
+                          'Do you want to Sign Out?',
+                          style: TextStyle(
+                            color: Color(0xFF599FED),
+                            fontSize: 1.2 * SizeConfig.defaultSize!,
+                            fontFamily: 'Molengo',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )),
+                    //),
                     onTap: () {
                       logout();
                       Navigator.push(
@@ -217,7 +419,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      ),
+      )),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -410,8 +612,8 @@ class DataList extends StatelessWidget {
                         thumb: book.thumbUrl,
                         id: book.id,
                         summary: book.summary,
-                        purchase: !purchase, // 임시로 지정 (전역으로 대체할 것임)
-                        record: !record, //임시로 지정 (전역으로 대체할 것임)
+                        purchase: purchase, // 임시로 지정 (전역으로 대체할 것임)
+                        record: record, //임시로 지정 (전역으로 대체할 것임)
                       ),
                     ),
                   );
