@@ -31,7 +31,6 @@ class BookIntro extends StatefulWidget {
 
 class _BookIntroState extends State<BookIntro> {
   bool isSelected = true;
-  bool isClicked = false;
   bool isClicked0 = true;
   bool isClicked1 = false;
   bool isClicked2 = false;
@@ -39,9 +38,7 @@ class _BookIntroState extends State<BookIntro> {
   bool wantPurchase = false;
   bool goRecord = false;
   bool completeInference = true;
-  late String voiceIcon = "😃";
-  late String voiceName = "";
-  late int inferenceId = 0;
+  late int inferenceId = 1000;
   late String token;
   String text = '';
   int voiceId = 10;
@@ -89,31 +86,7 @@ class _BookIntroState extends State<BookIntro> {
     setState(() {
       token = prefs.getString('token')!;
       purchaseInfo(token);
-      getVoiceInfo(token);
     });
-  }
-
-  Future<String> getVoiceInfo(String token) async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/myVoice');
-    var response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      final myJson = json.decode(response.body);
-      if (myJson != []) {
-        setState(() {
-          voiceName = myJson[0]['name'];
-          voiceIcon = myJson[0]['icon'];
-        });
-      }
-      return response.body;
-    } else {
-      throw Exception('Failed to fetch data');
-    }
   }
 
 //구매한 사람인지, 이 책이 인퍼런스되어 있는지 확인
@@ -127,12 +100,10 @@ class _BookIntroState extends State<BookIntro> {
         'Authorization': 'Bearer $token',
       },
     );
-
     if (response.statusCode == 200) {
       setState(() {
         isPurchased = json.decode(response.body)['purchase'];
         inferenceId = json.decode(response.body)['inference'];
-        print(inferenceId);
       });
       return response.body;
     } else {
@@ -225,28 +196,27 @@ class _BookIntroState extends State<BookIntro> {
                 bottom: false,
                 top: false,
                 child: Column(children: [
-                  //Expanded(
-                  //flex: 1,
-                  //child:
-                  Container(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(
-                          // [X]
-                          // Icons.highlight_off,
-                          Icons.clear,
-                          color: Colors.black,
-                          size: 3.5 * SizeConfig.defaultSize!,
-                        ),
-                      )),
-                  //),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(
+                            // [X]
+                            // Icons.highlight_off,
+                            Icons.clear,
+                            color: Colors.black,
+                            size: 3.5 * SizeConfig.defaultSize!,
+                          ),
+                        )),
+                  ),
                   //),
 
                   Expanded(
-                    flex: 6,
+                    flex: 7,
                     child: Row(
                       children: [
                         Expanded(
@@ -272,9 +242,9 @@ class _BookIntroState extends State<BookIntro> {
                                     // ],
                                     // ),
                                     child: Column(children: [
-                                  // SizedBox(
-                                  //   height: SizeConfig.defaultSize! * 2,
-                                  // ),
+                                  SizedBox(
+                                    height: SizeConfig.defaultSize! * 2,
+                                  ),
                                   Container(
                                       width: SizeConfig.defaultSize! * 30,
                                       height: SizeConfig.defaultSize! * 30,
@@ -293,19 +263,19 @@ class _BookIntroState extends State<BookIntro> {
                           flex: 5,
                           child: Container(
                             //   color: Colors.orange,
-                            child: Column(
+                            child: ListView(
                               children: [
-                                //   SizedBox(
-                                //     height: SizeConfig.defaultSize! * 1.5,
-                                //   ),
+                                SizedBox(
+                                  height: SizeConfig.defaultSize! * 1.5,
+                                ),
                                 Text(
                                   widget.title,
                                   style: TextStyle(
-                                      fontSize: SizeConfig.defaultSize! * 3.2,
+                                      fontSize: SizeConfig.defaultSize! * 3.5,
                                       fontFamily: 'Molengo'),
                                 ),
                                 SizedBox(
-                                  height: SizeConfig.defaultSize! * 1.0,
+                                  height: SizeConfig.defaultSize! * 1.5,
                                 ),
                                 Row(
                                   //  mainAxisAlignment: MainAxisAlignment.center,
@@ -314,7 +284,6 @@ class _BookIntroState extends State<BookIntro> {
                                         ? GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                isClicked = true;
                                                 isClicked0 = false;
                                                 isClicked1 = false;
                                                 isClicked2 = false;
@@ -340,12 +309,9 @@ class _BookIntroState extends State<BookIntro> {
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsets.only(
-                                                      right: 0 *
-                                                          SizeConfig
-                                                              .defaultSize!,
-                                                      left: 0 *
-                                                          SizeConfig
-                                                              .defaultSize!),
+                                                      right: SizeConfig
+                                                              .defaultSize! *
+                                                          1),
                                                   child: Image.asset(
                                                     'lib/images/mine.png',
                                                     height: SizeConfig
@@ -353,60 +319,16 @@ class _BookIntroState extends State<BookIntro> {
                                                         6.5,
                                                   ),
                                                 ),
-                                                /*child: isClicked
-                                                        ? Container(
-                                                            // height: SizeConfig
-                                                            //         .defaultSize! *
-                                                            //     6.6,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              border:
-                                                                  Border.all(
-                                                                color: const Color
-                                                                        .fromARGB(
-                                                                    255,
-                                                                    77,
-                                                                    252,
-                                                                    255),
-                                                                width: 3.0,
-                                                              ),
-                                                            ),
-                                                            child: Transform
-                                                                .translate(
-                                                                    offset: Offset(
-                                                                        0.0,
-                                                                        -1.2 *
-                                                                            SizeConfig.defaultSize!),
-                                                                    child: Text(
-                                                                      voiceIcon,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            SizeConfig.defaultSize! *
-                                                                                6.2,
-                                                                      ),
-                                                                    )))
-                                                        : Text(
-                                                            voiceIcon,
-                                                            style: TextStyle(
-                                                                fontSize: SizeConfig
-                                                                        .defaultSize! *
-                                                                    6.5,
-                                                                fontFamily:
-                                                                    'BreeSerif'),
-                                                          )),*/
                                                 SizedBox(
                                                     height: SizeConfig
                                                             .defaultSize! *
-                                                        0.3),
-                                                Text(voiceName,
+                                                        1),
+                                                Text('Mine',
                                                     style: TextStyle(
                                                         fontFamily: 'Molengo',
                                                         fontSize: 1.5 *
                                                             SizeConfig
-                                                                .defaultSize!)),
+                                                                .defaultSize!))
                                               ],
                                             ),
                                           )
@@ -457,7 +379,6 @@ class _BookIntroState extends State<BookIntro> {
                                               'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                           setState(() {
                                             isClicked0 = true;
-                                            isClicked = !isClicked0;
                                             isClicked1 = !isClicked0;
                                             isClicked2 = !isClicked0;
                                             canChanged = true; // 클릭 상태
@@ -526,7 +447,6 @@ class _BookIntroState extends State<BookIntro> {
                                               'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                           setState(() {
                                             isClicked1 = true;
-                                            isClicked = !isClicked1;
                                             isClicked0 = !isClicked1;
                                             isClicked2 = !isClicked1;
                                             canChanged = true; // 클릭 상태
@@ -595,7 +515,6 @@ class _BookIntroState extends State<BookIntro> {
                                               'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                           setState(() {
                                             isClicked2 = true;
-                                            isClicked = !isClicked2;
                                             isClicked0 = !isClicked2;
                                             isClicked1 = !isClicked2;
                                             canChanged = true; // 클릭 상태
@@ -650,33 +569,25 @@ class _BookIntroState extends State<BookIntro> {
                                                       fontFamily: 'Molengo',
                                                       fontSize: 1.5 *
                                                           SizeConfig
-                                                              .defaultSize!)),
+                                                              .defaultSize!))
                                             ],
                                           ),
                                         )),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 0.8 * SizeConfig.defaultSize!,
+                                Padding(
+                                  // Summary
+                                  padding: EdgeInsets.only(
+                                      right: 1 * SizeConfig.defaultSize!,
+                                      top: 1 * SizeConfig.defaultSize!),
+                                  child: Text(
+                                    widget.summary,
+                                    style: TextStyle(
+                                        fontFamily: 'Molengo',
+                                        fontSize:
+                                            SizeConfig.defaultSize! * 2.2),
+                                  ),
                                 ),
-                                Expanded(
-                                    flex: 3,
-                                    child: ListView(children: [
-                                      Padding(
-                                        // Summary
-                                        padding: EdgeInsets.only(
-                                            right: 1 * SizeConfig.defaultSize!,
-                                            top: 0 * SizeConfig.defaultSize!),
-                                        child: Text(
-                                          widget.summary,
-                                          style: TextStyle(
-                                              fontFamily: 'Molengo',
-                                              fontSize:
-                                                  SizeConfig.defaultSize! *
-                                                      2.2),
-                                        ),
-                                      ),
-                                    ]))
                               ],
                             ),
                           ),
@@ -685,7 +596,7 @@ class _BookIntroState extends State<BookIntro> {
                     ),
                   ),
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Row(children: [
                       Expanded(
                         // 썸네일 사진
