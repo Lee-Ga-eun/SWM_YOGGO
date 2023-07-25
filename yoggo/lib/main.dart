@@ -26,48 +26,20 @@ void main() async {
           BlocProvider<UserCubit>.value(value: userCubit),
           // Add more Cubits here if needed
         ],
-        child: const MyApp(),
+        child: const App(),
       ),
     );
   });
-
-  // runApp(
-  //   MultiBlocProvider(
-  //     providers: [
-  //       BlocProvider<UserCubit>.value(value: userCubit),
-  //       // Add more Cubits here if needed
-  //     ],
-  //     child: const MyApp(),
-  //   ),
-  // );
 }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: BlocBuilder<UserCubit, UserState>(
-//         builder: (context, state) {
-//           if (!state.isDataFetched) {
-//             return const SplashScreen();
-//           } else {
-//             return const HomeScreen();
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class App extends StatefulWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _AppState createState() => _AppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _AppState extends State<App> {
   bool _initialized = false;
 
   @override
@@ -98,20 +70,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     home: BlocBuilder<UserCubit, UserState>(
-  //       builder: (context, state) {
-  //         if (!state.isDataFetched) { //isDataFetched = true --> 데이터 불러왔단 뜻
-  //           return const SplashScreen(); //
-  //         } else {
-  //           return const HomeScreen(); // intro -> home으로 보내는 방식
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

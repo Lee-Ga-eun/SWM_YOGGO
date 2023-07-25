@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // await Navigator.push(context,
         //     MaterialPageRoute(builder: (context) => const HomeScreen()));
-        //print(username);
+        //print(username); 기존 코드
         await userCubit.login(username, 'email', purchase, record, false);
 
         final state = userCubit.state;
@@ -90,88 +90,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
-
-  // userCubit
-  //     .login(username, responseData['email'], record, purchase, false)
-  //     .then((_) {
-  //   Navigator.push(context,
-  //       MaterialPageRoute(builder: (context) => const HomeScreen()));
-  // });
-
-  //여기서부터
-  // await userCubit.login(
-  //     username, responseData['email'], purchase, record, false);
-
-  // final state = userCubit.state;
-  // if (state.isDataFetched) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const HomeScreen()),
-  //   );
-  // }
-  //여기까지
-
-  // BlocBuilder<UserCubit, UserState>(
-  //   builder: (context, state) {
-  //     if (state.isDataFetched) {
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => const HomeScreen()),
-  //       );
-  //       return const SizedBox
-  //           .shrink(); // HomeScreen으로 이동했으므로 빈 SizedBox를 반환
-  //     } else {
-  //       return const SizedBox.shrink(); // 로그인 UI를 반환
-  //     }
-  //   },
-  // );
-
-  //       await Navigator.push(context,
-  //           MaterialPageRoute(builder: (context) => const HomeScreen()));
-  //     } else {
-  //       // 로그인 실패
-  //       print('로그인 실패. 상태 코드: ${response.statusCode}');
-  //     }
-  //   }
-  // }
-
-  // Future<void> signInWithApple() async {
-  //   // Trigger the authentication flow
-  //   final rawNonce = generateNonce();
-  //   final nonce = sha256ofString(rawNonce);
-  //   final appleCredential = await SignInWithApple.getAppleIDCredential(
-  //     scopes: [
-  //       AppleIDAuthorizationScopes.email,
-  //       AppleIDAuthorizationScopes.fullName,
-  //     ],
-  //     nonce: nonce,
-  //   );
-  //   print(appleCredential);
-  //   UserModel user = UserModel(
-  //     name: appleCredential.givenName,
-  //     email: appleCredential.email,
-  //     providerId: appleCredential.userIdentifier!,
-  //     provider: 'apple',
-  //   );
-  //   var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
-  //   print(json.encode(user.toJson()));
-  //   var response = await http.post(url,
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: json.encode(user.toJson()));
-
-  //   if (response.statusCode == 200 || response.statusCode == 201) {
-  //     // 로그인 성공
-  //     var responseData = json.decode(response.body);
-  //     var token = responseData['token'];
-  //     var prefs = await SharedPreferences.getInstance();
-  //     await prefs.setString('token', token);
-  //     await Navigator.push(
-  //         context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-  //   } else {
-  //     // 로그인 실패
-  //     print('로그인 실패. 상태 코드: ${response.statusCode}');
-  //   }
-  // }
 
   @override
   void initState() {
