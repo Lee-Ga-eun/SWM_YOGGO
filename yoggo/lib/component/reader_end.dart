@@ -5,8 +5,6 @@ import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:yoggo/component/purchase.dart';
 
-// HI....
-
 class ReaderEnd extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
   final bool isSelected;
