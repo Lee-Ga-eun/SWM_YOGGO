@@ -603,18 +603,7 @@ class _BookIntroState extends State<BookIntro> {
                                       )
                                     : null;
                           },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            //alignment: Alignment.topRight,
-                            children: [
-                              // Text(
-                              //   'Selected?',
-                              //   style: TextStyle(
-                              //       color: Colors.white,
-                              //       fontWeight: FontWeight.bold,
-                              //       fontSize: SizeConfig.defaultSize! * 2),
-                              // ),
-                              Padding(
+                            child: Padding(
                                 padding: EdgeInsets.only(
                                     right: SizeConfig.defaultSize! * 1),
                                 child: Icon(
@@ -623,20 +612,18 @@ class _BookIntroState extends State<BookIntro> {
                                   color: Colors.black,
                                 ),
                               ),
-                            ],
-                          ),
+                              )
+                    )
+                    ]        
+                    
                         ),
                       ), // --------------------성우 아이콘 배치 완료  ---------
                     ]),
                   ),
                   //추가
-
-                  //  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
+            
         Visibility(
           visible: wantPurchase,
           child: AlertDialog(
@@ -724,8 +711,9 @@ class _BookIntroState extends State<BookIntro> {
             ],
           ),
         ),
-      ]),
-      //),
+    ]
+    )
     );
+      
   }
 }
