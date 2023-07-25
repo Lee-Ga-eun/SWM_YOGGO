@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yoggo/component/home/view/home_screen.dart';
 import 'package:yoggo/component/intro.dart';
 import 'component/globalCubit/user/user_cubit.dart';
 import 'component/globalCubit/user/user_state.dart';
@@ -97,15 +98,30 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(
+  //     home: BlocBuilder<UserCubit, UserState>(
+  //       builder: (context, state) {
+  //         if (!state.isDataFetched) { //isDataFetched = true --> 데이터 불러왔단 뜻
+  //           return const SplashScreen(); //
+  //         } else {
+  //           return const HomeScreen(); // intro -> home으로 보내는 방식
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
           if (!state.isDataFetched) {
-            return const SplashScreen();
+            //isDataFetched = true --> 데이터 불러왔단 뜻
+            return const SplashScreen(); //token이 없는 경우
           } else {
-            return const SplashScreen();
+            return const HomeScreen(); // token이 있는 경우
           }
         },
       ),

@@ -83,6 +83,19 @@ class UserCubit extends Cubit<UserState> {
       print('Error while fetching user data: $e');
     }
   }
+
+  Future<void> login(String username, String email, bool record, bool purchase,
+      bool isDataFetched) {
+    emit(
+      UserState(
+          userName: username,
+          email: email,
+          purchase: purchase,
+          record: record,
+          isDataFetched: true),
+    );
+    return Future.value();
+  }
 }
 
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
 import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
+import '../component/globalCubit/user/user_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,6 +19,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late UserCubit userCubit;
+
   String generateNonce([int length = 32]) {
     const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
@@ -31,7 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return digest.toString();
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
+    userCubit = context.read<UserCubit>();
+    //userCubit = context.watch<UserCubit>(listen: false);
+
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -65,14 +72,68 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setBool('record', record);
         await prefs.setString('username', username);
 
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        // await Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => const HomeScreen()));
+        //print(username);
+        await userCubit.login(username, 'email', purchase, record, false);
+
+        final state = userCubit.state;
+        if (state.isDataFetched) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
       } else {
         // 로그인 실패
         print('로그인 실패. 상태 코드: ${response.statusCode}');
       }
     }
   }
+
+  // userCubit
+  //     .login(username, responseData['email'], record, purchase, false)
+  //     .then((_) {
+  //   Navigator.push(context,
+  //       MaterialPageRoute(builder: (context) => const HomeScreen()));
+  // });
+
+  //여기서부터
+  // await userCubit.login(
+  //     username, responseData['email'], purchase, record, false);
+
+  // final state = userCubit.state;
+  // if (state.isDataFetched) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const HomeScreen()),
+  //   );
+  // }
+  //여기까지
+
+  // BlocBuilder<UserCubit, UserState>(
+  //   builder: (context, state) {
+  //     if (state.isDataFetched) {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const HomeScreen()),
+  //       );
+  //       return const SizedBox
+  //           .shrink(); // HomeScreen으로 이동했으므로 빈 SizedBox를 반환
+  //     } else {
+  //       return const SizedBox.shrink(); // 로그인 UI를 반환
+  //     }
+  //   },
+  // );
+
+  //       await Navigator.push(context,
+  //           MaterialPageRoute(builder: (context) => const HomeScreen()));
+  //     } else {
+  //       // 로그인 실패
+  //       print('로그인 실패. 상태 코드: ${response.statusCode}');
+  //     }
+  //   }
+  // }
 
   // Future<void> signInWithApple() async {
   //   // Trigger the authentication flow
@@ -146,7 +207,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 0 * SizeConfig.defaultSize!),
                   InkWell(
-                    onTap: signInWithGoogle,
+                    onTap: () {
+                      signInWithGoogle(context);
+                    },
                     child: Image.asset(
                       'lib/images/login_google.png', // 로그인 버튼 이미지 파일 경로 (PNG 형식)
                     ),
