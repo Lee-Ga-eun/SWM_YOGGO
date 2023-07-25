@@ -1,44 +1,73 @@
 import 'package:flutter/material.dart';
-import 'component/intro.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yoggo/component/intro.dart';
+import 'component/globalCubit/user/user_cubit.dart';
+import 'component/globalCubit/user/user_state.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  //runApp(const App());
-  WidgetsFlutterBinding.ensureInitialized();
-// await dotenv.load(fileName: ".env");
+  // 사용자 Cubit을 초기화합니다.
+  WidgetsFlutterBinding
+      .ensureInitialized(); // ensureInitialized()를 호출하여 바인딩 초기화
+
   await Firebase.initializeApp();
+
+  final userCubit = UserCubit();
+
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
-    runApp(const App());
+    runApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<UserCubit>.value(value: userCubit),
+          // Add more Cubits here if needed
+        ],
+        child: const MyApp(),
+      ),
+    );
   });
+
+  // runApp(
+  //   MultiBlocProvider(
+  //     providers: [
+  //       BlocProvider<UserCubit>.value(value: userCubit),
+  //       // Add more Cubits here if needed
+  //     ],
+  //     child: const MyApp(),
+  //   ),
+  // );
 }
 
-class App extends StatefulWidget {
-  const App({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: BlocBuilder<UserCubit, UserState>(
+//         builder: (context, state) {
+//           if (!state.isDataFetched) {
+//             return const SplashScreen();
+//           } else {
+//             return const HomeScreen();
+//           }
+//         },
+//       ),
+//     );
+//   }
+// }
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
-  _AppState createState() => _AppState();
+  _MyAppState createState() => _MyAppState();
 }
 
-class _AppState extends State<App> {
+class _MyAppState extends State<MyApp> {
   bool _initialized = false;
-
-  // static const platformChannel = MethodChannel('com.example.yoggo/channel');
-
-  // Future<void> sendMessageToKotlin() async {
-  //   try {
-  //     final String response =
-  //         await platformChannel.invokeMethod('sendMessage', {
-  //       'message': 'Hello from Flutter',
-  //     });
-  //     print('Received response from Kotlin: $response');
-  //   } catch (e) {
-  //     print('Error sending message to Kotlin: $e');
-  //   }
-  // }
 
   @override
   void initState() {
@@ -70,8 +99,16 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    // sendMessageToKotlin();
-    return const MaterialApp(home: SplashScreen() // 초기화 상태에 따라 화면 표시
-        );
+    return MaterialApp(
+      home: BlocBuilder<UserCubit, UserState>(
+        builder: (context, state) {
+          if (!state.isDataFetched) {
+            return const SplashScreen();
+          } else {
+            return const SplashScreen();
+          }
+        },
+      ),
+    );
   }
 }
