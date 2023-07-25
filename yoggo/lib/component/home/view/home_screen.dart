@@ -590,8 +590,8 @@ class DataList extends StatelessWidget {
           return Center(
             child: Center(
               child: LoadingAnimationWidget.fourRotatingDots(
-                color: Colors.white,
-                size: SizeConfig.defaultSize! * 16,
+                color: Color.fromARGB(255, 255, 169, 26),
+                size: SizeConfig.defaultSize! * 10,
               ),
             ),
           );
