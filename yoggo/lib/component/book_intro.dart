@@ -188,7 +188,7 @@ class _BookIntroState extends State<BookIntro> {
           ),
           child: Padding(
             padding: EdgeInsets.only(
-              left: SizeConfig.defaultSize!,
+              // left: 0.5 * SizeConfig.defaultSize!,
               top: SizeConfig.defaultSize!,
             ),
             child: SafeArea(
@@ -205,9 +205,10 @@ class _BookIntroState extends State<BookIntro> {
                             Navigator.of(context).pop();
                           },
                           icon: Icon( // [X]
-                            Icons.cancel,
+                            // Icons.highlight_off,
+                            Icons.clear,
                             color: Colors.black,
-                            size: SizeConfig.defaultSize! * 4,
+                            size: 3.5 * SizeConfig.defaultSize!,
                           ),
                         )),
                   ),
@@ -274,7 +275,7 @@ class _BookIntroState extends State<BookIntro> {
                                       fontFamily: 'Molengo'),
                                 ),
                                 SizedBox(
-                                  height: SizeConfig.defaultSize! * 1,
+                                  height: SizeConfig.defaultSize! * 1.5,
                                 ),
                                 Row(
                                   //  mainAxisAlignment: MainAxisAlignment.center,
@@ -315,7 +316,10 @@ class _BookIntroState extends State<BookIntro> {
                                                 ),
                                                 SizedBox(
                                                     height: SizeConfig.defaultSize! * 1),
-                                                const Text('Mine'),
+                                                Text('Mine',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Molengo',
+                                                    fontSize: 1.5 * SizeConfig.defaultSize!))
                                               ],
                                             ),
                                           )
@@ -338,12 +342,15 @@ class _BookIntroState extends State<BookIntro> {
                                                   ),
                                                   SizedBox(
                                                       height: SizeConfig.defaultSize! * 0.3),
-                                                  const Text('Mine')
+                                                  Text('Mine',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Molengo',
+                                                      fontSize: 1.5 * SizeConfig.defaultSize!))
                                                 ],
                                               ),
                                             )
                                           ),
-                                    SizedBox(width: 1 * SizeConfig.defaultSize!,),
+                                    SizedBox(width: 1.5 * SizeConfig.defaultSize!,),
                                     // Jolly
                                     GestureDetector(
                                       onTap: () {
@@ -393,12 +400,15 @@ class _BookIntroState extends State<BookIntro> {
                                             SizedBox(
                                                 height: SizeConfig.defaultSize! *
                                                     0.3),
-                                            Text(voices[0]['voiceName']),
+                                            Text(voices[0]['voiceName'],
+                                              style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize: 1.5 * SizeConfig.defaultSize!))
                                           ],
                                         ),
                                       )
                                     ),
-                                    SizedBox(width: 1 * SizeConfig.defaultSize!,),
+                                    SizedBox(width: 1.5 * SizeConfig.defaultSize!,),
                                     // Morgan
                                     GestureDetector(
                                       onTap: () {
@@ -448,12 +458,15 @@ class _BookIntroState extends State<BookIntro> {
                                             SizedBox(
                                                 height: SizeConfig.defaultSize! *
                                                     0.3),
-                                            Text(voices[1]['voiceName']),
+                                            Text(voices[1]['voiceName'],
+                                              style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize: 1.5 * SizeConfig.defaultSize!))
                                           ],
                                         ),
                                       )
                                     ),
-                                    SizedBox(width: 1 * SizeConfig.defaultSize!,),
+                                    SizedBox(width: 1.5 * SizeConfig.defaultSize!,),
                                     // Eric
                                     GestureDetector(
                                       onTap: () {
@@ -503,23 +516,27 @@ class _BookIntroState extends State<BookIntro> {
                                             SizedBox(
                                                 height: SizeConfig.defaultSize! *
                                                     0.3),
-                                            Text(voices[2]['voiceName']),
+                                            Text(voices[2]['voiceName'],
+                                              style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize: 1.5 * SizeConfig.defaultSize!))
                                           ],
                                         ),
                                       ) 
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: SizeConfig.defaultSize! * 0.1,
-                                ),
+                                // SizedBox(
+                                //   height: SizeConfig.defaultSize! * 1,
+                                // ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      right: SizeConfig.defaultSize! * 4),
+                                    right: 1 * SizeConfig.defaultSize!,
+                                    top: 1 * SizeConfig.defaultSize!),
                                   child: Text(
                                     widget.summary,
                                     style: TextStyle(
-                                        fontFamily: 'Prata',
+                                        fontFamily: 'Molengo',
                                         fontSize: SizeConfig.defaultSize! * 2),
                                   ),
                                 ),
@@ -590,20 +607,20 @@ class _BookIntroState extends State<BookIntro> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             //alignment: Alignment.topRight,
                             children: [
-                              Text(
-                                'Selected?',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: SizeConfig.defaultSize! * 2),
-                              ),
+                              // Text(
+                              //   'Selected?',
+                              //   style: TextStyle(
+                              //       color: Colors.white,
+                              //       fontWeight: FontWeight.bold,
+                              //       fontSize: SizeConfig.defaultSize! * 2),
+                              // ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    right: SizeConfig.defaultSize! * 2),
+                                    right: SizeConfig.defaultSize! * 1),
                                 child: Icon(
-                                  Icons.arrow_circle_right_outlined,
-                                  size: SizeConfig.defaultSize! * 5,
-                                  color: Colors.white,
+                                  Icons.arrow_forward,
+                                  size: SizeConfig.defaultSize! * 3.5,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
