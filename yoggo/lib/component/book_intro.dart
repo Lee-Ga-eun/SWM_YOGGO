@@ -220,7 +220,7 @@ class _BookIntroState extends State<BookIntro> {
                       children: [
                         Expanded(
                           // 썸네일 사진
-                          flex: 5,
+                          flex: 4,
                           child: Container(
                             // color: Colors.green,
                             child: Hero(
@@ -271,7 +271,7 @@ class _BookIntroState extends State<BookIntro> {
                                 Text(
                                   widget.title,
                                   style: TextStyle(
-                                      fontSize: SizeConfig.defaultSize! * 3,
+                                      fontSize: SizeConfig.defaultSize! * 3.5,
                                       fontFamily: 'Molengo'),
                                 ),
                                 SizedBox(
@@ -526,10 +526,7 @@ class _BookIntroState extends State<BookIntro> {
                                     ),
                                   ],
                                 ),
-                                // SizedBox(
-                                //   height: SizeConfig.defaultSize! * 1,
-                                // ),
-                                Padding(
+                                Padding( // Summary
                                   padding: EdgeInsets.only(
                                     right: 1 * SizeConfig.defaultSize!,
                                     top: 1 * SizeConfig.defaultSize!),
@@ -537,11 +534,8 @@ class _BookIntroState extends State<BookIntro> {
                                     widget.summary,
                                     style: TextStyle(
                                         fontFamily: 'Molengo',
-                                        fontSize: SizeConfig.defaultSize! * 2),
+                                        fontSize: SizeConfig.defaultSize! * 2.2),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.defaultSize!,
                                 ),
                               ],
                             ),
@@ -603,16 +597,20 @@ class _BookIntroState extends State<BookIntro> {
                                       )
                                     : null;
                           },
+                          // next 화살표 시작
                             child: Padding(
                                 padding: EdgeInsets.only(
-                                    right: SizeConfig.defaultSize! * 1),
+                                  bottom: 0 * SizeConfig.defaultSize!,
+                                  right: 0 * SizeConfig.defaultSize!,
+                                  left: 20 * SizeConfig.defaultSize!),
                                 child: Icon(
                                   Icons.arrow_forward,
                                   size: SizeConfig.defaultSize! * 3.5,
                                   color: Colors.black,
                                 ),
                               ),
-                              )
+                            // next 화살표 끝
+                            )
                     )
                     ]        
                     
