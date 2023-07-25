@@ -295,9 +295,6 @@ class _BookIntroState extends State<BookIntro> {
                             //   color: Colors.orange,
                             child: Column(
                               children: [
-                                //   SizedBox(
-                                //     height: SizeConfig.defaultSize! * 1.5,
-                                //   ),
                                 Text(
                                   widget.title,
                                   style: TextStyle(
@@ -305,7 +302,9 @@ class _BookIntroState extends State<BookIntro> {
                                       fontFamily: 'Molengo'),
                                 ),
                                 SizedBox(
-                                  height: SizeConfig.defaultSize! * 1.0,
+                                  height: isPurchased
+                                      ? SizeConfig.defaultSize! * 0
+                                      : SizeConfig.defaultSize! * 1.0,
                                 ),
                                 Row(
                                   //  mainAxisAlignment: MainAxisAlignment.center,
@@ -339,21 +338,60 @@ class _BookIntroState extends State<BookIntro> {
                                               // 결제 한 사람
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 0 *
-                                                          SizeConfig
-                                                              .defaultSize!,
-                                                      left: 0 *
-                                                          SizeConfig
-                                                              .defaultSize!),
-                                                  child: Image.asset(
-                                                    'lib/images/mine.png',
-                                                    height: SizeConfig
-                                                            .defaultSize! *
-                                                        6.5,
-                                                  ),
-                                                ),
-                                                /*child: isClicked
+                                                    padding: EdgeInsets.only(
+                                                        right: 0 *
+                                                            SizeConfig
+                                                                .defaultSize!,
+                                                        left: 0 *
+                                                            SizeConfig
+                                                                .defaultSize!),
+                                                    child: Stack(
+                                                      children: [
+                                                        Text(
+                                                          voiceIcon,
+                                                          style: TextStyle(
+                                                            fontSize: SizeConfig
+                                                                    .defaultSize! *
+                                                                7.1,
+                                                          ),
+                                                        ),
+                                                        isClicked
+                                                            ? Container()
+                                                            : Transform
+                                                                .translate(
+                                                                offset: Offset(
+                                                                    0.4 *
+                                                                        SizeConfig
+                                                                            .defaultSize!,
+                                                                    1.4 *
+                                                                        SizeConfig
+                                                                            .defaultSize!),
+                                                                child: Image.asset(
+                                                                    'lib/images/lock.png',
+                                                                    height:
+                                                                        SizeConfig.defaultSize! *
+                                                                            6.5,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            150,
+                                                                            255,
+                                                                            255,
+                                                                            255)),
+                                                              ),
+                                                      ],
+                                                    ) /*.asset('lib/images/mine.png',
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          6.5,
+                                                      colorBlendMode:
+                                                          BlendMode.srcATop,
+                                                      color: isClicked
+                                                          ? null
+                                                          : const Color
+                                                                  .fromARGB(150,
+                                                              255, 255, 255)),
+                                                ),*/
+                                                    /*child: isClicked
                                                         ? Container(
                                                             // height: SizeConfig
                                                             //         .defaultSize! *
@@ -397,16 +435,24 @@ class _BookIntroState extends State<BookIntro> {
                                                                 fontFamily:
                                                                     'BreeSerif'),
                                                           )),*/
+                                                    ),
                                                 SizedBox(
                                                     height: SizeConfig
                                                             .defaultSize! *
                                                         0.3),
-                                                Text(voiceName,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Molengo',
-                                                        fontSize: 1.5 *
+                                                Transform.translate(
+                                                    offset: Offset(
+                                                        0,
+                                                        -1.2 *
                                                             SizeConfig
-                                                                .defaultSize!)),
+                                                                .defaultSize!),
+                                                    child: Text(voiceName,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Molengo',
+                                                            fontSize: 1.5 *
+                                                                SizeConfig
+                                                                    .defaultSize!))),
                                               ],
                                             ),
                                           )
@@ -432,7 +478,17 @@ class _BookIntroState extends State<BookIntro> {
                                                         'lib/images/lock.png',
                                                         height: SizeConfig
                                                                 .defaultSize! *
-                                                            6.5),
+                                                            6.5,
+                                                        colorBlendMode:
+                                                            BlendMode.srcATop,
+                                                        color: isClicked0
+                                                            ? null
+                                                            : const Color
+                                                                    .fromARGB(
+                                                                200,
+                                                                255,
+                                                                255,
+                                                                255)),
                                                   ),
                                                   SizedBox(
                                                       height: SizeConfig
@@ -471,7 +527,19 @@ class _BookIntroState extends State<BookIntro> {
                                                       right: 0 *
                                                           SizeConfig
                                                               .defaultSize!),
-                                                  child: isClicked0
+                                                  child: Image.asset(
+                                                      'lib/images/jolly.png',
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          6.5,
+                                                      colorBlendMode:
+                                                          BlendMode.srcATop,
+                                                      color: isClicked0
+                                                          ? null
+                                                          : const Color
+                                                                  .fromARGB(150,
+                                                              255, 255, 255))
+                                                  /*child: isClicked0
                                                       ? Container(
                                                           height: SizeConfig
                                                                   .defaultSize! *
@@ -502,7 +570,8 @@ class _BookIntroState extends State<BookIntro> {
                                                           height: SizeConfig
                                                                   .defaultSize! *
                                                               6.5,
-                                                        )),
+                                                        )*/
+                                                  ),
                                               SizedBox(
                                                   height:
                                                       SizeConfig.defaultSize! *
@@ -536,11 +605,25 @@ class _BookIntroState extends State<BookIntro> {
                                           child: Column(
                                             children: [
                                               Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 0 *
-                                                          SizeConfig
-                                                              .defaultSize!),
-                                                  child: isClicked1
+                                                padding: EdgeInsets.only(
+                                                    right: 0 *
+                                                        SizeConfig
+                                                            .defaultSize!),
+                                                child: Image.asset(
+                                                    'lib/images/morgan.png',
+                                                    height: SizeConfig
+                                                            .defaultSize! *
+                                                        6.5,
+                                                    colorBlendMode:
+                                                        BlendMode.srcATop,
+                                                    color: isClicked1
+                                                        ? null
+                                                        : const Color.fromARGB(
+                                                            150,
+                                                            255,
+                                                            255,
+                                                            255)),
+                                                /*child: isClicked1
                                                       ? Container(
                                                           height: SizeConfig
                                                                   .defaultSize! *
@@ -571,7 +654,8 @@ class _BookIntroState extends State<BookIntro> {
                                                           height: SizeConfig
                                                                   .defaultSize! *
                                                               6.5,
-                                                        )),
+                                                        )),*/
+                                              ),
                                               SizedBox(
                                                   height:
                                                       SizeConfig.defaultSize! *
@@ -605,11 +689,25 @@ class _BookIntroState extends State<BookIntro> {
                                           child: Column(
                                             children: [
                                               Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 0 *
-                                                          SizeConfig
-                                                              .defaultSize!),
-                                                  child: isClicked2
+                                                padding: EdgeInsets.only(
+                                                    right: 0 *
+                                                        SizeConfig
+                                                            .defaultSize!),
+                                                child: Image.asset(
+                                                    'lib/images/eric.png',
+                                                    height: SizeConfig
+                                                            .defaultSize! *
+                                                        6.5,
+                                                    colorBlendMode:
+                                                        BlendMode.srcATop,
+                                                    color: isClicked2
+                                                        ? null
+                                                        : const Color.fromARGB(
+                                                            150,
+                                                            255,
+                                                            255,
+                                                            255)),
+                                                /*child: isClicked2
                                                       ? Container(
                                                           height: SizeConfig
                                                                   .defaultSize! *
@@ -640,7 +738,8 @@ class _BookIntroState extends State<BookIntro> {
                                                           height: SizeConfig
                                                                   .defaultSize! *
                                                               6.5,
-                                                        )),
+                                                        )*/
+                                              ),
                                               SizedBox(
                                                   height:
                                                       SizeConfig.defaultSize! *
@@ -657,7 +756,9 @@ class _BookIntroState extends State<BookIntro> {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: 0.8 * SizeConfig.defaultSize!,
+                                  height: isPurchased
+                                      ? 0
+                                      : 0.8 * SizeConfig.defaultSize!,
                                 ),
                                 Expanded(
                                     flex: 3,
