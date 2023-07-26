@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       token = prefs.getString('token')!;
       //userInfo(token);
-      getVoiceInfo(token);
+      //getVoiceInfo(token);
     });
   }
 
@@ -71,29 +71,29 @@ class _HomeScreenState extends State<HomeScreen> {
   //   });
   // }
 
-  Future<String> getVoiceInfo(String token) async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/myVoice');
-    var response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      final myJson = json.decode(response.body);
-      if (myJson != []) {
-        setState(() {
-          //inferenceUrl = myJson[0]['inferenceUrl'];
-          voiceName = myJson[0]['name'];
-          voiceIcon = myJson[0]['icon'];
-        });
-      }
-      return response.body;
-    } else {
-      throw Exception('Failed to fetch data');
-    }
-  }
+  // Future<String> getVoiceInfo(String token) async {
+  //   var url = Uri.parse('https://yoggo-server.fly.dev/user/myVoice');
+  //   var response = await http.get(
+  //     url,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer $token',
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     final myJson = json.decode(response.body);
+  //     if (myJson != []) {
+  //       setState(() {
+  //         //inferenceUrl = myJson[0]['inferenceUrl'];
+  //         voiceName = myJson[0]['name'];
+  //         voiceIcon = myJson[0]['icon'];
+  //       });
+  //     }
+  //     return response.body;
+  //   } else {
+  //     throw Exception('Failed to fetch data');
+  //   }
+  // }
 
   // Future<String> userInfo(String token) async {
   //   var url = Uri.parse('https://yoggo-server.fly.dev/user/myInfo');
