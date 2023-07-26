@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/size_config.dart';
+import 'globalCubit/user/user_cubit.dart';
 import 'home/view/home_screen.dart';
 import './record_retry.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -55,8 +57,8 @@ class _CheckVoiceState extends State<CheckVoice> {
       if (myJson != []) {
         setState(() {
           inferenceUrl = myJson[0]['inferenceUrl'];
-          voiceName = myJson[0]['name'];
-          voiceIcon = myJson[0]['icon'];
+          //voiceName = myJson[0]['name'];
+          //voiceIcon = myJson[0]['icon'];
         });
       }
       return response.body;
@@ -67,6 +69,8 @@ class _CheckVoiceState extends State<CheckVoice> {
 
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     SizeConfig().init(context);
     return Scaffold(
       body: Container(
@@ -154,7 +158,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                               height: SizeConfig.defaultSize! * 0.25,
                             ),
                             Text(
-                              voiceIcon,
+                              userState.voiceIcon!,
                               style: TextStyle(
                                 fontFamily: 'Molengo',
                                 fontSize: SizeConfig.defaultSize! * 13.5,
@@ -176,7 +180,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                             ),
                             child: Center(
                                 child: Text(
-                              voiceName,
+                              userState.voiceName!,
                               style: TextStyle(
                                 fontFamily: 'Molengo',
                                 fontSize: SizeConfig.defaultSize! * 2.3,

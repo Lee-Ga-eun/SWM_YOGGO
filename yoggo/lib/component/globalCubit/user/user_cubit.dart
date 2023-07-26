@@ -24,41 +24,51 @@ class UserCubit extends Cubit<UserState> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
-
       var url = Uri.parse('https://yoggo-server.fly.dev/user/myInfo');
       var response = await http.get(
         url,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
-          //'Authorization':
-          //   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjg4NjcyNjQ0fQ.QfovxSWrT1yLA4i2QIqdoqE7bsHVeJyc0RjppyCiP7c',
         },
       );
-
       if (response.statusCode == 200) {
-        print('데이터는 부름');
         // API 응답 데이터 파싱
         final data = json.decode(response.body)[0];
-        print(data);
+
         final userName = data['name'];
-        print(userName);
+
         final email = data['email'];
-        print(email);
+
         final purchase = data['purchase'] as bool;
-        print(purchase);
+
         final record = data['record'] as bool;
         const isDataFetched = true;
-
-        // 상태 업데이트
-        emit(
-          UserState(
+        if (record) {
+          final voiceId = data['voiceId'];
+          final voiceName = data['voiceName'];
+          final voiceIcon = data['voiceIcon'];
+          emit(UserState(
               userName: userName,
               email: email,
               purchase: purchase,
               record: record,
-              isDataFetched: isDataFetched),
-        );
+              isDataFetched: isDataFetched,
+              voiceId: voiceId,
+              voiceName: voiceName,
+              voiceIcon: voiceIcon));
+        }
+        // 상태 업데이트
+        else {
+          emit(
+            UserState(
+                userName: userName,
+                email: email,
+                purchase: purchase,
+                record: record,
+                isDataFetched: isDataFetched),
+          );
+        }
         // emit(state.copyWith(
         //   userName: userName,
         //   email: email,

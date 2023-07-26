@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 1 * SizeConfig.defaultSize!,
                       ),
-                      record && purchase
+                      userState.record && userState.purchase
                           ? GestureDetector(
                               onTap: () {
                                 //이벤트 넣어보기
@@ -260,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             offset: Offset(0.5,
                                                 -0.7 * SizeConfig.defaultSize!),
                                             child: Text(
-                                              voiceIcon,
+                                              userState.voiceIcon!,
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize:
@@ -275,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         width: 12.2 * SizeConfig.defaultSize!,
                                         height: 2 * SizeConfig.defaultSize!,
                                         child: Text(
-                                          voiceName,
+                                          userState.voiceName!,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.black,
@@ -335,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => purchase
+                                    builder: (context) => userState.purchase
                                         ? const RecordInfo()
                                         : const Purchase(),
                                   ),
@@ -500,7 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => purchase
+                                        builder: (context) => userState.purchase
                                             ? const RecordInfo()
                                             : const Purchase(),
                                       ),
@@ -531,8 +531,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           create: (context) =>
                               DataCubit()..loadData(), // DataCubit 생성 및 데이터 로드
                           child: DataList(
-                            record: record,
-                            purchase: purchase,
+                            record: userState.record,
+                            purchase: userState.purchase,
                           ),
                         ),
                       ),
