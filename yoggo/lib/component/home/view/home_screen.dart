@@ -458,6 +458,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       top: SizeConfig.defaultSize! * 2,
                       child: InkWell(
                         onTap: () {
+                          showNotification(flutterLocalNotificationsPlugin);
+
                           _scaffoldKey.currentState?.openDrawer();
                         },
                         child: Image.asset(
@@ -591,6 +593,7 @@ class DataList extends StatelessWidget {
       builder: (context, state) {
         if (state.isEmpty) {
           showNotification(flutterLocalNotificationsPlugin);
+
           return Center(
             child: Center(
               child: LoadingAnimationWidget.fourRotatingDots(
@@ -600,6 +603,7 @@ class DataList extends StatelessWidget {
             ),
           );
         } else {
+          showNotification(flutterLocalNotificationsPlugin);
           return ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: state.length,
