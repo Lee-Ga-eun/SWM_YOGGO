@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -96,9 +97,12 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    _sendLoginViewEvent();
     return Scaffold(
       body: Stack(
         children: [
@@ -126,6 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 0 * SizeConfig.defaultSize!),
                   InkWell(
                     onTap: () {
+                      _sendLoginGoogleClickEvent();
                       signInWithGoogle(context);
                     },
                     child: Image.asset(
@@ -139,5 +144,44 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  static Future<void> _sendLoginViewEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'login_view',
+        //parameters: <String, dynamic>{'contentId': contentId},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  static Future<void> _sendLoginGoogleClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'login_google_click',
+        //parameters: <String, dynamic>{'contentId': contentId},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  static Future<void> _sendLoginAppleClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'login_apple_click',
+        //parameters: <String, dynamic>{'contentId': contentId},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
   }
 }

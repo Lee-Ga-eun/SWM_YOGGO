@@ -1,9 +1,13 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
 import '../component/check_voice.dart';
+import '../size_config.dart';
+import 'globalCubit/user/user_cubit.dart';
 
 class WaitingVoicePage extends StatefulWidget {
   const WaitingVoicePage({super.key});
@@ -82,8 +86,13 @@ class _WaitingVoiceState extends State<WaitingVoicePage> {
     }
   }
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
+    SizeConfig().init(context);
     return Scaffold(
       // appBar: AppBar(
       //   title: const Text('Waiting Voice'),

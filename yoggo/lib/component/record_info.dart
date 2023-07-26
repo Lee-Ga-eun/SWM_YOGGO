@@ -1,7 +1,10 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
 import 'package:yoggo/size_config.dart';
 import './record_page2.dart';
+import 'globalCubit/user/user_cubit.dart';
 
 class RecordInfo extends StatefulWidget {
   const RecordInfo({super.key});
@@ -19,6 +22,8 @@ class _RecordInfoState extends State<RecordInfo> {
     // TODO: Add initialization code
   }
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   void dispose() {
     // TODO: Add cleanup code
@@ -27,6 +32,10 @@ class _RecordInfoState extends State<RecordInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
+    SizeConfig().init(context);
+    _sendRecAbstViewEvent(userState.purchase, userState.record);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -241,5 +250,21 @@ class _RecordInfoState extends State<RecordInfo> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendRecAbstViewEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_abst_view',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
   }
 }

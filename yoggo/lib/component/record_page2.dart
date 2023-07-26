@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/size_config.dart';
 import './record_info.dart';
@@ -13,6 +15,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import './waiting_voice.dart';
 import 'package:http_parser/http_parser.dart';
+
+import 'globalCubit/user/user_cubit.dart';
 
 class AudioRecorder extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -108,7 +112,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     }
   }
 
-  Future<void> _start() async {
+  Future<void> _start(purchase, record) async {
     try {
       if (await _audioRecorder.hasPermission()) {
         var myAppDir = await getAppDirectory();
@@ -126,6 +130,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
         _recordDuration = 0;
 
         _startTimer();
+        _sendRecStartClickEvent(purchase, record);
       }
     } catch (e) {
       if (kDebugMode) {}
@@ -137,7 +142,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     return directory.path;
   }
 
-  Future<void> _stop() async {
+  Future<void> _stop(purchase, record) async {
     setState(() {
       stopped = true;
     });
@@ -145,6 +150,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     _recordDuration = 0;
     //  if (Platform.isAndroid) stopRecording();
     path = await _audioRecorder.stop(); //path받기
+    _sendRecStopClickEvent(purchase, record);
     //  sendPathToKotlin(path);
     // if (path != null) {
     //   widget.onStop?.call(path);
@@ -168,8 +174,14 @@ class _AudioRecorderState extends State<AudioRecorder> {
     await audioPlayer.play(DeviceFileSource(path_copy));
   }
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
+    SizeConfig().init(context);
+    _sendRecIngViewEvent(userState.purchase, userState.record);
     return MaterialApp(
       home: Scaffold(
         body: Stack(
@@ -355,6 +367,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
                       child: TextButton(
                         onPressed: () {
                           path = ''; // 이 버전을 원하지 않는 경우 path 초기화
+                          _sendRecRerecClickEvent(
+                              userState.purchase, userState.record);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -385,6 +399,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
                             widget.onStop?.call(path!);
                             path_copy = path!.split('/').last;
                             sendRecord(path, path_copy);
+                            _sendRecKeepClickEvent(
+                                userState.purchase, userState.record);
                           }
                           Future.delayed(const Duration(seconds: 1), () {
                             Navigator.push(
@@ -422,6 +438,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   Widget _buildRecordStopControl() {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     late Icon icon;
     late Color color;
 
@@ -446,7 +464,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
               height: SizeConfig.defaultSize! * 5.6,
               child: icon),
           onTap: () {
-            (_recordState != RecordState.stop) ? _stop() : _start();
+            (_recordState != RecordState.stop)
+                ? _stop(userState.purchase, userState.record)
+                : _start(userState.purchase, userState.record);
           },
         ),
       ),
@@ -522,5 +542,86 @@ class _AudioRecorderState extends State<AudioRecorder> {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       setState(() => _recordDuration++);
     });
+  }
+
+  Future<void> _sendRecStartClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_start_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecStopClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_stop_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecIngViewEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_ing_view',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecRerecClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_rerec_clic',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecKeepClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_keep_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+          //'voiceId': voiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력r
+      print('Failed to log event: $e');
+    }
   }
 }

@@ -1,9 +1,13 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
 import 'package:yoggo/component/reader.dart';
 import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:yoggo/component/purchase.dart';
+
+import 'globalCubit/user/user_cubit.dart';
 
 class ReaderEnd extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
@@ -36,8 +40,14 @@ class _ReaderEndState extends State<ReaderEnd> {
     super.dispose();
   }
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
+    SizeConfig().init(context);
+    _sendBookEndViewEvent(widget.voiceId);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -86,6 +96,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                     padding:
                         EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
                     onPressed: () {
+                      _sendBookAgainClickEvent(widget.voiceId);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -112,6 +123,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                     padding:
                         EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
                     onPressed: () {
+                      _sendBookHomeClickEvent(widget.voiceId);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -384,5 +396,47 @@ class _ReaderEndState extends State<ReaderEnd> {
             ],
           )),
     );
+  }
+
+  Future<void> _sendBookEndViewEvent(contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_end_view',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookAgainClickEvent(contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_again_click',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookHomeClickEvent(contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_home_click',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
   }
 }

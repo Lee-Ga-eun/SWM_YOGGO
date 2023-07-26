@@ -86,11 +86,27 @@ class _BookIntroState extends State<BookIntro> {
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  Future<void> _sendVoiceClickEvent(contentVoiceId) async {
+  Future<void> _sendBookMyVoiceClickEvent(purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'voice_click',
+        name: 'book_my_voice_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookVoiceClickEvent(contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_voice_click',
         parameters: <String, dynamic>{'contentVoiceId': contentVoiceId},
       );
     } catch (e) {
@@ -115,11 +131,11 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
-  Future<void> _sendHomeBookExitClickEvent(contentVoiceId) async {
+  Future<void> _sendBookExitClickEvent(contentVoiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'home_book_exit_click',
+        name: 'book_exit_click',
         parameters: <String, dynamic>{
           'contentVoiceId': contentVoiceId,
           'pageId': 0,
@@ -256,7 +272,7 @@ class _BookIntroState extends State<BookIntro> {
                       alignment: Alignment.topLeft,
                       child: IconButton(
                         onPressed: () {
-                          _sendHomeBookExitClickEvent(cvi);
+                          _sendBookExitClickEvent(cvi);
                           Navigator.of(context).pop();
                         },
                         icon: Icon(
@@ -337,6 +353,12 @@ class _BookIntroState extends State<BookIntro> {
                                     userState.purchase
                                         ? GestureDetector(
                                             onTap: () {
+                                              _sendBookMyVoiceClickEvent(
+                                                //수정 필요
+                                                userState.purchase,
+                                                userState.record,
+                                              );
+
                                               setState(() {
                                                 isClicked = true;
                                                 isClicked0 = false;
@@ -541,7 +563,7 @@ class _BookIntroState extends State<BookIntro> {
                                     GestureDetector(
                                         onTap: () {
                                           cvi = voices[0]['contentVoiceId'];
-                                          _sendVoiceClickEvent(
+                                          _sendBookVoiceClickEvent(
                                               cvi); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                           setState(() {
                                             isClicked0 = true;
@@ -624,7 +646,7 @@ class _BookIntroState extends State<BookIntro> {
                                     GestureDetector(
                                         onTap: () {
                                           cvi = voices[1]['contentVoiceId'];
-                                          _sendVoiceClickEvent(
+                                          _sendBookVoiceClickEvent(
                                               cvi); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                           setState(() {
                                             isClicked1 = true;
@@ -710,7 +732,7 @@ class _BookIntroState extends State<BookIntro> {
                                         onTap: () {
                                           cvi = voices[2][
                                               'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
-                                          _sendVoiceClickEvent(cvi);
+                                          _sendBookVoiceClickEvent(cvi);
                                           setState(() {
                                             isClicked2 = true;
                                             isClicked = !isClicked2;
