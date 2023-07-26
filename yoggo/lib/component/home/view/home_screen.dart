@@ -152,6 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 11 * SizeConfig.defaultSize!,
                 decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
                 child: SafeArea(
+                  minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,193 +190,41 @@ class _HomeScreenState extends State<HomeScreen> {
                 )),
             Column(
               children: [
-                ListTile(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // OutlinedButton(
-                      //   onPressed: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => purchase
-                      //             ? const RecordInfo()
-                      //             : const Purchase(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   style: OutlinedButton.styleFrom(
-                      //     side: const BorderSide(
-                      //         width: 2,
-                      //         color: Color.fromARGB(
-                      //             255, 234, 234, 234)), // 테두리 스타일 설정
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius:
-                      //           BorderRadius.circular(8), // 테두리의 모서리를 둥글게 설정
-                      //     ),
-                      //   ),
-                      //   child: const Text('about subscribe'),
-                      // ),
-                      SizedBox(
-                        height: 2 * SizeConfig.defaultSize!,
-                      ),
-                      Text(
-                        'Voice Profile',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 1.8 * SizeConfig.defaultSize!,
-                          fontFamily: 'Molengo',
-                          fontWeight: FontWeight.w400,
+                SafeArea(
+                  minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
+                  child: ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // OutlinedButton(
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => purchase
+                        //             ? const RecordInfo()
+                        //             : const Purchase(),
+                        //       ),
+                        //     );
+                        //   },
+                        //   style: OutlinedButton.styleFrom(
+                        //     side: const BorderSide(
+                        //         width: 2,
+                        //         color: Color.fromARGB(
+                        //             255, 234, 234, 234)), // 테두리 스타일 설정
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius:
+                        //           BorderRadius.circular(8), // 테두리의 모서리를 둥글게 설정
+                        //     ),
+                        //   ),
+                        //   child: const Text('about subscribe'),
+                        // ),
+                        SizedBox(
+                          height: 2 * SizeConfig.defaultSize!,
                         ),
-                      ),
-                      SizedBox(
-                        height: 1 * SizeConfig.defaultSize!,
-                      ),
-                      userState.record && userState.purchase
-                          ? GestureDetector(
-                              onTap: () {
-                                //이벤트 넣어보기
-                              },
-                              child: SizedBox(
-                                width: 25 * SizeConfig.defaultSize!,
-                                height: 12.5 * SizeConfig.defaultSize!,
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      child: Container(
-                                        width: 25 * SizeConfig.defaultSize!,
-                                        height: 12.5 * SizeConfig.defaultSize!,
-                                        decoration: ShapeDecoration(
-                                          color: Colors.white.withOpacity(0.5),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                        left: 1 * SizeConfig.defaultSize!,
-                                        top: 1.1 * SizeConfig.defaultSize!,
-                                        child: Transform.translate(
-                                            offset: Offset(0.5,
-                                                -0.7 * SizeConfig.defaultSize!),
-                                            child: Text(
-                                              userState.voiceIcon!,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize:
-                                                    9 * SizeConfig.defaultSize!,
-                                                fontFamily: 'Molengo',
-                                              ),
-                                            ))),
-                                    Positioned(
-                                      left: 11 * SizeConfig.defaultSize!,
-                                      top: 2.8 * SizeConfig.defaultSize!,
-                                      child: SizedBox(
-                                        width: 12.2 * SizeConfig.defaultSize!,
-                                        height: 2 * SizeConfig.defaultSize!,
-                                        child: Text(
-                                          userState.voiceName!,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize:
-                                                2 * SizeConfig.defaultSize!,
-                                            fontFamily: 'Molengo',
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      left: 11.7 * SizeConfig.defaultSize!,
-                                      top: 6.7 * SizeConfig.defaultSize!,
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CheckVoice(
-                                                  infenrencedVoice: '48',
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
-                                              width:
-                                                  11 * SizeConfig.defaultSize!,
-                                              height:
-                                                  3 * SizeConfig.defaultSize!,
-                                              decoration: ShapeDecoration(
-                                                color: const Color(0xFFFFA91A),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                              child: Center(
-                                                  child: Text(
-                                                'Edit this voice',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 1.4 *
-                                                      SizeConfig.defaultSize!,
-                                                  fontFamily: 'Molengo',
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )))),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => userState.purchase
-                                        ? const RecordInfo()
-                                        : const Purchase(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                  width: 27 * SizeConfig.defaultSize!,
-                                  height: 4 * SizeConfig.defaultSize!,
-                                  decoration: ShapeDecoration(
-                                    color: Colors.white.withOpacity(0.5),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.add,
-                                    size: SizeConfig.defaultSize! * 2.5,
-                                    color: const Color(0xFFFFA91A),
-                                  ))),
-
-                      SizedBox(
-                        height: 2 * SizeConfig.defaultSize!,
-                      ),
-                      // IconButton(
-                      //     onPressed: () {
-                      //       Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //           builder: (context) => CheckVoice(
-                      //             infenrencedVoice: '48',
-                      //           ),
-                      //         ),
-                      //       );
-                      //     },
-                      //     icon: const Icon(Icons.check)),
-                      GestureDetector(
-                        child: Text(
-                          'Sign Out',
+                        Text(
+                          'Voice Profile',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 1.8 * SizeConfig.defaultSize!,
@@ -383,14 +232,169 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        onTap: () {
-                          setState(() {
-                            showSignOutConfirmation =
-                                !showSignOutConfirmation; // dropdown 상태 토글
-                          });
-                        },
-                      ),
-                    ],
+                        SizedBox(
+                          height: 1 * SizeConfig.defaultSize!,
+                        ),
+                        userState.record && userState.purchase
+                            ? GestureDetector(
+                                onTap: () {
+                                  //이벤트 넣어보기
+                                },
+                                child: SizedBox(
+                                  width: 23 * SizeConfig.defaultSize!,
+                                  height: 11 * SizeConfig.defaultSize!,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        child: Container(
+                                          width: 23 * SizeConfig.defaultSize!,
+                                          height: 11 * SizeConfig.defaultSize!,
+                                          decoration: ShapeDecoration(
+                                            color:
+                                                Colors.white.withOpacity(0.5),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                          left: 1.2 * SizeConfig.defaultSize!,
+                                          top: 1.5 * SizeConfig.defaultSize!,
+                                          // child: Transform.translate(
+                                          //     offset: Offset(
+                                          //         0.5,
+                                          //         -0.7 *
+                                          //             SizeConfig.defaultSize!),
+                                          child: Image.asset(
+                                            'lib/images/icons/${userState.voiceIcon}-c.png',
+                                            height: SizeConfig.defaultSize! * 8,
+                                          )),
+                                      Positioned(
+                                        left: 9.5 * SizeConfig.defaultSize!,
+                                        top: 2.3 * SizeConfig.defaultSize!,
+                                        child: SizedBox(
+                                          width: 12.2 * SizeConfig.defaultSize!,
+                                          height: 2 * SizeConfig.defaultSize!,
+                                          child: Text(
+                                            userState.voiceName!,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize:
+                                                  2 * SizeConfig.defaultSize!,
+                                              fontFamily: 'Molengo',
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 10.2 * SizeConfig.defaultSize!,
+                                        top: 6 * SizeConfig.defaultSize!,
+                                        child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CheckVoice(
+                                                    infenrencedVoice: '48',
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                                width: 11 *
+                                                    SizeConfig.defaultSize!,
+                                                height:
+                                                    3 * SizeConfig.defaultSize!,
+                                                decoration: ShapeDecoration(
+                                                  color:
+                                                      const Color(0xFFFFA91A),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                    child: Text(
+                                                  'Edit this voice',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 1.4 *
+                                                        SizeConfig.defaultSize!,
+                                                    fontFamily: 'Molengo',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                )))),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => userState.purchase
+                                          ? const RecordInfo()
+                                          : const Purchase(),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                    width: 27 * SizeConfig.defaultSize!,
+                                    height: 4 * SizeConfig.defaultSize!,
+                                    decoration: ShapeDecoration(
+                                      color: Colors.white.withOpacity(0.5),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.add,
+                                      size: SizeConfig.defaultSize! * 2.5,
+                                      color: const Color(0xFFFFA91A),
+                                    ))),
+
+                        SizedBox(
+                          height: 2 * SizeConfig.defaultSize!,
+                        ),
+                        // IconButton(
+                        //     onPressed: () {
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => CheckVoice(
+                        //             infenrencedVoice: '48',
+                        //           ),
+                        //         ),
+                        //       );
+                        //     },
+                        //     icon: const Icon(Icons.check)),
+                        GestureDetector(
+                          child: Text(
+                            'Sign Out',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 1.8 * SizeConfig.defaultSize!,
+                              fontFamily: 'Molengo',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              showSignOutConfirmation =
+                                  !showSignOutConfirmation; // dropdown 상태 토글
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 if (showSignOutConfirmation)

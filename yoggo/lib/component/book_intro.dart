@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,6 +86,53 @@ class _BookIntroState extends State<BookIntro> {
     super.initState();
     fetchPageData();
     getToken();
+  }
+
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  Future<void> _sendVoiceClickEvent(contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_click',
+        parameters: <String, dynamic>{'contentVoiceId': contentVoiceId},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookStartClickEvent(contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_start_click',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+          'contentId': widget.id
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHomeBookExitClickEvent(contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'home_book_exit_click',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+          'pageId': 0,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
   }
 
   Future<void> getToken() async {
@@ -213,6 +261,7 @@ class _BookIntroState extends State<BookIntro> {
                       alignment: Alignment.topLeft,
                       child: IconButton(
                         onPressed: () {
+                          _sendHomeBookExitClickEvent(cvi);
                           Navigator.of(context).pop();
                         },
                         icon: Icon(
@@ -316,9 +365,26 @@ class _BookIntroState extends State<BookIntro> {
                                                     });
                                             },
                                             child: Column(
-                                              // 결제 한 사람
                                               children: [
                                                 Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 0 *
+                                                            SizeConfig
+                                                                .defaultSize!),
+                                                    child: isClicked
+                                                        ? Image.asset(
+                                                            'lib/images/icons/${userState.voiceIcon}-c.png',
+                                                            height: SizeConfig
+                                                                    .defaultSize! *
+                                                                7,
+                                                          )
+                                                        : Image.asset(
+                                                            'lib/images/icons/${userState.voiceIcon}-uc.png',
+                                                            height: SizeConfig
+                                                                    .defaultSize! *
+                                                                7,
+                                                          )
+                                                    /*
                                                     padding: EdgeInsets.only(
                                                         right: 0 *
                                                             SizeConfig
@@ -360,7 +426,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                             255)),
                                                               ),
                                                       ],
-                                                    ) /*.asset('lib/images/mine.png',
+                                                    ) */ /*.asset('lib/images/mine.png',
                                                       height: SizeConfig
                                                               .defaultSize! *
                                                           6.5,
@@ -417,24 +483,12 @@ class _BookIntroState extends State<BookIntro> {
                                                                     'BreeSerif'),
                                                           )),*/
                                                     ),
-                                                SizedBox(
-                                                    height: SizeConfig
-                                                            .defaultSize! *
-                                                        0.3),
-                                                Transform.translate(
-                                                    offset: Offset(
-                                                        0,
-                                                        -1.2 *
+                                                Text(userState.voiceName!,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Molengo',
+                                                        fontSize: 1.5 *
                                                             SizeConfig
-                                                                .defaultSize!),
-                                                    child: Text(
-                                                        userState.voiceName!,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Molengo',
-                                                            fontSize: 1.5 *
-                                                                SizeConfig
-                                                                    .defaultSize!))),
+                                                                .defaultSize!))
                                               ],
                                             ),
                                           )
@@ -491,8 +545,9 @@ class _BookIntroState extends State<BookIntro> {
                                     // Jolly
                                     GestureDetector(
                                         onTap: () {
-                                          cvi = voices[0][
-                                              'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                          cvi = voices[0]['contentVoiceId'];
+                                          _sendVoiceClickEvent(
+                                              cvi); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                           setState(() {
                                             isClicked0 = true;
                                             isClicked = !isClicked0;
@@ -573,8 +628,9 @@ class _BookIntroState extends State<BookIntro> {
                                     // Morgan
                                     GestureDetector(
                                         onTap: () {
-                                          cvi = voices[1][
-                                              'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                          cvi = voices[1]['contentVoiceId'];
+                                          _sendVoiceClickEvent(
+                                              cvi); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                           setState(() {
                                             isClicked1 = true;
                                             isClicked = !isClicked1;
@@ -659,6 +715,7 @@ class _BookIntroState extends State<BookIntro> {
                                         onTap: () {
                                           cvi = voices[2][
                                               'contentVoiceId']; // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                          _sendVoiceClickEvent(cvi);
                                           setState(() {
                                             isClicked2 = true;
                                             isClicked = !isClicked2;
@@ -790,34 +847,42 @@ class _BookIntroState extends State<BookIntro> {
                               print(inferenceId);
                               (cvi == inferenceId) // 원래는 cvi==inferenceId
                                   ? await checkInference(token)
-                                      ? Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => FairytalePage(
-                                              // 다음 화면으로 contetnVoiceId를 가지고 이동
-                                              voiceId: cvi,
-                                              lastPage: lastPage,
-                                              isSelected: true,
-                                            ),
-                                          ))
+                                      ? {
+                                          _sendBookStartClickEvent(cvi),
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FairytalePage(
+                                                  // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                                  voiceId: cvi,
+                                                  lastPage: lastPage,
+                                                  isSelected: true,
+                                                ),
+                                              ))
+                                        }
                                       : setState(() {
                                           completeInference = false;
                                         })
                                   : canChanged
-                                      ? Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => FairytalePage(
-                                              // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                      ? {
+                                          _sendBookStartClickEvent(cvi),
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FairytalePage(
+                                                // 다음 화면으로 contetnVoiceId를 가지고 이동
 
-                                              record: widget.record!,
-                                              purchase: widget.purchase!,
-                                              voiceId: cvi,
-                                              lastPage: lastPage,
-                                              isSelected: true,
+                                                record: widget.record!,
+                                                purchase: widget.purchase!,
+                                                voiceId: cvi,
+                                                lastPage: lastPage,
+                                                isSelected: true,
+                                              ),
                                             ),
-                                          ),
-                                        )
+                                          )
+                                        }
                                       : null;
                             },
                             // next 화살표 시작
