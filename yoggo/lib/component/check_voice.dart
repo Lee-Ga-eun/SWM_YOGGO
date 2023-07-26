@@ -57,8 +57,6 @@ class _CheckVoiceState extends State<CheckVoice> {
       if (myJson != []) {
         setState(() {
           inferenceUrl = myJson[0]['inferenceUrl'];
-          //voiceName = myJson[0]['name'];
-          //voiceIcon = myJson[0]['icon'];
         });
       }
       return response.body;
@@ -83,6 +81,7 @@ class _CheckVoiceState extends State<CheckVoice> {
         child: SafeArea(
           bottom: false,
           top: false,
+          minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
           child: Column(
             children: [
               Expanded(
