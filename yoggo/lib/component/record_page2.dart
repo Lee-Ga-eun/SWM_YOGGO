@@ -32,6 +32,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   final _audioRecorder = Record();
   StreamSubscription<RecordState>? _recordSub;
   RecordState _recordState = RecordState.stop;
+  String? path = '';
   //StreamSubscription<Amplitude>? _amplitudeSub;
   //Amplitude? _amplitude;
   AudioPlayer audioPlayer = AudioPlayer();
@@ -143,13 +144,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
     _timer?.cancel();
     _recordDuration = 0;
     //  if (Platform.isAndroid) stopRecording();
-    final path = await _audioRecorder.stop();
+    path = await _audioRecorder.stop(); //path받기
     //  sendPathToKotlin(path);
-    if (path != null) {
-      widget.onStop?.call(path);
-      path_copy = path.split('/').last;
-      sendRecord(path, path_copy);
-    }
+    // if (path != null) {
+    //   widget.onStop?.call(path);
+    //   path_copy = path.split('/').last;
+    //   sendRecord(path, path_copy);
+    // }
   }
 
   Future<void> _pause() async {
@@ -320,24 +321,86 @@ class _AudioRecorderState extends State<AudioRecorder> {
               child: Visibility(
                 visible: stopped,
                 child: AlertDialog(
-                  title: Text(
-                    'Record Complete',
-                    style: TextStyle(fontSize: SizeConfig.defaultSize! * 1.7),
+                  titlePadding: EdgeInsets.only(
+                      left: SizeConfig.defaultSize! * 9,
+                      right: SizeConfig.defaultSize! * 5,
+                      top: SizeConfig.defaultSize! * 3),
+                  // buttonPadding: const EdgeInsets.only(left: 30, right: 30),
+                  actionsPadding: EdgeInsets.only(
+                      left: SizeConfig.defaultSize! * 8,
+                      right: SizeConfig.defaultSize! * 8,
+                      bottom: SizeConfig.defaultSize! * 3,
+                      top: SizeConfig.defaultSize! * 3),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        SizeConfig.defaultSize!), // 모든 모서리를 10 픽셀로 둥글게 설정
                   ),
-                  content: const Text('Your recording has been completed.'),
+                  backgroundColor: Colors.white.withOpacity(0.9),
+                  title: Text(
+                    'Would you like to use the voice you just recorded?',
+                    style: TextStyle(
+                      fontSize: SizeConfig.defaultSize! * 1.7,
+                      fontFamily: 'Molengo',
+                    ),
+                  ),
+                  // content: const Text('Your recording has been completed.'),
                   actions: [
-                    TextButton(
-                      onPressed: () {
-                        // 1초 후에 다음 페이지로 이동
-                        Future.delayed(const Duration(seconds: 1), () {
+                    Container(
+                      width: SizeConfig.defaultSize! * 17,
+                      // color: Colors.orange,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.defaultSize!), // 원하는 모서리의 둥글기 설정
+                          color: const Color.fromARGB(255, 255, 167, 26)),
+                      child: TextButton(
+                        onPressed: () {
+                          path = ''; // 이 버전을 원하지 않는 경우 path 초기화
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const WaitingVoicePage()),
-                          );
-                        });
-                      },
-                      child: const Text('OK'),
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const AudioRecorder()));
+                          //  Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'No, Re-make',
+                          style: TextStyle(
+                              color: Colors.black, fontFamily: 'Molengo,'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: SizeConfig.defaultSize! * 4,
+                    ),
+                    Container(
+                      width: SizeConfig.defaultSize! * 17,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.defaultSize!), // 원하는 모서리의 둥글기 설정
+                          color: const Color.fromARGB(255, 255, 167, 26)),
+                      child: TextButton(
+                        onPressed: () {
+                          // 1초 후에 다음 페이지로 이동
+                          if (path != null) {
+                            // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
+                            widget.onStop?.call(path!);
+                            path_copy = path!.split('/').last;
+                            sendRecord(path, path_copy);
+                          }
+                          Future.delayed(const Duration(seconds: 1), () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const WaitingVoicePage()),
+                            );
+                          });
+                        },
+                        child: const Text(
+                          'Yes',
+                          style: TextStyle(
+                              color: Colors.black, fontFamily: 'Molengo,'),
+                        ),
+                      ),
                     ),
                   ],
                 ),

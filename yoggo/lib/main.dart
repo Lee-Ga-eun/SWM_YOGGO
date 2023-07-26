@@ -7,7 +7,10 @@ import 'component/globalCubit/user/user_state.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 void main() async {
   // 사용자 Cubit을 초기화합니다.
   WidgetsFlutterBinding
@@ -15,6 +18,29 @@ void main() async {
 
   await Firebase.initializeApp();
 
+  // 푸시
+  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
+// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('ic_launcher');
+  final DarwinInitializationSettings initializationSettingsDarwin = //ios는 성공
+      DarwinInitializationSettings(
+    onDidReceiveLocalNotification:
+        (int? id, String? title, String? body, String? payload) async {},
+  );
+  const LinuxInitializationSettings initializationSettingsLinux =
+      LinuxInitializationSettings(defaultActionName: 'Open notification');
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+      macOS: initializationSettingsDarwin,
+      linux: initializationSettingsLinux);
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+  );
+  // onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+//푸시 종료
   final userCubit = UserCubit();
 
   SystemChrome.setPreferredOrientations(
