@@ -15,8 +15,6 @@ import 'globalCubit/user/user_cubit.dart';
 class BookIntro extends StatefulWidget {
   final String title, thumb, summary;
   final int id;
-  bool? record;
-  bool? purchase;
 
   BookIntro({
     // super.key,
@@ -25,8 +23,6 @@ class BookIntro extends StatefulWidget {
     required this.thumb,
     required this.id,
     required this.summary,
-    this.purchase,
-    this.record,
   }) : super(key: key);
 
   @override
@@ -39,7 +35,7 @@ class _BookIntroState extends State<BookIntro> {
   bool isClicked0 = true;
   bool isClicked1 = false;
   bool isClicked2 = false;
-  bool isPurchased = false;
+  //bool isPurchased = false;
   bool wantPurchase = false;
   bool goRecord = false;
   bool completeInference = true;
@@ -157,7 +153,6 @@ class _BookIntroState extends State<BookIntro> {
 
     if (response.statusCode == 200) {
       setState(() {
-        isPurchased = json.decode(response.body)['purchase'];
         inferenceId = json.decode(response.body)['inference'];
         print(inferenceId);
       });
@@ -332,14 +327,14 @@ class _BookIntroState extends State<BookIntro> {
                                       fontFamily: 'Molengo'),
                                 ),
                                 SizedBox(
-                                  height: isPurchased
+                                  height: userState.purchase
                                       ? SizeConfig.defaultSize! * 0
                                       : SizeConfig.defaultSize! * 1.0,
                                 ),
                                 Row(
                                   //  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    isPurchased
+                                    userState.purchase
                                         ? GestureDetector(
                                             onTap: () {
                                               setState(() {
@@ -349,7 +344,7 @@ class _BookIntroState extends State<BookIntro> {
                                                 isClicked2 = false;
                                                 canChanged = true;
                                               });
-                                              widget.record!
+                                              userState.record
                                                   ? inferenceId == 0
                                                       ? {
                                                           startInference(token),
@@ -795,7 +790,7 @@ class _BookIntroState extends State<BookIntro> {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: isPurchased
+                                  height: userState.purchase
                                       ? 0
                                       : 0.8 * SizeConfig.defaultSize!,
                                 ),
@@ -874,8 +869,8 @@ class _BookIntroState extends State<BookIntro> {
                                                   FairytalePage(
                                                 // 다음 화면으로 contetnVoiceId를 가지고 이동
 
-                                                record: widget.record!,
-                                                purchase: widget.purchase!,
+                                                record: userState.record!,
+                                                purchase: userState.purchase!,
                                                 voiceId: cvi,
                                                 lastPage: lastPage,
                                                 isSelected: true,
