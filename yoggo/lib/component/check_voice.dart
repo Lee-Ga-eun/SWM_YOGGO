@@ -10,11 +10,11 @@ import './record_retry.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class CheckVoice extends StatefulWidget {
-  final String infenrencedVoice;
+  // final String infenrencedVoice;
 
   const CheckVoice({
     super.key,
-    required this.infenrencedVoice,
+    // required this.infenrencedVoice,
   });
 
   @override
@@ -24,8 +24,6 @@ class CheckVoice extends StatefulWidget {
 class _CheckVoiceState extends State<CheckVoice> {
   AudioPlayer audioPlayer = AudioPlayer();
   late String token;
-  late String voiceName = ""; //"Usery";
-  late String voiceIcon = ""; //\u{1f603}";
   late String inferenceUrl = "";
   // void playAudio(String audioUrl) async {
   //   await audioPlayer.play(UrlSource(audioUrl));
@@ -43,25 +41,22 @@ class _CheckVoiceState extends State<CheckVoice> {
     });
   }
 
-  Future<String> getVoiceInfo(String token) async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/myVoice');
+  Future<void> getVoiceInfo(String token) async {
     var response = await http.get(
-      url,
+      Uri.parse('https://yoggo-server.fly.dev/user/inference'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
     if (response.statusCode == 200) {
-      final myJson = json.decode(response.body);
-      if (myJson != []) {
+      final data = json.decode(response.body);
+      if (data != [] && data.isNotEmpty) {
+        // 데이터가 빈 값이 아닌 경우
         setState(() {
-          inferenceUrl = myJson[0]['inferenceUrl'];
+          inferenceUrl = data[0];
         });
       }
-      return response.body;
-    } else {
-      throw Exception('Failed to fetch data');
     }
   }
 

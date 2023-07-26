@@ -32,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // late Future<List<bookModel>> webtoons;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late String token;
-  late bool purchase = true;
-  late bool record = true;
+  // late bool purchase = true;
+  // late bool record = true;
   String userName = '';
   String userEmail = '';
   late String voiceIcon = "😃";
@@ -299,9 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const CheckVoice(
-                                                    infenrencedVoice: '48',
-                                                  ),
+                                                      const CheckVoice(),
                                                 ),
                                               );
                                             },
@@ -624,8 +622,6 @@ class DataList extends StatelessWidget {
                         thumb: book.thumbUrl,
                         id: book.id,
                         summary: book.summary,
-                        purchase: purchase, // 임시로 지정 (전역으로 대체할 것임)
-                        record: record, //임시로 지정 (전역으로 대체할 것임)
                       ),
                     ),
                   );
