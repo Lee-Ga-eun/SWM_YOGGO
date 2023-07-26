@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -6,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
 import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
+
+import 'globalCubit/user/user_cubit.dart';
 
 // final bool _kAutoConsume = Platform.isIOS || true;
 
@@ -171,8 +175,14 @@ class _PurchaseState extends State<Purchase> {
     super.dispose();
   }
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
+    SizeConfig().init(context);
+    _sendSubViewEvent(userState.purchase, userState.record);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -333,6 +343,8 @@ class _PurchaseState extends State<Purchase> {
                               ),
                               child: TextButton(
                                 onPressed: () async {
+                                  _sendSubPayClickEvent(
+                                      userState.purchase, userState.record);
                                   await startPurchase();
                                 },
                                 child: Text(
@@ -354,5 +366,37 @@ class _PurchaseState extends State<Purchase> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendSubViewEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'sub_view',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendSubPayClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'sub_pay_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
   }
 }

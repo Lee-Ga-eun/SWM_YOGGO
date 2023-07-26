@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/size_config.dart';
 import './record_info.dart';
@@ -13,6 +15,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import './waiting_voice.dart';
 import 'package:http_parser/http_parser.dart';
+
+import 'globalCubit/user/user_cubit.dart';
 
 class AudioRecorderRetry extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -32,6 +36,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
   final _audioRecorder = Record();
   StreamSubscription<RecordState>? _recordSub;
   RecordState _recordState = RecordState.stop;
+  String? path = '';
   //StreamSubscription<Amplitude>? _amplitudeSub;
   //Amplitude? _amplitude;
   AudioPlayer audioPlayer = AudioPlayer();
@@ -123,7 +128,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     }
   }
 
-  Future<void> _start() async {
+  Future<void> _start(purchase, record) async {
     try {
       if (await _audioRecorder.hasPermission()) {
         var myAppDir = await getAppDirectory();
@@ -141,6 +146,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
         _recordDuration = 0;
 
         _startTimer();
+        _sendRecStartClickEvent(purchase, record);
       }
     } catch (e) {
       if (kDebugMode) {}
@@ -152,21 +158,21 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     return directory.path;
   }
 
-  Future<void> _stop() async {
+  Future<void> _stop(purchase, record) async {
     setState(() {
       stopped = true;
     });
     _timer?.cancel();
     _recordDuration = 0;
     //  if (Platform.isAndroid) stopRecording();
-    final path = await _audioRecorder.stop();
+    path = await _audioRecorder.stop(); //path받기
+    _sendRecStopClickEvent(purchase, record);
     //  sendPathToKotlin(path);
-    if (path != null) {
-      widget.onStop?.call(path);
-      path_copy = path.split('/').last;
-      await retryRecord();
-      sendRecord(path, path_copy);
-    }
+    // if (path != null) {
+    //   widget.onStop?.call(path);
+    //   path_copy = path.split('/').last;
+    //   sendRecord(path, path_copy);
+    // }
   }
 
   Future<void> _pause() async {
@@ -184,8 +190,13 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     await audioPlayer.play(DeviceFileSource(path_copy));
   }
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
+    SizeConfig().init(context);
     return MaterialApp(
       home: Scaffold(
         body: Stack(
@@ -335,21 +346,93 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
               child: Visibility(
                 visible: stopped,
                 child: AlertDialog(
-                  title: const Text('Record Complete'),
-                  content: const Text('Your recording has been completed.'),
+                  titlePadding: EdgeInsets.only(
+                      left: SizeConfig.defaultSize! * 9,
+                      right: SizeConfig.defaultSize! * 5,
+                      top: SizeConfig.defaultSize! * 3),
+                  // buttonPadding: const EdgeInsets.only(left: 30, right: 30),
+                  actionsPadding: EdgeInsets.only(
+                      left: SizeConfig.defaultSize! * 8,
+                      right: SizeConfig.defaultSize! * 8,
+                      bottom: SizeConfig.defaultSize! * 3,
+                      top: SizeConfig.defaultSize! * 3),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        SizeConfig.defaultSize!), // 모든 모서리를 10 픽셀로 둥글게 설정
+                  ),
+                  backgroundColor: Colors.white.withOpacity(0.9),
+                  title: Text(
+                    'Would you like to use the voice you just recorded?',
+                    style: TextStyle(
+                      fontSize: SizeConfig.defaultSize! * 1.7,
+                      fontFamily: 'Molengo',
+                    ),
+                  ),
+                  // content: const Text('Your recording has been completed.'),
                   actions: [
-                    TextButton(
-                      onPressed: () {
-                        // 1초 후에 다음 페이지로 이동
-                        Future.delayed(const Duration(seconds: 3), () {
+                    Container(
+                      width: SizeConfig.defaultSize! * 17,
+                      // color: Colors.orange,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.defaultSize!), // 원하는 모서리의 둥글기 설정
+                          color: const Color.fromARGB(255, 255, 167, 26)),
+                      child: TextButton(
+                        onPressed: () {
+                          path = ''; // 이 버전을 원하지 않는 경우 path 초기화
+                          _sendRecRerecClickEvent(
+                              userState.purchase, userState.record);
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const WaitingVoicePage()),
-                          );
-                        });
-                      },
-                      child: const Text('OK'),
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AudioRecorderRetry()));
+                          //  Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'No, Re-make',
+                          style: TextStyle(
+                              color: Colors.black, fontFamily: 'Molengo,'),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: SizeConfig.defaultSize! * 4,
+                    ),
+                    Container(
+                      width: SizeConfig.defaultSize! * 17,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.defaultSize!), // 원하는 모서리의 둥글기 설정
+                          color: const Color.fromARGB(255, 255, 167, 26)),
+                      child: TextButton(
+                        onPressed: () async {
+                          // 1초 후에 다음 페이지로 이동
+                          if (path != null) {
+                            // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
+                            widget.onStop?.call(path!);
+                            path_copy = path!.split('/').last;
+                            await retryRecord();
+                            sendRecord(path, path_copy);
+                            _sendRecKeepClickEvent(
+                                userState.purchase, userState.record);
+                          }
+
+                          Future.delayed(const Duration(seconds: 1), () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const WaitingVoicePage()),
+                            );
+                          });
+                        },
+                        child: const Text(
+                          'Yes',
+                          style: TextStyle(
+                              color: Colors.black, fontFamily: 'Molengo,'),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -371,18 +454,20 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
   }
 
   Widget _buildRecordStopControl() {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     late Icon icon;
     late Color color;
 
     if (_recordState != RecordState.stop) {
       icon = Icon(Icons.stop,
-          color: Colors.red, size: 3 * SizeConfig.defaultSize!);
+          color: Colors.red, size: SizeConfig.defaultSize! * 3);
       color = Colors.red.withOpacity(0.1);
     } else {
       //   _stopRecording();
       final theme = Theme.of(context);
       icon = Icon(Icons.mic,
-          color: theme.primaryColor, size: 3 * SizeConfig.defaultSize!);
+          color: theme.primaryColor, size: SizeConfig.defaultSize! * 3);
       color = theme.primaryColor.withOpacity(0.1);
     }
 
@@ -391,11 +476,13 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
         color: color,
         child: InkWell(
           child: SizedBox(
-              width: 5.6 * SizeConfig.defaultSize!,
-              height: 5.6 * SizeConfig.defaultSize!,
+              width: SizeConfig.defaultSize! * 5.6,
+              height: SizeConfig.defaultSize! * 5.6,
               child: icon),
           onTap: () {
-            (_recordState != RecordState.stop) ? _stop() : _start();
+            (_recordState != RecordState.stop)
+                ? _stop(userState.purchase, userState.record)
+                : _start(userState.purchase, userState.record);
           },
         ),
       ),
@@ -438,7 +525,12 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
       return _buildTimer();
     }
 
-    return const Text("Waiting to record");
+    return Text(
+      "Waiting to record",
+      style: TextStyle(
+        fontSize: SizeConfig.defaultSize! * 1.6,
+      ),
+    );
   }
 
   Widget _buildTimer() {
@@ -466,5 +558,86 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       setState(() => _recordDuration++);
     });
+  }
+
+  Future<void> _sendRecStartClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_start_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecStopClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_stop_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecIngViewEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_ing_view',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecRerecClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_rerec_clic',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecKeepClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_keep_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+          //'voiceId': voiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력r
+      print('Failed to log event: $e');
+    }
   }
 }

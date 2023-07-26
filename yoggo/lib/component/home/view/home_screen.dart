@@ -34,10 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late String token;
   // late bool purchase = true;
   // late bool record = true;
-  String userName = '';
-  String userEmail = '';
-  late String voiceIcon = "😃";
-  late String voiceName = "User";
+  //String userName = '';
   bool showEmail = false;
   bool showSignOutConfirmation = false;
   double dropdownHeight = 0.0;
@@ -52,6 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //getUserInfo();
     //}
   }
+
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   Future<void> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -133,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
+    _sendHomeViewEvent(userState.purchase, userState.record);
     SizeConfig().init(context);
     return Scaffold(
       key: _scaffoldKey,
@@ -238,7 +238,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         userState.record && userState.purchase
                             ? GestureDetector(
                                 onTap: () {
-                                  //이벤트 넣어보기
+                                  _sendHbgVoiceBoxClickEvent(
+                                      userState.purchase, userState.record);
                                 },
                                 child: SizedBox(
                                   width: 23 * SizeConfig.defaultSize!,
@@ -295,6 +296,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         top: 6 * SizeConfig.defaultSize!,
                                         child: GestureDetector(
                                             onTap: () {
+                                              _sendHbgVoiceClickEvent(
+                                                  userState.purchase,
+                                                  userState.record);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -335,6 +339,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               )
                             : GestureDetector(
                                 onTap: () {
+                                  _sendHbgVoiceClickEvent(
+                                      userState.purchase, userState.record);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -385,6 +391,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           onTap: () {
+                            _sendSignOutClickEvent(
+                                userState.purchase, userState.record);
                             setState(() {
                               showSignOutConfirmation =
                                   !showSignOutConfirmation; // dropdown 상태 토글
@@ -411,6 +419,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         )),
                     //),
                     onTap: () {
+                      _sendSignOutReallyClickEvent(
+                          userState.purchase, userState.record);
                       logout();
                       Navigator.push(
                         context,
@@ -461,7 +471,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: InkWell(
                         onTap: () {
                           showNotification(flutterLocalNotificationsPlugin);
-
+                          _sendHbgClickEvent(
+                              userState.purchase, userState.record);
                           _scaffoldKey.currentState?.openDrawer();
                         },
                         child: Image.asset(
@@ -503,6 +514,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Center(
                                 child: TextButton(
                                   onPressed: () {
+                                    _sendBannerClickEvent(
+                                        userState.purchase, userState.record);
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -564,6 +577,140 @@ class _HomeScreenState extends State<HomeScreen> {
       //   ),
     );
   }
+
+  Future<void> _sendSignOutReallyClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'sign_out_really_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendSignOutClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'sign_out_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHbgVoiceClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'hbg_voice_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHbgVoiceBoxClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'hbg_voice_box_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHbgMeClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'hbg_me_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHomeViewEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'home_view',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookClickEvent(contentId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_click',
+        parameters: <String, dynamic>{
+          'contentId': contentId,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBannerClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'banner_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHbgClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'hbg_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
 }
 
 class DataList extends StatelessWidget {
@@ -573,29 +720,17 @@ class DataList extends StatelessWidget {
       : super(key: key);
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  static Future<void> _sendBookClickEvent(contentId) async {
-    try {
-      // 이벤트 로깅
-      await analytics.logEvent(
-        name: 'book_click',
-        parameters: <String, dynamic>{'contentId': contentId},
-      );
-    } catch (e) {
-      // 이벤트 로깅 실패 시 에러 출력
-      print('Failed to log event: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // 데이터 큐빗을 가져오기.
     //final dataCubit = BlocProvider.of<DataCubit>(context);
-
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     return BlocBuilder<DataCubit, List<BookModel>>(
       builder: (context, state) {
         if (state.isEmpty) {
           showNotification(flutterLocalNotificationsPlugin);
-
+          _sendHomeLoadingViewEvent(userState.purchase, userState.record);
           return Center(
             child: Center(
               child: LoadingAnimationWidget.fourRotatingDots(
@@ -673,5 +808,33 @@ class DataList extends StatelessWidget {
         }
       },
     );
+  }
+
+  static Future<void> _sendBookClickEvent(contentId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_click',
+        parameters: <String, dynamic>{'contentId': contentId},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHomeLoadingViewEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'hbg_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
   }
 }

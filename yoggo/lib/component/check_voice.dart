@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -60,11 +61,15 @@ class _CheckVoiceState extends State<CheckVoice> {
     }
   }
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   Widget build(BuildContext context) {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
+    _sendVoiceViewEvent(
+        userState.purchase, userState.record, userState.voiceId!);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -311,15 +316,16 @@ class _CheckVoiceState extends State<CheckVoice> {
                                     children: [
                                       InkWell(
                                         onTap: () {
+                                          _sendVoiceRemakeClickEvent(
+                                              userState.purchase,
+                                              userState.record,
+                                              userState.voiceId!);
                                           audioPlayer.stop();
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const AudioRecorderRetry(
-                                                      // rerecord: true,
-                                                      // mustDelete: widget.path,
-                                                      ),
+                                                  const AudioRecorderRetry(),
                                             ),
                                           );
                                         },
@@ -359,6 +365,10 @@ class _CheckVoiceState extends State<CheckVoice> {
                                           //     255, 194, 120, 209),
                                         ),
                                         onPressed: () {
+                                          _sendVoicePlayClickEvent(
+                                              userState.purchase,
+                                              userState.record,
+                                              userState.voiceId!);
                                           inferenceUrl == ""
                                               ? null
                                               : audioPlayer.play(
@@ -548,5 +558,107 @@ class _CheckVoiceState extends State<CheckVoice> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendVoiceRemakeClickEvent(purchase, record, voiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_remake_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+          'voiceId': voiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendVoiceTextClickEvent(purchase, record, voiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_text_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+          'voiceId': voiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendVoiceIconClickEvent(purchase, record, voiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_icon_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+          'voiceId': voiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendVoiceNameClickEvent(purchase, record, voiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_name_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+          'voiceId': voiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendVoicePlayClickEvent(purchase, record, voiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_play_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+          'voiceId': voiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendVoiceViewEvent(purchase, record, voiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_view',
+        parameters: <String, dynamic>{
+          'purchase': purchase,
+          'record': record,
+          'voiceId': voiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
   }
 }

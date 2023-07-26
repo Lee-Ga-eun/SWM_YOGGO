@@ -1,4 +1,6 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
@@ -6,6 +8,7 @@ import 'package:yoggo/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import './reader_end.dart';
+import 'globalCubit/user/user_cubit.dart';
 
 class FairytalePage extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
@@ -51,6 +54,8 @@ class _FairyTalePageState extends State<FairytalePage>
     fetchAllBookPages();
     WidgetsBinding.instance.addObserver(this);
   }
+
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   Future<void> fetchAllBookPages() async {
     // API에서 모든 책 페이지 데이터를 불러와 pages 리스트에 저장
@@ -129,7 +134,9 @@ class _FairyTalePageState extends State<FairytalePage>
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     if (pages.isEmpty) {
+      _sendBookLoadingViewEvent(widget.voiceId);
       return Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -158,6 +165,7 @@ class _FairyTalePageState extends State<FairytalePage>
         ),
       );
     }
+    _sendBookPageViewEvent(widget.voiceId, currentPageIndex + 1);
     return WillPopScope(
       child: Scaffold(
         body: Stack(
@@ -251,6 +259,37 @@ class _FairyTalePageState extends State<FairytalePage>
       },
     );
   }
+
+  Future<void> _sendBookPageViewEvent(contentVoiceId, pageId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_page_view',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+          'pageId': pageId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookLoadingViewEvent(contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_loading_view',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
 }
 
 class PageWidget extends StatefulWidget {
@@ -296,8 +335,11 @@ class PageWidget extends StatefulWidget {
 }
 
 class _PageWidgetState extends State<PageWidget> {
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     void playAudio(String audioUrl) async {
       if (widget.realCurrent) {
         await widget.audioPlayer.stop();
@@ -344,6 +386,8 @@ class _PageWidgetState extends State<PageWidget> {
                       onPressed: () {
                         // stopAudio();
                         widget.dispose();
+                        _sendBookExitClickEvent(
+                            widget.voiceId, widget.currentPageIndex + 1);
                         Navigator.of(context).pop();
                       },
                     ),
@@ -428,12 +472,15 @@ class _PageWidgetState extends State<PageWidget> {
                           // bottom: 5,
                           // left: 10,
                           child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_back,
-                              size: SizeConfig.defaultSize! * 3,
-                            ),
-                            onPressed: widget.previousPage,
-                          ),
+                              icon: Icon(
+                                Icons.arrow_back,
+                                size: SizeConfig.defaultSize! * 3,
+                              ),
+                              onPressed: () {
+                                _sendBookBackClickEvent(widget.voiceId,
+                                    widget.currentPageIndex + 1);
+                                widget.previousPage();
+                              }),
                         ),
                         Expanded(
                           child: widget.currentPageIndex != widget.lastPage - 1
@@ -442,8 +489,11 @@ class _PageWidgetState extends State<PageWidget> {
                                     Icons.arrow_forward,
                                     size: SizeConfig.defaultSize! * 3,
                                   ),
-                                  onPressed: widget.nextPage,
-                                )
+                                  onPressed: () {
+                                    _sendBookNextClickEvent(widget.voiceId,
+                                        widget.currentPageIndex + 1);
+                                    widget.nextPage();
+                                  })
                               : IconButton(
                                   icon: Icon(
                                     Icons.check,
@@ -456,6 +506,8 @@ class _PageWidgetState extends State<PageWidget> {
                                   // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
                                   onPressed: () {
                                     widget.dispose();
+                                    _sendBookNextClickEvent(widget.voiceId,
+                                        widget.currentPageIndex + 1);
                                     if (widget.record != null &&
                                         widget.record == true &&
                                         widget.purchase == true) {
@@ -500,5 +552,53 @@ class _PageWidgetState extends State<PageWidget> {
         ],
       ),
     );
+  }
+
+  Future<void> _sendBookExitClickEvent(contentVoiceId, pageId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_exit_click',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+          'pageId': pageId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookNextClickEvent(contentVoiceId, pageId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_next_click',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+          'pageId': pageId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookBackClickEvent(contentVoiceId, pageId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_back_click',
+        parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+          'pageId': pageId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
   }
 }
