@@ -75,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
         // await Navigator.push(context,
         //     MaterialPageRoute(builder: (context) => const HomeScreen()));
         //print(username); 기존 코드
-        await userCubit.login(username, 'email', purchase, record, false);
-
+        //await userCubit.login(username, 'email', purchase, record, false);
+        await userCubit.fetchUser();
         final state = userCubit.state;
         if (state.isDataFetched) {
           Navigator.push(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/purchase.dart';
 import 'package:yoggo/component/record_info.dart';
@@ -7,6 +8,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import 'globalCubit/user/user_cubit.dart';
 
 class BookIntro extends StatefulWidget {
   final String title, thumb, summary;
@@ -39,8 +42,8 @@ class _BookIntroState extends State<BookIntro> {
   bool wantPurchase = false;
   bool goRecord = false;
   bool completeInference = true;
-  late String voiceIcon = "😃";
-  late String voiceName = "";
+  //late String voiceIcon = "😃";
+  //late String voiceName = "";
   late int inferenceId = 0;
   late String token;
   String text = '';
@@ -89,31 +92,7 @@ class _BookIntroState extends State<BookIntro> {
     setState(() {
       token = prefs.getString('token')!;
       purchaseInfo(token);
-      getVoiceInfo(token);
     });
-  }
-
-  Future<String> getVoiceInfo(String token) async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/myVoice');
-    var response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      final myJson = json.decode(response.body);
-      if (myJson != []) {
-        setState(() {
-          voiceName = myJson[0]['name'];
-          voiceIcon = myJson[0]['icon'];
-        });
-      }
-      return response.body;
-    } else {
-      throw Exception('Failed to fetch data');
-    }
   }
 
 //구매한 사람인지, 이 책이 인퍼런스되어 있는지 확인
@@ -185,6 +164,8 @@ class _BookIntroState extends State<BookIntro> {
   @override
   Widget build(BuildContext context) {
     // precacheImages(context);
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     SizeConfig().init(context);
     if (cvi == 0) {
       return Scaffold(
@@ -348,7 +329,7 @@ class _BookIntroState extends State<BookIntro> {
                                                     child: Stack(
                                                       children: [
                                                         Text(
-                                                          voiceIcon,
+                                                          userState.voiceIcon!,
                                                           style: TextStyle(
                                                             fontSize: SizeConfig
                                                                     .defaultSize! *
@@ -446,7 +427,8 @@ class _BookIntroState extends State<BookIntro> {
                                                         -1.2 *
                                                             SizeConfig
                                                                 .defaultSize!),
-                                                    child: Text(voiceName,
+                                                    child: Text(
+                                                        userState.voiceName!,
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Molengo',
