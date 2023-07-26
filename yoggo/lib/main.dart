@@ -11,6 +11,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+
 void main() async {
   // 사용자 Cubit을 초기화합니다.
   WidgetsFlutterBinding
@@ -24,6 +25,12 @@ void main() async {
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('ic_launcher');
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestPermission(); //권한 허용?
+
   final DarwinInitializationSettings initializationSettingsDarwin = //ios는 성공
       DarwinInitializationSettings(
     onDidReceiveLocalNotification:
