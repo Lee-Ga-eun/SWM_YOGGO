@@ -81,7 +81,7 @@ class _CheckVoiceState extends State<CheckVoice> {
         child: SafeArea(
           bottom: false,
           top: false,
-          minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
+          minimum: EdgeInsets.only(left: 6 * SizeConfig.defaultSize!),
           child: Column(
             children: [
               Expanded(
@@ -154,14 +154,11 @@ class _CheckVoiceState extends State<CheckVoice> {
                           ),
                           child: Column(children: [
                             SizedBox(
-                              height: SizeConfig.defaultSize! * 0.25,
+                              height: SizeConfig.defaultSize! * 2.2,
                             ),
-                            Text(
-                              userState.voiceIcon!,
-                              style: TextStyle(
-                                fontFamily: 'Molengo',
-                                fontSize: SizeConfig.defaultSize! * 13.5,
-                              ),
+                            Image.asset(
+                              'lib/images/icons/${userState.voiceIcon}-c.png',
+                              height: SizeConfig.defaultSize! * 13.5,
                             ),
                           ]),
                         ),

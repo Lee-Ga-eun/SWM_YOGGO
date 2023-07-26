@@ -90,6 +90,7 @@ flutter:
   assets:
     - lib/images/
     - .env
+    - lib/images/icons/
     # - lib/images/logo.png
   #   - images/a_dot_ham.jpeg
 
@@ -123,7 +124,6 @@ flutter:
     - family: Gloria
       fonts:
         - asset: assets/fonts/GloriaHallelujah-Regular.ttf
-    
 
         # Prata-Regular.ttf
     # - family: Schyler

@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
@@ -18,6 +19,7 @@ void main() async {
       .ensureInitialized(); // ensureInitialized()를 호출하여 바인딩 초기화
 
   await Firebase.initializeApp();
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   // 푸시
   // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -67,7 +69,10 @@ void main() async {
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
   @override
   _AppState createState() => _AppState();
 }
