@@ -16,6 +16,8 @@ import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import '../../globalCubit/user/user_cubit.dart';
+import '../../push.dart';
+import 'package:yoggo/main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -588,6 +590,7 @@ class DataList extends StatelessWidget {
     return BlocBuilder<DataCubit, List<BookModel>>(
       builder: (context, state) {
         if (state.isEmpty) {
+          showNotification(flutterLocalNotificationsPlugin);
           return Center(
             child: Center(
               child: LoadingAnimationWidget.fourRotatingDots(
