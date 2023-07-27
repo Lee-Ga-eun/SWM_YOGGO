@@ -6,9 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/home/view/home_screen.dart';
-import 'package:yoggo/component/purchase.dart';
 import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
 import '../component/globalCubit/user/user_cubit.dart';
@@ -81,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await userCubit.fetchUser();
         final state = userCubit.state;
         if (state.isDataFetched) {
+          OneSignal.shared.setExternalUserId(state.userId.toString());
           Navigator.of(context).pop();
           // Navigator.push(
           //   context,
