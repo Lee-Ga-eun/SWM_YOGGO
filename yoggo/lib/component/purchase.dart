@@ -184,194 +184,223 @@ class _PurchaseState extends State<Purchase> {
     SizeConfig().init(context);
     _sendSubViewEvent(userState.purchase, userState.record);
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/images/bkground.png'),
-            fit: BoxFit.cover,
-          ),
+        body: Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('lib/images/bkground.png'),
+          fit: BoxFit.cover,
         ),
-        child: SafeArea(
+      ),
+      child: SafeArea(
           bottom: false,
           top: false,
-          child: Column(
-            children: [
-              Expanded(
-                flex: SizeConfig.defaultSize!.toInt(),
-                child: Stack(
-                  alignment: Alignment.centerLeft,
+        child: Column(
+          children: [
+            //Expanded(
+            //flex: 7,
+            //child:
+            SizedBox(height: SizeConfig.defaultSize!),
+
+            Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'LOVEL',
-                          style: TextStyle(
-                            fontFamily: 'Modak',
-                            fontSize: SizeConfig.defaultSize! * 5,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Positioned(
-                      left: 2 * SizeConfig.defaultSize!,
-                      child: IconButton(
-                        icon: const Icon(Icons.cancel),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                          );
-                        },
-                        //color: Colors.red,
+                    Text(
+                      'LOVEL',
+                      style: TextStyle(
+                        fontFamily: 'Modak',
+                        fontSize: SizeConfig.defaultSize! * 5,\
                       ),
                     ),
                   ],
                 ),
-              ),
-              Expanded(
-                flex: SizeConfig.defaultSize!.toInt() * 3,
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'lib/images/rocket.png',
-                              width: SizeConfig.defaultSize! * 5,
-                              alignment: Alignment.topCenter,
-                            ),
-                            Text(
-                              'Stimulate your children\'s imaginations \n Provide a fantastic reading experience \n Improve your bond with your children ',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Molengo',
-                                  fontSize: SizeConfig.defaultSize! * 2.3),
-                            ),
-                            Image.asset(
-                              'lib/images/horse.png',
-                              width: SizeConfig.defaultSize! * 5,
-                              alignment: Alignment.topCenter,
-                            )
-                          ],
+                Positioned(
+                  left: 2 * SizeConfig.defaultSize!,
+                  child: IconButton(
+                    icon: const Icon(Icons.cancel),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomeScreen(),
                         ),
-                        SizedBox(
-                          height: SizeConfig.defaultSize! * 3,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: '\$19.99/month\n',
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2,
-                                            fontFamily: 'Molengo',
-                                            color: Colors.grey,
-                                            decoration:
-                                                TextDecoration.lineThrough),
-                                      ),
-                                      TextSpan(
-                                        text: '\$5.99/month\n',
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2,
-                                            color: Colors.black,
-                                            fontFamily: 'Molengo'),
-                                      ),
-                                      TextSpan(
-                                        text: '70% ',
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2.3,
-                                            color: Colors.red,
-                                            fontFamily: 'Molengo'),
-                                      ),
-                                      TextSpan(
-                                        text: 'OFF + 1 ',
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2.3,
-                                            color: Colors.black,
-                                            fontFamily: 'Molengo'),
-                                      ),
-                                      TextSpan(
-                                        text: 'FREE ',
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2.3,
-                                            color: Colors.red,
-                                            fontFamily: 'Molengo'),
-                                      ),
-                                      TextSpan(
-                                        text: 'MONTH\n',
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2.3,
-                                            color: Colors.black,
-                                            fontFamily: 'Molengo'),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(),
-                            child: Container(
-                              width: SizeConfig.defaultSize! * 52.6,
-                              height: SizeConfig.defaultSize! * 4.5,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(152, 97, 1, 152),
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(SizeConfig.defaultSize!)),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: SizeConfig.defaultSize! * 5,
-                                  right: SizeConfig.defaultSize! * 5,
-                                  // top: SizeConfig.defaultSize! * 0.2,
-                                  // bottom: SizeConfig.defaultSize! * 0.2,
-                                ),
-                                child: TextButton(
-                                  onPressed: () async {
-                                    _sendSubPayClickEvent(
-                                        userState.purchase, userState.record);
-                                    await startPurchase();
-                                  },
-                                  child: Text(
-                                    'Go get unlimited access to all upcoming books',
-                                    style: TextStyle(
-                                      fontFamily: 'Molengo',
-                                      fontSize: SizeConfig.defaultSize! * 2.1,
-                                      color: Colors.white,
+                      );
+                    },
+                    //color: Colors.red,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: SizeConfig.defaultSize! * 0.5),
+            //),
+            Container(
+              width: 72 * SizeConfig.defaultSize!,
+              height: 29.4 * SizeConfig.defaultSize!,
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(128, 255, 255, 255),
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(SizeConfig.defaultSize! * 3))),
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'lib/images/rocket.png',
+                            width: SizeConfig.defaultSize! * 5,
+                            alignment: Alignment.topCenter,
+                          ),
+                          SizedBox(
+                            width: SizeConfig.defaultSize! * 2,
+                          ),
+                          Text(
+                            'Stimulate your children\'s imaginations \n Provide a fantastic reading experience \n Improve your bond with your children ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Molengo',
+                                fontSize: SizeConfig.defaultSize! * 2.3),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.defaultSize! * 2,
+                          ),
+                          Image.asset(
+                            'lib/images/horse.png',
+                            width: SizeConfig.defaultSize! * 5,
+                            alignment: Alignment.topCenter,
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: SizeConfig.defaultSize! * 1.5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: '\$19.99/month\n',
+                                      style: TextStyle(
+                                          fontSize: SizeConfig.defaultSize! * 2,
+                                          fontFamily: 'Molengo',
+                                          color: Colors.grey,
+                                          decoration:
+                                              TextDecoration.lineThrough),
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
+                                    TextSpan(
+                                      text: '\$5.99/month\n',
+                                      style: TextStyle(
+                                          fontSize: SizeConfig.defaultSize! * 2,
+                                          color: Colors.black,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                    TextSpan(
+                                      text: '70% ',
+                                      style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.defaultSize! * 2.3,
+                                          color: Colors.red,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                    TextSpan(
+                                      text: 'OFF + 1 ',
+                                      style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.defaultSize! * 2.3,
+                                          color: Colors.black,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                    TextSpan(
+                                      text: 'FREE ',
+                                      style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.defaultSize! * 2.3,
+                                          color: Colors.red,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                    TextSpan(
+                                      text: 'MONTH\n',
+                                      style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.defaultSize! * 2.3,
+                                          color: Colors.black,
+                                          fontFamily: 'Molengo'),
+                                    ),
+                                  ],
                                 ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+
+                      GestureDetector(
+                        onTap: () async {
+                          _sendSubPayClickEvent(
+                              userState.purchase, userState.record);
+                          await startPurchase();
+                        },
+                        child: Container(
+                            width: 52 * SizeConfig.defaultSize!,
+                            height: 4.5 * SizeConfig.defaultSize!,
+                            decoration: BoxDecoration(
+                                color: Color(0xFFFFA91A),
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    SizeConfig.defaultSize! * 1.5))),
+                            child: Center(
+                                child: Text(
+                              'Go get unlimited access to all upcoming books',
+                              style: TextStyle(
+                                fontFamily: 'Molengo',
+                                fontSize: SizeConfig.defaultSize! * 2.1,
+                                color: Colors.white,
                               ),
-                            ))
-                      ],
-                    )),
-              ),
-            ],
-          ),
+                              textAlign: TextAlign.center,
+                            ))),
+                      )
+                      // Padding(
+                      //     padding: const EdgeInsets.only(),
+                      //     child: Container(
+                      //       width: SizeConfig.defaultSize! * 52.6,
+                      //       height: SizeConfig.defaultSize! * 4.5,
+                      //       decoration: BoxDecoration(
+                      //         color: const Color.fromARGB(152, 97, 1, 152),
+                      //         borderRadius: BorderRadius.all(
+                      //             Radius.circular(SizeConfig.defaultSize!)),
+                      //       ),
+                      //       child: Padding(
+                      //         padding: EdgeInsets.only(
+                      //           left: SizeConfig.defaultSize! * 5,
+                      //           right: SizeConfig.defaultSize! * 5,
+                      //           // top: SizeConfig.defaultSize! * 0.2,
+                      //           // bottom: SizeConfig.defaultSize! * 0.2,
+                      //         ),
+                      //         child: TextButton(
+                      //           onPressed: () async {
+                      //             _sendSubPayClickEvent(
+                      //                 userState.purchase, userState.record);
+                      //             await startPurchase();
+                      //           },
+                      //           child: Text(),
+                      //         ),
+                      //       ),
+                      //)
+                    ],
+                  )),
+            ) //),
+          
         ),
       ),
-    );
+    ));
   }
 
   Future<void> _sendSubViewEvent(purchase, record) async {
