@@ -342,12 +342,14 @@ class _PurchaseState extends State<Purchase> {
                       onTap: () async {
                         _sendSubPayClickEvent(
                             userState.purchase, userState.record);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const LoginScreen()), //HomeScreen()),
-                        );
+                        userState.login
+                            ? await startPurchase()
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const LoginScreen()), //HomeScreen()),
+                              );
                         //await startPurchase();
                       },
                       child: Container(
