@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoggo/component/record_request.dart';
 import 'package:yoggo/size_config.dart';
 import './record_info.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +14,6 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
-import './waiting_voice.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'globalCubit/user/user_cubit.dart';
@@ -422,8 +422,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const WaitingVoicePage()),
+                                  builder: (context) => const recordRequest()),
                             );
                           });
                         },

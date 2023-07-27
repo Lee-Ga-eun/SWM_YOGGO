@@ -890,9 +890,6 @@ class _BookIntroState extends State<BookIntro> {
                                               builder: (context) =>
                                                   FairytalePage(
                                                 // 다음 화면으로 contetnVoiceId를 가지고 이동
-
-                                                record: userState.record!,
-                                                purchase: userState.purchase!,
                                                 voiceId: cvi,
                                                 lastPage: lastPage,
                                                 isSelected: true,
