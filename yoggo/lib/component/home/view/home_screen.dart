@@ -503,30 +503,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.only(
                                 left: SizeConfig.defaultSize! * 2,
                                 right: SizeConfig.defaultSize! * 2),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                color: Color.fromARGB(255, 255, 201, 29),
-                                //   border: Border.all(
-                                //   color: const Color.fromARGB(255, 255, 169, 26)),
-                              ),
-                              // color: Colors.white,
-                              height: SizeConfig.defaultSize! * 4,
-                              child: Center(
-                                child: TextButton(
-                                  onPressed: () {
-                                    _sendBannerClickEvent(
-                                        userState.purchase, userState.record);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => userState.purchase
-                                            ? const RecordInfo()
-                                            : const Purchase(),
-                                      ),
-                                    );
-                                  },
+                            child: GestureDetector(
+                              onTap: () {
+                                _sendBannerClickEvent(
+                                    userState.purchase, userState.record);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => userState.purchase
+                                        ? const RecordInfo()
+                                        : const Purchase(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  color: Color(0xFFFFA91A),
+                                  //   border: Border.all(
+                                  //   color: const Color.fromARGB(255, 255, 169, 26)),
+                                ),
+                                // color: Colors.white,
+                                height: SizeConfig.defaultSize! * 4,
+                                child: Center(
                                   child: Text(
                                     'Want to read a book in your voice?',
                                     style: TextStyle(
