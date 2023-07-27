@@ -13,10 +13,10 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
-import './waiting_voice.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'globalCubit/user/user_cubit.dart';
+import './record_request.dart';
 
 class AudioRecorder extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -93,6 +93,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   Future<void> sendRecord(audioUrl, recordName) async {
+    final UserCubit userCubit;
     var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
 
     var request = http.MultipartRequest('POST', url);
@@ -105,7 +106,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
     var response = await request.send();
     if (response.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('record', true);
+      //await prefs.setBool('record', true);
+      //  await userCubit.fetchUser();
       print('Record sent successfully');
     } else {
       print('Failed to send record. Status code: ${response.statusCode}');
@@ -392,22 +394,24 @@ class _AudioRecorderState extends State<AudioRecorder> {
                               SizeConfig.defaultSize!), // 원하는 모서리의 둥글기 설정
                           color: const Color.fromARGB(255, 255, 167, 26)),
                       child: TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           // 1초 후에 다음 페이지로 이동
                           if (path != null) {
                             // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
                             widget.onStop?.call(path!);
                             path_copy = path!.split('/').last;
-                            sendRecord(path, path_copy);
+                            await sendRecord(path, path_copy);
                             _sendRecKeepClickEvent(
                                 userState.purchase, userState.record);
                           }
-                          Future.delayed(const Duration(seconds: 1), () {
-                            Navigator.push(
+                          Future.delayed(const Duration(seconds: 1), () async {
+                            // await userCubit.fetchUser();
+                            // print("fetchuser부름");
+                            print(userState.record);
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const WaitingVoicePage()),
+                                  builder: (context) => const recordRequest()),
                             );
                           });
                         },

@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -17,6 +18,20 @@ void main() async {
   // 사용자 Cubit을 초기화합니다.
   WidgetsFlutterBinding
       .ensureInitialized(); // ensureInitialized()를 호출하여 바인딩 초기화
+
+//Remove this method to stop OneSignal Debugging
+  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  OneSignal.shared.setAppId("2d42b96d-78df-43fe-b6d1-3899c3684ac5");
+// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+    print("Accepted permission: $accepted");
+  });
+
+  await OneSignal.shared.getDeviceState().then(
+        (value) => {
+          print('::::: one signal :::: ${value!.userId}'),
+        },
+      );
 
   await Firebase.initializeApp();
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
@@ -84,7 +99,11 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     initialize();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.white.withOpacity(0), // 투명한 배경 색상으로 설정
+    ));
   }
 
   Future<void> initialize() async {

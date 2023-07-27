@@ -192,6 +192,8 @@ class _PurchaseState extends State<Purchase> {
         ),
       ),
       child: SafeArea(
+          bottom: false,
+          top: false,
         child: Column(
           children: [
             //Expanded(
@@ -209,7 +211,7 @@ class _PurchaseState extends State<Purchase> {
                       'LOVEL',
                       style: TextStyle(
                         fontFamily: 'Modak',
-                        fontSize: SizeConfig.defaultSize! * 5,
+                        fontSize: SizeConfig.defaultSize! * 5,\
                       ),
                     ),
                   ],
@@ -395,7 +397,7 @@ class _PurchaseState extends State<Purchase> {
                     ],
                   )),
             ) //),
-          ],
+          
         ),
       ),
     ));
