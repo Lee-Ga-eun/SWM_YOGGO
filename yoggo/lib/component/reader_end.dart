@@ -12,15 +12,12 @@ import 'globalCubit/user/user_cubit.dart';
 class ReaderEnd extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
   final bool isSelected;
-  bool? purchase, record;
   final int lastPage;
   ReaderEnd({
     super.key,
     required this.voiceId, // detail_screen에서 받아오는 것들 초기화
     required this.isSelected,
     required this.lastPage,
-    this.record,
-    this.purchase,
   });
 
   @override
@@ -81,10 +78,10 @@ class _ReaderEndState extends State<ReaderEnd> {
                 ],
               ),
             ),
-            widget.purchase != null
-                ? (widget.purchase == true && widget.record == false
+            userState.purchase != null
+                ? (userState.purchase == true && userState.record == false
                     ? notRecordUser()
-                    : widget.purchase == true && widget.record == true
+                    : userState.purchase == true && userState.record == true
                         ? allPass()
                         : notPurchaseUser())
                 : Container(),
@@ -105,8 +102,8 @@ class _ReaderEndState extends State<ReaderEnd> {
                             voiceId: widget.voiceId,
                             lastPage: widget.lastPage,
                             isSelected: widget.isSelected,
-                            record: widget.record,
-                            purchase: widget.purchase,
+                            record: userState.record,
+                            purchase: userState.purchase,
                           ),
                         ),
                       );
@@ -155,19 +152,25 @@ class _ReaderEndState extends State<ReaderEnd> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'lib/images/congratulate1.png',
+                    'lib/images/congratulate2.png',
                     width: SizeConfig.defaultSize! * 5,
                     alignment: Alignment.topCenter,
                   ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 1.5,
+                  ),
                   Text(
-                    'Congratulations on \n completing the reading',
+                    'Congratulations on \n completing the READING',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: 'Molengo',
                         fontSize: SizeConfig.defaultSize! * 2.5),
                   ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 2,
+                  ),
                   Image.asset(
-                    'lib/images/congratulate2.png',
+                    'lib/images/congratulate1.png',
                     width: SizeConfig.defaultSize! * 5,
                     alignment: Alignment.topCenter,
                   )
@@ -191,19 +194,25 @@ class _ReaderEndState extends State<ReaderEnd> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'lib/images/congratulate1.png',
+                    'lib/images/congratulate2.png',
                     width: SizeConfig.defaultSize! * 5,
                     alignment: Alignment.topCenter,
                   ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 1.5,
+                  ),
                   Text(
-                    'Congratulations on \n completing the reading',
+                    'Congratulations on \n completing the READING',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: 'Molengo',
                         fontSize: SizeConfig.defaultSize! * 2.5),
                   ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 2,
+                  ),
                   Image.asset(
-                    'lib/images/congratulate2.png',
+                    'lib/images/congratulate1.png',
                     width: SizeConfig.defaultSize! * 5,
                     alignment: Alignment.topCenter,
                   )
@@ -217,16 +226,19 @@ class _ReaderEndState extends State<ReaderEnd> {
                 child: Container(
                   // color: Colors.yellow,
                   decoration: BoxDecoration(
+                    color: const Color.fromARGB(100, 255, 255, 255),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.defaultSize! * 3)),
-                    border: Border.all(
-                      color: const Color.fromARGB(
-                          152, 97, 1, 152), // Border의 색상을 지정합니다.
-                      width:
-                          SizeConfig.defaultSize! * 0.3, // Border의 두께를 지정합니다.
-                    ),
+                        Radius.circular(SizeConfig.defaultSize! * 2)
+
+                        // border: Border.all(
+                        //   color: const Color.fromARGB(
+                        //       152, 97, 1, 152), // Border의 색상을 지정합니다.
+                        //   width:
+                        //       SizeConfig.defaultSize! * 0.3, // Border의 두께를 지정합니다.
+                        ),
                   ),
-                  height: SizeConfig.defaultSize! * 11,
+                  height: SizeConfig.defaultSize! * 13.2,
+                  width: SizeConfig.defaultSize! * 66.9,
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: SizeConfig.defaultSize! * 3,
@@ -242,38 +254,41 @@ class _ReaderEndState extends State<ReaderEnd> {
                               fontSize: SizeConfig.defaultSize! * 2.3),
                         ),
                         SizedBox(
-                          height: SizeConfig.defaultSize!,
+                          height: SizeConfig.defaultSize! * 1.5,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(152, 97, 1, 152),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(SizeConfig.defaultSize!)),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: SizeConfig.defaultSize! * 5,
-                              right: SizeConfig.defaultSize! * 5,
-                              top: SizeConfig.defaultSize! * 0.2,
-                              bottom: SizeConfig.defaultSize! * 0.2,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              //결제가 끝나면 RecordInfo로 가야 함
+                              MaterialPageRoute(
+                                builder: (context) => const Purchase(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFA91A),
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  SizeConfig.defaultSize! * 0.9)),
                             ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  //결제가 끝나면 RecordInfo로 가야 함
-                                  MaterialPageRoute(
-                                    builder: (context) => const Purchase(),
-                                  ),
-                                );
-                              },
+                            width: SizeConfig.defaultSize! * 24,
+                            height: 4.5 * SizeConfig.defaultSize!,
+                            child: Center(
+                              //Padding(
+                              //   padding: EdgeInsets.only(
+                              //     left: SizeConfig.defaultSize! * 5,
+                              //     right: SizeConfig.defaultSize! * 5,
+                              //     top: SizeConfig.defaultSize! * 0.5,
+                              //     bottom: SizeConchild: fig.defaultSize! * 0.5,
+                              //   ),
                               child: Text(
                                 'Go to Record',
                                 style: TextStyle(
-                                    fontFamily: 'Molengo',
-                                    fontSize: SizeConfig.defaultSize! * 2.3,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                                  fontFamily: 'Molengo',
+                                  fontSize: SizeConfig.defaultSize! * 2.3,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
@@ -301,19 +316,25 @@ class _ReaderEndState extends State<ReaderEnd> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'lib/images/congratulate1.png',
+                    'lib/images/congratulate2.png',
                     width: SizeConfig.defaultSize! * 5,
                     alignment: Alignment.topCenter,
                   ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 1.5,
+                  ),
                   Text(
-                    'Congratulations on \n completing the reading',
+                    'Congratulations on \n completing the READING',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: 'Molengo',
                         fontSize: SizeConfig.defaultSize! * 2.5),
                   ),
+                  SizedBox(
+                    width: SizeConfig.defaultSize! * 2,
+                  ),
                   Image.asset(
-                    'lib/images/congratulate2.png',
+                    'lib/images/congratulate1.png',
                     width: SizeConfig.defaultSize! * 5,
                     alignment: Alignment.topCenter,
                   )
@@ -327,16 +348,19 @@ class _ReaderEndState extends State<ReaderEnd> {
                 child: Container(
                   // color: Colors.yellow,
                   decoration: BoxDecoration(
+                    color: const Color.fromARGB(100, 255, 255, 255),
                     borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.defaultSize! * 3)),
-                    border: Border.all(
-                      color: const Color.fromARGB(
-                          152, 97, 1, 152), // Border의 색상을 지정합니다.
-                      width:
-                          SizeConfig.defaultSize! * 0.3, // Border의 두께를 지정합니다.
-                    ),
+                        Radius.circular(SizeConfig.defaultSize! * 2)
+
+                        // border: Border.all(
+                        //   color: const Color.fromARGB(
+                        //       152, 97, 1, 152), // Border의 색상을 지정합니다.
+                        //   width:
+                        //       SizeConfig.defaultSize! * 0.3, // Border의 두께를 지정합니다.
+                        ),
                   ),
-                  height: SizeConfig.defaultSize! * 11,
+                  height: SizeConfig.defaultSize! * 13.2,
+                  width: SizeConfig.defaultSize! * 66.9,
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: SizeConfig.defaultSize! * 3,
@@ -352,38 +376,41 @@ class _ReaderEndState extends State<ReaderEnd> {
                               fontSize: SizeConfig.defaultSize! * 2.3),
                         ),
                         SizedBox(
-                          height: SizeConfig.defaultSize!,
+                          height: SizeConfig.defaultSize! * 1.5,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(152, 97, 1, 152),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(SizeConfig.defaultSize!)),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: SizeConfig.defaultSize! * 5,
-                              right: SizeConfig.defaultSize! * 5,
-                              top: SizeConfig.defaultSize! * 0.2,
-                              bottom: SizeConfig.defaultSize! * 0.2,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              //결제가 끝나면 RecordInfo로 가야 함
+                              MaterialPageRoute(
+                                builder: (context) => const RecordInfo(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFA91A),
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  SizeConfig.defaultSize! * 0.9)),
                             ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  //결제가 끝나면 RecordInfo로 가야 함
-                                  MaterialPageRoute(
-                                    builder: (context) => const RecordInfo(),
-                                  ),
-                                );
-                              },
+                            width: SizeConfig.defaultSize! * 24,
+                            height: 4.5 * SizeConfig.defaultSize!,
+                            child: Center(
+                              //Padding(
+                              //   padding: EdgeInsets.only(
+                              //     left: SizeConfig.defaultSize! * 5,
+                              //     right: SizeConfig.defaultSize! * 5,
+                              //     top: SizeConfig.defaultSize! * 0.5,
+                              //     bottom: SizeConchild: fig.defaultSize! * 0.5,
+                              //   ),
                               child: Text(
                                 'Go to Record',
                                 style: TextStyle(
-                                    fontFamily: 'Molengo',
-                                    fontSize: SizeConfig.defaultSize! * 2.3,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                                  fontFamily: 'Molengo',
+                                  fontSize: SizeConfig.defaultSize! * 2.3,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
