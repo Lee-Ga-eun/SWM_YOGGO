@@ -7,9 +7,7 @@ import 'package:yoggo/component/book_intro.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../check_voice.dart';
 import '../viewModel/home_screen_cubit.dart';
@@ -132,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
+    // userCubit.fetchUser();
     _sendHomeViewEvent(userState.purchase, userState.record);
     SizeConfig().init(context);
     return Scaffold(
@@ -473,7 +472,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       top: SizeConfig.defaultSize! * 2,
                       child: InkWell(
                         onTap: () {
-                          showNotification(flutterLocalNotificationsPlugin);
+                          //   showNotification(flutterLocalNotificationsPlugin);
                           _sendHbgClickEvent(
                               userState.purchase, userState.record);
                           _scaffoldKey.currentState?.openDrawer();
@@ -732,7 +731,7 @@ class DataList extends StatelessWidget {
     return BlocBuilder<DataCubit, List<BookModel>>(
       builder: (context, state) {
         if (state.isEmpty) {
-          showNotification(flutterLocalNotificationsPlugin);
+          //   showNotification(flutterLocalNotificationsPlugin);
           _sendHomeLoadingViewEvent(userState.purchase, userState.record);
           return Center(
             child: Center(
