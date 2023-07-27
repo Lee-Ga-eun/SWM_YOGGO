@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/login_screen.dart';
 import 'package:yoggo/component/purchase.dart';
 import 'package:yoggo/component/record_info.dart';
+import 'package:http/http.dart' as http;
 import 'package:yoggo/component/book_intro.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
@@ -30,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // late Future<List<bookModel>> webtoons;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   late String token;
+  late int userId;
   // late bool purchase = true;
   // late bool record = true;
   //String userName = '';
@@ -43,8 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     //webtoons = ApiService.getTodaysToons();
     // if (!isDataFetched) {
-    //getToken();
-    //getUserInfo();
+    getToken();
     //}
   }
 
@@ -106,7 +109,9 @@ class _HomeScreenState extends State<HomeScreen> {
   //     setState(() {
   //       final myJson = json.decode(response.body)[0];
   //       // purchase = myJson['purchase'];
-  //       userName = myJson['name'];
+  //       userId = myJson['id'];
+  //       OneSignal.shared.setExternalUserId(userId.toString());
+
   //       // record = myJson['record'];
   //     });
   //     isDataFetched = true;
@@ -131,7 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     // userCubit.fetchUser();
-    OneSignal.shared.setExternalUserId(userState.userId.toString());
     _sendHomeViewEvent(userState.purchase, userState.record);
     SizeConfig().init(context);
     return Scaffold(
