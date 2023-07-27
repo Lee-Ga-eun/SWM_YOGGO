@@ -184,52 +184,62 @@ class _PurchaseState extends State<Purchase> {
     SizeConfig().init(context);
     _sendSubViewEvent(userState.purchase, userState.record);
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/images/bkground.png'),
-            fit: BoxFit.cover,
-          ),
+        body: Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('lib/images/bkground.png'),
+          fit: BoxFit.cover,
         ),
+      ),
+      child: SafeArea(
         child: Column(
           children: [
-            Expanded(
-              flex: SizeConfig.defaultSize!.toInt(),
-              child: Stack(
-                alignment: Alignment.centerLeft,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'LOVEL',
-                        style: TextStyle(
-                          fontFamily: 'Modak',
-                          fontSize: SizeConfig.defaultSize! * 5,
-                        ),
+            //Expanded(
+            //flex: 7,
+            //child:
+            SizedBox(height: SizeConfig.defaultSize!),
+
+            Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'LOVEL',
+                      style: TextStyle(
+                        fontFamily: 'Modak',
+                        fontSize: SizeConfig.defaultSize! * 5,
                       ),
-                    ],
-                  ),
-                  Positioned(
-                    left: 2 * SizeConfig.defaultSize!,
-                    child: IconButton(
-                      icon: const Icon(Icons.cancel),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
-                          ),
-                        );
-                      },
-                      //color: Colors.red,
                     ),
+                  ],
+                ),
+                Positioned(
+                  left: 2 * SizeConfig.defaultSize!,
+                  child: IconButton(
+                    icon: const Icon(Icons.cancel),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomeScreen(),
+                        ),
+                      );
+                    },
+                    //color: Colors.red,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Expanded(
-              flex: SizeConfig.defaultSize!.toInt() * 3,
+            SizedBox(height: SizeConfig.defaultSize! * 0.5),
+            //),
+            Container(
+              width: 72 * SizeConfig.defaultSize!,
+              height: 29.4 * SizeConfig.defaultSize!,
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(128, 255, 255, 255),
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(SizeConfig.defaultSize! * 3))),
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: Column(
@@ -243,12 +253,18 @@ class _PurchaseState extends State<Purchase> {
                             width: SizeConfig.defaultSize! * 5,
                             alignment: Alignment.topCenter,
                           ),
+                          SizedBox(
+                            width: SizeConfig.defaultSize! * 2,
+                          ),
                           Text(
                             'Stimulate your children\'s imaginations \n Provide a fantastic reading experience \n Improve your bond with your children ',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontFamily: 'Molengo',
                                 fontSize: SizeConfig.defaultSize! * 2.3),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.defaultSize! * 2,
                           ),
                           Image.asset(
                             'lib/images/horse.png',
@@ -258,7 +274,7 @@ class _PurchaseState extends State<Purchase> {
                         ],
                       ),
                       SizedBox(
-                        height: SizeConfig.defaultSize! * 3,
+                        height: SizeConfig.defaultSize! * 1.5,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -324,48 +340,65 @@ class _PurchaseState extends State<Purchase> {
                           )
                         ],
                       ),
-                      Padding(
-                          padding: const EdgeInsets.only(),
-                          child: Container(
-                            width: SizeConfig.defaultSize! * 52.6,
-                            height: SizeConfig.defaultSize! * 4.5,
+
+                      GestureDetector(
+                        onTap: () async {
+                          _sendSubPayClickEvent(
+                              userState.purchase, userState.record);
+                          await startPurchase();
+                        },
+                        child: Container(
+                            width: 52 * SizeConfig.defaultSize!,
+                            height: 4.5 * SizeConfig.defaultSize!,
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(152, 97, 1, 152),
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(SizeConfig.defaultSize!)),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left: SizeConfig.defaultSize! * 5,
-                                right: SizeConfig.defaultSize! * 5,
-                                // top: SizeConfig.defaultSize! * 0.2,
-                                // bottom: SizeConfig.defaultSize! * 0.2,
-                              ),
-                              child: TextButton(
-                                onPressed: () async {
-                                  _sendSubPayClickEvent(
-                                      userState.purchase, userState.record);
-                                  await startPurchase();
-                                },
+                                color: Color(0xFFFFA91A),
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    SizeConfig.defaultSize! * 1.5))),
+                            child: Center(
                                 child: Text(
-                                  'Go get unlimited access to all upcoming books',
-                                  style: TextStyle(
-                                    fontFamily: 'Molengo',
-                                    fontSize: SizeConfig.defaultSize! * 2.1,
-                                    color: Colors.white,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+                              'Go get unlimited access to all upcoming books',
+                              style: TextStyle(
+                                fontFamily: 'Molengo',
+                                fontSize: SizeConfig.defaultSize! * 2.1,
+                                color: Colors.white,
                               ),
-                            ),
-                          ))
+                              textAlign: TextAlign.center,
+                            ))),
+                      )
+                      // Padding(
+                      //     padding: const EdgeInsets.only(),
+                      //     child: Container(
+                      //       width: SizeConfig.defaultSize! * 52.6,
+                      //       height: SizeConfig.defaultSize! * 4.5,
+                      //       decoration: BoxDecoration(
+                      //         color: const Color.fromARGB(152, 97, 1, 152),
+                      //         borderRadius: BorderRadius.all(
+                      //             Radius.circular(SizeConfig.defaultSize!)),
+                      //       ),
+                      //       child: Padding(
+                      //         padding: EdgeInsets.only(
+                      //           left: SizeConfig.defaultSize! * 5,
+                      //           right: SizeConfig.defaultSize! * 5,
+                      //           // top: SizeConfig.defaultSize! * 0.2,
+                      //           // bottom: SizeConfig.defaultSize! * 0.2,
+                      //         ),
+                      //         child: TextButton(
+                      //           onPressed: () async {
+                      //             _sendSubPayClickEvent(
+                      //                 userState.purchase, userState.record);
+                      //             await startPurchase();
+                      //           },
+                      //           child: Text(),
+                      //         ),
+                      //       ),
+                      //)
                     ],
                   )),
-            ),
+            ) //),
           ],
         ),
       ),
-    );
+    ));
   }
 
   Future<void> _sendSubViewEvent(purchase, record) async {
