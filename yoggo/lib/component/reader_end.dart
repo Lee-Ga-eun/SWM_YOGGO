@@ -102,8 +102,6 @@ class _ReaderEndState extends State<ReaderEnd> {
                             voiceId: widget.voiceId,
                             lastPage: widget.lastPage,
                             isSelected: widget.isSelected,
-                            record: userState.record,
-                            purchase: userState.purchase,
                           ),
                         ),
                       );

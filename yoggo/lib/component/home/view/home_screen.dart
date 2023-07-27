@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/login_screen.dart';
 import 'package:yoggo/component/purchase.dart';
@@ -14,7 +15,6 @@ import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import '../../globalCubit/user/user_cubit.dart';
-import '../../push.dart';
 import 'package:yoggo/main.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -131,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     // userCubit.fetchUser();
+    OneSignal.shared.setExternalUserId(userState.userId.toString());
     _sendHomeViewEvent(userState.purchase, userState.record);
     SizeConfig().init(context);
     return Scaffold(
@@ -441,6 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       userState.purchase, userState.record);
                                   logout();
                                   userCubit.logout();
+                                  OneSignal.shared.removeExternalUserId();
                                   _scaffoldKey.currentState?.closeDrawer();
                                   setState(() {
                                     showSignOutConfirmation =
@@ -769,7 +771,6 @@ class DataList extends StatelessWidget {
             ),
           );
         } else {
-          showNotification(flutterLocalNotificationsPlugin);
           return ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: state.length,

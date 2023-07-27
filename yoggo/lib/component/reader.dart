@@ -13,15 +13,12 @@ import 'globalCubit/user/user_cubit.dart';
 class FairytalePage extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
   final bool isSelected;
-  bool? purchase, record;
   final int lastPage;
   FairytalePage({
     super.key,
     required this.voiceId, // detail_screen에서 받아오는 것들 초기화
     required this.isSelected,
     required this.lastPage,
-    this.record,
-    this.purchase,
   });
 
   @override
@@ -186,8 +183,6 @@ class _FairyTalePageState extends State<FairytalePage>
                 currentPageIndex: currentPageIndex,
                 nextPage: nextPage,
                 lastPage: widget.lastPage,
-                record: widget.record,
-                purchase: widget.purchase,
                 voiceId: widget.voiceId,
                 isSelected: widget.isSelected,
                 dispose: dispose,
@@ -216,8 +211,6 @@ class _FairyTalePageState extends State<FairytalePage>
                 currentPageIndex: currentPageIndex,
                 nextPage: nextPage,
                 lastPage: widget.lastPage,
-                record: widget.record,
-                purchase: widget.purchase,
                 voiceId: widget.voiceId,
                 isSelected: widget.isSelected,
                 dispose: dispose,
@@ -241,8 +234,6 @@ class _FairyTalePageState extends State<FairytalePage>
                 currentPageIndex: currentPageIndex,
                 nextPage: nextPage,
                 lastPage: widget.lastPage,
-                record: widget.record,
-                purchase: widget.purchase,
                 voiceId: widget.voiceId,
                 isSelected: widget.isSelected,
                 dispose: dispose,
