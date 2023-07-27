@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
+import 'package:yoggo/component/login_screen.dart';
 import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
 
@@ -341,7 +342,13 @@ class _PurchaseState extends State<Purchase> {
                       onTap: () async {
                         _sendSubPayClickEvent(
                             userState.purchase, userState.record);
-                        await startPurchase();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const LoginScreen()), //HomeScreen()),
+                        );
+                        //await startPurchase();
                       },
                       child: Container(
                           width: 52 * SizeConfig.defaultSize!,

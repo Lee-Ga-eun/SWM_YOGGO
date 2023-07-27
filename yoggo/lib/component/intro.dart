@@ -53,11 +53,11 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ),
         child: Builder(builder: (BuildContext context) {
-          if (token != null) {
-            return const HomeScreen();
-          } else {
-            return const LoginScreen();
-          }
+          //if (token != null) {
+          return const HomeScreen();
+          //} else {
+          //  return const LoginScreen();
+          //}
         }
             // return StreamBuilder<firebase_auth.User?>(
             //   stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),

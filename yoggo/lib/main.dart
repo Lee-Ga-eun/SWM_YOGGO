@@ -132,12 +132,12 @@ class _AppState extends State<App> {
     return MaterialApp(
       home: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
-          if (!state.isDataFetched) {
-            //isDataFetched = true --> 데이터 불러왔단 뜻
-            return const SplashScreen(); //token이 없는 경우
-          } else {
-            return const HomeScreen(); // token이 있는 경우
-          }
+          //if (!state.isDataFetched) {
+          //isDataFetched = true --> 데이터 불러왔단 뜻
+          //return const SplashScreen(); //token이 없는 경우
+          //} else {
+          return const HomeScreen(); // token이 있는 경우
+          //}
         },
       ),
     );

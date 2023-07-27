@@ -8,6 +8,7 @@ import 'package:crypto/crypto.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
+import 'package:yoggo/component/purchase.dart';
 import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
 import '../component/globalCubit/user/user_cubit.dart';
@@ -80,10 +81,12 @@ class _LoginScreenState extends State<LoginScreen> {
         await userCubit.fetchUser();
         final state = userCubit.state;
         if (state.isDataFetched) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-          );
+          Navigator.of(context).pop();
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => const Purchase()), //HomeScreen()),
+          // );
         }
       } else {
         // 로그인 실패
