@@ -380,6 +380,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //       );
                         //     },
                         //     icon: const Icon(Icons.check)),
+
                         GestureDetector(
                           child: Text(
                             'Sign Out',
@@ -399,37 +400,39 @@ class _HomeScreenState extends State<HomeScreen> {
                             });
                           },
                         ),
+                        showSignOutConfirmation
+                            ? GestureDetector(
+                                child: Transform.translate(
+                                    offset: Offset(
+                                        0.5 * SizeConfig.defaultSize!,
+                                        0.5 * SizeConfig.defaultSize!),
+                                    child: Text(
+                                      'Do you want to Sign Out?',
+                                      style: TextStyle(
+                                        color: const Color(0xFF599FED),
+                                        fontSize: 1.2 * SizeConfig.defaultSize!,
+                                        fontFamily: 'Molengo',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    )),
+                                //),
+                                onTap: () {
+                                  _sendSignOutReallyClickEvent(
+                                      userState.purchase, userState.record);
+                                  logout();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginScreen(),
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container()
                       ],
                     ),
                   ),
-                ),
-                if (showSignOutConfirmation)
-                  GestureDetector(
-                    child: Transform.translate(
-                        offset: Offset(-2 * SizeConfig.defaultSize!,
-                            0.5 * SizeConfig.defaultSize!),
-                        child: Text(
-                          'Do you want to Sign Out?',
-                          style: TextStyle(
-                            color: const Color(0xFF599FED),
-                            fontSize: 1.2 * SizeConfig.defaultSize!,
-                            fontFamily: 'Molengo',
-                            fontWeight: FontWeight.w400,
-                          ),
-                        )),
-                    //),
-                    onTap: () {
-                      _sendSignOutReallyClickEvent(
-                          userState.purchase, userState.record);
-                      logout();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                  ),
+                )
               ],
             ),
           ],
@@ -746,7 +749,7 @@ class DataList extends StatelessWidget {
             itemCount: state.length,
             itemBuilder: (context, index) {
               final book = state[index];
-              return InkWell(
+              return GestureDetector(
                 onTap: () {
                   _sendBookClickEvent(book.id);
                   Navigator.push(
