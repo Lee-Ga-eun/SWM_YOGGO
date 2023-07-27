@@ -550,8 +550,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
       await analytics.logEvent(
         name: 'rec_start_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -566,8 +566,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
       await analytics.logEvent(
         name: 'rec_stop_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -582,8 +582,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
       await analytics.logEvent(
         name: 'rec_ing_view',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -598,8 +598,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
       await analytics.logEvent(
         name: 'rec_rerec_clic',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -614,8 +614,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
       await analytics.logEvent(
         name: 'rec_keep_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           //'voiceId': voiceId,
         },
       );

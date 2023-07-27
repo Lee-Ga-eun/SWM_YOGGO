@@ -92,8 +92,8 @@ class _BookIntroState extends State<BookIntro> {
       await analytics.logEvent(
         name: 'book_my_voice_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {

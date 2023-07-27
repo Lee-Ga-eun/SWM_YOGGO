@@ -584,8 +584,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'sign_out_really_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -599,8 +599,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'sign_out_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -614,8 +614,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'hbg_voice_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -629,8 +629,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'hbg_voice_box_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -644,8 +644,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'hbg_me_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -659,8 +659,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'home_view',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -688,8 +688,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'banner_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -703,8 +703,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'hbg_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -829,8 +829,8 @@ class DataList extends StatelessWidget {
       await analytics.logEvent(
         name: 'hbg_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {

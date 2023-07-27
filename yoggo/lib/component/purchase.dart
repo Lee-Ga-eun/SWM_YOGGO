@@ -374,8 +374,8 @@ class _PurchaseState extends State<Purchase> {
       await analytics.logEvent(
         name: 'sub_view',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -390,8 +390,8 @@ class _PurchaseState extends State<Purchase> {
       await analytics.logEvent(
         name: 'sub_pay_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {

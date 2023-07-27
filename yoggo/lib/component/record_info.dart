@@ -258,8 +258,8 @@ class _RecordInfoState extends State<RecordInfo> {
       await analytics.logEvent(
         name: 'rec_abst_view',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
