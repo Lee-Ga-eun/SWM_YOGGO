@@ -380,26 +380,47 @@ class _HomeScreenState extends State<HomeScreen> {
                         //     },
                         //     icon: const Icon(Icons.check)),
 
-                        GestureDetector(
-                          child: Text(
-                            'Sign Out',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1.8 * SizeConfig.defaultSize!,
-                              fontFamily: 'Molengo',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          onTap: () {
-                            _sendSignOutClickEvent(
-                                userState.purchase, userState.record);
-                            setState(() {
-                              showSignOutConfirmation =
-                                  !showSignOutConfirmation; // dropdown 상태 토글
-                            });
-                          },
-                        ),
-                        showSignOutConfirmation
+                        userState.login
+                            ? GestureDetector(
+                                child: Text(
+                                  'Sign Out',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 1.8 * SizeConfig.defaultSize!,
+                                    fontFamily: 'Molengo',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                onTap: () {
+                                  _sendSignOutClickEvent(
+                                      userState.purchase, userState.record);
+                                  setState(() {
+                                    showSignOutConfirmation =
+                                        !showSignOutConfirmation; // dropdown 상태 토글
+                                  });
+                                },
+                              )
+                            : GestureDetector(
+                                child: Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 1.8 * SizeConfig.defaultSize!,
+                                    fontFamily: 'Molengo',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                onTap: () {
+                                  _sendSignOutClickEvent(
+                                      userState.purchase, userState.record);
+                                  // dropdown 상태 토글
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginScreen(),
+                                      ));
+                                }),
+                        userState.login && showSignOutConfirmation
                             ? GestureDetector(
                                 child: Transform.translate(
                                     offset: Offset(
@@ -419,12 +440,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _sendSignOutReallyClickEvent(
                                       userState.purchase, userState.record);
                                   logout();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const LoginScreen(),
-                                    ),
-                                  );
+                                  userCubit.logout();
+                                  _scaffoldKey.currentState?.closeDrawer();
+                                  setState(() {
+                                    showSignOutConfirmation =
+                                        !showSignOutConfirmation; // dropdown 상태 토글
+                                  }); //고민
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => const LoginScreen(),
+                                  //   ),
+                                  // );
                                 },
                               )
                             : Container()

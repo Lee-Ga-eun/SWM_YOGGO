@@ -12,10 +12,12 @@ bool record = false;
 class UserCubit extends Cubit<UserState> {
   UserCubit()
       : super(UserState(
-            userName: '',
+            userId: 0,
+            userName: 'Guest',
             email: '',
             record: false,
             purchase: false,
+            login: false,
             isDataFetched: false)) {
     fetchUser();
   }
@@ -41,18 +43,21 @@ class UserCubit extends Cubit<UserState> {
         final email = data['email'];
 
         final purchase = data['purchase'] as bool;
-
+        final userId = data['id'];
         final record = data['record'] as bool;
+        const login = true;
         const isDataFetched = true;
         if (record) {
           final voiceId = data['voiceId'];
           final voiceName = data['voiceName'];
           final voiceIcon = data['voiceIcon'];
           emit(UserState(
+              userId: userId,
               userName: userName,
               email: email,
               purchase: purchase,
               record: record,
+              login: login,
               isDataFetched: isDataFetched,
               voiceId: voiceId,
               voiceName: voiceName,
@@ -62,10 +67,12 @@ class UserCubit extends Cubit<UserState> {
         else {
           emit(
             UserState(
+                userId: userId,
                 userName: userName,
                 email: email,
                 purchase: purchase,
                 record: record,
+                login: true,
                 isDataFetched: isDataFetched),
           );
         }
@@ -94,15 +101,16 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  Future<void> login(String username, String email, bool record, bool purchase,
-      bool isDataFetched) {
+  Future<void> logout() {
     emit(
       UserState(
-          userName: username,
-          email: email,
-          purchase: purchase,
-          record: record,
-          isDataFetched: true),
+          userId: 0,
+          userName: 'Guest',
+          email: '',
+          record: false,
+          purchase: false,
+          login: false,
+          isDataFetched: false),
     );
     return Future.value();
   }

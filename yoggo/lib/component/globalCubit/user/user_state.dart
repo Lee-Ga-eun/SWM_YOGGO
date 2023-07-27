@@ -1,8 +1,10 @@
 class UserState {
+  final int userId;
   final String userName;
   final String email;
   final bool record;
   final bool purchase;
+  final bool login;
   int? voiceId;
   String? voiceName;
   String? voiceIcon;
@@ -10,10 +12,12 @@ class UserState {
   bool isDataFetched;
 
   UserState({
+    required this.userId,
     required this.userName,
     required this.email,
     required this.record,
     required this.purchase,
+    required this.login,
     required this.isDataFetched,
     this.voiceId,
     this.voiceName,
@@ -22,21 +26,25 @@ class UserState {
   });
 
   UserState copyWith({
+    int? userId,
     String? userName,
     String? email,
     bool? record,
     bool? purchase,
     bool? isDataFetched,
+    bool? login,
     int? voiceId,
     String? voiceName,
     String? voiceIcon,
     String? inferenceUrl,
   }) {
     return UserState(
+      userId: userId ?? this.userId,
       userName: userName ?? this.userName,
       email: email ?? this.email,
       record: record ?? this.record,
       purchase: purchase ?? this.purchase,
+      login: login ?? this.login,
       isDataFetched: isDataFetched ?? this.isDataFetched,
       voiceId: voiceId ?? this.voiceId,
       voiceIcon: voiceIcon ?? this.voiceIcon,
