@@ -566,8 +566,8 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_remake_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'voiceId': voiceId,
         },
       );
@@ -583,8 +583,8 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_text_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'voiceId': voiceId,
         },
       );
@@ -600,8 +600,8 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_icon_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'voiceId': voiceId,
         },
       );
@@ -617,8 +617,8 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_name_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'voiceId': voiceId,
         },
       );
@@ -634,8 +634,8 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_play_click',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'voiceId': voiceId,
         },
       );
@@ -651,8 +651,8 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_view',
         parameters: <String, dynamic>{
-          'purchase': purchase,
-          'record': record,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'voiceId': voiceId,
         },
       );
