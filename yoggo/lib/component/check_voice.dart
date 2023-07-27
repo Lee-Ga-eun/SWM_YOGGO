@@ -81,7 +81,7 @@ class _CheckVoiceState extends State<CheckVoice> {
         child: SafeArea(
           bottom: false,
           top: false,
-          minimum: EdgeInsets.only(left: 9 * SizeConfig.defaultSize!),
+          minimum: EdgeInsets.only(left: 7 * SizeConfig.defaultSize!),
           child: Column(
             children: [
               Expanded(

@@ -37,13 +37,14 @@ class _RecordInfoState extends State<RecordInfo> {
     SizeConfig().init(context);
     _sendRecAbstViewEvent(userState.purchase, userState.record);
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/images/bkground.png'),
-            fit: BoxFit.cover,
-          ),
+        body: Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('lib/images/bkground.png'),
+          fit: BoxFit.cover,
         ),
+      ),
+      child: SafeArea(
         child: Column(
           children: [
             SizedBox(
@@ -102,7 +103,7 @@ class _RecordInfoState extends State<RecordInfo> {
               ),
             ),
             Expanded(
-              flex: SizeConfig.defaultSize!.toInt() * 4,
+              flex: SizeConfig.defaultSize!.toInt() * 5,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -215,7 +216,7 @@ class _RecordInfoState extends State<RecordInfo> {
               ),
             ),
             Expanded(
-              flex: SizeConfig.defaultSize!.toInt() * 1,
+              flex: 4,
               //child:
               //  Positioned(
               child: Row(
@@ -249,7 +250,7 @@ class _RecordInfoState extends State<RecordInfo> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Future<void> _sendRecAbstViewEvent(purchase, record) async {
