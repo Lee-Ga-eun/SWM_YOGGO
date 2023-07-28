@@ -199,8 +199,7 @@ class _PurchaseState extends State<Purchase> {
           //Expanded(
           //flex: 7,
           //child:
-          SizedBox(height: SizeConfig.defaultSize!),
-
+          SizedBox(height: SizeConfig.defaultSize! * 1),
           Stack(
             alignment: Alignment.centerLeft,
             children: [
@@ -247,6 +246,35 @@ class _PurchaseState extends State<Purchase> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(
+                      "Just hearing your voice activates children's brains.\nRead all upcoming books to your child with your own voice.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: 'Molengo',
+                          fontSize: SizeConfig.defaultSize! * 2.2),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.defaultSize! * 2.5,
+                    ),
+                    RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(children: [
+                          TextSpan(
+                            text: '\$19.99/month\n',
+                            style: TextStyle(
+                                fontSize: SizeConfig.defaultSize! * 1.8,
+                                fontFamily: 'Molengo',
+                                color: Colors.grey,
+                                decoration: TextDecoration.lineThrough),
+                          ),
+                          TextSpan(
+                            text: '\$5.99/month',
+                            style: TextStyle(
+                                fontSize: SizeConfig.defaultSize! * 2,
+                                color: Colors.black,
+                                fontFamily: 'Molengo'),
+                          ),
+                        ])),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -256,17 +284,46 @@ class _PurchaseState extends State<Purchase> {
                           alignment: Alignment.topCenter,
                         ),
                         SizedBox(
-                          width: SizeConfig.defaultSize! * 2,
+                          width: SizeConfig.defaultSize! * 5,
                         ),
-                        Text(
-                          'Stimulate your children\'s imaginations \n Provide a fantastic reading experience \n Improve your bond with your children ',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: 'Molengo',
-                              fontSize: SizeConfig.defaultSize! * 2.3),
-                        ),
+                        RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(children: [
+                              TextSpan(
+                                text: '70% ',
+                                style: TextStyle(
+                                    height: 0,
+                                    fontSize: SizeConfig.defaultSize! * 2.3,
+                                    color: Colors.red,
+                                    fontFamily: 'Molengo'),
+                              ),
+                              TextSpan(
+                                text: 'OFF + 1 ',
+                                style: TextStyle(
+                                    height: 0,
+                                    fontSize: SizeConfig.defaultSize! * 2.3,
+                                    color: Colors.black,
+                                    fontFamily: 'Molengo'),
+                              ),
+                              TextSpan(
+                                text: 'FREE ',
+                                style: TextStyle(
+                                    height: 0,
+                                    fontSize: SizeConfig.defaultSize! * 2.3,
+                                    color: Colors.red,
+                                    fontFamily: 'Molengo'),
+                              ),
+                              TextSpan(
+                                text: 'MONTH',
+                                style: TextStyle(
+                                    height: 0,
+                                    fontSize: SizeConfig.defaultSize! * 2.3,
+                                    color: Colors.black,
+                                    fontFamily: 'Molengo'),
+                              ),
+                            ])),
                         SizedBox(
-                          width: SizeConfig.defaultSize! * 2,
+                          width: SizeConfig.defaultSize! * 5,
                         ),
                         Image.asset(
                           'lib/images/horse.png',
@@ -276,68 +333,8 @@ class _PurchaseState extends State<Purchase> {
                       ],
                     ),
                     SizedBox(
-                      height: SizeConfig.defaultSize! * 1.5,
+                      height: 1.5 * SizeConfig.defaultSize!,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: '\$19.99/month\n',
-                                    style: TextStyle(
-                                        fontSize: SizeConfig.defaultSize! * 2,
-                                        fontFamily: 'Molengo',
-                                        color: Colors.grey,
-                                        decoration: TextDecoration.lineThrough),
-                                  ),
-                                  TextSpan(
-                                    text: '\$5.99/month\n',
-                                    style: TextStyle(
-                                        fontSize: SizeConfig.defaultSize! * 2,
-                                        color: Colors.black,
-                                        fontFamily: 'Molengo'),
-                                  ),
-                                  TextSpan(
-                                    text: '70% ',
-                                    style: TextStyle(
-                                        fontSize: SizeConfig.defaultSize! * 2.3,
-                                        color: Colors.red,
-                                        fontFamily: 'Molengo'),
-                                  ),
-                                  TextSpan(
-                                    text: 'OFF + 1 ',
-                                    style: TextStyle(
-                                        fontSize: SizeConfig.defaultSize! * 2.3,
-                                        color: Colors.black,
-                                        fontFamily: 'Molengo'),
-                                  ),
-                                  TextSpan(
-                                    text: 'FREE ',
-                                    style: TextStyle(
-                                        fontSize: SizeConfig.defaultSize! * 2.3,
-                                        color: Colors.red,
-                                        fontFamily: 'Molengo'),
-                                  ),
-                                  TextSpan(
-                                    text: 'MONTH\n',
-                                    style: TextStyle(
-                                        fontSize: SizeConfig.defaultSize! * 2.3,
-                                        color: Colors.black,
-                                        fontFamily: 'Molengo'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-
                     GestureDetector(
                       onTap: () async {
                         _sendSubPayClickEvent(
@@ -361,15 +358,18 @@ class _PurchaseState extends State<Purchase> {
                                   SizeConfig.defaultSize! * 1.5))),
                           child: Center(
                               child: Text(
-                            'Go get unlimited access to all upcoming books',
+                            "Let's Invest in Recording UNDER ONE minute",
                             style: TextStyle(
                               fontFamily: 'Molengo',
-                              fontSize: SizeConfig.defaultSize! * 2.1,
+                              fontSize: SizeConfig.defaultSize! * 2.2,
                               color: Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ))),
-                    )
+                    ),
+                    SizedBox(
+                      height: SizeConfig.defaultSize! * 0.7,
+                    ),
                     // Padding(
                     //     padding: const EdgeInsets.only(),
                     //     child: Container(
