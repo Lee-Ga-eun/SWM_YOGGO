@@ -264,6 +264,7 @@ class _BookIntroState extends State<BookIntro> {
               child: SafeArea(
                 bottom: false,
                 top: false,
+                minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
                 child: Column(children: [
                   //Expanded(
                   //flex: 1,
