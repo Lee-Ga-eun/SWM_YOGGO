@@ -264,7 +264,7 @@ class _BookIntroState extends State<BookIntro> {
               child: SafeArea(
                 bottom: false,
                 top: false,
-                minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
+                minimum: EdgeInsets.only(right: 3 * SizeConfig.defaultSize!),
                 child: Column(children: [
                   //Expanded(
                   //flex: 1,
@@ -382,24 +382,35 @@ class _BookIntroState extends State<BookIntro> {
                                             child: Column(
                                               children: [
                                                 Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 0 *
-                                                            SizeConfig
-                                                                .defaultSize!),
-                                                    child: isClicked
-                                                        ? Image.asset(
-                                                            'lib/images/icons/${userState.voiceIcon}-c.png',
-                                                            height: SizeConfig
-                                                                    .defaultSize! *
-                                                                7,
-                                                          )
-                                                        : Image.asset(
-                                                            'lib/images/icons/${userState.voiceIcon}-uc.png',
-                                                            height: SizeConfig
-                                                                    .defaultSize! *
-                                                                7,
-                                                          )
-                                                    /*
+                                                  padding: EdgeInsets.only(
+                                                      right: 0 *
+                                                          SizeConfig
+                                                              .defaultSize!),
+                                                  child: userState.record
+                                                      ? isClicked
+                                                          ? Image.asset(
+                                                              'lib/images/icons/${userState.voiceIcon}-c.png',
+                                                              height: SizeConfig
+                                                                      .defaultSize! *
+                                                                  7,
+                                                            )
+                                                          : Image.asset(
+                                                              'lib/images/icons/${userState.voiceIcon}-uc.png',
+                                                              height: SizeConfig
+                                                                      .defaultSize! *
+                                                                  7,
+                                                            )
+                                                      : Image.asset(
+                                                          'lib/images/lock.png',
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              6.5,
+                                                          colorBlendMode:
+                                                              BlendMode.srcATop,
+                                                          color: const Color
+                                                                  .fromARGB(200,
+                                                              255, 255, 255)),
+                                                  /*
                                       padding: EdgeInsets.only(
                                           right: 0 *
                                               SizeConfig
@@ -453,7 +464,7 @@ class _BookIntroState extends State<BookIntro> {
                                                     .fromARGB(150,
                                                 255, 255, 255)),
                                   ),*/
-                                                    /*child: isClicked
+                                                  /*child: isClicked
                                           ? Container(
                                               // height: SizeConfig
                                               //         .defaultSize! *
@@ -497,8 +508,11 @@ class _BookIntroState extends State<BookIntro> {
                                                   fontFamily:
                                                       'BreeSerif'),
                                             )),*/
-                                                    ),
-                                                Text(userState.voiceName!,
+                                                ),
+                                                Text(
+                                                    userState.record
+                                                        ? userState.voiceName!
+                                                        : 'User',
                                                     style: TextStyle(
                                                         fontFamily: 'Gaegu',
                                                         // fontWeight:
