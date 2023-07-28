@@ -55,6 +55,7 @@ class _PurchaseState extends State<Purchase> {
         if (e.pendingCompletePurchase) {
           if (!mounted) return;
           successPurchase();
+          UserCubit().fetchUser();
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const RecordInfo()));
         }
