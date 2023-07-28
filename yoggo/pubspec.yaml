@@ -124,6 +124,38 @@ flutter:
     - family: Gloria
       fonts:
         - asset: assets/fonts/GloriaHallelujah-Regular.ttf
+    - family: NanumMyeongjo
+      fonts:
+        - asset: assets/fonts/NanumMyeongjo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NanumMyeongjo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/NanumMyeongjo-ExtraBold.ttf
+          weight: 800
+    - family: Oxygen
+      fonts:
+        - asset: assets/fonts/Oxygen-Regular.ttf
+          weight: 300
+        - asset: assets/fonts/Oxygen-light.ttf
+          weight: 400
+        - asset: assets/fonts/Oxygen-Bold.ttf
+          weight: 700
+    - family: Capriola
+      fonts:
+        - asset: assets/fonts/Capriola-Regular.ttf
+          weight: 400
+    - family: LoveYaLikeASister
+      fonts:
+        - asset: assets/fonts/LoveYaLikeASister-Regular.ttf
+          weight: 400
+    - family: Gaegu
+      fonts:
+        - asset: assets/fonts/Gaegu-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Gaegu-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Gaegu-Bold.ttf
+          weight: 700
 
         # Prata-Regular.ttf
     # - family: Schyler

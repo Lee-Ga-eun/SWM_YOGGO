@@ -354,32 +354,40 @@ class _PageWidgetState extends State<PageWidget> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      alignment: Alignment.centerLeft,
-                      icon: Icon(
+                      //HEADER
+                      flex: 12,
+                      child: Container(
                         // [X]
-                        Icons.clear,
-                        color: Colors.black,
-                        size: 3.5 * SizeConfig.defaultSize!,
-                      ),
-                      onPressed: () {
-                        // stopAudio();
-                        widget.dispose();
-                        _sendBookExitClickEvent(
-                            widget.voiceId, widget.currentPageIndex + 1);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              alignment: Alignment.centerLeft,
+                              icon: Icon(
+                                Icons.clear,
+                                color: Colors.black,
+                                size: 3.0 * SizeConfig.defaultSize!,
+                              ),
+                              onPressed: () {
+                                // stopAudio();
+                                widget.dispose();
+                                _sendBookExitClickEvent(widget.voiceId,
+                                    widget.currentPageIndex + 1);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
+                      )),
                   Expanded(
-                    flex: 8,
+                    // HEAD
+                    flex: 74,
                     child: Row(
                       children: [
                         Expanded(
                           flex: imagePostion == 1 ? 1 : 2,
                           child: Container(
-                            //  color: Colors.red,
+                            // color: Colors.red,
                             child: imagePostion == 1
                                 ? Stack(
                                     children: [
@@ -402,16 +410,27 @@ class _PageWidgetState extends State<PageWidget> {
                                       )
                                     ],
                                   )
-                                : SingleChildScrollView(
-                                    child: Text(
-                                      // textAlign: TextAlign.center,
-                                      text,
-                                      style: TextStyle(
-                                          fontSize: SizeConfig.defaultSize! * 2,
-                                          fontFamily: 'BreeSerif'),
+                                : Padding(
+                                    // 글자 - 그림
+                                    padding: EdgeInsets.only(
+                                        right: 1 * SizeConfig.defaultSize!,
+                                        left: 1 * SizeConfig.defaultSize!),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            text,
+                                            style: TextStyle(
+                                                fontSize: 2.3 *
+                                                    SizeConfig.defaultSize!,
+                                                fontFamily: 'Gaegu',
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    //    ],
-                                    //),
                                   ),
                             // ), // 글자를 2번 화면에 배치
                           ),
@@ -444,8 +463,8 @@ class _PageWidgetState extends State<PageWidget> {
                                   ) //그림을 2번 화면에 배치
                                 : Padding(
                                     padding: EdgeInsets.only(
-                                        right: SizeConfig.defaultSize! * 2,
-                                        left: SizeConfig.defaultSize! * 2),
+                                        right: 0.5 * SizeConfig.defaultSize!,
+                                        left: 2 * SizeConfig.defaultSize!),
                                     child: SingleChildScrollView(
                                       child: Column(
                                         mainAxisAlignment:
@@ -455,8 +474,10 @@ class _PageWidgetState extends State<PageWidget> {
                                             text,
                                             style: TextStyle(
                                                 fontSize:
-                                                    SizeConfig.defaultSize! * 2,
-                                                fontFamily: 'BreeSerif'),
+                                                    SizeConfig.defaultSize! *
+                                                        2.3,
+                                                fontFamily: 'Gaegu',
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
@@ -468,85 +489,112 @@ class _PageWidgetState extends State<PageWidget> {
                     ),
                   ),
                   Expanded(
-                    flex: 1,
+                    flex: 12,
                     child: Row(
                       children: [
                         Expanded(
-                          flex: 1,
-                          // bottom: 5,
-                          // left: 10,
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.arrow_back,
-                                size: SizeConfig.defaultSize! * 3,
+                            flex: 1,
+                            // bottom: 5,
+                            // left: 10,
+                            child: Container(
+                              // [<-]
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.start, // 아이콘을 맨 왼쪽으로 정렬
+                                children: [
+                                  Icon(
+                                    Icons.arrow_back,
+                                    size: SizeConfig.defaultSize! * 3,
+                                    color: Colors.black,
+                                  ),
+                                ],
                               ),
-                              onPressed: () {
-                                _sendBookBackClickEvent(widget.voiceId,
-                                    widget.currentPageIndex + 1);
-                                widget.previousPage();
-                              }),
-                        ),
+                            )),
                         Expanded(
                             flex: 8,
                             child:
                                 Container(color: Color.fromARGB(0, 0, 0, 0))),
                         Expanded(
-                          flex: 1,
-                          child: widget.currentPageIndex != widget.lastPage - 1
-                              ? IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_forward,
-                                    size: SizeConfig.defaultSize! * 3,
-                                  ),
-                                  onPressed: () {
-                                    _sendBookNextClickEvent(widget.voiceId,
-                                        widget.currentPageIndex + 1);
-                                    widget.nextPage();
-                                  })
-                              : IconButton(
-                                  icon: Icon(
-                                    Icons.check,
-                                    color:
-                                        const Color.fromARGB(255, 77, 204, 81),
-                                    size: SizeConfig.defaultSize! * 3,
-                                  ),
-                                  // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
-                                  // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~
-                                  // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
-                                  onPressed: () {
-                                    widget.dispose();
-                                    _sendBookNextClickEvent(widget.voiceId,
-                                        widget.currentPageIndex + 1);
-                                    if (widget.record != null &&
-                                        widget.record == true &&
-                                        widget.purchase == true) {
-                                      //Navigator.pop(context);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ReaderEnd(
-                                            voiceId: widget.voiceId,
-                                            lastPage: widget.lastPage,
-                                            isSelected: widget.isSelected,
+                            flex: 1,
+                            child: widget.currentPageIndex !=
+                                    widget.lastPage - 1
+                                ? Container(
+                                    // [->]
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .end, // 아이콘을 맨 왼쪽으로 정렬
+                                      children: [
+                                        IconButton(
+                                            icon: Icon(
+                                              Icons.arrow_forward,
+                                              size: SizeConfig.defaultSize! * 3,
+                                            ),
+                                            onPressed: () {
+                                              _sendBookNextClickEvent(
+                                                  widget.voiceId,
+                                                  widget.currentPageIndex + 1);
+                                              widget.nextPage();
+                                            })
+                                      ],
+                                    ),
+                                  )
+                                : Container(
+                                    // [->]
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .end, // 아이콘을 맨 왼쪽으로 정렬
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.check,
+                                            color: const Color.fromARGB(
+                                                255, 77, 204, 81),
+                                            size: SizeConfig.defaultSize! * 3,
                                           ),
+                                          // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
+                                          // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~
+                                          // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
+                                          onPressed: () {
+                                            widget.dispose();
+                                            _sendBookNextClickEvent(
+                                                widget.voiceId,
+                                                widget.currentPageIndex + 1);
+                                            if (widget.record != null &&
+                                                widget.record == true &&
+                                                widget.purchase == true) {
+                                              //Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReaderEnd(
+                                                    voiceId: widget.voiceId,
+                                                    lastPage: widget.lastPage,
+                                                    isSelected:
+                                                        widget.isSelected,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              Navigator.push(
+                                                context,
+                                                //결제가 끝나면 RecordInfo로 가야 함
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReaderEnd(
+                                                    voiceId: widget.voiceId,
+                                                    lastPage: widget.lastPage,
+                                                    isSelected:
+                                                        widget.isSelected,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
                                         ),
-                                      );
-                                    } else {
-                                      Navigator.push(
-                                        context,
-                                        //결제가 끝나면 RecordInfo로 가야 함
-                                        MaterialPageRoute(
-                                          builder: (context) => ReaderEnd(
-                                            voiceId: widget.voiceId,
-                                            lastPage: widget.lastPage,
-                                            isSelected: widget.isSelected,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                        ),
+                                      ],
+                                    ),
+                                  )),
                       ],
                     ),
                   ),
