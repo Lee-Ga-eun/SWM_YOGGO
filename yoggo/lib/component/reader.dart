@@ -7,6 +7,7 @@ import 'package:yoggo/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import './reader_end.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class FairytalePage extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
@@ -140,22 +141,11 @@ class _FairyTalePageState extends State<FairytalePage>
               fit: BoxFit.cover,
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(Colors.yellow),
-                  strokeWidth: 0.5 * SizeConfig.defaultSize!, // 동그라미 로딩의 크기 조정
-                ),
-              ),
-              SizedBox(
-                height: 1 * SizeConfig.defaultSize!,
-              ),
-              const Text('Loading a book'),
-            ],
+          child: Center(
+            child: LoadingAnimationWidget.fourRotatingDots(
+              color: const Color.fromARGB(255, 255, 169, 26),
+              size: SizeConfig.defaultSize! * 10,
+            ),
           ),
         ),
       );
