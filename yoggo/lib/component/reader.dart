@@ -1,6 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
@@ -8,13 +7,12 @@ import 'package:yoggo/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import './reader_end.dart';
-import 'globalCubit/user/user_cubit.dart';
 
 class FairytalePage extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
   final bool isSelected;
   final int lastPage;
-  FairytalePage({
+  const FairytalePage({
     super.key,
     required this.voiceId, // detail_screen에서 받아오는 것들 초기화
     required this.isSelected,
@@ -392,17 +390,27 @@ class _PageWidgetState extends State<PageWidget> {
                           child: Container(
                             //  color: Colors.red,
                             child: imagePostion == 1
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                        20), // 모서리를 원형으로 설정
-                                    child: Image.network(
-                                      imageUrl,
-                                      fit: BoxFit.cover,
-                                      //height: SizeConfig.defaultSize! * 30,
-                                      //width: SizeConfig.defaultSize! * 30,
-                                    ),
+                                ? Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            20), // 모서리를 원형으로 설정
+                                        child: Image.asset(
+                                          'lib/images/gray.png',
+                                        ),
+                                      ),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            20), // 모서리를 원형으로 설정
+                                        child: Image.network(
+                                          imageUrl,
+                                          fit: BoxFit.cover,
+                                          //height: SizeConfig.defaultSize! * 30,
+                                          //width: SizeConfig.defaultSize! * 30,
+                                        ),
+                                      )
+                                    ],
                                   )
-                                // ) // // 그림을 1번 화면에 배치
                                 : SingleChildScrollView(
                                     child: Text(
                                       // textAlign: TextAlign.center,
@@ -422,14 +430,27 @@ class _PageWidgetState extends State<PageWidget> {
                           child: Container(
                             //color: position == 2 ? Colors.red : Colors.white,
                             child: imagePostion == 0
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                        20), // 모서리를 원형으로 설정
-                                    child: Image.network(
-                                      imageUrl,
-                                      width: SizeConfig.defaultSize! * 22,
-                                    ),
-                                  ) // 그림을 2번 화면에 배치
+                                ? Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            20), // 모서리를 원형으로 설정
+                                        child: Image.asset(
+                                          'lib/images/gray.png',
+                                        ),
+                                      ),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            20), // 모서리를 원형으로 설정
+                                        child: Image.network(
+                                          imageUrl,
+                                          fit: BoxFit.cover,
+                                          //height: SizeConfig.defaultSize! * 30,
+                                          //width: SizeConfig.defaultSize! * 30,
+                                        ),
+                                      )
+                                    ],
+                                  ) //그림을 2번 화면에 배치
                                 : Padding(
                                     padding: EdgeInsets.only(
                                         right: SizeConfig.defaultSize! * 2,
