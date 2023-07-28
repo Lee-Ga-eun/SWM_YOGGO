@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../size_config.dart';
 import 'globalCubit/user/user_cubit.dart';
 import 'home/view/home_screen.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class recordRequest extends StatefulWidget {
   const recordRequest({super.key});
@@ -197,14 +198,18 @@ class _recordRequesteState extends State<recordRequest> {
                             child: GestureDetector(
                               onTap: () async {
                                 await userCubit.fetchUser();
-                                if (userState.record) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const HomeScreen()),
-                                  );
-                                }
+                                //if (userState.record) {
+                                OneSignal.shared
+                                    .promptUserForPushNotificationPermission()
+                                    .then((accepted) {
+                                  print("Accepted permission: $accepted");
+                                });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const HomeScreen()),
+                                );
+                                //    }
                               },
                               child: Container(
                                   width: SizeConfig.defaultSize! * 24,
