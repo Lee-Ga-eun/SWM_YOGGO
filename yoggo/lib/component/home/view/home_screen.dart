@@ -646,6 +646,112 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     SizeConfig.defaultSize!),
                                       )),
                                 ),
+                                onTap: () {
+                                  _sendSignOutClickEvent(
+                                      userState.purchase, userState.record);
+                                  // dropdown 상태 토글
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginScreen(),
+                                      ));
+                                }),
+                        userState.login && showSignOutConfirmation
+                            ? GestureDetector(
+                                child: Transform.translate(
+                                    offset: Offset(
+                                        0.5 * SizeConfig.defaultSize!,
+                                        0.5 * SizeConfig.defaultSize!),
+                                    child: Text(
+                                      'Do you want to Sign Out?',
+                                      style: TextStyle(
+                                        color: const Color(0xFF599FED),
+                                        fontSize: 1.2 * SizeConfig.defaultSize!,
+                                        fontFamily: 'Molengo',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    )),
+                                //),
+                                onTap: () {
+                                  _sendSignOutReallyClickEvent(
+                                      userState.purchase, userState.record);
+                                  logout();
+                                  userCubit.logout();
+                                  OneSignal.shared.removeExternalUserId();
+                                  _scaffoldKey.currentState?.closeDrawer();
+                                  setState(() {
+                                    showSignOutConfirmation =
+                                        !showSignOutConfirmation; // dropdown 상태 토글
+                                  }); //고민
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => const LoginScreen(),
+                                  //   ),
+                                  // );
+                                },
+                              )
+                            : Container()
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      )),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/bkground.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          top: false,
+          minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
+          child: Column(
+            children: [
+              Expanded(
+                // HEADER
+                flex: 15,
+                child: Row(children: [
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.start, // 아이콘을 맨 왼쪽으로 정렬
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            //   showNotification(flutterLocalNotificationsPlugin);
+                            _sendHbgClickEvent(
+                                userState.purchase, userState.record);
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                          child: Image.asset(
+                            'lib/images/hamburger.png',
+                            width: 3.5 * SizeConfig.defaultSize!, // 이미지의 폭 설정
+                            height: 3.5 * SizeConfig.defaultSize!, // 이미지의 높이 설정
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 8,
+                    child: Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center, // 아이콘을 맨 왼쪽으로 정렬
+                      children: [
+                        Text(
+                          'LOVEL',
+                          style: TextStyle(
+                            fontFamily: 'Modak',
+                            fontSize: SizeConfig.defaultSize! * 5,
+
                                 // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
                                 // Container(
                                 //   color: Colors.yellow,
@@ -663,6 +769,96 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: Container(color: Color.fromARGB(0, 0, 0, 0)))
+                ]),
+              ),
+              // SizedBox(
+              //   height: SizeConfig.defaultSize! * 1.5,
+              // ),
+              userState.record && userState.purchase
+                  ? Container()
+                  //     : Expanded(
+                  : Expanded(
+                      // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
+                      flex: 12,
+                      child: Column(
+                        children: [
+                          // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.defaultSize! * 0,
+                                right: SizeConfig.defaultSize! * 0),
+                            child: GestureDetector(
+                              onTap: () {
+                                _sendBannerClickEvent(
+                                    userState.purchase, userState.record);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => userState.purchase
+                                        ? const RecordInfo()
+                                        : const Purchase(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  color: Color(0xFFFFA91A),
+                                  //   border: Border.all(
+                                  //   color: const Color.fromARGB(255, 255, 169, 26)),
+                                ),
+                                // color: Colors.white,
+                                height: 3.8 * SizeConfig.defaultSize!,
+                                child: Center(
+                                  child: Text(
+                                    'Do you want to read a book in your own voice?',
+                                    style: TextStyle(
+                                        fontSize: 2.0 * SizeConfig.defaultSize!,
+                                        fontFamily: 'Molengo',
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ), // 배너 종료
+              Expanded(
+                flex: 73,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: SizeConfig.defaultSize! * 36,
+                        child: BlocProvider(
+                          create: (context) =>
+                              DataCubit()..loadData(), // DataCubit 생성 및 데이터 로드
+                          child: DataList(
+                            record: userState.record,
+                            purchase: userState.purchase,
+                          ),
+                        ),
+                      ),
+                      // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
+                      // Container(
+                      //   color: Colors.yellow,
+                      //   height: 300,
+                      //   child: const Center(
+                      //     child: Text(
+                      //       'Scrollable Content 2',
+                      //       style: TextStyle(fontSize: 24),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+
                   ),
                 ),
                 //   ),
@@ -812,6 +1008,116 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       );
     } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+}
+
+class DataList extends StatelessWidget {
+  final bool record;
+  final bool purchase;
+  const DataList({Key? key, required this.record, required this.purchase})
+      : super(key: key);
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    // 데이터 큐빗을 가져오기.
+    //final dataCubit = BlocProvider.of<DataCubit>(context);
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
+    return BlocBuilder<DataCubit, List<BookModel>>(
+      builder: (context, state) {
+        if (state.isEmpty) {
+          //   showNotification(flutterLocalNotificationsPlugin);
+          _sendHomeLoadingViewEvent(userState.purchase, userState.record);
+          return Center(
+            child: Center(
+              child: LoadingAnimationWidget.fourRotatingDots(
+                color: const Color.fromARGB(255, 255, 169, 26),
+                size: SizeConfig.defaultSize! * 10,
+              ),
+            ),
+          );
+        } else {
+          return ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: state.length,
+            itemBuilder: (context, index) {
+              final book = state[index];
+              return GestureDetector(
+                onTap: () {
+                  _sendBookClickEvent(book.id);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BookIntro(
+                        title: book.title,
+                        thumb: book.thumbUrl,
+                        id: book.id,
+                        summary: book.summary,
+                      ),
+                    ),
+                  );
+                },
+                child: Column(
+                  children: [
+                    Hero(
+                      tag: book.id,
+                      child: Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        height: SizeConfig.defaultSize! * 22,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: CachedNetworkImage(
+                            imageUrl: book.thumbUrl,
+                            // httpHeaders: const {
+                            //   "User-Agent":
+                            //       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+                            // },
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.defaultSize! * 0.5,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.defaultSize! * 20,
+                      child: Text(
+                        book.title,
+                        style: TextStyle(
+                          fontFamily: 'BreeSerif',
+                          fontSize: SizeConfig.defaultSize! * 1.6,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) =>
+                SizedBox(width: 2 * SizeConfig.defaultSize!),
+          );
+        }
+      },
+    );
+  }
+
+  static Future<void> _sendBookClickEvent(contentId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_click',
+        parameters: <String, dynamic>{'contentId': contentId},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
     }
   }

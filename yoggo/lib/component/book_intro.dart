@@ -277,7 +277,7 @@ class _BookIntroState extends State<BookIntro> {
                             flex: 1,
                             child: IconButton(
                               icon: Icon(Icons.clear,
-                                  size: 3 * SizeConfig.defaultSize!),
+                                  size: 2.5 * SizeConfig.defaultSize!),
                               onPressed: () {
                                 _sendBookExitClickEvent(cvi);
                                 Navigator.of(context).pop();
@@ -334,9 +334,10 @@ class _BookIntroState extends State<BookIntro> {
                                   child: Text(
                                     widget.title,
                                     style: TextStyle(
-                                      fontSize: 3.2 * SizeConfig.defaultSize!,
-                                      fontFamily: 'Molengo',
-                                    ),
+                                        fontSize: 3.2 * SizeConfig.defaultSize!,
+                                        // fontFamily: 'LoveYaLikeASister',
+
+                                        fontFamily: 'BreeSerif'),
                                   ),
                                 ),
                                 SizedBox(
@@ -513,8 +514,10 @@ class _BookIntroState extends State<BookIntro> {
                                                         ? userState.voiceName!
                                                         : 'User',
                                                     style: TextStyle(
-                                                        fontFamily: 'Molengo',
-                                                        fontSize: 1.5 *
+                                                        fontFamily: 'Gaegu',
+                                                        // fontWeight:
+                                                        //     FontWeight.w800,
+                                                        fontSize: 1.8 *
                                                             SizeConfig
                                                                 .defaultSize!))
                                               ],
@@ -560,8 +563,8 @@ class _BookIntroState extends State<BookIntro> {
                                                           0.3),
                                                   Text('Mine',
                                                       style: TextStyle(
-                                                          fontFamily: 'Molengo',
-                                                          fontSize: 1.5 *
+                                                          fontFamily: 'Gaegu',
+                                                          fontSize: 1.8 *
                                                               SizeConfig
                                                                   .defaultSize!))
                                                 ],
@@ -644,8 +647,8 @@ class _BookIntroState extends State<BookIntro> {
                                                           0.3),
                                               Text(voices[0]['voiceName'],
                                                   style: TextStyle(
-                                                      fontFamily: 'Molengo',
-                                                      fontSize: 1.5 *
+                                                      fontFamily: 'Gaegu',
+                                                      fontSize: 1.8 *
                                                           SizeConfig
                                                               .defaultSize!))
                                             ],
@@ -729,8 +732,8 @@ class _BookIntroState extends State<BookIntro> {
                                                           0.3),
                                               Text(voices[1]['voiceName'],
                                                   style: TextStyle(
-                                                      fontFamily: 'Molengo',
-                                                      fontSize: 1.5 *
+                                                      fontFamily: 'Gaegu',
+                                                      fontSize: 1.8 *
                                                           SizeConfig
                                                               .defaultSize!))
                                             ],
@@ -814,8 +817,8 @@ class _BookIntroState extends State<BookIntro> {
                                                           0.3),
                                               Text(voices[2]['voiceName'],
                                                   style: TextStyle(
-                                                      fontFamily: 'Molengo',
-                                                      fontSize: 1.5 *
+                                                      fontFamily: 'Gaegu',
+                                                      fontSize: 1.8 *
                                                           SizeConfig
                                                               .defaultSize!)),
                                             ],
@@ -840,10 +843,11 @@ class _BookIntroState extends State<BookIntro> {
                                         child: Text(
                                           widget.summary,
                                           style: TextStyle(
-                                              fontFamily: 'Molengo',
+                                              fontFamily: 'Gaegu',
+                                              fontWeight: FontWeight.w400,
                                               fontSize:
                                                   SizeConfig.defaultSize! *
-                                                      2.2),
+                                                      2.3),
                                         ),
                                       ),
                                     ]))
@@ -918,7 +922,7 @@ class _BookIntroState extends State<BookIntro> {
                                 children: [
                                   Icon(
                                     Icons.arrow_forward,
-                                    size: SizeConfig.defaultSize! * 3,
+                                    size: 2.5 * SizeConfig.defaultSize!,
                                     color: Colors.black,
                                   ),
                                 ],
