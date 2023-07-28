@@ -366,7 +366,7 @@ class _PageWidgetState extends State<PageWidget> {
                               icon: Icon(
                                 Icons.clear,
                                 color: Colors.black,
-                                size: 3.0 * SizeConfig.defaultSize!,
+                                size: 2.5 * SizeConfig.defaultSize!,
                               ),
                               onPressed: () {
                                 // stopAudio();
@@ -426,7 +426,7 @@ class _PageWidgetState extends State<PageWidget> {
                                                 fontSize: 2.3 *
                                                     SizeConfig.defaultSize!,
                                                 fontFamily: 'Gaegu',
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.w400),
                                           ),
                                         ],
                                       ),
@@ -477,7 +477,7 @@ class _PageWidgetState extends State<PageWidget> {
                                                     SizeConfig.defaultSize! *
                                                         2.3,
                                                 fontFamily: 'Gaegu',
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.w400),
                                           ),
                                         ],
                                       ),
@@ -502,11 +502,16 @@ class _PageWidgetState extends State<PageWidget> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.start, // 아이콘을 맨 왼쪽으로 정렬
                                 children: [
-                                  Icon(
-                                    Icons.arrow_back,
-                                    size: SizeConfig.defaultSize! * 3,
-                                    color: Colors.black,
-                                  ),
+                                  IconButton(
+                                      icon: Icon(
+                                        Icons.arrow_back,
+                                        size: 3 * SizeConfig.defaultSize!,
+                                      ),
+                                      onPressed: () {
+                                        _sendBookBackClickEvent(widget.voiceId,
+                                            widget.currentPageIndex + 1);
+                                        widget.previousPage();
+                                      })
                                 ],
                               ),
                             )),
@@ -527,7 +532,7 @@ class _PageWidgetState extends State<PageWidget> {
                                         IconButton(
                                             icon: Icon(
                                               Icons.arrow_forward,
-                                              size: SizeConfig.defaultSize! * 3,
+                                              size: 3 * SizeConfig.defaultSize!,
                                             ),
                                             onPressed: () {
                                               _sendBookNextClickEvent(
@@ -549,7 +554,7 @@ class _PageWidgetState extends State<PageWidget> {
                                             Icons.check,
                                             color: const Color.fromARGB(
                                                 255, 77, 204, 81),
-                                            size: SizeConfig.defaultSize! * 3,
+                                            size: 3 * SizeConfig.defaultSize!,
                                           ),
                                           // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
                                           // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~

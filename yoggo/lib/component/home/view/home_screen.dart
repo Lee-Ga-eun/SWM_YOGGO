@@ -484,12 +484,36 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Expanded(
-                flex: SizeConfig.defaultSize!.toInt(),
-                child: Stack(
-                  alignment: Alignment.centerLeft,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                // HEADER
+                flex: 15,
+                child: Row(children: [
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.start, // 아이콘을 맨 왼쪽으로 정렬
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            //   showNotification(flutterLocalNotificationsPlugin);
+                            _sendHbgClickEvent(
+                                userState.purchase, userState.record);
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                          child: Image.asset(
+                            'lib/images/hamburger.png',
+                            width: 3.5 * SizeConfig.defaultSize!, // 이미지의 폭 설정
+                            height: 3.5 * SizeConfig.defaultSize!, // 이미지의 높이 설정
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 8,
+                    child: Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center, // 아이콘을 맨 왼쪽으로 정렬
                       children: [
                         Text(
                           'LOVEL',
@@ -500,25 +524,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    Positioned(
-                      //left: 20,
-                      top: SizeConfig.defaultSize! * 2,
-                      child: InkWell(
-                        onTap: () {
-                          //   showNotification(flutterLocalNotificationsPlugin);
-                          _sendHbgClickEvent(
-                              userState.purchase, userState.record);
-                          _scaffoldKey.currentState?.openDrawer();
-                        },
-                        child: Image.asset(
-                          'lib/images/hamburger.png',
-                          width: 3.5 * SizeConfig.defaultSize!, // 이미지의 폭 설정
-                          height: 3.5 * SizeConfig.defaultSize!, // 이미지의 높이 설정
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: Container(color: Color.fromARGB(0, 0, 0, 0)))
+                ]),
               ),
               // SizedBox(
               //   height: SizeConfig.defaultSize! * 1.5,
@@ -528,14 +538,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   //     : Expanded(
                   : Expanded(
                       // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
-                      flex: SizeConfig.defaultSize!.toInt() * 1,
+                      flex: 12,
                       child: Column(
                         children: [
                           // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
                           Padding(
                             padding: EdgeInsets.only(
-                                left: SizeConfig.defaultSize! * 2,
-                                right: SizeConfig.defaultSize! * 2),
+                                left: SizeConfig.defaultSize! * 0,
+                                right: SizeConfig.defaultSize! * 0),
                             child: GestureDetector(
                               onTap: () {
                                 _sendBannerClickEvent(
@@ -558,13 +568,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   //   color: const Color.fromARGB(255, 255, 169, 26)),
                                 ),
                                 // color: Colors.white,
-                                height: SizeConfig.defaultSize! * 4,
+                                height: 3.8 * SizeConfig.defaultSize!,
                                 child: Center(
                                   child: Text(
-                                    'Want to read a book in your voice?',
+                                    'Do you want to read a book in your own voice?',
                                     style: TextStyle(
-                                        fontSize: 2 * SizeConfig.defaultSize!,
+                                        fontSize: 2.0 * SizeConfig.defaultSize!,
                                         fontFamily: 'Molengo',
+                                        fontWeight: FontWeight.w400,
                                         color: Colors.black),
                                   ),
                                 ),
@@ -575,7 +586,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ), // 배너 종료
               Expanded(
-                flex: SizeConfig.defaultSize!.toInt() * 4,
+                flex: 73,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -818,7 +829,7 @@ class DataList extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: SizeConfig.defaultSize! * 1,
+                      height: SizeConfig.defaultSize! * 0.5,
                     ),
                     SizedBox(
                       width: SizeConfig.defaultSize! * 20,

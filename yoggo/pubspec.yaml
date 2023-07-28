@@ -156,6 +156,10 @@ flutter:
           weight: 400
         - asset: assets/fonts/Gaegu-Bold.ttf
           weight: 700
+    - family: ComingSoon
+      fonts:
+        - asset: assets/fonts/ComingSoon-Regular.ttf
+          weight: 400
 
         # Prata-Regular.ttf
     # - family: Schyler
