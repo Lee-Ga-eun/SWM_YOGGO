@@ -11,12 +11,13 @@ import 'package:yoggo/size_config.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'globalCubit/user/user_cubit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class BookIntro extends StatefulWidget {
   final String title, thumb, summary;
   final int id;
 
-  BookIntro({
+  const BookIntro({
     // super.key,
     Key? key,
     required this.title,
@@ -239,7 +240,7 @@ class _BookIntroState extends State<BookIntro> {
           child: Center(
             // 로딩 화면
             child: LoadingAnimationWidget.fourRotatingDots(
-              color: Color.fromARGB(255, 255, 169, 26),
+              color: const Color.fromARGB(255, 255, 169, 26),
               size: SizeConfig.defaultSize! * 10,
             ),
           ),
@@ -323,7 +324,9 @@ class _BookIntroState extends State<BookIntro> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      child: Image.network(widget.thumb))
+                                      child: CachedNetworkImage(
+                                          imageUrl: widget.thumb))
+                                  // Image.network(widget.thumb))
                                 ])),
                               ),
                             ),
@@ -333,14 +336,17 @@ class _BookIntroState extends State<BookIntro> {
                           // 제목과 책 내용 요약
                           flex: 5,
                           child: Container(
-                            //   color: Colors.orange,
                             child: Column(
                               children: [
-                                Text(
-                                  widget.title,
-                                  style: TextStyle(
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    widget.title,
+                                    style: TextStyle(
                                       fontSize: SizeConfig.defaultSize! * 3.2,
-                                      fontFamily: 'Molengo'),
+                                      fontFamily: 'Molengo',
+                                    ),
+                                  ),
                                 ),
                                 SizedBox(
                                   height: userState.purchase
@@ -822,8 +828,9 @@ class _BookIntroState extends State<BookIntro> {
                                       Padding(
                                         // Summary
                                         padding: EdgeInsets.only(
-                                            right: 1 * SizeConfig.defaultSize!,
-                                            top: 0 * SizeConfig.defaultSize!),
+                                          right: 8 * SizeConfig.defaultSize!,
+                                          top: 0 * SizeConfig.defaultSize!,
+                                        ),
                                         child: Text(
                                           widget.summary,
                                           style: TextStyle(
