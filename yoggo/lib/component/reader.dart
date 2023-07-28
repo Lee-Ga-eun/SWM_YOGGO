@@ -358,9 +358,10 @@ class _PageWidgetState extends State<PageWidget> {
                     child: IconButton(
                       alignment: Alignment.centerLeft,
                       icon: Icon(
-                        Icons.cancel,
-                        color: Colors.white,
-                        size: SizeConfig.defaultSize! * 3.5,
+                        // [X]
+                        Icons.clear,
+                        color: Colors.black,
+                        size: 3.5 * SizeConfig.defaultSize!,
                       ),
                       onPressed: () {
                         // stopAudio();
@@ -471,6 +472,7 @@ class _PageWidgetState extends State<PageWidget> {
                     child: Row(
                       children: [
                         Expanded(
+                          flex: 1,
                           // bottom: 5,
                           // left: 10,
                           child: IconButton(
@@ -485,6 +487,11 @@ class _PageWidgetState extends State<PageWidget> {
                               }),
                         ),
                         Expanded(
+                            flex: 8,
+                            child:
+                                Container(color: Color.fromARGB(0, 0, 0, 0))),
+                        Expanded(
+                          flex: 1,
                           child: widget.currentPageIndex != widget.lastPage - 1
                               ? IconButton(
                                   icon: Icon(

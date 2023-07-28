@@ -229,7 +229,6 @@ class _BookIntroState extends State<BookIntro> {
     SizeConfig().init(context);
     if (cvi == 0) {
       return Scaffold(
-        //backgroundColor: Colors.yellow, // 노란색 배경 설정
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -269,57 +268,47 @@ class _BookIntroState extends State<BookIntro> {
                   //Expanded(
                   //flex: 1,
                   //child:
-                  Container(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          _sendBookExitClickEvent(cvi);
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(
-                          // [X]
-                          // Icons.highlight_off,
-                          Icons.clear,
-                          color: Colors.black,
-                          size: 3.5 * SizeConfig.defaultSize!,
-                        ),
-                      )),
-                  //),
-                  //),
+                  Expanded(
+                      // HEADER
+                      flex: 14,
+                      child: Row(children: [
+                        Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              icon: Icon(Icons.clear,
+                                  size: 3 * SizeConfig.defaultSize!),
+                              onPressed: () {
+                                _sendBookExitClickEvent(cvi);
+                                Navigator.of(context).pop();
+                              },
+                            )),
+                        Expanded(
+                            flex: 8,
+                            child:
+                                Container(color: Color.fromARGB(0, 0, 0, 0))),
+                        Expanded(
+                            flex: 1,
+                            child: Container(color: Color.fromARGB(0, 0, 0, 0)))
+                      ])),
 
                   Expanded(
-                    flex: 6,
+                    // BODY
+                    flex: 74,
                     child: Row(
                       children: [
                         Expanded(
                           // 썸네일 사진
                           flex: 4,
                           child: Container(
-                            // color: Colors.green,
+                            color: Color.fromARGB(0, 0, 0, 0),
                             child: Hero(
                               tag: widget.id,
                               child: Center(
                                 child: Container(
-                                    // margin: EdgeInsets.only(top: SizeConfig.defaultSize! * 4),
-                                    // decoration: BoxDecoration(
-                                    // boxShadow: [
-                                    //   BoxShadow(
-                                    //     color: Colors.grey
-                                    //         .withOpacity(0.5), // 그림자 색상
-                                    //     spreadRadius: 5, // 그림자의 확산 범위
-                                    //     blurRadius: 7, // 그림자의 흐림 정도
-                                    //     offset: const Offset(
-                                    //         0, 3), // 그림자의 위치 (가로, 세로)
-                                    //   ),
-                                    // ],
-                                    // ),
                                     child: Column(children: [
-                                  // SizedBox(
-                                  //   height: SizeConfig.defaultSize! * 2,
-                                  // ),
                                   Container(
-                                      width: SizeConfig.defaultSize! * 30,
-                                      height: SizeConfig.defaultSize! * 30,
+                                      width: 30 * SizeConfig.defaultSize!,
+                                      height: 30 * SizeConfig.defaultSize!,
                                       clipBehavior: Clip.hardEdge,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
@@ -333,9 +322,10 @@ class _BookIntroState extends State<BookIntro> {
                           ),
                         ),
                         Expanded(
-                          // 제목과 책 내용 요약
+                          // 제목, 성우, 요약
                           flex: 5,
                           child: Container(
+                            color: Color.fromARGB(0, 52, 0, 0),
                             child: Column(
                               children: [
                                 Align(
@@ -343,15 +333,15 @@ class _BookIntroState extends State<BookIntro> {
                                   child: Text(
                                     widget.title,
                                     style: TextStyle(
-                                      fontSize: SizeConfig.defaultSize! * 3.2,
+                                      fontSize: 3.2 * SizeConfig.defaultSize!,
                                       fontFamily: 'Molengo',
                                     ),
                                   ),
                                 ),
                                 SizedBox(
                                   height: userState.purchase
-                                      ? SizeConfig.defaultSize! * 0
-                                      : SizeConfig.defaultSize! * 1.0,
+                                      ? 0 * SizeConfig.defaultSize!
+                                      : 1 * SizeConfig.defaultSize!,
                                 ),
                                 Row(
                                   //  mainAxisAlignment: MainAxisAlignment.center,
@@ -408,103 +398,103 @@ class _BookIntroState extends State<BookIntro> {
                                                                 7,
                                                           )
                                                     /*
-                                                    padding: EdgeInsets.only(
-                                                        right: 0 *
-                                                            SizeConfig
-                                                                .defaultSize!,
-                                                        left: 0 *
-                                                            SizeConfig
-                                                                .defaultSize!),
-                                                    child: Stack(
-                                                      children: [
-                                                        Text(
-                                                          userState.voiceIcon!,
-                                                          style: TextStyle(
-                                                            fontSize: SizeConfig
-                                                                    .defaultSize! *
-                                                                7.1,
-                                                          ),
-                                                        ),
-                                                        isClicked
-                                                            ? Container()
-                                                            : Transform
-                                                                .translate(
-                                                                offset: Offset(
-                                                                    0.4 *
-                                                                        SizeConfig
-                                                                            .defaultSize!,
-                                                                    1.4 *
-                                                                        SizeConfig
-                                                                            .defaultSize!),
-                                                                child: Image.asset(
-                                                                    'lib/images/lock.png',
-                                                                    height:
-                                                                        SizeConfig.defaultSize! *
-                                                                            6.5,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            150,
-                                                                            255,
-                                                                            255,
-                                                                            255)),
-                                                              ),
-                                                      ],
-                                                    ) */ /*.asset('lib/images/mine.png',
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          6.5,
-                                                      colorBlendMode:
-                                                          BlendMode.srcATop,
-                                                      color: isClicked
-                                                          ? null
-                                                          : const Color
-                                                                  .fromARGB(150,
-                                                              255, 255, 255)),
-                                                ),*/
+                                      padding: EdgeInsets.only(
+                                          right: 0 *
+                                              SizeConfig
+                                                  .defaultSize!,
+                                          left: 0 *
+                                              SizeConfig
+                                                  .defaultSize!),
+                                      child: Stack(
+                                        children: [
+                                          Text(
+                                            userState.voiceIcon!,
+                                            style: TextStyle(
+                                              fontSize: SizeConfig
+                                                      .defaultSize! *
+                                                  7.1,
+                                            ),
+                                          ),
+                                          isClicked
+                                              ? Container()
+                                              : Transform
+                                                  .translate(
+                                                  offset: Offset(
+                                                      0.4 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      1.4 *
+                                                          SizeConfig
+                                                              .defaultSize!),
+                                                  child: Image.asset(
+                                                      'lib/images/lock.png',
+                                                      height:
+                                                          SizeConfig.defaultSize! *
+                                                              6.5,
+                                                      color: Color
+                                                          .fromARGB(
+                                                              150,
+                                                              255,
+                                                              255,
+                                                              255)),
+                                                ),
+                                        ],
+                                      ) */ /*.asset('lib/images/mine.png',
+                                        height: SizeConfig
+                                                .defaultSize! *
+                                            6.5,
+                                        colorBlendMode:
+                                            BlendMode.srcATop,
+                                        color: isClicked
+                                            ? null
+                                            : const Color
+                                                    .fromARGB(150,
+                                                255, 255, 255)),
+                                  ),*/
                                                     /*child: isClicked
-                                                        ? Container(
-                                                            // height: SizeConfig
-                                                            //         .defaultSize! *
-                                                            //     6.6,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              border:
-                                                                  Border.all(
-                                                                color: const Color
-                                                                        .fromARGB(
-                                                                    255,
-                                                                    77,
-                                                                    252,
-                                                                    255),
-                                                                width: 3.0,
-                                                              ),
-                                                            ),
-                                                            child: Transform
-                                                                .translate(
-                                                                    offset: Offset(
-                                                                        0.0,
-                                                                        -1.2 *
-                                                                            SizeConfig.defaultSize!),
-                                                                    child: Text(
-                                                                      voiceIcon,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            SizeConfig.defaultSize! *
-                                                                                6.2,
-                                                                      ),
-                                                                    )))
-                                                        : Text(
-                                                            voiceIcon,
-                                                            style: TextStyle(
-                                                                fontSize: SizeConfig
-                                                                        .defaultSize! *
-                                                                    6.5,
-                                                                fontFamily:
-                                                                    'BreeSerif'),
-                                                          )),*/
+                                          ? Container(
+                                              // height: SizeConfig
+                                              //         .defaultSize! *
+                                              //     6.6,
+                                              decoration:
+                                                  BoxDecoration(
+                                                shape: BoxShape
+                                                    .circle,
+                                                border:
+                                                    Border.all(
+                                                  color: const Color
+                                                          .fromARGB(
+                                                      255,
+                                                      77,
+                                                      252,
+                                                      255),
+                                                  width: 3.0,
+                                                ),
+                                              ),
+                                              child: Transform
+                                                  .translate(
+                                                      offset: Offset(
+                                                          0.0,
+                                                          -1.2 *
+                                                              SizeConfig.defaultSize!),
+                                                      child: Text(
+                                                        voiceIcon,
+                                                        style:
+                                                            TextStyle(
+                                                          fontSize:
+                                                              SizeConfig.defaultSize! *
+                                                                  6.2,
+                                                        ),
+                                                      )))
+                                          : Text(
+                                              voiceIcon,
+                                              style: TextStyle(
+                                                  fontSize: SizeConfig
+                                                          .defaultSize! *
+                                                      6.5,
+                                                  fontFamily:
+                                                      'BreeSerif'),
+                                            )),*/
                                                     ),
                                                 Text(userState.voiceName!,
                                                     style: TextStyle(
@@ -563,6 +553,7 @@ class _BookIntroState extends State<BookIntro> {
                                               ),
                                             )),
                                     SizedBox(
+                                      // color: ,
                                       width: 1.5 * SizeConfig.defaultSize!,
                                     ),
                                     // Jolly
@@ -600,37 +591,37 @@ class _BookIntroState extends State<BookIntro> {
                                                                   .fromARGB(150,
                                                               255, 255, 255))
                                                   /*child: isClicked0
-                                                      ? Container(
-                                                          height: SizeConfig
-                                                                  .defaultSize! *
-                                                              6.6,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: const Color
-                                                                      .fromARGB(
-                                                                  255,
-                                                                  255,
-                                                                  255,
-                                                                  255),
-                                                              width: 3.5,
-                                                            ),
-                                                          ),
-                                                          child: Image.asset(
-                                                            'lib/images/jolly.png',
-                                                            height: SizeConfig
-                                                                    .defaultSize! *
-                                                                6.5,
-                                                          ),
-                                                        )
-                                                      : Image.asset(
-                                                          'lib/images/jolly.png',
-                                                          height: SizeConfig
-                                                                  .defaultSize! *
-                                                              6.5,
-                                                        )*/
+                                            ? Container(
+                                                height: SizeConfig
+                                                        .defaultSize! *
+                                                    6.6,
+                                                decoration:
+                                                    BoxDecoration(
+                                                  shape:
+                                                      BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: const Color
+                                                            .fromARGB(
+                                                        255,
+                                                        255,
+                                                        255,
+                                                        255),
+                                                    width: 3.5,
+                                                  ),
+                                                ),
+                                                child: Image.asset(
+                                                  'lib/images/jolly.png',
+                                                  height: SizeConfig
+                                                          .defaultSize! *
+                                                      6.5,
+                                                ),
+                                              )
+                                            : Image.asset(
+                                                'lib/images/jolly.png',
+                                                height: SizeConfig
+                                                        .defaultSize! *
+                                                    6.5,
+                                              )*/
                                                   ),
                                               SizedBox(
                                                   height:
@@ -685,37 +676,37 @@ class _BookIntroState extends State<BookIntro> {
                                                             255,
                                                             255)),
                                                 /*child: isClicked1
-                                                      ? Container(
-                                                          height: SizeConfig
-                                                                  .defaultSize! *
-                                                              6.6,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: const Color
-                                                                      .fromARGB(
-                                                                  255,
-                                                                  255,
-                                                                  255,
-                                                                  255),
-                                                              width: 3.5,
-                                                            ),
-                                                          ),
-                                                          child: Image.asset(
-                                                            'lib/images/morgan.png',
-                                                            height: SizeConfig
-                                                                    .defaultSize! *
-                                                                6.5,
-                                                          ),
-                                                        )
-                                                      : Image.asset(
-                                                          'lib/images/morgan.png',
-                                                          height: SizeConfig
-                                                                  .defaultSize! *
-                                                              6.5,
-                                                        )),*/
+                                            ? Container(
+                                                height: SizeConfig
+                                                        .defaultSize! *
+                                                    6.6,
+                                                decoration:
+                                                    BoxDecoration(
+                                                  shape:
+                                                      BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: const Color
+                                                            .fromARGB(
+                                                        255,
+                                                        255,
+                                                        255,
+                                                        255),
+                                                    width: 3.5,
+                                                  ),
+                                                ),
+                                                child: Image.asset(
+                                                  'lib/images/morgan.png',
+                                                  height: SizeConfig
+                                                          .defaultSize! *
+                                                      6.5,
+                                                ),
+                                              )
+                                            : Image.asset(
+                                                'lib/images/morgan.png',
+                                                height: SizeConfig
+                                                        .defaultSize! *
+                                                    6.5,
+                                              )),*/
                                               ),
                                               SizedBox(
                                                   height:
@@ -770,37 +761,37 @@ class _BookIntroState extends State<BookIntro> {
                                                             255,
                                                             255)),
                                                 /*child: isClicked2
-                                                      ? Container(
-                                                          height: SizeConfig
-                                                                  .defaultSize! *
-                                                              6.6,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: const Color
-                                                                      .fromARGB(
-                                                                  255,
-                                                                  255,
-                                                                  255,
-                                                                  255),
-                                                              width: 3.5,
-                                                            ),
-                                                          ),
-                                                          child: Image.asset(
-                                                            'lib/images/eric.png',
-                                                            height: SizeConfig
-                                                                    .defaultSize! *
-                                                                6.5,
-                                                          ),
-                                                        )
-                                                      : Image.asset(
-                                                          'lib/images/eric.png',
-                                                          height: SizeConfig
-                                                                  .defaultSize! *
-                                                              6.5,
-                                                        )*/
+                                            ? Container(
+                                                height: SizeConfig
+                                                        .defaultSize! *
+                                                    6.6,
+                                                decoration:
+                                                    BoxDecoration(
+                                                  shape:
+                                                      BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: const Color
+                                                            .fromARGB(
+                                                        255,
+                                                        255,
+                                                        255,
+                                                        255),
+                                                    width: 3.5,
+                                                  ),
+                                                ),
+                                                child: Image.asset(
+                                                  'lib/images/eric.png',
+                                                  height: SizeConfig
+                                                          .defaultSize! *
+                                                      6.5,
+                                                ),
+                                              )
+                                            : Image.asset(
+                                                'lib/images/eric.png',
+                                                height: SizeConfig
+                                                        .defaultSize! *
+                                                    6.5,
+                                              )*/
                                               ),
                                               SizedBox(
                                                   height:
@@ -828,7 +819,7 @@ class _BookIntroState extends State<BookIntro> {
                                       Padding(
                                         // Summary
                                         padding: EdgeInsets.only(
-                                          right: 8 * SizeConfig.defaultSize!,
+                                          right: 0 * SizeConfig.defaultSize!,
                                           top: 0 * SizeConfig.defaultSize!,
                                         ),
                                         child: Text(
@@ -849,23 +840,19 @@ class _BookIntroState extends State<BookIntro> {
                     ),
                   ),
                   Expanded(
-                    flex: 1,
+                    // FOOTER
+                    flex: 12,
                     child: Row(children: [
                       Expanded(
-                        // 썸네일 사진
                         flex: 1,
-                        child: Container(
-                            //color: Colors.white,
-                            ),
+                        child: Container(color: Color.fromARGB(0, 0, 100, 0)),
                       ),
                       Expanded(
-                          // 썸네일 사진
-                          flex: 1,
-                          child: Container()),
+                          flex: 8,
+                          child: Container(color: Color.fromARGB(0, 0, 0, 0))),
                       Expanded(
-                          // 제목과 책 내용 요약
-                          flex: 1,
-                          child: GestureDetector(
+                        flex: 1,
+                        child: GestureDetector(
                             onTap: () async {
                               print('인퍼런스아이디');
                               print(inferenceId);
@@ -907,24 +894,27 @@ class _BookIntroState extends State<BookIntro> {
                                       : null;
                             },
                             // next 화살표 시작
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: 0 * SizeConfig.defaultSize!,
-                                  right: 0 * SizeConfig.defaultSize!,
-                                  left: 20 * SizeConfig.defaultSize!),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                size: SizeConfig.defaultSize! * 3.5,
-                                color: Colors.black,
+
+                            child: Container(
+                              // [->]
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.end, // 아이콘을 맨 왼쪽으로 정렬
+                                children: [
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    size: SizeConfig.defaultSize! * 3,
+                                    color: Colors.black,
+                                  ),
+                                ],
                               ),
-                            ),
-                            // next 화살표 끝
-                          ))
+                            )),
+                        // next 화살표 끝
+                      )
                     ]),
                   ), // --------------------성우 아이콘 배치 완료  ---------
                 ]),
               ),
-              //추가
             ),
           ),
           Visibility(
