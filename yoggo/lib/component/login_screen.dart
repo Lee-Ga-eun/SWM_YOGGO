@@ -122,15 +122,23 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'LOVEL', // 원하는 텍스트를 여기에 입력하세요
-                    style: TextStyle(
-                      fontSize: 15 * SizeConfig.defaultSize!,
-                      color: Colors.black,
-                      fontFamily: 'modak',
-                    ),
-                  ),
+                  Text('LOVEL', // 원하는 텍스트를 여기에 입력하세요
+                      style: TextStyle(
+                        fontSize: 10 * SizeConfig.defaultSize!,
+                        color: Colors.black,
+                        fontFamily: 'modak',
+                      )),
                   SizedBox(height: 0 * SizeConfig.defaultSize!),
+                  Text(
+                    'Unlimited linkage between devices\nthrough your account', // 원하는 텍스트를 여기에 입력하세요
+                    style: TextStyle(
+                      fontSize: 2.5 * SizeConfig.defaultSize!,
+                      color: Colors.black,
+                      fontFamily: 'molengo',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 4 * SizeConfig.defaultSize!),
                   InkWell(
                     onTap: () {
                       _sendLoginGoogleClickEvent();
