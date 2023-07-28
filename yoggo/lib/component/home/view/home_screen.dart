@@ -98,359 +98,377 @@ class _HomeScreenState extends State<HomeScreen> {
             } else {
               return Scaffold(
                 key: _scaffoldKey,
-                drawer: Drawer(
-                    child: Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('lib/images/bkground.png'),
-                      fit: BoxFit.cover,
+                drawer: SizedBox(
+                  width: 33 * SizeConfig.defaultSize!,
+                  child: Drawer(
+                      child: Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('lib/images/bkground.png'),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      Container(
-                          width: 30 * SizeConfig.defaultSize!,
-                          height: 11 * SizeConfig.defaultSize!,
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5)),
-                          child: SafeArea(
-                            minimum: EdgeInsets.only(
-                                left: 3 * SizeConfig.defaultSize!),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: SizeConfig.defaultSize! * 3),
-                                Text(
-                                  ' Welcome! ',
-                                  style: TextStyle(
-                                      fontSize: SizeConfig.defaultSize! * 1.8,
-                                      fontFamily: 'Molengo'),
-                                ),
-                                SizedBox(height: SizeConfig.defaultSize!),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: SizeConfig.defaultSize! * 1),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.account_circle,
-                                        size: SizeConfig.defaultSize! * 2.3,
-                                      ),
-                                      SizedBox(
-                                        width: SizeConfig.defaultSize! * 0.5,
-                                      ),
-                                      Text(
-                                        userState.userName,
-                                        style: TextStyle(
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 1.4),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
-                      Column(
-                        children: [
-                          SafeArea(
-                            minimum: EdgeInsets.only(
-                                left: 3 * SizeConfig.defaultSize!),
-                            child: ListTile(
-                              title: Column(
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: [
+                        Container(
+                            width: 30 * SizeConfig.defaultSize!,
+                            height: 11 * SizeConfig.defaultSize!,
+                            decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.5)),
+                            child: SafeArea(
+                              minimum: EdgeInsets.only(
+                                  left: 3 * SizeConfig.defaultSize!),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // ),
-                                  SizedBox(
-                                    height: 2 * SizeConfig.defaultSize!,
-                                  ),
+                                  SizedBox(height: SizeConfig.defaultSize! * 3),
                                   Text(
-                                    'Voice Profile',
+                                    ' Welcome! ',
                                     style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 1.8 * SizeConfig.defaultSize!,
-                                      fontFamily: 'Molengo',
-                                      fontWeight: FontWeight.w400,
+                                        fontSize: SizeConfig.defaultSize! * 1.8,
+                                        fontFamily: 'Molengo'),
+                                  ),
+                                  SizedBox(height: SizeConfig.defaultSize!),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: SizeConfig.defaultSize! * 1),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.account_circle,
+                                          size: SizeConfig.defaultSize! * 2.3,
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.defaultSize! * 0.5,
+                                        ),
+                                        Text(
+                                          userState.userName,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  SizeConfig.defaultSize! *
+                                                      1.4),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 1 * SizeConfig.defaultSize!,
-                                  ),
-                                  userState.record && userState.purchase
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            _sendHbgVoiceBoxClickEvent(
-                                                userState.purchase,
-                                                userState.record);
-                                          },
-                                          child: SizedBox(
-                                            width: 23 * SizeConfig.defaultSize!,
-                                            height:
-                                                11 * SizeConfig.defaultSize!,
-                                            child: Stack(
-                                              children: [
-                                                Positioned(
-                                                  child: Container(
-                                                    width: 23 *
-                                                        SizeConfig.defaultSize!,
-                                                    height: 11 *
-                                                        SizeConfig.defaultSize!,
-                                                    decoration: ShapeDecoration(
-                                                      color: Colors.white
-                                                          .withOpacity(0.5),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                    left: 1.2 *
-                                                        SizeConfig.defaultSize!,
-                                                    top: 1.5 *
-                                                        SizeConfig.defaultSize!,
-                                                    // child: Transform.translate(
-                                                    //     offset: Offset(
-                                                    //         0.5,
-                                                    //         -0.7 *
-                                                    //             SizeConfig.defaultSize!),
-                                                    child: Image.asset(
-                                                      'lib/images/icons/${userState.voiceIcon}-c.png',
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          8,
-                                                    )),
-                                                Positioned(
-                                                  left: 9.5 *
-                                                      SizeConfig.defaultSize!,
-                                                  top: 2.3 *
-                                                      SizeConfig.defaultSize!,
-                                                  child: SizedBox(
-                                                    width: 12.2 *
-                                                        SizeConfig.defaultSize!,
-                                                    height: 2 *
-                                                        SizeConfig.defaultSize!,
-                                                    child: Text(
-                                                      userState.voiceName!,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 2 *
-                                                            SizeConfig
-                                                                .defaultSize!,
-                                                        fontFamily: 'Molengo',
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  left: 10.2 *
-                                                      SizeConfig.defaultSize!,
-                                                  top: 6 *
-                                                      SizeConfig.defaultSize!,
-                                                  child: GestureDetector(
-                                                      onTap: () {
-                                                        _sendHbgVoiceClickEvent(
-                                                            userState.purchase,
-                                                            userState.record);
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const CheckVoice(),
-                                                          ),
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                          width: 11 *
-                                                              SizeConfig
-                                                                  .defaultSize!,
-                                                          height: 3 *
-                                                              SizeConfig
-                                                                  .defaultSize!,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: const Color(
-                                                                0xFFFFA91A),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                          ),
-                                                          child: Center(
-                                                              child: Text(
-                                                            'Edit this voice',
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 1.4 *
-                                                                  SizeConfig
-                                                                      .defaultSize!,
-                                                              fontFamily:
-                                                                  'Molengo',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                            ),
-                                                          )))),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      : GestureDetector(
-                                          onTap: () {
-                                            _sendHbgVoiceClickEvent(
-                                                userState.purchase,
-                                                userState.record);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    userState.purchase
-                                                        ? const RecordInfo()
-                                                        : const Purchase(),
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
+                                ],
+                              ),
+                            )),
+                        Column(
+                          children: [
+                            SafeArea(
+                              minimum: EdgeInsets.only(
+                                  left: 3 * SizeConfig.defaultSize!),
+                              child: ListTile(
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // ),
+                                    SizedBox(
+                                      height: 2 * SizeConfig.defaultSize!,
+                                    ),
+                                    Text(
+                                      'Voice Profile',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 1.8 * SizeConfig.defaultSize!,
+                                        fontFamily: 'Molengo',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 1 * SizeConfig.defaultSize!,
+                                    ),
+                                    userState.record && userState.purchase
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              _sendHbgVoiceBoxClickEvent(
+                                                  userState.purchase,
+                                                  userState.record);
+                                            },
+                                            child: SizedBox(
                                               width:
-                                                  27 * SizeConfig.defaultSize!,
+                                                  23 * SizeConfig.defaultSize!,
                                               height:
-                                                  4 * SizeConfig.defaultSize!,
-                                              decoration: ShapeDecoration(
-                                                color: Colors.white
-                                                    .withOpacity(0.5),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
+                                                  11 * SizeConfig.defaultSize!,
+                                              child: Stack(
+                                                children: [
+                                                  Positioned(
+                                                    child: Container(
+                                                      width: 23 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      height: 11 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      decoration:
+                                                          ShapeDecoration(
+                                                        color: Colors.white
+                                                            .withOpacity(0.5),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                      left: 1.2 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      top: 1.5 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      // child: Transform.translate(
+                                                      //     offset: Offset(
+                                                      //         0.5,
+                                                      //         -0.7 *
+                                                      //             SizeConfig.defaultSize!),
+                                                      child: Image.asset(
+                                                        'lib/images/icons/${userState.voiceIcon}-c.png',
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            8,
+                                                      )),
+                                                  Positioned(
+                                                    left: 9.5 *
+                                                        SizeConfig.defaultSize!,
+                                                    top: 2.3 *
+                                                        SizeConfig.defaultSize!,
+                                                    child: SizedBox(
+                                                      width: 12.2 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      height: 2 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      child: Text(
+                                                        userState.voiceName!,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 2 *
+                                                              SizeConfig
+                                                                  .defaultSize!,
+                                                          fontFamily: 'Molengo',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    left: 10.2 *
+                                                        SizeConfig.defaultSize!,
+                                                    top: 6 *
+                                                        SizeConfig.defaultSize!,
+                                                    child: GestureDetector(
+                                                        onTap: () {
+                                                          _sendHbgVoiceClickEvent(
+                                                              userState
+                                                                  .purchase,
+                                                              userState.record);
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const CheckVoice(),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                            width: 11 *
+                                                                SizeConfig
+                                                                    .defaultSize!,
+                                                            height: 3 *
+                                                                SizeConfig
+                                                                    .defaultSize!,
+                                                            decoration:
+                                                                ShapeDecoration(
+                                                              color: const Color(
+                                                                  0xFFFFA91A),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                            ),
+                                                            child: Center(
+                                                                child: Text(
+                                                              'Edit this voice',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 1.4 *
+                                                                    SizeConfig
+                                                                        .defaultSize!,
+                                                                fontFamily:
+                                                                    'Molengo',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                            )))),
+                                                  )
+                                                ],
                                               ),
-                                              child: Icon(
-                                                Icons.add,
-                                                size: SizeConfig.defaultSize! *
-                                                    2.5,
-                                                color: const Color(0xFFFFA91A),
-                                              ))),
-
-                                  SizedBox(
-                                    height: 2 * SizeConfig.defaultSize!,
-                                  ),
-                                  // IconButton(
-                                  //     onPressed: () {
-                                  //       Navigator.push(
-                                  //         context,
-                                  //         MaterialPageRoute(
-                                  //           builder: (context) => CheckVoice(
-                                  //             infenrencedVoice: '48',
-                                  //           ),
-                                  //         ),
-                                  //       );
-                                  //     },
-                                  //     icon: const Icon(Icons.check)),
-
-                                  userState.login
-                                      ? GestureDetector(
-                                          child: Text(
-                                            'Sign Out',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize:
-                                                  1.8 * SizeConfig.defaultSize!,
-                                              fontFamily: 'Molengo',
-                                              fontWeight: FontWeight.w400,
                                             ),
-                                          ),
-                                          onTap: () {
-                                            _sendSignOutClickEvent(
-                                                userState.purchase,
-                                                userState.record);
-                                            setState(() {
-                                              showSignOutConfirmation =
-                                                  !showSignOutConfirmation; // dropdown 상태 토글
-                                            });
-                                          },
-                                        )
-                                      : GestureDetector(
-                                          child: Text(
-                                            'Sign In',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize:
-                                                  1.8 * SizeConfig.defaultSize!,
-                                              fontFamily: 'Molengo',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            _sendSignOutClickEvent(
-                                                userState.purchase,
-                                                userState.record);
-                                            // dropdown 상태 토글
-                                            Navigator.push(
+                                          )
+                                        : GestureDetector(
+                                            onTap: () {
+                                              _sendHbgVoiceClickEvent(
+                                                  userState.purchase,
+                                                  userState.record);
+                                              Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const LoginScreen(),
-                                                ));
-                                          }),
-                                  //    userState.login && showSignOutConfirmation
-                                  userState.login && showSignOutConfirmation
-                                      ? GestureDetector(
-                                          child: Transform.translate(
-                                              offset: Offset(
-                                                  0.5 * SizeConfig.defaultSize!,
-                                                  0.5 *
-                                                      SizeConfig.defaultSize!),
-                                              child: Text(
-                                                'Do you want to Sign Out?',
-                                                style: TextStyle(
-                                                  color:
-                                                      const Color(0xFF599FED),
-                                                  fontSize: 1.2 *
-                                                      SizeConfig.defaultSize!,
-                                                  fontFamily: 'Molengo',
-                                                  fontWeight: FontWeight.w400,
+                                                      userState.purchase
+                                                          ? const RecordInfo()
+                                                          : const Purchase(),
                                                 ),
-                                              )),
-                                          //),
-                                          onTap: () {
-                                            _sendSignOutReallyClickEvent(
-                                                userState.purchase,
-                                                userState.record);
-                                            logout();
-                                            userCubit.logout();
-                                            OneSignal.shared
-                                                .removeExternalUserId();
-                                            _scaffoldKey.currentState
-                                                ?.closeDrawer();
-                                            setState(() {
-                                              showSignOutConfirmation =
-                                                  !showSignOutConfirmation; // dropdown 상태 토글
-                                            }); //고민
-                                          },
-                                        )
-                                      : Container()
-                                ],
+                                              );
+                                            },
+                                            child: Container(
+                                                width: 27 *
+                                                    SizeConfig.defaultSize!,
+                                                height:
+                                                    4 * SizeConfig.defaultSize!,
+                                                decoration: ShapeDecoration(
+                                                  color: Colors.white
+                                                      .withOpacity(0.5),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                                child: Icon(
+                                                  Icons.add,
+                                                  size:
+                                                      SizeConfig.defaultSize! *
+                                                          2.5,
+                                                  color:
+                                                      const Color(0xFFFFA91A),
+                                                ))),
+
+                                    SizedBox(
+                                      height: 2 * SizeConfig.defaultSize!,
+                                    ),
+                                    // IconButton(
+                                    //     onPressed: () {
+                                    //       Navigator.push(
+                                    //         context,
+                                    //         MaterialPageRoute(
+                                    //           builder: (context) => CheckVoice(
+                                    //             infenrencedVoice: '48',
+                                    //           ),
+                                    //         ),
+                                    //       );
+                                    //     },
+                                    //     icon: const Icon(Icons.check)),
+
+                                    userState.login
+                                        ? GestureDetector(
+                                            child: Text(
+                                              'Sign Out',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 1.8 *
+                                                    SizeConfig.defaultSize!,
+                                                fontFamily: 'Molengo',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              _sendSignOutClickEvent(
+                                                  userState.purchase,
+                                                  userState.record);
+                                              setState(() {
+                                                showSignOutConfirmation =
+                                                    !showSignOutConfirmation; // dropdown 상태 토글
+                                              });
+                                            },
+                                          )
+                                        : GestureDetector(
+                                            child: Text(
+                                              'Sign In',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 1.8 *
+                                                    SizeConfig.defaultSize!,
+                                                fontFamily: 'Molengo',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              _sendSignOutClickEvent(
+                                                  userState.purchase,
+                                                  userState.record);
+                                              // dropdown 상태 토글
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const LoginScreen(),
+                                                  ));
+                                            }),
+                                    //    userState.login && showSignOutConfirmation
+                                    userState.login && showSignOutConfirmation
+                                        ? GestureDetector(
+                                            child: Transform.translate(
+                                                offset: Offset(
+                                                    0.5 *
+                                                        SizeConfig.defaultSize!,
+                                                    0.5 *
+                                                        SizeConfig
+                                                            .defaultSize!),
+                                                child: Text(
+                                                  'Do you want to Sign Out?',
+                                                  style: TextStyle(
+                                                    color:
+                                                        const Color(0xFF599FED),
+                                                    fontSize: 1.2 *
+                                                        SizeConfig.defaultSize!,
+                                                    fontFamily: 'Molengo',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                )),
+                                            //),
+                                            onTap: () {
+                                              _sendSignOutReallyClickEvent(
+                                                  userState.purchase,
+                                                  userState.record);
+                                              logout();
+                                              userCubit.logout();
+                                              OneSignal.shared
+                                                  .removeExternalUserId();
+                                              _scaffoldKey.currentState
+                                                  ?.closeDrawer();
+                                              setState(() {
+                                                showSignOutConfirmation =
+                                                    !showSignOutConfirmation; // dropdown 상태 토글
+                                              }); //고민
+                                            },
+                                          )
+                                        : Container()
+                                  ],
+                                ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+                ),
                 body: Container(
                   decoration: const BoxDecoration(
                     image: DecorationImage(
