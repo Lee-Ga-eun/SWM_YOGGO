@@ -535,8 +535,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          left: SizeConfig.defaultSize! * 2,
-                                          right: SizeConfig.defaultSize! * 2),
+                                          left: 0 * SizeConfig.defaultSize!,
+                                          right: 0 * SizeConfig.defaultSize!),
                                       child: GestureDetector(
                                         onTap: () {
                                           _sendBannerClickEvent(
