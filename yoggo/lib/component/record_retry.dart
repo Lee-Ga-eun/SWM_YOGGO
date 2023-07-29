@@ -385,6 +385,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                                   path = ''; // 이 버전을 원하지 않는 경우 path 초기화
                                   _sendRecRerecClickEvent(
                                       userState.purchase, userState.record);
+                                  Navigator.of(context).pop();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
