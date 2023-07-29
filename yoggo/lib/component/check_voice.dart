@@ -95,7 +95,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         children: [
                           IconButton(
                             icon: Icon(Icons.clear,
-                                size: 2.5 * SizeConfig.defaultSize!),
+                                size: 3 * SizeConfig.defaultSize!),
                             onPressed: () {
                               audioPlayer.stop();
                               Navigator.push(
