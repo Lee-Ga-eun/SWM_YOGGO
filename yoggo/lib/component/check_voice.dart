@@ -86,10 +86,25 @@ class _CheckVoiceState extends State<CheckVoice> {
             children: [
               Expanded(
                 flex: 1,
-                child: Stack(
-                  alignment: Alignment.centerLeft,
-                  children: [
-                    Row(
+                child: Row(children: [
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        audioPlayer.stop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomeScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 8,
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
@@ -101,39 +116,14 @@ class _CheckVoiceState extends State<CheckVoice> {
                         ),
                       ],
                     ),
-                    Positioned(
-                      left: 2 * SizeConfig.defaultSize!,
-                      child: IconButton(
-                        icon: const Icon(Icons.cancel),
-                        onPressed: () {
-                          audioPlayer.stop();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                          );
-                        },
-                        //color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: Container(color: Color.fromARGB(0, 0, 0, 0)))
+                ]),
               ),
-              // Expanded(
-              //   flex: 1,
-              //   child: Text(
-              //     'Complete! Here is your voice!',
-              //     textAlign: TextAlign.center,
-              //     style: TextStyle(
-              //       fontSize: 3 * SizeConfig.defaultSize!,
-              //       color: const Color.fromARGB(255, 194, 120, 209),
-              //       fontFamily: 'BreeSerif',
-              //     ),
-              //   ),
-              // ),
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Row(
                   children: [
                     // SizedBox(
@@ -143,7 +133,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                       children: [
                         Container(
                           width: 18 * SizeConfig.defaultSize!,
-                          height: 18 * SizeConfig.defaultSize!,
+                          height: 19 * SizeConfig.defaultSize!,
                           margin: EdgeInsets.zero,
                           padding: EdgeInsets.zero,
                           decoration: ShapeDecoration(
@@ -154,7 +144,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                           ),
                           child: Column(children: [
                             SizedBox(
-                              height: SizeConfig.defaultSize! * 2.2,
+                              height: SizeConfig.defaultSize! * 2.8,
                             ),
                             Image.asset(
                               'lib/images/icons/${userState.voiceIcon}-c.png',
@@ -163,11 +153,11 @@ class _CheckVoiceState extends State<CheckVoice> {
                           ]),
                         ),
                         SizedBox(
-                          height: SizeConfig.defaultSize!,
+                          height: 1.6 * SizeConfig.defaultSize!,
                         ),
                         Container(
                             width: 18 * SizeConfig.defaultSize!,
-                            height: 7.5 * SizeConfig.defaultSize!,
+                            height: 9 * SizeConfig.defaultSize!,
                             decoration: ShapeDecoration(
                               color: Colors.white.withOpacity(0.5),
                               shape: RoundedRectangleBorder(
@@ -189,8 +179,8 @@ class _CheckVoiceState extends State<CheckVoice> {
                     ),
                     Column(children: [
                       Container(
-                        width: 52.4 * SizeConfig.defaultSize!,
-                        height: 26.5 * SizeConfig.defaultSize!,
+                        width: 55 * SizeConfig.defaultSize!,
+                        height: 29.6 * SizeConfig.defaultSize!,
                         margin: EdgeInsets.zero,
                         decoration: ShapeDecoration(
                           color: Colors.white.withOpacity(0.5),
@@ -200,7 +190,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                         ),
                         child: Column(
                           children: [
-                            SizedBox(height: 2 * SizeConfig.defaultSize!),
+                            SizedBox(height: 3.2 * SizeConfig.defaultSize!),
                             Container(
                                 width: 50 * SizeConfig.defaultSize!,
                                 height: 16 * SizeConfig.defaultSize!,

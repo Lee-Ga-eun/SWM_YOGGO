@@ -380,7 +380,7 @@ class _PageWidgetState extends State<PageWidget> {
                         ),
                       )),
                   Expanded(
-                    // HEAD
+                    // BoDY
                     flex: 74,
                     child: Row(
                       children: [
