@@ -214,7 +214,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                     Column(children: [
                       Expanded(
                           // HEADER
-                          flex: 14,
+                          flex: 12,
                           child: Row(children: [
                             Expanded(
                                 flex: 1,
@@ -224,7 +224,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(
-                                        height: 1 * SizeConfig.defaultSize!,
+                                        height: 0 * SizeConfig.defaultSize!,
                                       ),
                                       IconButton(
                                         icon: Icon(Icons.clear,
@@ -256,7 +256,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       SizedBox(
-                                        height: 1 * SizeConfig.defaultSize!,
+                                        height: 0 * SizeConfig.defaultSize!,
                                       ),
                                       IconButton(
                                         icon: Icon(
