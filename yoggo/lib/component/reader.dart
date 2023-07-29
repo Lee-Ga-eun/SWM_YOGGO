@@ -366,7 +366,7 @@ class _PageWidgetState extends State<PageWidget> {
                               icon: Icon(
                                 Icons.clear,
                                 color: Colors.black,
-                                size: 2.5 * SizeConfig.defaultSize!,
+                                size: 3 * SizeConfig.defaultSize!,
                               ),
                               onPressed: () {
                                 // stopAudio();

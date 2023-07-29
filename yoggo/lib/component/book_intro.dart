@@ -268,7 +268,7 @@ class _BookIntroState extends State<BookIntro> {
                 child: Column(children: [
                   Expanded(
                       // HEADER
-                      flex: 14,
+                      flex: 12,
                       child: Row(children: [
                         Expanded(
                             flex: 1,
