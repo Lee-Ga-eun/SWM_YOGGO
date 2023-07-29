@@ -219,7 +219,7 @@ class _PurchaseState extends State<Purchase> {
               Positioned(
                 left: 2 * SizeConfig.defaultSize!,
                 child: IconButton(
-                  icon: const Icon(Icons.clear),
+                  icon: Icon(Icons.clear, size: 3 * SizeConfig.defaultSize!),
                   onPressed: () {
                     Navigator.push(
                       context,
