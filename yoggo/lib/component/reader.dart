@@ -553,7 +553,7 @@ class _PageWidgetState extends State<PageWidget> {
                                           icon: Icon(
                                             Icons.check,
                                             color: const Color.fromARGB(
-                                                255, 77, 204, 81),
+                                                255, 0, 0, 0),
                                             size: 3 * SizeConfig.defaultSize!,
                                           ),
                                           // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
