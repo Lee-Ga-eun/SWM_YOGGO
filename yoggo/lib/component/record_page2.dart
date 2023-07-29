@@ -208,7 +208,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                                 flex: 1,
                                 child: IconButton(
                                   icon: Icon(Icons.clear,
-                                      size: 2.5 * SizeConfig.defaultSize!),
+                                      size: 3 * SizeConfig.defaultSize!),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -344,7 +344,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Capriola',
-                                        fontSize: 2.3 * SizeConfig.defaultSize!,
+                                        fontSize: 2.2 * SizeConfig.defaultSize!,
                                       ),
                                     ),
                                   ),
@@ -388,7 +388,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Molengo',
-                                        fontSize: 2.3 * SizeConfig.defaultSize!,
+                                        fontSize: 2.2 * SizeConfig.defaultSize!,
                                       ),
                                     ),
                                   ),
