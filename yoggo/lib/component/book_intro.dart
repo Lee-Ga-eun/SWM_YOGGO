@@ -272,14 +272,19 @@ class _BookIntroState extends State<BookIntro> {
                       child: Row(children: [
                         Expanded(
                             flex: 1,
-                            child: IconButton(
-                              icon: Icon(Icons.clear,
-                                  size: 3 * SizeConfig.defaultSize!),
-                              onPressed: () {
-                                _sendBookExitClickEvent(cvi);
-                                Navigator.of(context).pop();
-                              },
-                            )),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.clear,
+                                        size: 3 * SizeConfig.defaultSize!),
+                                    onPressed: () {
+                                      _sendBookExitClickEvent(cvi);
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ])),
                         Expanded(
                             flex: 8,
                             child:
@@ -327,7 +332,7 @@ class _BookIntroState extends State<BookIntro> {
                             Text(
                               widget.title,
                               style: TextStyle(
-                                  fontSize: 3.3 * SizeConfig.defaultSize!,
+                                  fontSize: 3.2 * SizeConfig.defaultSize!,
                                   fontFamily: 'BreeSerif'),
                             ),
                             SizedBox(
