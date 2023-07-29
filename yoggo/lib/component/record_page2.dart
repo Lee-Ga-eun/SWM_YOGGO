@@ -185,197 +185,224 @@ class _AudioRecorderState extends State<AudioRecorder> {
     SizeConfig().init(context);
     _sendRecIngViewEvent(userState.purchase, userState.record);
     return MaterialApp(
-      home: Scaffold(
-        body: Stack(
-          children: [
-            Container(
+        home: Scaffold(
+      body: Stack(
+        children: [
+          Container(
               decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('lib/images/bkground.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: SizeConfig.defaultSize!,
-                  ),
-                  Expanded(
-                    flex: SizeConfig.defaultSize!.toInt(),
-                    child: Stack(
-                      alignment: Alignment.centerLeft,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'LOVEL',
-                              style: TextStyle(
-                                fontFamily: 'Modak',
-                                fontSize: SizeConfig.defaultSize! * 5,
+                  image: DecorationImage(
+                image: AssetImage('lib/images/bkground.png'),
+                fit: BoxFit.cover,
+              )),
+              child: SafeArea(
+                  bottom: false,
+                  top: false,
+                  minimum: EdgeInsets.only(right: 3 * SizeConfig.defaultSize!),
+                  child: Stack(children: [
+                    Column(children: [
+                      Expanded(
+                          // HEADER
+                          flex: 14,
+                          child: Row(children: [
+                            Expanded(
+                                flex: 1,
+                                child: IconButton(
+                                  icon: Icon(Icons.clear,
+                                      size: 3 * SizeConfig.defaultSize!),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )),
+                            Expanded(
+                              flex: 8,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'LOVEL',
+                                    style: TextStyle(
+                                      fontFamily: 'Modak',
+                                      fontSize: SizeConfig.defaultSize! * 5,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                    color: Color.fromARGB(0, 0, 0, 0)))
+                          ])),
+                      Expanded(
+                        // BODY
+                        flex: 62,
+                        child: Container(
+                            // color: Color.fromARGB(250, 0, 100, 0),
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'As she emerges from the sea onto the shore, she realizes that\nher voice is gone, but she still recognizes its immeasurable beauty\nand preciousness. She expresses it in the following way:\n"Voice is an ineffable beauty. It is the purest and most precious gift.\nThough I have lost this cherished gift, I will embark on a journey\nto find true love through other means. Even without my voice,\nthe emotions and passions within me will not easily fade away.\nLove transcends language. In this quest to reclaim my precious voice,\nI will discover my true self and learn the ways of love and freedom."',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 2.1 * SizeConfig.defaultSize!,
+                                fontFamily: 'Molengo',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              textAlign: TextAlign.center,
+                            )
                           ],
-                        ),
-                        Positioned(
-                          left: SizeConfig.defaultSize! * 2,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.cancel,
-                              size: SizeConfig.defaultSize! * 2.3,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RecordInfo(),
+                        )),
+                      ),
+                      Expanded(
+                        // FOOTER
+                        flex: 24,
+                        child: Row(children: [
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                                // color: Color.fromARGB(250, 0, 100, 0)
                                 ),
-                              );
-                            },
+                          ),
+                          Expanded(flex: 3, child: Container()),
+                          Expanded(
+                            flex: 2,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                _buildRecordStopControl(),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                _buildText(),
+                              ],
+                            ),
+                          ),
+                          Expanded(flex: 1, child: Container())
+                        ]),
+                      ),
+                    ]),
+                    Visibility(
+                      visible: stopped,
+                      child: AlertDialog(
+                        titlePadding: EdgeInsets.only(
+                          left: SizeConfig.defaultSize! * 8,
+                          right: SizeConfig.defaultSize! * 8,
+                          top: SizeConfig.defaultSize! * 7,
+                          bottom: SizeConfig.defaultSize! * 2,
+                        ),
+                        actionsPadding: EdgeInsets.only(
+                          // left: SizeConfig.defaultSize! * 5,
+                          // right: SizeConfig.defaultSize! * 5,
+                          bottom: SizeConfig.defaultSize! * 5,
+                          top: SizeConfig.defaultSize! * 3,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.defaultSize! * 3),
+                        ),
+                        backgroundColor: Colors.white.withOpacity(0.9),
+                        title: Text(
+                          'Would you like to use the voice you just recorded?',
+                          style: TextStyle(
+                            fontSize: SizeConfig.defaultSize! * 2.5,
+                            fontFamily: 'Molengo',
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                      flex: 22,
-                      child: Text(
-                        'As she emerges from the sea onto the shore, she realizes that\nher voice is gone, but she still recognizes its immeasurable beauty\nand preciousness. She expresses it in the following way:\n"Voice is an ineffable beauty. It is the purest and most precious gift.\nThough I have lost this cherished gift, I will embark on a journey\nto find true love through other means. Even without my voice,\nthe emotions and passions within me will not easily fade away.\nLove transcends language. In this quest to reclaim my precious voice,\nI will discover my true self and learn the ways of love and freedom."\n',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 2 * SizeConfig.defaultSize!,
-                          fontFamily: 'Molengo',
-                          fontWeight: FontWeight.w400,
-                        ),
-                        textAlign: TextAlign.center,
-                      )),
-                  Expanded(
-                    flex: SizeConfig.defaultSize!.toInt() * 1,
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        _buildRecordStopControl(),
-                        SizedBox(width: SizeConfig.defaultSize! * 1),
-                        // _buildPauseResumeControl(),
-                        // const SizedBox(width: 20),
-                        _buildText(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned.fill(
-              child: Visibility(
-                visible: stopped,
-                child: AlertDialog(
-                  titlePadding: EdgeInsets.only(
-                      left: SizeConfig.defaultSize! * 10,
-                      right: SizeConfig.defaultSize! * 10,
-                      top: SizeConfig.defaultSize! * 7),
-                  // buttonPadding: const EdgeInsets.only(left: 30, right: 30),
-                  actionsPadding: EdgeInsets.only(
-                      left: SizeConfig.defaultSize! * 9,
-                      right: SizeConfig.defaultSize! * 9,
-                      bottom: SizeConfig.defaultSize! * 3,
-                      top: SizeConfig.defaultSize! * 5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        SizeConfig.defaultSize! * 3), // 모든 모서리를 10 픽셀로 둥글게 설정
-                  ),
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  title: Text(
-                    'Would you like to use the voice you just recorded?',
-                    style: TextStyle(
-                      fontSize: SizeConfig.defaultSize! * 2.5,
-                      fontFamily: 'Molengo',
-                    ),
-                  ),
-                  // content: const Text('Your recording has been completed.'),
-                  actions: [
-                    GestureDetector(
-                      onTap: () {
-                        path = ''; // 이 버전을 원하지 않는 경우 path 초기화
-                        _sendRecRerecClickEvent(
-                            userState.purchase, userState.record);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AudioRecorder()));
-                        //  Navigator.pop(context);
-                      },
-                      child: Container(
-                          width: SizeConfig.defaultSize! * 24,
-                          height: SizeConfig.defaultSize! * 4.5,
-                          // color: Colors.orange,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                  SizeConfig.defaultSize! *
-                                      1.5), // 원하는 모서리의 둥글기 설정
-                              color: const Color(0xFFFFA91A)),
-                          child: Center(
-                            child: Text(
-                              'No, Re-make',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Molengo,',
-                                  fontSize: 2.3 * SizeConfig.defaultSize!),
-                            ),
-                          )),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.defaultSize! * 4,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        // 1초 후에 다음 페이지로 이동
-                        if (path != null) {
-                          // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
-                          widget.onStop?.call(path!);
-                          path_copy = path!.split('/').last;
-                          await sendRecord(path, path_copy);
-                          _sendRecKeepClickEvent(
-                              userState.purchase, userState.record);
-                        }
-                        Future.delayed(const Duration(seconds: 1), () async {
-                          // await userCubit.fetchUser();
-                          // print("fetchuser부름");
-                          print(userState.record);
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const recordRequest()),
-                          );
-                        });
-                      },
-                      child: Container(
-                          width: SizeConfig.defaultSize! * 24,
-                          height: SizeConfig.defaultSize! * 4.5,
-                          // color: Colors.orange,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                  SizeConfig.defaultSize! *
-                                      1.5), // 원하는 모서리의 둥글기 설정
-                              color: const Color(0xFFFFA91A)),
-                          child: Center(
-                            child: Text(
-                              'Yes',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Molengo,',
-                                  fontSize: 2.3 * SizeConfig.defaultSize!),
-                            ),
-                          )),
+                        actions: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  path = ''; // 이 버전을 원하지 않는 경우 path 초기화
+                                  _sendRecRerecClickEvent(
+                                      userState.purchase, userState.record);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AudioRecorder()),
+                                  );
+                                },
+                                child: Container(
+                                  width: SizeConfig.defaultSize! * 24,
+                                  height: SizeConfig.defaultSize! * 4.5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.defaultSize! * 1.5),
+                                    color: const Color(0xFFFFA91A),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'No, Re-make',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Capriola',
+                                        fontSize: 2.2 * SizeConfig.defaultSize!,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                  width: SizeConfig.defaultSize! * 4), // 간격 조정
+                              GestureDetector(
+                                onTap: () async {
+                                  // 1초 후에 다음 페이지로 이동
+                                  if (path != null) {
+                                    // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
+                                    widget.onStop?.call(path!);
+                                    path_copy = path!.split('/').last;
+                                    await sendRecord(path, path_copy);
+                                    _sendRecKeepClickEvent(
+                                        userState.purchase, userState.record);
+                                  }
+                                  Future.delayed(const Duration(seconds: 1),
+                                      () async {
+                                    print(userState.record);
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const recordRequest()),
+                                    );
+                                  });
+                                },
+                                child: Container(
+                                  width: SizeConfig.defaultSize! * 24,
+                                  height: SizeConfig.defaultSize! * 4.5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.defaultSize! * 1.5),
+                                    color: const Color(0xFFFFA91A),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Yes',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Molengo',
+                                        fontSize: 2.2 * SizeConfig.defaultSize!,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+                  ])))
+        ],
       ),
-    );
+    ));
   }
 
   @override
@@ -390,35 +417,29 @@ class _AudioRecorderState extends State<AudioRecorder> {
   Widget _buildRecordStopControl() {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
-    late Image icon;
-    //late Color color;
+    late Widget icon;
 
     if (_recordState != RecordState.stop) {
-      icon = Image.asset('lib/images/record.png',
-          height: SizeConfig.defaultSize! * 3); //(Icons.stop,
-      //color: Colors.red, size: SizeConfig.defaultSize! * 3);
-      //color = Colors.red.withOpacity(0.1);
-    } else {
-      //   _stopRecording();
-      final theme = Theme.of(context);
-      icon = Image.asset(
-        'lib/images/record.png',
-        height: SizeConfig.defaultSize! * 3,
+      icon = Icon(
+        Icons.stop,
+        size: 5 * SizeConfig.defaultSize!,
+        color: Color.fromARGB(255, 255, 0, 0),
       );
-      //color: theme.primaryColor); //(Icons.stop,
-      //icon = Icon(Icons.mic,
-      //    color: theme.primaryColor, size: SizeConfig.defaultSize! * 3);
-      //color = theme.primaryColor.withOpacity(0.1);
+    } else {
+      final theme = Theme.of(context);
+      icon = Icon(Icons.circle,
+          size: 5 * SizeConfig.defaultSize!,
+          color: Color.fromARGB(255, 255, 0, 0));
     }
 
     return ClipOval(
       child: Material(
-        //color: color,
         child: InkWell(
           child: SizedBox(
-              width: SizeConfig.defaultSize! * 5.6,
-              height: SizeConfig.defaultSize! * 5.6,
-              child: icon),
+            width: SizeConfig.defaultSize! * 5.2,
+            height: SizeConfig.defaultSize! * 5.2,
+            child: icon,
+          ),
           onTap: () {
             (_recordState != RecordState.stop)
                 ? _stop(userState.purchase, userState.record)
@@ -468,7 +489,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     return Text(
       "Waiting to record",
       style: TextStyle(
-        fontSize: SizeConfig.defaultSize! * 1.6,
+        fontSize: SizeConfig.defaultSize! * 1.8,
         fontFamily: 'Molengo',
       ),
     );
@@ -480,10 +501,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
     return Text(
       '$minutes : $seconds',
-      style: const TextStyle(
-        color: Colors.red,
-        fontFamily: 'Molengo',
-      ),
+      style: TextStyle(
+          color: Colors.red,
+          fontFamily: 'Oxygen',
+          fontSize: 1.8 * SizeConfig.defaultSize!),
     );
   }
 

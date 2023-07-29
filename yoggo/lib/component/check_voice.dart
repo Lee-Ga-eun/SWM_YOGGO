@@ -89,18 +89,24 @@ class _CheckVoiceState extends State<CheckVoice> {
                 child: Row(children: [
                   Expanded(
                     flex: 1,
-                    child: IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        audioPlayer.stop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
-                          ),
-                        );
-                      },
-                    ),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.clear,
+                                size: 2.5 * SizeConfig.defaultSize!),
+                            onPressed: () {
+                              audioPlayer.stop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeScreen(),
+                                ),
+                              );
+                            },
+                          )
+                        ]),
                   ),
                   Expanded(
                     flex: 8,
