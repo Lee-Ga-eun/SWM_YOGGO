@@ -244,6 +244,43 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                             },
                           ),
                         ),
+                        Positioned(
+                          right: 10 * SizeConfig.defaultSize!,
+                          child: IconButton(
+                            icon: Text(
+                              "📢",
+                              style: TextStyle(
+                                  fontSize: SizeConfig.defaultSize! * 3),
+                            ),
+                            onPressed: () async {
+                              // showDialog를 통해 팝업 창을 띄웁니다.
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    scrollable: true,
+                                    alignment: Alignment.centerRight,
+                                    //title: const Text('For good qualtiy'),
+                                    content: const Text(
+                                      '\n\nEliminate ambient noise and \nfocus on your voice\n\nThe more of your voice without \ngaps the better quality\n\nThe best quality when recorded \nfor about 40 seconds\n',
+                                    ),
+                                    actions: <Widget>[
+                                      // 팝업 창 내 버튼
+                                      TextButton(
+                                        child: const Text(
+                                          'Got it',
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(); // 팝업 닫기
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        )
                       ],
                     ),
                   ),
