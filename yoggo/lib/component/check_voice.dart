@@ -88,301 +88,328 @@ class _CheckVoiceState extends State<CheckVoice> {
                 flex: 1,
                 child: Row(children: [
                   Expanded(
-                    flex: 1,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.clear,
-                                size: 2.5 * SizeConfig.defaultSize!),
-                            onPressed: () {
-                              audioPlayer.stop();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const HomeScreen(),
-                                ),
-                              );
-                            },
-                          )
-                        ]),
-                  ),
+                      flex: 1,
+                      child: Container(
+                        // color: Color.fromARGB(200, 202, 20, 20),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.clear,
+                                    size: 3 * SizeConfig.defaultSize!),
+                                onPressed: () {
+                                  audioPlayer.stop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomeScreen(),
+                                    ),
+                                  );
+                                },
+                              )
+                            ]),
+                      )),
                   Expanded(
-                    flex: 8,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'LOVEL',
-                          style: TextStyle(
-                            fontFamily: 'Modak',
-                            fontSize: SizeConfig.defaultSize! * 5,
-                          ),
+                      flex: 8,
+                      child: Container(
+                        // color: Color.fromARGB(232, 0, 26, 64),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'LOVEL',
+                              style: TextStyle(
+                                fontFamily: 'Modak',
+                                fontSize: SizeConfig.defaultSize! * 5,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      )),
                   Expanded(
                       flex: 1,
                       child: Container(color: Color.fromARGB(0, 0, 0, 0)))
                 ]),
               ),
               Expanded(
-                flex: 4,
-                child: Row(
-                  children: [
-                    // SizedBox(
-                    //   width: SizeConfig.defaultSize!,
-                    // ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 18 * SizeConfig.defaultSize!,
-                          height: 19 * SizeConfig.defaultSize!,
-                          margin: EdgeInsets.zero,
-                          padding: EdgeInsets.zero,
-                          decoration: ShapeDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: Column(children: [
-                            SizedBox(
-                              height: SizeConfig.defaultSize! * 2.8,
-                            ),
-                            Image.asset(
-                              'lib/images/icons/${userState.voiceIcon}-c.png',
-                              height: SizeConfig.defaultSize! * 13.5,
-                            ),
-                          ]),
-                        ),
-                        SizedBox(
-                          height: 1.6 * SizeConfig.defaultSize!,
-                        ),
-                        Container(
-                            width: 18 * SizeConfig.defaultSize!,
-                            height: 9 * SizeConfig.defaultSize!,
-                            decoration: ShapeDecoration(
-                              color: Colors.white.withOpacity(0.5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 1.5 * SizeConfig.defaultSize!,
+                      ),
+                      Row(
+                        children: [
+                          // SizedBox(
+                          //   width: SizeConfig.defaultSize!,
+                          // ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 18 * SizeConfig.defaultSize!,
+                                height: 19 * SizeConfig.defaultSize!,
+                                margin: EdgeInsets.zero,
+                                padding: EdgeInsets.zero,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white.withOpacity(0.5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                child: Column(children: [
+                                  SizedBox(
+                                    height: SizeConfig.defaultSize! * 2.8,
+                                  ),
+                                  Image.asset(
+                                    'lib/images/icons/${userState.voiceIcon}-c.png',
+                                    height: SizeConfig.defaultSize! * 13.5,
+                                  ),
+                                ]),
                               ),
-                            ),
-                            child: Center(
-                                child: Text(
-                              userState.voiceName!,
-                              style: TextStyle(
-                                fontFamily: 'Molengo',
-                                fontSize: SizeConfig.defaultSize! * 2.3,
+                              SizedBox(
+                                height: 1.6 * SizeConfig.defaultSize!,
                               ),
-                            )))
-                      ],
-                    ),
-                    SizedBox(
-                      width: SizeConfig.defaultSize! * 2,
-                    ),
-                    Column(children: [
-                      Container(
-                        width: 55 * SizeConfig.defaultSize!,
-                        height: 29.6 * SizeConfig.defaultSize!,
-                        margin: EdgeInsets.zero,
-                        decoration: ShapeDecoration(
-                          color: Colors.white.withOpacity(0.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 3.2 * SizeConfig.defaultSize!),
-                            Container(
-                                width: 50 * SizeConfig.defaultSize!,
-                                height: 16 * SizeConfig.defaultSize!,
-                                child: Center(
-                                  child: Text(
-                                    "This dialogue highlights the mermaid's realization\nof the value of her voice, its intangible beauty,\nand its role in her pursuit of true love and self-discovery.\nDespite losing her voice, she finds the strength to communicate\nthrough her heart and believes that love goes beyond words.\nThe journey becomes an opportunity for her to uncover\nher true essence and understand the essence of love and freedom.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 1.8 * SizeConfig.defaultSize!,
-                                      fontFamily: 'Molengo',
-                                      fontWeight: FontWeight.w400,
+                              Container(
+                                  width: 18 * SizeConfig.defaultSize!,
+                                  height: 9 * SizeConfig.defaultSize!,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
-                                  // child: SingleChildScrollView(
-                                  //   child: RichText(
-                                  //     textAlign: TextAlign.center,
-                                  //     text: TextSpan(
-                                  //       children: [
-                                  //         TextSpan(
-                                  //           children: [
-                                  // TextSpan(
-                                  //   text:
-                                  //       'This dialogue highlights the mermaid\'s realization of the value\n',
-                                  //   style: TextStyle(
-                                  //       fontSize:
-                                  //           1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  // TextSpan(
-                                  //   text:
-                                  //       'of her voice, its intangible beauty, and its role in her pursuit of\n',
-                                  //   style: TextStyle(
-                                  //       fontSize:
-                                  //           1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  // TextSpan(
-                                  //   text:
-                                  //       'true love and self-discovery. Despite losing her voice, she finds \n ',
-                                  //   style: TextStyle(
-                                  //       fontSize:
-                                  //           1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  // TextSpan(
-                                  //   text:
-                                  //       'the strength to communicate through her heart and believes that \n',
-                                  //   style: TextStyle(
-                                  //       fontSize:
-                                  //           1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  // TextSpan(
-                                  //   text:
-                                  //       'love goes beyond words. The journey becomes  an opportunity for her\n',
-                                  //   style: TextStyle(
-                                  //       fontSize:
-                                  //           1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  // TextSpan(
-                                  //   text:
-                                  //       'to uncover her true essence and understand the essence of love and freedom.\n',
-                                  //   style: TextStyle(
-                                  //       fontSize:
-                                  //           1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  // TextSpan(
-                                  //   text:
-                                  //       'and passions within me will not easily fade away. Love transcends\n',
-                                  //   style: TextStyle(
-                                  //       fontSize: 1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  // TextSpan(
-                                  //   text:
-                                  //       'language. In this quest to reclaim my precious voice, I will discover my\n',
-                                  //   style: TextStyle(
-                                  //       fontSize: 1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  // TextSpan(
-                                  //   text:
-                                  //       'true self and learn the ways of love and freedom."',
-                                  //   style: TextStyle(
-                                  //       fontSize: 1.6 * SizeConfig.defaultSize!,
-                                  //       color: Colors.black,
-                                  //       fontWeight: FontWeight.bold),
-                                  // ),
-                                  //           ],
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                )),
-                            Expanded(
-                              child: Stack(
-                                alignment: Alignment.centerLeft,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  child: Center(
+                                      child: Text(
+                                    userState.voiceName!,
+                                    style: TextStyle(
+                                      fontFamily: 'Molengo',
+                                      fontSize: SizeConfig.defaultSize! * 2.3,
+                                    ),
+                                  )))
+                            ],
+                          ),
+                          SizedBox(
+                            width: SizeConfig.defaultSize! * 2,
+                          ),
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 55 * SizeConfig.defaultSize!,
+                                  height: 29.6 * SizeConfig.defaultSize!,
+                                  margin: EdgeInsets.zero,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  child: Column(
                                     children: [
-                                      InkWell(
-                                        onTap: () {
-                                          _sendVoiceRemakeClickEvent(
-                                              userState.purchase,
-                                              userState.record,
-                                              userState.voiceId!);
-                                          audioPlayer.stop();
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AudioRecorderRetry(),
-                                            ),
-                                          );
-                                        },
-                                        child: Container(
-                                          width: 31.1 * SizeConfig.defaultSize!,
-                                          height: 4.5 * SizeConfig.defaultSize!,
-                                          decoration: ShapeDecoration(
-                                            color: Color(0xFFFFA91A),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          ),
+                                      SizedBox(
+                                          height:
+                                              3.2 * SizeConfig.defaultSize!),
+                                      Container(
+                                          width: 50 * SizeConfig.defaultSize!,
+                                          height: 16 * SizeConfig.defaultSize!,
                                           child: Center(
                                             child: Text(
-                                              'Re-make your voice',
+                                              "This dialogue highlights the mermaid's realization\nof the value of her voice, its intangible beauty,\nand its role in her pursuit of true love and self-discovery.\nDespite losing her voice, she finds the strength to communicate\nthrough her heart and believes that love goes beyond words.\nThe journey becomes an opportunity for her to uncover\nher true essence and understand the essence of love and freedom.",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 2.3 *
+                                                fontSize: 1.8 *
                                                     SizeConfig.defaultSize!,
                                                 fontFamily: 'Molengo',
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                          ),
+                                            // child: SingleChildScrollView(
+                                            //   child: RichText(
+                                            //     textAlign: TextAlign.center,
+                                            //     text: TextSpan(
+                                            //       children: [
+                                            //         TextSpan(
+                                            //           children: [
+                                            // TextSpan(
+                                            //   text:
+                                            //       'This dialogue highlights the mermaid\'s realization of the value\n',
+                                            //   style: TextStyle(
+                                            //       fontSize:
+                                            //           1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            // TextSpan(
+                                            //   text:
+                                            //       'of her voice, its intangible beauty, and its role in her pursuit of\n',
+                                            //   style: TextStyle(
+                                            //       fontSize:
+                                            //           1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            // TextSpan(
+                                            //   text:
+                                            //       'true love and self-discovery. Despite losing her voice, she finds \n ',
+                                            //   style: TextStyle(
+                                            //       fontSize:
+                                            //           1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            // TextSpan(
+                                            //   text:
+                                            //       'the strength to communicate through her heart and believes that \n',
+                                            //   style: TextStyle(
+                                            //       fontSize:
+                                            //           1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            // TextSpan(
+                                            //   text:
+                                            //       'love goes beyond words. The journey becomes  an opportunity for her\n',
+                                            //   style: TextStyle(
+                                            //       fontSize:
+                                            //           1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            // TextSpan(
+                                            //   text:
+                                            //       'to uncover her true essence and understand the essence of love and freedom.\n',
+                                            //   style: TextStyle(
+                                            //       fontSize:
+                                            //           1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            // TextSpan(
+                                            //   text:
+                                            //       'and passions within me will not easily fade away. Love transcends\n',
+                                            //   style: TextStyle(
+                                            //       fontSize: 1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            // TextSpan(
+                                            //   text:
+                                            //       'language. In this quest to reclaim my precious voice, I will discover my\n',
+                                            //   style: TextStyle(
+                                            //       fontSize: 1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            // TextSpan(
+                                            //   text:
+                                            //       'true self and learn the ways of love and freedom."',
+                                            //   style: TextStyle(
+                                            //       fontSize: 1.6 * SizeConfig.defaultSize!,
+                                            //       color: Colors.black,
+                                            //       fontWeight: FontWeight.bold),
+                                            // ),
+                                            //           ],
+                                            //         ),
+                                            //       ],
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                          )),
+                                      Expanded(
+                                        child: Stack(
+                                          alignment: Alignment.centerLeft,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    _sendVoiceRemakeClickEvent(
+                                                        userState.purchase,
+                                                        userState.record,
+                                                        userState.voiceId!);
+                                                    audioPlayer.stop();
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const AudioRecorderRetry(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: 31.1 *
+                                                        SizeConfig.defaultSize!,
+                                                    height: 4.5 *
+                                                        SizeConfig.defaultSize!,
+                                                    decoration: ShapeDecoration(
+                                                      color: Color(0xFFFFA91A),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                      ),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Re-make your voice',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 2.3 *
+                                                              SizeConfig
+                                                                  .defaultSize!,
+                                                          fontFamily: 'Molengo',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 5.3 *
+                                                      SizeConfig.defaultSize!,
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(
+                                                    Icons.play_arrow,
+                                                    size: 3 *
+                                                        SizeConfig.defaultSize!,
+                                                    // color: const Color.fromARGB(
+                                                    //     255, 194, 120, 209),
+                                                  ),
+                                                  onPressed: () {
+                                                    _sendVoicePlayClickEvent(
+                                                        userState.purchase,
+                                                        userState.record,
+                                                        userState.voiceId!);
+                                                    inferenceUrl == ""
+                                                        ? null
+                                                        : audioPlayer.play(
+                                                            UrlSource(
+                                                                inferenceUrl));
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 5.3 * SizeConfig.defaultSize!,
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.play_arrow,
-                                          size: 3 * SizeConfig.defaultSize!,
-                                          // color: const Color.fromARGB(
-                                          //     255, 194, 120, 209),
-                                        ),
-                                        onPressed: () {
-                                          _sendVoicePlayClickEvent(
-                                              userState.purchase,
-                                              userState.record,
-                                              userState.voiceId!);
-                                          inferenceUrl == ""
-                                              ? null
-                                              : audioPlayer.play(
-                                                  UrlSource(inferenceUrl));
-                                        },
-                                      ),
+                                      )
                                     ],
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                                ),
+                              ])
+                        ],
                       ),
-                    ])
-                  ],
-                ),
-              ),
+                    ],
+                  )),
               //   Expanded(
               //     flex: 2,
               //     child: SingleChildScrollView(

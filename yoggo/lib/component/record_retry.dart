@@ -214,14 +214,18 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                     Column(children: [
                       Expanded(
                           // HEADER
-                          flex: 14,
+                          flex: 12,
                           child: Row(children: [
                             Expanded(
                                 flex: 1,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
+                                      SizedBox(
+                                        height: 0 * SizeConfig.defaultSize!,
+                                      ),
                                       IconButton(
                                         icon: Icon(Icons.clear,
                                             size: 3 * SizeConfig.defaultSize!),
@@ -247,10 +251,13 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                             ),
                             Expanded(
                                 flex: 1,
-                                child: Row(
+                                child: Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
+                                      SizedBox(
+                                        height: 0 * SizeConfig.defaultSize!,
+                                      ),
                                       IconButton(
                                         icon: Icon(
                                           Icons.info_outline, // "info" 아이콘 사용
@@ -378,6 +385,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                                   path = ''; // 이 버전을 원하지 않는 경우 path 초기화
                                   _sendRecRerecClickEvent(
                                       userState.purchase, userState.record);
+                                  Navigator.of(context).pop();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
