@@ -315,7 +315,7 @@ class _PurchaseState extends State<Purchase> {
                                     fontFamily: 'Molengo'),
                               ),
                               TextSpan(
-                                text: 'MONTH',
+                                text: 'WEEK',
                                 style: TextStyle(
                                     height: 0,
                                     fontSize: SizeConfig.defaultSize! * 2.3,

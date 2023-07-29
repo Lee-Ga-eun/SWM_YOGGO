@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoggo/component/record_info_retry.dart';
 import 'package:yoggo/component/record_request.dart';
 import 'package:yoggo/size_config.dart';
 import './record_info.dart';
@@ -214,7 +215,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                     Column(children: [
                       Expanded(
                           // HEADER
-                          flex: 12,
+                          flex: 14,
                           child: Row(children: [
                             Expanded(
                                 flex: 1,
@@ -264,33 +265,39 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                                           size: SizeConfig.defaultSize! * 3.5,
                                         ),
                                         onPressed: () async {
-                                          // showDialog를 통해 팝업 창을 띄웁니다.
-                                          await showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                scrollable: true,
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                //title: const Text('For good quality'),
-                                                content: const Text(
-                                                  '\n\nEliminate ambient noise and \nfocus on your voice\n\nThe more of your voice without \ngaps the better quality\n\nThe best quality when recorded \nfor about 40 seconds\n',
-                                                ),
-                                                actions: <Widget>[
-                                                  // 팝업 창 내 버튼
-                                                  TextButton(
-                                                    child: const Text(
-                                                      'Got it',
-                                                    ),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop(); // 팝업 닫기
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const RecordInfoRetry()),
                                           );
+                                          // showDialog를 통해 팝업 창을 띄웁니다.
+                                          // await showDialog(
+                                          //   context: context,
+                                          //   builder: (context) {
+                                          //     return AlertDialog(
+                                          //       scrollable: true,
+                                          //       alignment:
+                                          //           Alignment.centerRight,
+                                          //       //title: const Text('For good quality'),
+                                          //       content: const Text(
+                                          //         '\n\nEliminate ambient noise and \nfocus on your voice\n\nThe more of your voice without \ngaps the better quality\n\nThe best quality when recorded \nfor about 40 seconds\n',
+                                          //       ),
+                                          //       actions: <Widget>[
+                                          //         // 팝업 창 내 버튼
+                                          //         TextButton(
+                                          //           child: const Text(
+                                          //             'Got it',
+                                          //           ),
+                                          //           onPressed: () {
+                                          //             Navigator.of(context)
+                                          //                 .pop(); // 팝업 닫기
+                                          //           },
+                                          //         ),
+                                          //       ],
+                                          //     );
+                                          //   },
+                                          // );
                                         },
                                       ),
                                     ]))
