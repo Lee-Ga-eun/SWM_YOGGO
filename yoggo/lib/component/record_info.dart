@@ -45,6 +45,7 @@ class _RecordInfoState extends State<RecordInfo> {
         ),
       ),
       child: SafeArea(
+        bottom: true,
         child: Column(
           children: [
             Expanded(
