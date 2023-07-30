@@ -344,7 +344,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                                       'No, Re-make',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontFamily: 'Capriola',
+                                        fontFamily: 'Molengo',
                                         fontSize: 2.2 * SizeConfig.defaultSize!,
                                       ),
                                     ),
