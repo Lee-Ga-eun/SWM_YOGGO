@@ -1,4 +1,10 @@
 PODS:
+  - Amplitude (8.16.1):
+    - AnalyticsConnector (~> 1.0.0)
+  - amplitude_flutter (0.0.1):
+    - Amplitude (= 8.16.1)
+    - Flutter
+  - AnalyticsConnector (1.0.1)
   - app_links (0.0.1):
     - Flutter
   - AppAuth (1.6.2):
@@ -163,6 +169,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - amplitude_flutter (from `.symlinks/plugins/amplitude_flutter/ios`)
   - app_links (from `.symlinks/plugins/app_links/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -183,6 +190,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Amplitude
+    - AnalyticsConnector
     - AppAuth
     - Firebase
     - FirebaseAnalytics
@@ -202,6 +211,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  amplitude_flutter:
+    :path: ".symlinks/plugins/amplitude_flutter/ios"
   app_links:
     :path: ".symlinks/plugins/app_links/ios"
   audioplayers_darwin:
@@ -238,6 +249,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
+  Amplitude: fe18b3bbd880f2d9174b8109b79a77cd67687e2d
+  amplitude_flutter: 6216e64320d2dbe4e5be2764381d93280499211f
+  AnalyticsConnector: eccd7e1cd3dd18e6bd09ac2506e37d4ed43ba3f4
   app_links: 5ef33d0d295a89d9d16bb81b0e3b0d5f70d6c875
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
