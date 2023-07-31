@@ -5,17 +5,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../size_config.dart';
 import 'globalCubit/user/user_cubit.dart';
-import 'home/view/home_screen.dart';
+import 'home/view/home.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-class recordRequest extends StatefulWidget {
-  const recordRequest({super.key});
+class RecEnd extends StatefulWidget {
+  const RecEnd({super.key});
 
   @override
-  _recordRequesteState createState() => _recordRequesteState();
+  _RecEndState createState() => _RecEndState();
 }
 
-class _recordRequesteState extends State<recordRequest> {
+class _RecEndState extends State<RecEnd> {
   bool isLoading = true;
   late String token;
   String completeInferenced = '';

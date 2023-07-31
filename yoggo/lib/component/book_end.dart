@@ -3,19 +3,19 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yoggo/component/home/view/home_screen.dart';
-import 'package:yoggo/component/reader.dart';
-import 'package:yoggo/component/record_info.dart';
+import 'package:yoggo/component/home/view/home.dart';
+import 'package:yoggo/component/book_page.dart';
+import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:yoggo/component/purchase.dart';
 
 import 'globalCubit/user/user_cubit.dart';
 
-class ReaderEnd extends StatefulWidget {
+class BookEnd extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
   final bool isSelected;
   final int lastPage;
-  ReaderEnd({
+  BookEnd({
     super.key,
     required this.voiceId, // detail_screen에서 받아오는 것들 초기화
     required this.isSelected,
@@ -23,10 +23,10 @@ class ReaderEnd extends StatefulWidget {
   });
 
   @override
-  _ReaderEndState createState() => _ReaderEndState();
+  _BookEndState createState() => _BookEndState();
 }
 
-class _ReaderEndState extends State<ReaderEnd> {
+class _BookEndState extends State<BookEnd> {
   @override
   void initState() {
     super.initState();
@@ -102,7 +102,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FairytalePage(
+                          builder: (context) => BookPage(
                             // 다음 화면으로 contetnVoiceId를 가지고 이동
                             voiceId: widget.voiceId,
                             lastPage: widget.lastPage,
@@ -264,7 +264,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                             _sendBookEndPurClick(purchase, record, cvi);
                             Navigator.push(
                               context,
-                              //결제가 끝나면 RecordInfo로 가야 함
+                              //결제가 끝나면 RecInfo로 가야 함
                               MaterialPageRoute(
                                 builder: (context) => const Purchase(),
                               ),
@@ -374,7 +374,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'If you want to read a book in the voice of your parents,',
+                          'If you want to read a Book in the voice of your parents,',
                           style: TextStyle(
                               fontFamily: 'Molengo',
                               fontSize: SizeConfig.defaultSize! * 2.3),
@@ -387,9 +387,9 @@ class _ReaderEndState extends State<ReaderEnd> {
                             _sendBookEndPurClick(purchase, record, cvi);
                             Navigator.push(
                               context,
-                              //결제가 끝나면 RecordInfo로 가야 함
+                              //결제가 끝나면 RecInfo로 가야 함
                               MaterialPageRoute(
-                                builder: (context) => const RecordInfo(),
+                                builder: (context) => const RecInfo(),
                               ),
                             );
                           },

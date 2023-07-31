@@ -5,16 +5,16 @@ import 'package:yoggo/size_config.dart';
 import 'globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 
-class RecordInfoRetry extends StatefulWidget {
-  const RecordInfoRetry({super.key});
+class RecReInfo extends StatefulWidget {
+  const RecReInfo({super.key});
 
   @override
-  _RecordInfoState createState() => _RecordInfoState();
+  _RecInfoState createState() => _RecInfoState();
 }
 
 String mypath = '';
 
-class _RecordInfoState extends State<RecordInfoRetry> {
+class _RecInfoState extends State<RecReInfo> {
   @override
   void initState() {
     super.initState();
@@ -214,7 +214,7 @@ class _RecordInfoState extends State<RecordInfoRetry> {
                                 //     Navigator.push(
                                 //       context,
                                 //       MaterialPageRoute(
-                                //         builder: (context) => const AudioRecorder(
+                                //         builder: (context) => const Rec(
                                 //             // 다음 화면으로 contetnVoiceId를 가지고 이동
                                 //             ),
                                 //       ),
@@ -255,7 +255,7 @@ class _RecordInfoState extends State<RecordInfoRetry> {
                       //       //     Navigator.push(
                       //       //       context,
                       //       //       MaterialPageRoute(
-                      //       //         builder: (context) => const AudioRecorder(
+                      //       //         builder: (context) => const Rec(
                       //       //             // 다음 화면으로 contetnVoiceId를 가지고 이동
                       //       //             ),
                       //       //       ),

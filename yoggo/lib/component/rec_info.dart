@@ -1,22 +1,22 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yoggo/component/home/view/home_screen.dart';
+import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/size_config.dart';
-import './record_page2.dart';
+import 'rec.dart';
 import 'globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 
-class RecordInfo extends StatefulWidget {
-  const RecordInfo({super.key});
+class RecInfo extends StatefulWidget {
+  const RecInfo({super.key});
 
   @override
-  _RecordInfoState createState() => _RecordInfoState();
+  _RecInfoState createState() => _RecInfoState();
 }
 
 String mypath = '';
 
-class _RecordInfoState extends State<RecordInfo> {
+class _RecInfoState extends State<RecInfo> {
   @override
   void initState() {
     super.initState();
@@ -215,7 +215,7 @@ class _RecordInfoState extends State<RecordInfo> {
                                 //     Navigator.push(
                                 //       context,
                                 //       MaterialPageRoute(
-                                //         builder: (context) => const AudioRecorder(
+                                //         builder: (context) => const Rec(
                                 //             // 다음 화면으로 contetnVoiceId를 가지고 이동
                                 //             ),
                                 //       ),
@@ -257,7 +257,7 @@ class _RecordInfoState extends State<RecordInfo> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const AudioRecorder(
+                                    builder: (context) => const Rec(
                                         // 다음 화면으로 contetnVoiceId를 가지고 이동
                                         ),
                                   ),

@@ -7,23 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/size_config.dart';
 import 'globalCubit/user/user_cubit.dart';
-import 'home/view/home_screen.dart';
-import './record_retry.dart';
+import 'home/view/home.dart';
+import 'rec_re.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-class CheckVoice extends StatefulWidget {
+class VoiceProfile extends StatefulWidget {
   // final String infenrencedVoice;
 
-  const CheckVoice({
+  const VoiceProfile({
     super.key,
     // required this.infenrencedVoice,
   });
 
   @override
-  _CheckVoiceState createState() => _CheckVoiceState();
+  _VoiceProfileState createState() => _VoiceProfileState();
 }
 
-class _CheckVoiceState extends State<CheckVoice> {
+class _VoiceProfileState extends State<VoiceProfile> {
   AudioPlayer audioPlayer = AudioPlayer();
   late String token;
   late String inferenceUrl = "";
@@ -339,7 +339,7 @@ class _CheckVoiceState extends State<CheckVoice> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            const AudioRecorderRetry(),
+                                                            const RecRe(),
                                                       ),
                                                     );
                                                   },
@@ -514,7 +514,7 @@ class _CheckVoiceState extends State<CheckVoice> {
               //                 Navigator.push(
               //                   context,
               //                   MaterialPageRoute(
-              //                     builder: (context) => const AudioRecorderRetry(
+              //                     builder: (context) => const RecRe(
               //                         // rerecord: true,
               //                         // mustDelete: widget.path,
               //                         ),

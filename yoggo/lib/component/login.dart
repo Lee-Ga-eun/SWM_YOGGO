@@ -13,14 +13,14 @@ import 'package:yoggo/size_config.dart';
 import '../component/globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _LoginState createState() => _LoginState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginState extends State<Login> {
   late UserCubit userCubit;
 
   String generateNonce([int length = 32]) {

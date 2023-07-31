@@ -2,10 +2,8 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/record_info_retry.dart';
-import 'package:yoggo/component/record_request.dart';
 import 'package:yoggo/size_config.dart';
-import './record_info.dart';
+import 'rec_info.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -17,24 +15,26 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:amplitude_flutter/amplitude.dart' as Amp;
-import 'globalCubit/user/user_cubit.dart';
 
-class AudioRecorderRetry extends StatefulWidget {
+import 'globalCubit/user/user_cubit.dart';
+import 'rec_end.dart';
+
+class Rec extends StatefulWidget {
   final void Function(String path)? onStop;
 
-  const AudioRecorderRetry({Key? key, this.onStop}) : super(key: key);
+  const Rec({Key? key, this.onStop}) : super(key: key);
 
   @override
-  State<AudioRecorderRetry> createState() => _AudioRecorderRetryState();
+  State<Rec> createState() => _RecState();
 }
 
-class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
+class _RecState extends State<Rec> {
   late String token;
   bool stopped = false;
   String path_copy = '';
   int _recordDuration = 0;
   Timer? _timer;
-  final _audioRecorder = Record();
+  final _Rec = Record();
   StreamSubscription<RecordState>? _recordSub;
   RecordState _recordState = RecordState.stop;
   String? path = '';
@@ -70,11 +70,11 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
 
   @override
   void initState() {
-    _recordSub = _audioRecorder.onStateChanged().listen((recordState) {
+    _recordSub = _Rec.onStateChanged().listen((recordState) {
       setState(() => _recordState = recordState);
     });
 
-    // _amplitudeSub = _audioRecorder
+    // _amplitudeSub = _Rec
     //     .onAmplitudeChanged(const Duration(milliseconds: 300))
     //     .listen((amp) => setState(() => _amplitude = amp));
 
@@ -93,22 +93,8 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     return id;
   }
 
-  Future<void> retryRecord() async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/retryRecord');
-
-    var request = http.MultipartRequest('GET', url);
-    request.headers['Authorization'] = 'Bearer $token';
-
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      print('inferenceUrl is updated');
-    } else {
-      print(
-          'Failed to update inferenceUrl. Status code: ${response.statusCode}');
-    }
-  }
-
   Future<void> sendRecord(audioUrl, recordName) async {
+    final UserCubit userCubit;
     var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
 
     var request = http.MultipartRequest('POST', url);
@@ -121,8 +107,8 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     var response = await request.send();
     if (response.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('record', true);
-      print(prefs.getBool('record'));
+      //await prefs.setBool('record', true);
+      //  await userCubit.fetchUser();
       print('Record sent successfully');
     } else {
       print('Failed to send record. Status code: ${response.statusCode}');
@@ -131,11 +117,11 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
 
   Future<void> _start(purchase, record) async {
     try {
-      if (await _audioRecorder.hasPermission()) {
+      if (await _Rec.hasPermission()) {
         var myAppDir = await getAppDirectory();
         var id = await getId();
         var playerExtension = Platform.isAndroid ? '$id.wav' : '$id.flac';
-        await _audioRecorder.start(
+        await _Rec.start(
           path: '$myAppDir/$playerExtension',
           encoder: Platform.isAndroid
               ? AudioEncoder.wav
@@ -166,7 +152,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     _timer?.cancel();
     _recordDuration = 0;
     //  if (Platform.isAndroid) stopRecording();
-    path = await _audioRecorder.stop(); //path받기
+    path = await _Rec.stop(); //path받기
     _sendRecStopClickEvent(purchase, record);
     //  sendPathToKotlin(path);
     // if (path != null) {
@@ -179,12 +165,12 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
   Future<void> _pause() async {
     playAudio();
     _timer?.cancel();
-    await _audioRecorder.pause();
+    await _Rec.pause();
   }
 
   Future<void> _resume() async {
     _startTimer();
-    await _audioRecorder.resume();
+    await _Rec.resume();
   }
 
   void playAudio() async {
@@ -200,9 +186,11 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
+    _sendRecIngViewEvent(userState.purchase, userState.record);
     return MaterialApp(
-      home: Scaffold(
-        body: Stack(children: [
+        home: Scaffold(
+      body: Stack(
+        children: [
           Container(
               decoration: const BoxDecoration(
                   image: DecorationImage(
@@ -221,22 +209,13 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                           child: Row(children: [
                             Expanded(
                                 flex: 1,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        height: 0 * SizeConfig.defaultSize!,
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.clear,
-                                            size: 3 * SizeConfig.defaultSize!),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ])),
+                                child: IconButton(
+                                  icon: Icon(Icons.clear,
+                                      size: 3 * SizeConfig.defaultSize!),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )),
                             Expanded(
                               flex: 8,
                               child: Row(
@@ -254,55 +233,8 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                             ),
                             Expanded(
                                 flex: 1,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        height: 0 * SizeConfig.defaultSize!,
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.info_outline, // "info" 아이콘 사용
-                                          size: SizeConfig.defaultSize! * 3.5,
-                                        ),
-                                        onPressed: () async {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const RecordInfoRetry()),
-                                          );
-                                          // showDialog를 통해 팝업 창을 띄웁니다.
-                                          // await showDialog(
-                                          //   context: context,
-                                          //   builder: (context) {
-                                          //     return AlertDialog(
-                                          //       scrollable: true,
-                                          //       alignment:
-                                          //           Alignment.centerRight,
-                                          //       //title: const Text('For good quality'),
-                                          //       content: const Text(
-                                          //         '\n\nEliminate ambient noise and \nfocus on your voice\n\nThe more of your voice without \ngaps the better quality\n\nThe best quality when recorded \nfor about 40 seconds\n',
-                                          //       ),
-                                          //       actions: <Widget>[
-                                          //         // 팝업 창 내 버튼
-                                          //         TextButton(
-                                          //           child: const Text(
-                                          //             'Got it',
-                                          //           ),
-                                          //           onPressed: () {
-                                          //             Navigator.of(context)
-                                          //                 .pop(); // 팝업 닫기
-                                          //           },
-                                          //         ),
-                                          //       ],
-                                          //     );
-                                          //   },
-                                          // );
-                                        },
-                                      ),
-                                    ]))
+                                child: Container(
+                                    color: Color.fromARGB(0, 0, 0, 0)))
                           ])),
                       Expanded(
                         // BODY
@@ -398,8 +330,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const AudioRecorderRetry()),
+                                        builder: (context) => const Rec()),
                                   );
                                 },
                                 child: Container(
@@ -441,8 +372,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              const recordRequest()),
+                                          builder: (context) => const RecEnd()),
                                     );
                                   });
                                 },
@@ -470,11 +400,11 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
                           ),
                         ],
                       ),
-                    ),
+                    )
                   ])))
-        ]),
+        ],
       ),
-    );
+    ));
   }
 
   @override
@@ -482,7 +412,7 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     _timer?.cancel();
     _recordSub?.cancel();
     // _amplitudeSub?.cancel();
-    _audioRecorder.dispose();
+    _Rec.dispose();
     super.dispose();
   }
 
@@ -561,8 +491,8 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     return Text(
       "Waiting to record",
       style: TextStyle(
-        fontFamily: 'Molengo',
         fontSize: SizeConfig.defaultSize! * 1.8,
+        fontFamily: 'Molengo',
       ),
     );
   }
