@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
 import '../component/globalCubit/user/user_cubit.dart';
+import 'package:amplitude_flutter/amplitude.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -101,6 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +179,13 @@ class _LoginScreenState extends State<LoginScreen> {
         name: 'login_google_click',
         //parameters: <String, dynamic>{'contentId': contentId},
       );
+      await amplitude.logEvent(
+        'login_google_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -189,6 +198,14 @@ class _LoginScreenState extends State<LoginScreen> {
       await analytics.logEvent(
         name: 'login_apple_click',
         //parameters: <String, dynamic>{'contentId': contentId},
+      );
+
+      await amplitude.logEvent(
+        'login_apple_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
