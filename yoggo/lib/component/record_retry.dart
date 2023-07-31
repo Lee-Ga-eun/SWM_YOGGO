@@ -16,7 +16,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
-
+import 'package:amplitude_flutter/amplitude.dart' as Amp;
 import 'globalCubit/user/user_cubit.dart';
 
 class AudioRecorderRetry extends StatefulWidget {
@@ -192,6 +192,8 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final Amp.Amplitude amplitude =
+      Amp.Amplitude.getInstance(instanceName: "SayIT");
 
   @override
   Widget build(BuildContext context) {
@@ -605,6 +607,10 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
           'record': record ? 'true' : 'false',
         },
       );
+      amplitude.logEvent('rec_start_click', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -621,6 +627,11 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
           'record': record ? 'true' : 'false',
         },
       );
+
+      amplitude.logEvent('rec_stop_click', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -637,6 +648,10 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
           'record': record ? 'true' : 'false',
         },
       );
+      amplitude.logEvent('rec_ing_view', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -647,12 +662,16 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'rec_rerec_clic',
+        name: 'rec_rerec_click',
         parameters: <String, dynamic>{
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
+      amplitude.logEvent('rec_rerec_click', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -670,6 +689,10 @@ class _AudioRecorderRetryState extends State<AudioRecorderRetry> {
           //'voiceId': voiceId,
         },
       );
+      amplitude.logEvent('rec_keep_click', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력r
       print('Failed to log event: $e');
