@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/home/view/home_screen.dart';
-import 'package:yoggo/component/login_screen.dart';
-import 'package:yoggo/component/record_info.dart';
+import 'package:yoggo/component/home/view/home.dart';
+import 'package:yoggo/component/login.dart';
+import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/size_config.dart';
 
 import 'globalCubit/user/user_cubit.dart';
@@ -56,8 +56,8 @@ class _PurchaseState extends State<Purchase> {
           if (!mounted) return;
           successPurchase();
           UserCubit().fetchUser();
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const RecordInfo()));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const RecInfo()));
         }
       });
     }
@@ -347,7 +347,7 @@ class _PurchaseState extends State<Purchase> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const LoginScreen()), //HomeScreen()),
+                                        const Login()), //HomeScreen()),
                               );
                         //await startPurchase();
                       },
@@ -437,7 +437,7 @@ class _PurchaseState extends State<Purchase> {
           'record': record ? 'true' : 'false',
         },
       );
-      await ampltude.logEvent(
+      await amplitude.logEvent(
         'sub_pay_click',
         eventProperties: {
           'purchase': purchase ? 'true' : 'false',

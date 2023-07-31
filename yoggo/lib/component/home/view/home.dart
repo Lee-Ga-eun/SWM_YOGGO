@@ -1,16 +1,16 @@
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/login_screen.dart';
+import 'package:yoggo/component/login.dart';
 import 'package:yoggo/component/purchase.dart';
-import 'package:yoggo/component/record_info.dart';
+import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/component/book_intro.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../check_voice.dart';
+import '../../voice_profile.dart';
 import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -280,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  const CheckVoice(),
+                                                                  const VoiceProfile(),
                                                             ),
                                                           );
                                                         },
@@ -334,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       userState.purchase
-                                                          ? const RecordInfo()
+                                                          ? const RecInfo()
                                                           : const Purchase(),
                                                 ),
                                               );
@@ -420,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const LoginScreen(),
+                                                        const Login(),
                                                   ));
                                             }),
                                     //    userState.login && showSignOutConfirmation
@@ -550,7 +550,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   userState.purchase
-                                                      ? const RecordInfo()
+                                                      ? const RecInfo()
                                                       : const Purchase(),
                                             ),
                                           );

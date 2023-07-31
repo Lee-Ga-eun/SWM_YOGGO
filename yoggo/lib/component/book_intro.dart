@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/purchase.dart';
-import 'package:yoggo/component/record_info.dart';
-import '../component/reader.dart';
+import 'package:yoggo/component/rec_info.dart';
+import 'book_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
@@ -888,8 +888,7 @@ class _BookIntroState extends State<BookIntro> {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FairytalePage(
+                                                builder: (context) => BookPage(
                                                   // 다음 화면으로 contetnVoiceId를 가지고 이동
                                                   voiceId: cvi,
                                                   lastPage: lastPage,
@@ -906,8 +905,7 @@ class _BookIntroState extends State<BookIntro> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  FairytalePage(
+                                              builder: (context) => BookPage(
                                                 // 다음 화면으로 contetnVoiceId를 가지고 이동
                                                 voiceId: cvi,
                                                 lastPage: lastPage,
@@ -1000,7 +998,7 @@ class _BookIntroState extends State<BookIntro> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const RecordInfo()),
+                            builder: (context) => const RecInfo()),
                       );
                     });
                   },

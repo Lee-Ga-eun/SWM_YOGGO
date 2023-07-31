@@ -3,7 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:yoggo/component/home/view/home_screen.dart';
+import 'package:yoggo/component/home/view/home.dart';
 import 'component/globalCubit/user/user_cubit.dart';
 import 'component/globalCubit/user/user_state.dart';
 import 'package:flutter/services.dart';

@@ -8,16 +8,16 @@ import 'dart:async';
 import 'package:yoggo/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import './reader_end.dart';
+import 'book_end.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'globalCubit/user/user_cubit.dart';
 
-class FairytalePage extends StatefulWidget {
+class BookPage extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
   final bool isSelected;
   final int lastPage;
-  const FairytalePage({
+  const BookPage({
     super.key,
     required this.voiceId, // detail_screen에서 받아오는 것들 초기화
     required this.isSelected,
@@ -25,11 +25,10 @@ class FairytalePage extends StatefulWidget {
   });
 
   @override
-  _FairyTalePageState createState() => _FairyTalePageState();
+  _BookPageState createState() => _BookPageState();
 }
 
-class _FairyTalePageState extends State<FairytalePage>
-    with WidgetsBindingObserver {
+class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   // List<BookPage> pages = []; // 책 페이지 데이터 리스트
   List<Map<String, dynamic>> pages = [];
   int currentPageIndex = 0; // 현재 페이지 인덱스
@@ -588,8 +587,7 @@ class _PageWidgetState extends State<PageWidget> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ReaderEnd(
+                                                  builder: (context) => BookEnd(
                                                     voiceId: widget.voiceId,
                                                     lastPage: widget.lastPage,
                                                     isSelected:
@@ -600,10 +598,9 @@ class _PageWidgetState extends State<PageWidget> {
                                             } else {
                                               Navigator.push(
                                                 context,
-                                                //결제가 끝나면 RecordInfo로 가야 함
+                                                //결제가 끝나면 RecInfo로 가야 함
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ReaderEnd(
+                                                  builder: (context) => BookEnd(
                                                     voiceId: widget.voiceId,
                                                     lastPage: widget.lastPage,
                                                     isSelected:
