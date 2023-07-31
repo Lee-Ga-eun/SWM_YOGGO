@@ -1,6 +1,8 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
 import 'component/globalCubit/user/user_cubit.dart';
 import 'component/globalCubit/user/user_state.dart';
@@ -15,12 +17,13 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void main() async {
   // 사용자 Cubit을 초기화합니다.
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding
       .ensureInitialized(); // ensureInitialized()를 호출하여 바인딩 초기화
 
 //Remove this method to stop OneSignal Debugging
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  OneSignal.shared.setAppId("2d42b96d-78df-43fe-b6d1-3899c3684ac5");
+  OneSignal.shared.setAppId(dotenv.get("ONESIGNAL"));
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
   // OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
   //   print("Accepted permission: $accepted");
@@ -31,6 +34,12 @@ void main() async {
           print('::::: one signal :::: ${value!.userId}'),
         },
       );
+  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  print(dotenv.get("AMPLITUDE_API"));
+  // Initialize SDK
+  await amplitude.init(dotenv.get("AMPLITUDE_API"));
+
+  await amplitude.logEvent('startup');
 
   await Firebase.initializeApp();
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
