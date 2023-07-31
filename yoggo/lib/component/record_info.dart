@@ -5,6 +5,7 @@ import 'package:yoggo/component/home/view/home_screen.dart';
 import 'package:yoggo/size_config.dart';
 import './record_page2.dart';
 import 'globalCubit/user/user_cubit.dart';
+import 'package:amplitude_flutter/amplitude.dart';
 
 class RecordInfo extends StatefulWidget {
   const RecordInfo({super.key});
@@ -23,6 +24,7 @@ class _RecordInfoState extends State<RecordInfo> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   @override
   void dispose() {
@@ -91,7 +93,7 @@ class _RecordInfoState extends State<RecordInfo> {
                   ),
                   Expanded(
                       flex: 1,
-                      child: Container(color: Color.fromARGB(0, 0, 0, 0)))
+                      child: Container(color: const Color.fromARGB(0, 0, 0, 0)))
                 ])),
             Expanded(
                 flex: 74,
@@ -230,11 +232,11 @@ class _RecordInfoState extends State<RecordInfo> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Container(color: Color.fromARGB(0, 0, 100, 0)),
+                    child: Container(color: const Color.fromARGB(0, 0, 100, 0)),
                   ),
                   Expanded(
                     flex: 8,
-                    child: Container(color: Color.fromARGB(0, 0, 100, 0)),
+                    child: Container(color: const Color.fromARGB(0, 0, 100, 0)),
                   ),
                   Expanded(
                       flex: 1,
@@ -278,6 +280,13 @@ class _RecordInfoState extends State<RecordInfo> {
       await analytics.logEvent(
         name: 'rec_abst_view',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      await amplitude.logEvent(
+        'rec_abst_view',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },

@@ -11,6 +11,7 @@ import 'package:yoggo/component/record_info.dart';
 import 'package:yoggo/size_config.dart';
 
 import 'globalCubit/user/user_cubit.dart';
+import 'package:amplitude_flutter/amplitude.dart';
 
 // final bool _kAutoConsume = Platform.isIOS || true;
 
@@ -36,7 +37,6 @@ class _PurchaseState extends State<Purchase> {
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   List<ProductDetails> view = [];
   late String token;
-
   Future fetch() async {
     final bool available = await InAppPurchase.instance.isAvailable();
     if (available) {
@@ -178,6 +178,7 @@ class _PurchaseState extends State<Purchase> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +240,7 @@ class _PurchaseState extends State<Purchase> {
             width: 72 * SizeConfig.defaultSize!,
             height: 29.4 * SizeConfig.defaultSize!,
             decoration: BoxDecoration(
-                color: Color.fromARGB(128, 255, 255, 255),
+                color: const Color.fromARGB(128, 255, 255, 255),
                 borderRadius: BorderRadius.all(
                     Radius.circular(SizeConfig.defaultSize! * 3))),
             child: Padding(
@@ -354,7 +355,7 @@ class _PurchaseState extends State<Purchase> {
                           width: 52 * SizeConfig.defaultSize!,
                           height: 4.5 * SizeConfig.defaultSize!,
                           decoration: BoxDecoration(
-                              color: Color(0xFFFFA91A),
+                              color: const Color(0xFFFFA91A),
                               borderRadius: BorderRadius.all(Radius.circular(
                                   SizeConfig.defaultSize! * 1.5))),
                           child: Center(
@@ -416,6 +417,10 @@ class _PurchaseState extends State<Purchase> {
           'record': record ? 'true' : 'false',
         },
       );
+      await amplitude.logEvent('sub_view', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -428,6 +433,13 @@ class _PurchaseState extends State<Purchase> {
       await analytics.logEvent(
         name: 'sub_pay_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      await ampltude.logEvent(
+        'sub_pay_click',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
