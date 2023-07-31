@@ -1,3 +1,4 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'dart:convert';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,6 +63,7 @@ class _CheckVoiceState extends State<CheckVoice> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   @override
   Widget build(BuildContext context) {
@@ -594,6 +596,14 @@ class _CheckVoiceState extends State<CheckVoice> {
           'voiceId': voiceId,
         },
       );
+      await amplitude.logEvent(
+        'voice_remake_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'voiceId': voiceId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -606,6 +616,14 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_text_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'voiceId': voiceId,
+        },
+      );
+      await amplitude.logEvent(
+        'voice_text_click',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -628,6 +646,14 @@ class _CheckVoiceState extends State<CheckVoice> {
           'voiceId': voiceId,
         },
       );
+      await amplitude.logEvent(
+        'voice_icon_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'voiceId': voiceId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -640,6 +666,14 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_name_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'voiceId': voiceId,
+        },
+      );
+      await amplitude.logEvent(
+        'voice_name_click',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -662,6 +696,14 @@ class _CheckVoiceState extends State<CheckVoice> {
           'voiceId': voiceId,
         },
       );
+      await amplitude.logEvent(
+        'voice_play_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'voiceId': voiceId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -674,6 +716,14 @@ class _CheckVoiceState extends State<CheckVoice> {
       await analytics.logEvent(
         name: 'voice_view',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'voiceId': voiceId,
+        },
+      );
+      await amplitude.logEvent(
+        'voice_view',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,

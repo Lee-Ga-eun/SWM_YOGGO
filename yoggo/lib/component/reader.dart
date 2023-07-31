@@ -1,5 +1,7 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
@@ -8,6 +10,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import './reader_end.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import 'globalCubit/user/user_cubit.dart';
 
 class FairytalePage extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
@@ -52,6 +56,7 @@ class _FairyTalePageState extends State<FairytalePage>
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   Future<void> fetchAllBookPages() async {
     // API에서 모든 책 페이지 데이터를 불러와 pages 리스트에 저장
@@ -249,6 +254,10 @@ class _FairyTalePageState extends State<FairytalePage>
           'pageId': pageId,
         },
       );
+      amplitude.logEvent('book_page_view', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+        'pageId': pageId,
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -264,6 +273,9 @@ class _FairyTalePageState extends State<FairytalePage>
           'contentVoiceId': contentVoiceId,
         },
       );
+      amplitude.logEvent('book_loading_view', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -315,9 +327,12 @@ class PageWidget extends StatefulWidget {
 
 class _PageWidgetState extends State<PageWidget> {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     SizeConfig().init(context);
     void playAudio(String audioUrl) async {
       if (widget.realCurrent) {
@@ -535,7 +550,9 @@ class _PageWidgetState extends State<PageWidget> {
                                               size: 3 * SizeConfig.defaultSize!,
                                             ),
                                             onPressed: () {
-                                              _sendBookNextClickEvent(
+                                              _sendBookLastClickEvent(
+                                                  userState.purchase,
+                                                  userState.record,
                                                   widget.voiceId,
                                                   widget.currentPageIndex + 1);
                                               widget.nextPage();
@@ -622,6 +639,35 @@ class _PageWidgetState extends State<PageWidget> {
           'pageId': pageId,
         },
       );
+      amplitude.logEvent('book_exit_click', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+        'pageId': pageId,
+      });
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookLastClickEvent(
+      purchase, record, contentVoiceId, pageId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_last_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'contentVoiceId': contentVoiceId,
+          'pageId': pageId,
+        },
+      );
+      amplitude.logEvent('book_last_click', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+        'contentVoiceId': contentVoiceId,
+        'pageId': pageId,
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -638,6 +684,10 @@ class _PageWidgetState extends State<PageWidget> {
           'pageId': pageId,
         },
       );
+      amplitude.logEvent('book_next_click', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+        'pageId': pageId,
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -654,6 +704,10 @@ class _PageWidgetState extends State<PageWidget> {
           'pageId': pageId,
         },
       );
+      amplitude.logEvent('book_back_click', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+        'pageId': pageId,
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');

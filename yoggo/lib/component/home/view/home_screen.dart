@@ -1,3 +1,4 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/login_screen.dart';
@@ -42,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   Future<void> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -703,6 +706,13 @@ class _HomeScreenState extends State<HomeScreen> {
           'record': record ? 'true' : 'false',
         },
       );
+      await amplitude.logEvent(
+        'sign_out_really_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
     } catch (e) {
       print('Failed to log event: $e');
     }
@@ -714,6 +724,13 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'sign_out_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      await amplitude.logEvent(
+        'sign_out_click',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -734,6 +751,13 @@ class _HomeScreenState extends State<HomeScreen> {
           'record': record ? 'true' : 'false',
         },
       );
+      await amplitude.logEvent(
+        'hbg_voice_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
     } catch (e) {
       print('Failed to log event: $e');
     }
@@ -746,6 +770,13 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'hbg_voice_box_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      await amplitude.logEvent(
+        'hbg_voice_box_click',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -766,6 +797,13 @@ class _HomeScreenState extends State<HomeScreen> {
           'record': record ? 'true' : 'false',
         },
       );
+      await amplitude.logEvent(
+        'hbg_me_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
     } catch (e) {
       print('Failed to log event: $e');
     }
@@ -778,6 +816,13 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'home_view',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      await amplitude.logEvent(
+        'home_view',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -797,6 +842,12 @@ class _HomeScreenState extends State<HomeScreen> {
           'contentId': contentId,
         },
       );
+      await amplitude.logEvent(
+        'book_click',
+        eventProperties: {
+          'contentId': contentId,
+        },
+      );
     } catch (e) {
       print('Failed to log event: $e');
     }
@@ -809,6 +860,13 @@ class _HomeScreenState extends State<HomeScreen> {
       await analytics.logEvent(
         name: 'banner_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      await amplitude.logEvent(
+        'banner_click',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -829,6 +887,13 @@ class _HomeScreenState extends State<HomeScreen> {
           'record': record ? 'true' : 'false',
         },
       );
+      await amplitude.logEvent(
+        'hbg_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
     } catch (e) {
       print('Failed to log event: $e');
     }
@@ -839,8 +904,15 @@ class _HomeScreenState extends State<HomeScreen> {
       print("_sendHomeLoadingViewEvent");
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'hbg_click',
+        name: 'home_loading_view',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      await amplitude.logEvent(
+        'home_loading_view',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },

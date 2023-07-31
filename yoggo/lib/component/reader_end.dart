@@ -1,4 +1,6 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yoggo/component/home/view/home_screen.dart';
@@ -38,6 +40,7 @@ class _ReaderEndState extends State<ReaderEnd> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +83,12 @@ class _ReaderEndState extends State<ReaderEnd> {
             ),
             userState.purchase != null
                 ? (userState.purchase == true && userState.record == false
-                    ? notRecordUser()
+                    ? notRecordUser(
+                        userState.purchase, userState.record, widget.voiceId)
                     : userState.purchase == true && userState.record == true
                         ? allPass()
-                        : notPurchaseUser())
+                        : notPurchaseUser(userState.purchase, userState.record,
+                            widget.voiceId))
                 : Container(),
             Expanded(
                 flex: SizeConfig.defaultSize!.toInt(),
@@ -179,7 +184,7 @@ class _ReaderEndState extends State<ReaderEnd> {
         ));
   }
 
-  Expanded notPurchaseUser() {
+  Expanded notPurchaseUser(purchase, record, cvi) {
     // 구매를 안 한 사용자
     return Expanded(
       flex: SizeConfig.defaultSize!.toInt() * 3,
@@ -256,6 +261,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                         ),
                         InkWell(
                           onTap: () {
+                            _sendBookEndPurClick(purchase, record, cvi);
                             Navigator.push(
                               context,
                               //결제가 끝나면 RecordInfo로 가야 함
@@ -301,7 +307,7 @@ class _ReaderEndState extends State<ReaderEnd> {
     );
   }
 
-  Expanded notRecordUser() {
+  Expanded notRecordUser(purchase, record, cvi) {
     // 녹음을 안 한 사용자
     return Expanded(
       flex: SizeConfig.defaultSize!.toInt() * 3,
@@ -378,6 +384,7 @@ class _ReaderEndState extends State<ReaderEnd> {
                         ),
                         InkWell(
                           onTap: () {
+                            _sendBookEndPurClick(purchase, record, cvi);
                             Navigator.push(
                               context,
                               //결제가 끝나면 RecordInfo로 가야 함
@@ -432,6 +439,30 @@ class _ReaderEndState extends State<ReaderEnd> {
           'contentVoiceId': contentVoiceId,
         },
       );
+      amplitude.logEvent('book_end_view', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+      });
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookEndPurClick(purchase, record, contentVoiceId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_end_pur_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'contentVoiceId': contentVoiceId,
+        },
+      );
+      amplitude.logEvent('book_end_pur_click', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+        'contentVoiceId': contentVoiceId,
+      });
     } catch (e) {
       print('Failed to log event: $e');
     }
@@ -446,6 +477,8 @@ class _ReaderEndState extends State<ReaderEnd> {
           'contentVoiceId': contentVoiceId,
         },
       );
+      amplitude.logEvent('book_again_click',
+          eventProperties: {'contentVoiceId': contentVoiceId});
     } catch (e) {
       print('Failed to log event: $e');
     }
@@ -460,6 +493,8 @@ class _ReaderEndState extends State<ReaderEnd> {
           'contentVoiceId': contentVoiceId,
         },
       );
+      amplitude.logEvent('book_home_click',
+          eventProperties: {'contentVoiceId': contentVoiceId});
     } catch (e) {
       print('Failed to log event: $e');
     }

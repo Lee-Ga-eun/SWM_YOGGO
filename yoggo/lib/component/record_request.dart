@@ -1,3 +1,4 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,12 +86,13 @@ class _recordRequesteState extends State<recordRequest> {
   // }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
 
   @override
   Widget build(BuildContext context) {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
-    print("request페이지");
+    _sendRecEndViewEvent(userState.purchase, userState.record);
     print(userState.record);
     SizeConfig().init(context);
     return Scaffold(
@@ -239,5 +241,25 @@ class _recordRequesteState extends State<recordRequest> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendRecEndViewEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_end_view',
+        parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      amplitude.logEvent('rec_end_view', eventProperties: {
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,12 +88,22 @@ class _BookIntroState extends State<BookIntro> {
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
+  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  // static Analytics_config.analytics.logEvent("suhwanc");
+
   Future<void> _sendBookMyVoiceClickEvent(purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_my_voice_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      amplitude.logEvent(
+        'book_my_voice_click',
+        eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -110,6 +121,10 @@ class _BookIntroState extends State<BookIntro> {
         name: 'book_voice_click',
         parameters: <String, dynamic>{'contentVoiceId': contentVoiceId},
       );
+      await amplitude.logEvent(
+        'book_voice_click',
+        eventProperties: {'contentVoiceId': contentVoiceId},
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -126,6 +141,13 @@ class _BookIntroState extends State<BookIntro> {
           'contentId': widget.id
         },
       );
+      await amplitude.logEvent(
+        'book_start_click',
+        eventProperties: {
+          'contentVoiceId': contentVoiceId,
+          'contentId': widget.id
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -138,6 +160,13 @@ class _BookIntroState extends State<BookIntro> {
       await analytics.logEvent(
         name: 'book_exit_click',
         parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+          'pageId': 0,
+        },
+      );
+      await amplitude.logEvent(
+        'book_exit_click',
+        eventProperties: {
           'contentVoiceId': contentVoiceId,
           'pageId': 0,
         },
