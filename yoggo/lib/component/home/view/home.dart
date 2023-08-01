@@ -598,7 +598,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           final book = state[index];
                                           return GestureDetector(
                                             onTap: () {
-                                              _sendBookClickEvent(book.id);
+                                              _sendBookClickEvent(
+                                                  userState.purchase,
+                                                  userState.record,
+                                                  book.id);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -786,19 +789,19 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHbgMeClickEvent(purchase, record) async {
+  Future<void> _sendHbgNameClickEvent(purchase, record) async {
     try {
-      print("_sendHbgMeClickEvent");
+      print("_sendHbgNameClickEvent");
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'hbg_me_click',
+        name: 'hbg_name_click',
         parameters: <String, dynamic>{
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       await amplitude.logEvent(
-        'hbg_me_click',
+        'hbg_name_click',
         eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
@@ -832,19 +835,23 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendBookClickEvent(contentId) async {
+  Future<void> _sendBookClickEvent(purchase, record, contentId) async {
     try {
       print("_sendBookClickEvent");
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'contentId': contentId,
         },
       );
       await amplitude.logEvent(
         'book_click',
         eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'contentId': contentId,
         },
       );

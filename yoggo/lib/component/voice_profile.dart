@@ -149,31 +149,42 @@ class _VoiceProfileState extends State<VoiceProfile> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                width: 18 * SizeConfig.defaultSize!,
-                                height: 19 * SizeConfig.defaultSize!,
-                                margin: EdgeInsets.zero,
-                                padding: EdgeInsets.zero,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white.withOpacity(0.5),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                              GestureDetector(
+                                onTap: () {
+                                  _sendVoiceIconClickEvent(userState.purchase,
+                                      userState.record, userState.voiceId);
+                                },
+                                child: Container(
+                                  width: 18 * SizeConfig.defaultSize!,
+                                  height: 19 * SizeConfig.defaultSize!,
+                                  margin: EdgeInsets.zero,
+                                  padding: EdgeInsets.zero,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
                                   ),
+                                  child: Column(children: [
+                                    SizedBox(
+                                      height: SizeConfig.defaultSize! * 2.8,
+                                    ),
+                                    Image.asset(
+                                      'lib/images/icons/${userState.voiceIcon}-c.png',
+                                      height: SizeConfig.defaultSize! * 13.5,
+                                    ),
+                                  ]),
                                 ),
-                                child: Column(children: [
-                                  SizedBox(
-                                    height: SizeConfig.defaultSize! * 2.8,
-                                  ),
-                                  Image.asset(
-                                    'lib/images/icons/${userState.voiceIcon}-c.png',
-                                    height: SizeConfig.defaultSize! * 13.5,
-                                  ),
-                                ]),
                               ),
                               SizedBox(
                                 height: 1.6 * SizeConfig.defaultSize!,
                               ),
-                              Container(
+                              GestureDetector(
+                                onTap: () {
+                                  _sendVoiceNameClickEvent(userState.purchase,
+                                      userState.record, userState.voiceId);
+                                },
+                                child: Container(
                                   width: 18 * SizeConfig.defaultSize!,
                                   height: 9 * SizeConfig.defaultSize!,
                                   decoration: ShapeDecoration(
@@ -183,13 +194,16 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                     ),
                                   ),
                                   child: Center(
-                                      child: Text(
-                                    userState.voiceName!,
-                                    style: TextStyle(
-                                      fontFamily: 'Molengo',
-                                      fontSize: SizeConfig.defaultSize! * 2.3,
+                                    child: Text(
+                                      userState.voiceName!,
+                                      style: TextStyle(
+                                        fontFamily: 'Molengo',
+                                        fontSize: SizeConfig.defaultSize! * 2.3,
+                                      ),
                                     ),
-                                  )))
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                           SizedBox(
@@ -213,7 +227,14 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                       SizedBox(
                                           height:
                                               3.2 * SizeConfig.defaultSize!),
-                                      Container(
+                                      GestureDetector(
+                                        onTap: () {
+                                          _sendVoiceScriptClickEvent(
+                                              userState.purchase,
+                                              userState.record,
+                                              userState.voiceId);
+                                        },
+                                        child: Container(
                                           width: 50 * SizeConfig.defaultSize!,
                                           height: 16 * SizeConfig.defaultSize!,
                                           child: Center(
@@ -228,98 +249,9 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                            // child: SingleChildScrollView(
-                                            //   child: RichText(
-                                            //     textAlign: TextAlign.center,
-                                            //     text: TextSpan(
-                                            //       children: [
-                                            //         TextSpan(
-                                            //           children: [
-                                            // TextSpan(
-                                            //   text:
-                                            //       'This dialogue highlights the mermaid\'s realization of the value\n',
-                                            //   style: TextStyle(
-                                            //       fontSize:
-                                            //           1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            // TextSpan(
-                                            //   text:
-                                            //       'of her voice, its intangible beauty, and its role in her pursuit of\n',
-                                            //   style: TextStyle(
-                                            //       fontSize:
-                                            //           1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            // TextSpan(
-                                            //   text:
-                                            //       'true love and self-discovery. Despite losing her voice, she finds \n ',
-                                            //   style: TextStyle(
-                                            //       fontSize:
-                                            //           1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            // TextSpan(
-                                            //   text:
-                                            //       'the strength to communicate through her heart and believes that \n',
-                                            //   style: TextStyle(
-                                            //       fontSize:
-                                            //           1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            // TextSpan(
-                                            //   text:
-                                            //       'love goes beyond words. The journey becomes  an opportunity for her\n',
-                                            //   style: TextStyle(
-                                            //       fontSize:
-                                            //           1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            // TextSpan(
-                                            //   text:
-                                            //       'to uncover her true essence and understand the essence of love and freedom.\n',
-                                            //   style: TextStyle(
-                                            //       fontSize:
-                                            //           1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            // TextSpan(
-                                            //   text:
-                                            //       'and passions within me will not easily fade away. Love transcends\n',
-                                            //   style: TextStyle(
-                                            //       fontSize: 1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            // TextSpan(
-                                            //   text:
-                                            //       'language. In this quest to reclaim my precious voice, I will discover my\n',
-                                            //   style: TextStyle(
-                                            //       fontSize: 1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            // TextSpan(
-                                            //   text:
-                                            //       'true self and learn the ways of love and freedom."',
-                                            //   style: TextStyle(
-                                            //       fontSize: 1.6 * SizeConfig.defaultSize!,
-                                            //       color: Colors.black,
-                                            //       fontWeight: FontWeight.bold),
-                                            // ),
-                                            //           ],
-                                            //         ),
-                                            //       ],
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                          )),
+                                          ),
+                                        ),
+                                      ),
                                       Expanded(
                                         child: Stack(
                                           alignment: Alignment.centerLeft,
@@ -329,52 +261,67 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 InkWell(
-                                                  onTap: () {
-                                                    _sendVoiceRemakeClickEvent(
-                                                        userState.purchase,
-                                                        userState.record,
-                                                        userState.voiceId!);
-                                                    audioPlayer.stop();
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const RecRe(),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    width: 31.1 *
-                                                        SizeConfig.defaultSize!,
-                                                    height: 4.5 *
-                                                        SizeConfig.defaultSize!,
-                                                    decoration: ShapeDecoration(
-                                                      color: Color(0xFFFFA91A),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                      ),
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Re-make your voice',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 2.3 *
-                                                              SizeConfig
-                                                                  .defaultSize!,
-                                                          fontFamily: 'Molengo',
-                                                          fontWeight:
-                                                              FontWeight.w400,
+                                                    onTap: () {
+                                                      _sendVoiceRerecClickEvent(
+                                                          userState.purchase,
+                                                          userState.record,
+                                                          userState.voiceId!);
+                                                      audioPlayer.stop();
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const RecRe(),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        _sendVoiceRerecClickEvent(
+                                                            userState.purchase,
+                                                            userState.record,
+                                                            userState.voiceId);
+                                                      },
+                                                      child: Container(
+                                                        width: 31.1 *
+                                                            SizeConfig
+                                                                .defaultSize!,
+                                                        height: 4.5 *
+                                                            SizeConfig
+                                                                .defaultSize!,
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          color:
+                                                              Color(0xFFFFA91A),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                          ),
+                                                        ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            'Re-make your voice',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 2.3 *
+                                                                  SizeConfig
+                                                                      .defaultSize!,
+                                                              fontFamily:
+                                                                  'Molengo',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                    )),
                                                 SizedBox(
                                                   width: 5.3 *
                                                       SizeConfig.defaultSize!,
@@ -412,172 +359,6 @@ class _VoiceProfileState extends State<VoiceProfile> {
                       ),
                     ],
                   )),
-              //   Expanded(
-              //     flex: 2,
-              //     child: SingleChildScrollView(
-              //       child: RichText(
-              //         textAlign: TextAlign.center,
-              //         text: TextSpan(
-              //           children: [
-              //             TextSpan(
-              //               children: [
-              //                 TextSpan(
-              //                   text:
-              //                       'This dialogue highlights the mermaid\'s realization of the value\n',
-              //                   style: TextStyle(
-              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
-              //                       color: Colors.black,
-              //                       fontWeight: FontWeight.bold),
-              //                 ),
-              //                 TextSpan(
-              //                   text:
-              //                       'of her voice, its intangible beauty, and its role in her pursuit of\n',
-              //                   style: TextStyle(
-              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
-              //                       color: Colors.black,
-              //                       fontWeight: FontWeight.bold),
-              //                 ),
-              //                 TextSpan(
-              //                   text:
-              //                       'true love and self-discovery. Despite losing her voice, she finds \n ',
-              //                   style: TextStyle(
-              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
-              //                       color: Colors.black,
-              //                       fontWeight: FontWeight.bold),
-              //                 ),
-              //                 TextSpan(
-              //                   text:
-              //                       'the strength to communicate through her heart and believes that \n',
-              //                   style: TextStyle(
-              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
-              //                       color: Colors.black,
-              //                       fontWeight: FontWeight.bold),
-              //                 ),
-              //                 TextSpan(
-              //                   text:
-              //                       'love goes beyond words. The journey becomes  an opportunity for her\n',
-              //                   style: TextStyle(
-              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
-              //                       color: Colors.black,
-              //                       fontWeight: FontWeight.bold),
-              //                 ),
-              //                 TextSpan(
-              //                   text:
-              //                       'to uncover her true essence and understand the essence of love and freedom.\n',
-              //                   style: TextStyle(
-              //                       fontSize: 1.6 * SizeConfig.defaultSize!,
-              //                       color: Colors.black,
-              //                       fontWeight: FontWeight.bold),
-              //                 ),
-              //                 // TextSpan(
-              //                 //   text:
-              //                 //       'and passions within me will not easily fade away. Love transcends\n',
-              //                 //   style: TextStyle(
-              //                 //       fontSize: 16.0,
-              //                 //       color: Colors.black,
-              //                 //       fontWeight: FontWeight.bold),
-              //                 // ),
-              //                 // TextSpan(
-              //                 //   text:
-              //                 //       'language. In this quest to reclaim my precious voice, I will discover my\n',
-              //                 //   style: TextStyle(
-              //                 //       fontSize: 16.0,
-              //                 //       color: Colors.black,
-              //                 //       fontWeight: FontWeight.bold),
-              //                 // ),
-              //                 // TextSpan(
-              //                 //   text:
-              //                 //       'true self and learn the ways of love and freedom."',
-              //                 //   style: TextStyle(
-              //                 //       fontSize: 16.0,
-              //                 //       color: Colors.black,
-              //                 //       fontWeight: FontWeight.bold),
-              //                 // ),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              //   Expanded(
-              //     flex: 1,
-              //     child: Stack(
-              //       alignment: Alignment.centerLeft,
-              //       children: [
-              //         Row(
-              //           mainAxisAlignment: MainAxisAlignment.center,
-              //           children: [
-              //             TextButton(
-              //               onPressed: () {
-              //                 audioPlayer.stop();
-              //                 Navigator.push(
-              //                   context,
-              //                   MaterialPageRoute(
-              //                     builder: (context) => const RecRe(
-              //                         // rerecord: true,
-              //                         // mustDelete: widget.path,
-              //                         ),
-              //                   ),
-              //                 );
-              //               },
-              //               style: TextButton.styleFrom(
-              //                 shape: RoundedRectangleBorder(
-              //                   borderRadius:
-              //                       BorderRadius.circular(8.0), // 원하는 모양의 네모 박스로 변경
-              //                 ),
-              //                 backgroundColor:
-              //                     const Color.fromARGB(255, 194, 120, 209),
-              //               ),
-              //               child: const Text(
-              //                 ' Re-make your voice ',
-              //                 style: TextStyle(color: Colors.white),
-              //               ),
-              //             ),
-              //             SizedBox(
-              //               width: 3.0 * SizeConfig.defaultSize!,
-              //             ),
-              //             IconButton(
-              //               icon: Icon(
-              //                 Icons.play_arrow,
-              //                 size: 3 * SizeConfig.defaultSize!,
-              //                 color: const Color.fromARGB(255, 194, 120, 209),
-              //               ),
-              //               onPressed: () {
-              //                 audioPlayer.play(UrlSource(widget.infenrencedVoice));
-              //               },
-              //             ),
-              //             // SizedBox(
-              //             //   width: 3 * SizeConfig.defaultSize!,
-              //             // ),
-              //             // TextButton(
-              //             //   onPressed: () {
-              //             //     audioPlayer.stop();
-              //             //     Navigator.push(
-              //             //       context,
-              //             //       MaterialPageRoute(
-              //             //         builder: (context) => const HomeScreen(),
-              //             //       ),
-              //             //     );
-              //             //   },
-              //             // style: TextButton.styleFrom(
-              //             //   shape: RoundedRectangleBorder(
-              //             //     borderRadius:
-              //             //         BorderRadius.circular(8.0), // 원하는 모양의 네모 박스로 변경
-              //             //   ),
-              //             //   backgroundColor:
-              //             //       const Color.fromARGB(255, 194, 120, 209),
-              //             // ),
-              //             // child: const Text(
-              //             //   '    I love it!    ',
-              //             //   style: TextStyle(color: Colors.white),
-              //             // ),
-              //             // ),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //   )
             ],
           ),
         ),
@@ -585,11 +366,11 @@ class _VoiceProfileState extends State<VoiceProfile> {
     );
   }
 
-  Future<void> _sendVoiceRemakeClickEvent(purchase, record, voiceId) async {
+  Future<void> _sendVoiceRerecClickEvent(purchase, record, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'voice_remake_click',
+        name: 'voice_rerec_click',
         parameters: <String, dynamic>{
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
@@ -597,7 +378,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
         },
       );
       await amplitude.logEvent(
-        'voice_remake_click',
+        'voice_rerec_click',
         eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
@@ -610,11 +391,11 @@ class _VoiceProfileState extends State<VoiceProfile> {
     }
   }
 
-  Future<void> _sendVoiceTextClickEvent(purchase, record, voiceId) async {
+  Future<void> _sendVoiceScriptClickEvent(purchase, record, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'voice_text_click',
+        name: 'voice_script_click',
         parameters: <String, dynamic>{
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
@@ -622,7 +403,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
         },
       );
       await amplitude.logEvent(
-        'voice_text_click',
+        'voice_script_click',
         eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
