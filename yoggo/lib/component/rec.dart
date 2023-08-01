@@ -186,7 +186,7 @@ class _RecState extends State<Rec> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendRecIngViewEvent(userState.purchase, userState.record);
+    _sendRecViewEvent(userState.purchase, userState.record);
     return MaterialApp(
         home: Scaffold(
       body: Stack(
@@ -568,17 +568,17 @@ class _RecState extends State<Rec> {
     }
   }
 
-  Future<void> _sendRecIngViewEvent(purchase, record) async {
+  Future<void> _sendRecViewEvent(purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'rec_ing_view',
+        name: 'rec_view',
         parameters: <String, dynamic>{
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
-      amplitude.logEvent('rec_ing_view', eventProperties: {
+      amplitude.logEvent('rec_view', eventProperties: {
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
