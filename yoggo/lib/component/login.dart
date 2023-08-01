@@ -107,7 +107,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    _sendLoginViewEvent();
+    _sendSigninViewEvent();
     return Scaffold(
       body: Stack(
         children: [
@@ -143,7 +143,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 4 * SizeConfig.defaultSize!),
                   InkWell(
                     onTap: () {
-                      _sendLoginGoogleClickEvent();
+                      _sendSigninGoogleClickEvent();
                       signInWithGoogle(context);
                     },
                     child: Image.asset(
@@ -159,12 +159,16 @@ class _LoginState extends State<Login> {
     );
   }
 
-  static Future<void> _sendLoginViewEvent() async {
+  static Future<void> _sendSigninViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'login_view',
+        name: 'signin_view',
         //parameters: <String, dynamic>{'contentId': contentId},
+      );
+      await amplitude.logEvent(
+        'signin_google_click',
+        eventProperties: {},
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
@@ -172,19 +176,16 @@ class _LoginState extends State<Login> {
     }
   }
 
-  static Future<void> _sendLoginGoogleClickEvent() async {
+  static Future<void> _sendSigninGoogleClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'login_google_click',
+        name: 'signin_google_click',
         //parameters: <String, dynamic>{'contentId': contentId},
       );
       await amplitude.logEvent(
-        'login_google_click',
-        eventProperties: {
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        'signin_google_click',
+        eventProperties: {},
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
@@ -192,16 +193,16 @@ class _LoginState extends State<Login> {
     }
   }
 
-  static Future<void> _sendLoginAppleClickEvent() async {
+  static Future<void> _sendSigninAppleClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'login_apple_click',
+        name: 'signin_apple_click',
         //parameters: <String, dynamic>{'contentId': contentId},
       );
 
       await amplitude.logEvent(
-        'login_apple_click',
+        'signin_apple_click',
         eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',

@@ -37,7 +37,7 @@ class _RecInfoState extends State<RecInfo> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendRecAbstViewEvent(userState.purchase, userState.record);
+    _sendRecInfoViewEvent(userState.purchase, userState.record);
     return Scaffold(
         body: Container(
       decoration: const BoxDecoration(
@@ -274,18 +274,18 @@ class _RecInfoState extends State<RecInfo> {
     ));
   }
 
-  Future<void> _sendRecAbstViewEvent(purchase, record) async {
+  Future<void> _sendRecInfoViewEvent(purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'rec_abst_view',
+        name: 'rec_info_view',
         parameters: <String, dynamic>{
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       await amplitude.logEvent(
-        'rec_abst_view',
+        'rec_info_view',
         eventProperties: {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
