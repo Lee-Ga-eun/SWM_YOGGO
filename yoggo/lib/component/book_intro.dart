@@ -204,8 +204,7 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
-  Future<void> _sendBookIntroXClickEvent(
-      contentVoiceId, purchase, record) async {
+  Future<void> _sendBookIntroXClickEvent(contentId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
@@ -389,7 +388,7 @@ class _BookIntroState extends State<BookIntro> {
                                     icon: Icon(Icons.clear,
                                         size: 3 * SizeConfig.defaultSize!),
                                     onPressed: () {
-                                      _sendBookIntroXClickEvent(contentId,
+                                      _sendBookIntroXClickEvent(widget.id,
                                           userState.purchase, userState.record);
                                       Navigator.of(context).pop();
                                     },
@@ -457,7 +456,6 @@ class _BookIntroState extends State<BookIntro> {
                                     ? GestureDetector(
                                         onTap: () {
                                           _sendBookMyVoiceClickEvent(
-                                            //수정 필요
                                             userState.purchase,
                                             userState.record,
                                             contentId,
@@ -689,7 +687,12 @@ class _BookIntroState extends State<BookIntro> {
                                       cvi = voices[0]['contentVoiceId'];
                                       vi = voices[0]['voiceId'];
                                       _sendBookVoiceClickEvent(
-                                          cvi); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                          cvi,
+                                          contentId,
+                                          vi,
+                                          userState.purchase,
+                                          userState
+                                              .record); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                       setState(() {
                                         isClicked0 = true;
                                         isClicked = !isClicked0;
@@ -770,7 +773,12 @@ class _BookIntroState extends State<BookIntro> {
                                       vi = voices[1]['voiceId'];
 
                                       _sendBookVoiceClickEvent(
-                                          cvi); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                          cvi,
+                                          contentId,
+                                          vi,
+                                          userState.purchase,
+                                          userState
+                                              .record); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                       setState(() {
                                         isClicked1 = true;
                                         isClicked = !isClicked1;
@@ -850,7 +858,12 @@ class _BookIntroState extends State<BookIntro> {
                                       cvi = voices[2]['contentVoiceId'];
                                       vi = voices[2]['voiceId'];
                                       // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
-                                      _sendBookVoiceClickEvent(cvi);
+                                      _sendBookVoiceClickEvent(
+                                          cvi,
+                                          contentId,
+                                          vi,
+                                          userState.purchase,
+                                          userState.record);
                                       setState(() {
                                         isClicked2 = true;
                                         isClicked = !isClicked2;
@@ -973,7 +986,12 @@ class _BookIntroState extends State<BookIntro> {
                               (cvi == inferenceId) // 원래는 cvi==inferenceId
                                   ? await checkInference(token)
                                       ? {
-                                          _sendBookStartClickEvent(cvi),
+                                          _sendBookStartClickEvent(
+                                              cvi,
+                                              contentId,
+                                              vi,
+                                              userState.purchase,
+                                              userState.record),
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -992,7 +1010,12 @@ class _BookIntroState extends State<BookIntro> {
                                         })
                                   : canChanged
                                       ? {
-                                          _sendBookStartClickEvent(cvi),
+                                          _sendBookStartClickEvent(
+                                              cvi,
+                                              contentId,
+                                              vi,
+                                              userState.purchase,
+                                              userState.record),
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
