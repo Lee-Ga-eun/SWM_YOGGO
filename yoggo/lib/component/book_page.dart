@@ -14,12 +14,17 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'globalCubit/user/user_cubit.dart';
 
 class BookPage extends StatefulWidget {
-  final int voiceId; //detail_screen에서 받아오는 것들
+  final int contentVoiceId; //detail_screen에서 받아오는 것들
   final bool isSelected;
   final int lastPage;
+  final int voiceId;
+  final int contentId;
+
   const BookPage({
     super.key,
+    required this.contentVoiceId, // detail_screen에서 받아오는 것들 초기화
     required this.voiceId, // detail_screen에서 받아오는 것들 초기화
+    required this.contentId, // detail_screen에서 받아오는 것들 초기화
     required this.isSelected,
     required this.lastPage,
   });
@@ -60,7 +65,7 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   Future<void> fetchAllBookPages() async {
     // API에서 모든 책 페이지 데이터를 불러와 pages 리스트에 저장
     final response = await http.get(Uri.parse(
-        'https://yoggo-server.fly.dev/content/page?contentVoiceId=${widget.voiceId}'));
+        'https://yoggo-server.fly.dev/content/page?contentVoiceId=${widget.contentVoiceId}'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       if (jsonData is List<dynamic>) {
@@ -176,6 +181,8 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
                 nextPage: nextPage,
                 lastPage: widget.lastPage,
                 voiceId: widget.voiceId,
+                contentVoiceId: widget.contentVoiceId,
+                contentId: widget.contentId,
                 isSelected: widget.isSelected,
                 dispose: dispose,
                 stopAudio: stopAudio,
@@ -204,6 +211,8 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
                 nextPage: nextPage,
                 lastPage: widget.lastPage,
                 voiceId: widget.voiceId,
+                contentVoiceId: widget.contentVoiceId,
+                contentId: widget.contentId,
                 isSelected: widget.isSelected,
                 dispose: dispose,
                 stopAudio: stopAudio,
@@ -227,6 +236,8 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
                 nextPage: nextPage,
                 lastPage: widget.lastPage,
                 voiceId: widget.voiceId,
+                contentVoiceId: widget.contentVoiceId,
+                contentId: widget.contentId,
                 isSelected: widget.isSelected,
                 dispose: dispose,
                 stopAudio: stopAudio,
@@ -296,6 +307,8 @@ class PageWidget extends StatefulWidget {
   final bool? purchase;
   final bool? record;
   final int voiceId; //detail_screen에서 받아오는 것들
+  final int contentVoiceId; //detail_screen에서 받아오는 것들
+  final int contentId; //detail_screen에서 받아오는 것들
   final bool isSelected;
   final dispose;
   final stopAudio;
@@ -314,6 +327,8 @@ class PageWidget extends StatefulWidget {
     required this.lastPage,
     this.purchase,
     required this.voiceId,
+    required this.contentVoiceId,
+    required this.contentId,
     required this.isSelected,
     this.record,
     required this.dispose,
@@ -589,6 +604,9 @@ class _PageWidgetState extends State<PageWidget> {
                                                 MaterialPageRoute(
                                                   builder: (context) => BookEnd(
                                                     voiceId: widget.voiceId,
+                                                    contentVoiceId:
+                                                        widget.contentVoiceId,
+                                                    contentId: widget.contentId,
                                                     lastPage: widget.lastPage,
                                                     isSelected:
                                                         widget.isSelected,
@@ -601,6 +619,9 @@ class _PageWidgetState extends State<PageWidget> {
                                                 //결제가 끝나면 RecInfo로 가야 함
                                                 MaterialPageRoute(
                                                   builder: (context) => BookEnd(
+                                                    contentVoiceId:
+                                                        widget.contentVoiceId,
+                                                    contentId: widget.contentId,
                                                     voiceId: widget.voiceId,
                                                     lastPage: widget.lastPage,
                                                     isSelected:

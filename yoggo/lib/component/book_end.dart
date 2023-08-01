@@ -13,11 +13,15 @@ import 'globalCubit/user/user_cubit.dart';
 
 class BookEnd extends StatefulWidget {
   final int voiceId; //detail_screen에서 받아오는 것들
+  final int contentVoiceId; //detail_screen에서 받아오는 것들
+  final int contentId; //detail_screen에서 받아오는 것들
   final bool isSelected;
   final int lastPage;
   BookEnd({
     super.key,
     required this.voiceId, // detail_screen에서 받아오는 것들 초기화
+    required this.contentVoiceId, // detail_screen에서 받아오는 것들 초기화
+    required this.contentId, // detail_screen에서 받아오는 것들 초기화
     required this.isSelected,
     required this.lastPage,
   });
@@ -47,7 +51,8 @@ class _BookEndState extends State<BookEnd> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendBookEndViewEvent(widget.voiceId);
+    _sendBookEndViewEvent(widget.contentVoiceId, widget.contentId,
+        widget.voiceId, userState.purchase, userState.record);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -98,12 +103,19 @@ class _BookEndState extends State<BookEnd> {
                     padding:
                         EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
                     onPressed: () {
-                      _sendBookAgainClickEvent(widget.voiceId);
+                      _sendBookAgainClickEvent(
+                          widget.contentVoiceId,
+                          widget.contentId,
+                          widget.voiceId,
+                          userState.purchase,
+                          userState.record);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => BookPage(
                             // 다음 화면으로 contetnVoiceId를 가지고 이동
+                            contentId: widget.contentId,
+                            contentVoiceId: widget.contentVoiceId,
                             voiceId: widget.voiceId,
                             lastPage: widget.lastPage,
                             isSelected: widget.isSelected,
@@ -123,7 +135,12 @@ class _BookEndState extends State<BookEnd> {
                     padding:
                         EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
                     onPressed: () {
-                      _sendBookHomeClickEvent(widget.voiceId);
+                      _sendBookHomeClickEvent(
+                          widget.contentVoiceId,
+                          widget.contentId,
+                          widget.voiceId,
+                          userState.purchase,
+                          userState.record);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -261,7 +278,12 @@ class _BookEndState extends State<BookEnd> {
                         ),
                         InkWell(
                           onTap: () {
-                            _sendBookEndPurClick(purchase, record, cvi);
+                            _sendBookEndSubClick(
+                                widget.contentVoiceId,
+                                widget.contentId,
+                                widget.voiceId,
+                                purchase,
+                                record);
                             Navigator.push(
                               context,
                               //결제가 끝나면 RecInfo로 가야 함
@@ -384,7 +406,12 @@ class _BookEndState extends State<BookEnd> {
                         ),
                         InkWell(
                           onTap: () {
-                            _sendBookEndPurClick(purchase, record, cvi);
+                            _sendBookEndSubClick(
+                                widget.contentVoiceId,
+                                widget.contentId,
+                                widget.voiceId,
+                                purchase,
+                                record);
                             Navigator.push(
                               context,
                               //결제가 끝나면 RecInfo로 가야 함
@@ -430,71 +457,105 @@ class _BookEndState extends State<BookEnd> {
     );
   }
 
-  Future<void> _sendBookEndViewEvent(contentVoiceId) async {
+  Future<void> _sendBookEndViewEvent(
+      contentVoiceId, contentId, voiceId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_end_view',
         parameters: <String, dynamic>{
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('book_end_view', eventProperties: {
         'contentVoiceId': contentVoiceId,
+        'contentId': contentId,
+        'voiceId': voiceId,
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
       });
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendBookEndPurClick(purchase, record, contentVoiceId) async {
+  Future<void> _sendBookEndSubClick(
+      contentVoiceId, contentId, voiceId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'book_end_pur_click',
+        name: 'book_end_sub_click',
         parameters: <String, dynamic>{
+          'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
-          'contentVoiceId': contentVoiceId,
         },
       );
-      amplitude.logEvent('book_end_pur_click', eventProperties: {
+      amplitude.logEvent('book_end_sub_click', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+        'contentId': contentId,
+        'voiceId': voiceId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
-        'contentVoiceId': contentVoiceId,
       });
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendBookAgainClickEvent(contentVoiceId) async {
+  Future<void> _sendBookAgainClickEvent(
+      contentVoiceId, contentId, voiceId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_again_click',
         parameters: <String, dynamic>{
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
-      amplitude.logEvent('book_again_click',
-          eventProperties: {'contentVoiceId': contentVoiceId});
+      amplitude.logEvent('book_again_click', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+        'contentId': contentId,
+        'voiceId': voiceId,
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendBookHomeClickEvent(contentVoiceId) async {
+  Future<void> _sendBookHomeClickEvent(
+      contentVoiceId, contentId, voiceId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_home_click',
         parameters: <String, dynamic>{
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
         },
       );
-      amplitude.logEvent('book_home_click',
-          eventProperties: {'contentVoiceId': contentVoiceId});
+      amplitude.logEvent('book_home_click', eventProperties: {
+        'contentVoiceId': contentVoiceId,
+        'contentId': contentId,
+        'voiceId': voiceId,
+        'purchase': purchase ? 'true' : 'false',
+        'record': record ? 'true' : 'false',
+      });
     } catch (e) {
       print('Failed to log event: $e');
     }
