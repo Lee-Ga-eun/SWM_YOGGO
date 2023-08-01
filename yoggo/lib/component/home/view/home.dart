@@ -2,7 +2,7 @@ import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/login.dart';
-import 'package:yoggo/component/purchase.dart';
+import 'package:yoggo/component/sub.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/component/book_intro.dart';
 import 'package:google_sign_in/google_sign_in.dart';

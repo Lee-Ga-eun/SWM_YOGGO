@@ -7,7 +7,7 @@ import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/book_page.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/size_config.dart';
-import 'package:yoggo/component/purchase.dart';
+import 'package:yoggo/component/sub.dart';
 
 import 'globalCubit/user/user_cubit.dart';
 
