@@ -3,7 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/purchase.dart';
+import 'package:yoggo/component/sub.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'book_page.dart';
 import 'package:http/http.dart' as http;
