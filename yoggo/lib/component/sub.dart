@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home.dart';
-import 'package:yoggo/component/login.dart';
+import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/size_config.dart';
 

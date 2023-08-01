@@ -1,7 +1,7 @@
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/login.dart';
+import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/sub.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/component/book_intro.dart';
@@ -10,7 +10,7 @@ import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../voice_profile.dart';
+import '../../voice.dart';
 import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -507,7 +507,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 top: SizeConfig.defaultSize! * 2,
                                 child: InkWell(
                                   onTap: () {
-                                    //     print("열림");
                                     _sendHbgClickEvent(
                                         userState.purchase, userState.record);
                                     _scaffoldKey.currentState?.openDrawer();
@@ -567,7 +566,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           height: SizeConfig.defaultSize! * 4,
                                           child: Center(
                                             child: Text(
-                                              'Want to read a book in your voice?',
+                                              'Do you want to read a book in your voice?',
                                               style: TextStyle(
                                                   fontSize: 2 *
                                                       SizeConfig.defaultSize!,
@@ -745,7 +744,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _sendHbgVoiceClickEvent(purchase, record) async {
     try {
-      print("_sendHbgVoiceClickEvent");
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_voice_click',
@@ -767,7 +765,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _sendHbgVoiceBoxClickEvent(purchase, record) async {
-    print("_sendHbgVoiceBoxClickEvent");
     try {
       // 이벤트 로깅
       await analytics.logEvent(
@@ -791,7 +788,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _sendHbgNameClickEvent(purchase, record) async {
     try {
-      print("_sendHbgNameClickEvent");
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_name_click',
@@ -814,7 +810,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _sendHomeViewEvent(purchase, record) async {
     try {
-      print("_sendHomeViewEvent");
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'home_view',
@@ -837,7 +832,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _sendBookClickEvent(purchase, record, contentId) async {
     try {
-      print("_sendBookClickEvent");
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_click',
@@ -862,7 +856,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _sendBannerClickEvent(purchase, record) async {
     try {
-      print("_sendBannerClickEvent");
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'banner_click',
@@ -885,7 +878,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _sendHbgClickEvent(purchase, record) async {
     try {
-      print("_sendHbgClickEvent");
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_click',
@@ -908,7 +900,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _sendHomeLoadingViewEvent(purchase, record) async {
     try {
-      print("_sendHomeLoadingViewEvent");
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'home_loading_view',

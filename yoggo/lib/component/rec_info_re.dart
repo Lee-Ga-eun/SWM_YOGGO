@@ -60,7 +60,7 @@ class _RecInfoState extends State<RecReInfo> {
                         children: [
                           IconButton(
                             icon: Icon(Icons.clear,
-                                size: 2.5 * SizeConfig.defaultSize!),
+                                size: 3 * SizeConfig.defaultSize!),
                             onPressed: () {
                               Navigator.of(context).pop();
                               // Navigator.push(
