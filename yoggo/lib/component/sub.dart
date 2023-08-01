@@ -258,25 +258,6 @@ class _PurchaseState extends State<Purchase> {
                     SizedBox(
                       height: SizeConfig.defaultSize! * 2.5,
                     ),
-                    RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(children: [
-                          TextSpan(
-                            text: '\$19.99/month\n',
-                            style: TextStyle(
-                                fontSize: SizeConfig.defaultSize! * 1.8,
-                                fontFamily: 'Molengo',
-                                color: Colors.grey,
-                                decoration: TextDecoration.lineThrough),
-                          ),
-                          TextSpan(
-                            text: '\$5.99/month',
-                            style: TextStyle(
-                                fontSize: SizeConfig.defaultSize! * 2,
-                                color: Colors.black,
-                                fontFamily: 'Molengo'),
-                          ),
-                        ])),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -286,46 +267,29 @@ class _PurchaseState extends State<Purchase> {
                           alignment: Alignment.topCenter,
                         ),
                         SizedBox(
-                          width: SizeConfig.defaultSize! * 5,
+                          width: SizeConfig.defaultSize! * 10,
                         ),
                         RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(children: [
                               TextSpan(
-                                text: '70% ',
+                                text: '\$19.99/month\n',
                                 style: TextStyle(
-                                    height: 0,
-                                    fontSize: SizeConfig.defaultSize! * 2.3,
-                                    color: Colors.red,
-                                    fontFamily: 'Molengo'),
+                                    fontSize: SizeConfig.defaultSize! * 1.8,
+                                    fontFamily: 'Molengo',
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.lineThrough),
                               ),
                               TextSpan(
-                                text: 'OFF + 1 ',
+                                text: '\$5.99/month',
                                 style: TextStyle(
-                                    height: 0,
-                                    fontSize: SizeConfig.defaultSize! * 2.3,
-                                    color: Colors.black,
-                                    fontFamily: 'Molengo'),
-                              ),
-                              TextSpan(
-                                text: 'FREE ',
-                                style: TextStyle(
-                                    height: 0,
-                                    fontSize: SizeConfig.defaultSize! * 2.3,
-                                    color: Colors.red,
-                                    fontFamily: 'Molengo'),
-                              ),
-                              TextSpan(
-                                text: 'WEEK',
-                                style: TextStyle(
-                                    height: 0,
-                                    fontSize: SizeConfig.defaultSize! * 2.3,
+                                    fontSize: SizeConfig.defaultSize! * 2,
                                     color: Colors.black,
                                     fontFamily: 'Molengo'),
                               ),
                             ])),
                         SizedBox(
-                          width: SizeConfig.defaultSize! * 5,
+                          width: SizeConfig.defaultSize! * 10,
                         ),
                         Image.asset(
                           'lib/images/horse.png',
@@ -334,44 +298,166 @@ class _PurchaseState extends State<Purchase> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 1.5 * SizeConfig.defaultSize!,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        _sendSubPayClickEvent(
-                            userState.purchase, userState.record);
-                        userState.login
-                            ? await startPurchase()
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const Login()), //HomeScreen()),
-                              );
-                        //await startPurchase();
-                      },
-                      child: Container(
-                          width: 52 * SizeConfig.defaultSize!,
-                          height: 4.5 * SizeConfig.defaultSize!,
-                          decoration: BoxDecoration(
-                              color: const Color(0xFFFFA91A),
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  SizeConfig.defaultSize! * 1.5))),
-                          child: Center(
-                              child: Text(
-                            "Let's Invest in Recording UNDER ONE minute",
+                    // RichText(
+                    //     textAlign: TextAlign.center,
+                    //     text: TextSpan(children: [
+                    //       TextSpan(
+                    //         text: '\$19.99/month\n',
+                    //         style: TextStyle(
+                    //             fontSize: SizeConfig.defaultSize! * 1.8,
+                    //             fontFamily: 'Molengo',
+                    //             color: Colors.grey,
+                    //             decoration: TextDecoration.lineThrough),
+                    //       ),
+                    //       TextSpan(
+                    //         text: '\$5.99/month',
+                    //         style: TextStyle(
+                    //             fontSize: SizeConfig.defaultSize! * 2,
+                    //             color: Colors.black,
+                    //             fontFamily: 'Molengo'),
+                    //       ),
+                    //     ])),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     Image.asset(
+                    //       'lib/images/rocket.png',
+                    //       width: SizeConfig.defaultSize! * 5,
+                    //       alignment: Alignment.topCenter,
+                    //     ),
+                    //     SizedBox(
+                    //       width: SizeConfig.defaultSize! * 5,
+                    //     ),
+                    RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(children: [
+                          TextSpan(
+                            text: '70% ',
                             style: TextStyle(
-                              fontFamily: 'Molengo',
-                              fontSize: SizeConfig.defaultSize! * 2.2,
-                              color: Colors.black,
-                            ),
-                            textAlign: TextAlign.center,
-                          ))),
-                    ),
+                                height: 0,
+                                fontSize: SizeConfig.defaultSize! * 2.3,
+                                color: Colors.red,
+                                fontFamily: 'Molengo'),
+                          ),
+                          TextSpan(
+                            text: 'OFF + 1 ',
+                            style: TextStyle(
+                                height: 0,
+                                fontSize: SizeConfig.defaultSize! * 2.3,
+                                color: Colors.black,
+                                fontFamily: 'Molengo'),
+                          ),
+                          TextSpan(
+                            text: 'FREE ',
+                            style: TextStyle(
+                                height: 0,
+                                fontSize: SizeConfig.defaultSize! * 2.3,
+                                color: Colors.red,
+                                fontFamily: 'Molengo'),
+                          ),
+                          TextSpan(
+                            text: 'WEEK',
+                            style: TextStyle(
+                                height: 0,
+                                fontSize: SizeConfig.defaultSize! * 2.3,
+                                color: Colors.black,
+                                fontFamily: 'Molengo'),
+                          ),
+                        ])),
+                    //   SizedBox(
+                    //     width: SizeConfig.defaultSize! * 5,
+                    //   ),
+                    //   Image.asset(
+                    //     'lib/images/horse.png',
+                    //     width: SizeConfig.defaultSize! * 5,
+                    //     alignment: Alignment.topCenter,
+                    //   )
+                    // ],
+                    //),
                     SizedBox(
-                      height: SizeConfig.defaultSize! * 0.7,
+                      height: 0.2 * SizeConfig.defaultSize!,
                     ),
+
+                    GestureDetector(
+                        onTap: () async {
+                          _sendSubPayClickEvent(
+                              userState.purchase, userState.record);
+                          userState.login
+                              ? await startPurchase()
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Login()), //HomeScreen()),
+                                );
+                          //await startPurchase();
+                        },
+                        child: Stack(children: [
+                          SizedBox(
+                            width: 52 * SizeConfig.defaultSize!,
+                            height: 9.5 * SizeConfig.defaultSize!,
+                          ),
+                          Positioned(
+                              //left: 39 * SizeConfig.defaultSize!,
+                              bottom: 2.5 * SizeConfig.defaultSize!,
+                              child: Container(
+                                  width: 52 * SizeConfig.defaultSize!,
+                                  height: 4.5 * SizeConfig.defaultSize!,
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xFFFFA91A),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              SizeConfig.defaultSize! * 1.5))),
+                                  child: Center(
+                                      child: Text(
+                                    "Let's Invest in Recording UNDER ONE minute",
+                                    style: TextStyle(
+                                      fontFamily: 'Molengo',
+                                      fontSize: SizeConfig.defaultSize! * 2.2,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )))),
+                          Positioned(
+                            left: 39 * SizeConfig.defaultSize!,
+                            bottom: 6.2 * SizeConfig.defaultSize!,
+                            child: Container(
+                                width: 12 * SizeConfig.defaultSize!,
+                                height: 3 * SizeConfig.defaultSize!,
+                                decoration: BoxDecoration(
+                                    color: const Color(0xFF1787FF),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                            SizeConfig.defaultSize! * 1))),
+                                child: Center(
+                                    child: Text(
+                                  "Try it FREE",
+                                  style: TextStyle(
+                                    fontFamily: 'Molengo',
+                                    fontSize: SizeConfig.defaultSize! * 1.6,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ))),
+                          ),
+                          Positioned(
+                            bottom: 0 * SizeConfig.defaultSize!,
+                            left: 10 * SizeConfig.defaultSize!,
+                            child: Text(
+                              "You can cancel this subscription at any time if you wish.",
+                              style: TextStyle(
+                                fontFamily: 'Molengo',
+                                decoration: TextDecoration.underline,
+                                fontSize: SizeConfig.defaultSize! * 1.5,
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ])),
+                    // SizedBox(
+                    //   height: SizeConfig.defaultSize! * 0.7,
+                    // ),
                     // Padding(
                     //     padding: const EdgeInsets.only(),
                     //     child: Container(
