@@ -139,9 +139,12 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     SizeConfig().init(context);
     if (pages.isEmpty) {
-      _sendBookLoadingViewEvent(widget.voiceId);
+      _sendBookPageLoadingViewEvent(userState.purchase, userState.record,
+          widget.contentVoiceId, widget.contentId, widget.voiceId);
       return Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -159,7 +162,13 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
         ),
       );
     }
-    _sendBookPageViewEvent(widget.voiceId, currentPageIndex + 1);
+    _sendBookPageViewEvent(
+        userState.purchase,
+        userState.record,
+        widget.contentVoiceId,
+        widget.contentId,
+        widget.voiceId,
+        currentPageIndex + 1);
     return WillPopScope(
       child: Scaffold(
         body: Stack(
@@ -254,38 +263,61 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _sendBookPageViewEvent(contentVoiceId, pageId) async {
+  Future<void> _sendBookPageViewEvent(
+      purchase, record, contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_page_view',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
           'pageId': pageId,
         },
       );
-      amplitude.logEvent('book_page_view', eventProperties: {
-        'contentVoiceId': contentVoiceId,
-        'pageId': pageId,
-      });
+      amplitude.logEvent(
+        'book_page_view',
+        eventProperties: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+          'pageId': pageId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendBookLoadingViewEvent(contentVoiceId) async {
+  Future<void> _sendBookPageLoadingViewEvent(
+      purchase, record, contentVoiceId, contentId, voiceId) async {
     try {
-      // 이벤트 로깅
       await analytics.logEvent(
-        name: 'book_loading_view',
+        name: 'book_page_loading_view',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
         },
       );
-      amplitude.logEvent('book_loading_view', eventProperties: {
-        'contentVoiceId': contentVoiceId,
-      });
+      amplitude.logEvent(
+        'book_page_loading_view',
+        eventProperties: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -400,7 +432,12 @@ class _PageWidgetState extends State<PageWidget> {
                               onPressed: () {
                                 // stopAudio();
                                 widget.dispose();
-                                _sendBookExitClickEvent(widget.voiceId,
+                                _sendBookPageXClickEvent(
+                                    userState.purchase,
+                                    userState.record,
+                                    widget.contentVoiceId,
+                                    widget.contentId,
+                                    widget.voiceId,
                                     widget.currentPageIndex + 1);
                                 Navigator.of(context).pop();
                               },
@@ -537,7 +574,12 @@ class _PageWidgetState extends State<PageWidget> {
                                         size: 3 * SizeConfig.defaultSize!,
                                       ),
                                       onPressed: () {
-                                        _sendBookBackClickEvent(widget.voiceId,
+                                        _sendBookBackClickEvent(
+                                            userState.purchase,
+                                            userState.record,
+                                            widget.contentVoiceId,
+                                            widget.contentId,
+                                            widget.voiceId,
                                             widget.currentPageIndex + 1);
                                         widget.previousPage();
                                       })
@@ -567,6 +609,8 @@ class _PageWidgetState extends State<PageWidget> {
                                               _sendBookLastClickEvent(
                                                   userState.purchase,
                                                   userState.record,
+                                                  widget.contentVoiceId,
+                                                  widget.contentId,
                                                   widget.voiceId,
                                                   widget.currentPageIndex + 1);
                                               widget.nextPage();
@@ -593,6 +637,10 @@ class _PageWidgetState extends State<PageWidget> {
                                           onPressed: () {
                                             widget.dispose();
                                             _sendBookNextClickEvent(
+                                                userState.purchase,
+                                                userState.record,
+                                                widget.contentVoiceId,
+                                                widget.contentId,
                                                 widget.voiceId,
                                                 widget.currentPageIndex + 1);
                                             if (widget.record != null &&
@@ -647,20 +695,32 @@ class _PageWidgetState extends State<PageWidget> {
     );
   }
 
-  Future<void> _sendBookExitClickEvent(contentVoiceId, pageId) async {
+  Future<void> _sendBookPageXClickEvent(
+      purchase, record, contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'book_exit_click',
+        name: 'book_page_x_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
           'pageId': pageId,
         },
       );
-      amplitude.logEvent('book_exit_click', eventProperties: {
-        'contentVoiceId': contentVoiceId,
-        'pageId': pageId,
-      });
+      amplitude.logEvent(
+        'book_page_x_click',
+        eventProperties: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+          'pageId': pageId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
@@ -668,7 +728,7 @@ class _PageWidgetState extends State<PageWidget> {
   }
 
   Future<void> _sendBookLastClickEvent(
-      purchase, record, contentVoiceId, pageId) async {
+      purchase, record, contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
@@ -677,55 +737,86 @@ class _PageWidgetState extends State<PageWidget> {
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
           'pageId': pageId,
         },
       );
-      amplitude.logEvent('book_last_click', eventProperties: {
-        'purchase': purchase ? 'true' : 'false',
-        'record': record ? 'true' : 'false',
-        'contentVoiceId': contentVoiceId,
-        'pageId': pageId,
-      });
+      amplitude.logEvent(
+        'book_last_click',
+        eventProperties: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+          'pageId': pageId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendBookNextClickEvent(contentVoiceId, pageId) async {
+  Future<void> _sendBookNextClickEvent(
+      purchase, record, contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_next_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
           'pageId': pageId,
         },
       );
-      amplitude.logEvent('book_next_click', eventProperties: {
-        'contentVoiceId': contentVoiceId,
-        'pageId': pageId,
-      });
+      amplitude.logEvent(
+        'book_next_click',
+        eventProperties: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+          'pageId': pageId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendBookBackClickEvent(contentVoiceId, pageId) async {
+  Future<void> _sendBookBackClickEvent(
+      purchase, record, contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_back_click',
         parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
           'pageId': pageId,
         },
       );
-      amplitude.logEvent('book_back_click', eventProperties: {
-        'contentVoiceId': contentVoiceId,
-        'pageId': pageId,
-      });
+      amplitude.logEvent(
+        'book_back_click',
+        eventProperties: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+          'contentVoiceId': contentVoiceId,
+          'contentId': contentId,
+          'voiceId': voiceId,
+          'pageId': pageId,
+        },
+      );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
