@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/rec_re_info.dart';
+import 'package:yoggo/component/rec_info_re.dart';
 import 'package:yoggo/component/rec_end.dart';
 import 'package:yoggo/size_config.dart';
 import 'rec_info.dart';
