@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/models/user.dart';
@@ -96,6 +97,68 @@ class _LoginState extends State<Login> {
     }
   }
 
+  Future<void> signInWithApple(BuildContext context) async {
+    userCubit = context.read<UserCubit>();
+    // Trigger the authentication flow
+    final rawNonce = generateNonce();
+    final nonce = sha256ofString(rawNonce);
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      nonce: nonce,
+    );
+    String? name = appleCredential.givenName;
+    AppleUserModel user;
+    if (name != null && name.isNotEmpty) {
+      user = AppleUserModel(
+        idToken: appleCredential.identityToken!,
+        name: appleCredential.givenName!,
+        // email: appleCredential.email,
+        // providerId: appleCredential.userIdentifier!,
+        provider: 'apple',
+      );
+    } else {
+      user = AppleUserModel(
+        idToken: appleCredential.identityToken!,
+        name: 'User',
+        // email: appleCredential.email,
+        // providerId: appleCredential.userIdentifier!,
+        provider: 'apple',
+      );
+    }
+    var url = Uri.parse('https://yoggo-server.fly.dev/auth/applelogin');
+    var response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(user.toJson()));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // 로그인 성공
+      var responseData = json.decode(response.body);
+      var token = responseData['token'];
+      var purchase = responseData['purchase'];
+      var record = responseData['record'];
+      var username = responseData['username'];
+      var prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', token);
+      await prefs.setBool('purchase', purchase);
+      await prefs.setBool('record', record);
+      await prefs.setString('username', username);
+
+      // await Navigator.push(context,
+      //     MaterialPageRoute(builder: (context) => const HomeScreen()));
+      //print(username); 기존 코드
+      //await userCubit.login(username, 'email', purchase, record, false);
+      await userCubit.fetchUser();
+      final state = userCubit.state;
+      if (state.isDataFetched) {
+        OneSignal.shared.setExternalUserId(state.userId.toString());
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -148,6 +211,16 @@ class _LoginState extends State<Login> {
                     },
                     child: Image.asset(
                       'lib/images/login_google.png', // 로그인 버튼 이미지 파일 경로 (PNG 형식)
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _sendSigninAppleClickEvent();
+                      //signInWithGoogle(context);
+                      signInWithApple(context);
+                    },
+                    child: Image.asset(
+                      'lib/images/login_apple.png', // 로그인 버튼 이미지 파일 경로 (PNG 형식)
                     ),
                   ),
                 ],
