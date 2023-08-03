@@ -229,19 +229,27 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                     ),
                                   ),
                                   child: inferenceUrl == ""
-                                      ? Center(
-                                          child: Text(
-                                            "We are making your voice!",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize:
-                                                  3 * SizeConfig.defaultSize!,
-                                              fontFamily: 'Molengo',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        )
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                              const CircularProgressIndicator(
+                                                  color: Color(0xFFFFA91A)),
+                                              SizedBox(
+                                                height: SizeConfig.defaultSize!,
+                                              ),
+                                              Text(
+                                                "We are making your voice!",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 3 *
+                                                      SizeConfig.defaultSize!,
+                                                  fontFamily: 'Molengo',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ])
                                       : Column(
                                           children: [
                                             SizedBox(
