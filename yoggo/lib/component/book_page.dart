@@ -606,7 +606,7 @@ class _PageWidgetState extends State<PageWidget> {
                                               size: 3 * SizeConfig.defaultSize!,
                                             ),
                                             onPressed: () {
-                                              _sendBookLastClickEvent(
+                                              _sendBookNextClickEvent(
                                                   userState.purchase,
                                                   userState.record,
                                                   widget.contentVoiceId,
@@ -619,7 +619,7 @@ class _PageWidgetState extends State<PageWidget> {
                                     ),
                                   )
                                 : Container(
-                                    // [->]
+                                    // [V]
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment
                                           .end, // 아이콘을 맨 왼쪽으로 정렬
@@ -636,13 +636,14 @@ class _PageWidgetState extends State<PageWidget> {
                                           // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
                                           onPressed: () {
                                             widget.dispose();
-                                            _sendBookNextClickEvent(
+                                            _sendBookLastClickEvent(
                                                 userState.purchase,
                                                 userState.record,
                                                 widget.contentVoiceId,
                                                 widget.contentId,
                                                 widget.voiceId,
                                                 widget.currentPageIndex + 1);
+
                                             if (widget.record != null &&
                                                 widget.record == true &&
                                                 widget.purchase == true) {
