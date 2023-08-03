@@ -144,12 +144,14 @@ class _BookEndState extends State<BookEnd> {
                           widget.voiceId,
                           userState.purchase,
                           userState.record);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
-                        ),
-                      );
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const HomeScreen(),
+                      //   ),
+                      // );
                     },
                     icon: Icon(
                       Icons.home,

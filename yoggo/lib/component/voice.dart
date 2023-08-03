@@ -228,141 +228,157 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                          height:
-                                              3.2 * SizeConfig.defaultSize!),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _sendVoiceScriptClickEvent(
-                                              userState.userId,
-                                              userState.purchase,
-                                              userState.record,
-                                              userState.voiceId);
-                                        },
-                                        child: Container(
-                                          width: 50 * SizeConfig.defaultSize!,
-                                          height: 16 * SizeConfig.defaultSize!,
-                                          child: Center(
-                                            child: Text(
-                                              "This dialogue highlights the mermaid's realization\nof the value of her voice, its intangible beauty,\nand its role in her pursuit of true love and self-discovery.\nDespite losing her voice, she finds the strength to communicate\nthrough her heart and believes that love goes beyond words.\nThe journey becomes an opportunity for her to uncover\nher true essence and understand the essence of love and freedom.",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 1.8 *
-                                                    SizeConfig.defaultSize!,
-                                                fontFamily: 'Molengo',
-                                                fontWeight: FontWeight.w400,
-                                              ),
+                                  child: inferenceUrl == ""
+                                      ? Center(
+                                          child: Text(
+                                            "We are making your voice!",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize:
+                                                  3 * SizeConfig.defaultSize!,
+                                              fontFamily: 'Molengo',
+                                              fontWeight: FontWeight.w400,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Stack(
-                                          alignment: Alignment.centerLeft,
+                                        )
+                                      : Column(
                                           children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                InkWell(
-                                                    onTap: () {
-                                                      _sendVoiceRerecClickEvent(
-                                                          userState.userId,
-                                                          userState.purchase,
-                                                          userState.record,
-                                                          userState.voiceId!);
-                                                      audioPlayer.stop();
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const RecRe(),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        _sendVoiceRerecClickEvent(
-                                                            userState.userId,
-                                                            userState.purchase,
-                                                            userState.record,
-                                                            userState.voiceId);
-                                                      },
-                                                      child: Container(
-                                                        width: 31.1 *
-                                                            SizeConfig
-                                                                .defaultSize!,
-                                                        height: 4.5 *
-                                                            SizeConfig
-                                                                .defaultSize!,
-                                                        decoration:
-                                                            ShapeDecoration(
-                                                          color:
-                                                              Color(0xFFFFA91A),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
+                                            SizedBox(
+                                                height: 3.2 *
+                                                    SizeConfig.defaultSize!),
+                                            GestureDetector(
+                                              onTap: () {
+                                                _sendVoiceScriptClickEvent(
+                                                    userState.userId,
+                                                    userState.purchase,
+                                                    userState.record,
+                                                    userState.voiceId);
+                                              },
+                                              child: Container(
+                                                width: 50 *
+                                                    SizeConfig.defaultSize!,
+                                                height: 16 *
+                                                    SizeConfig.defaultSize!,
+                                                child: Center(
+                                                  child: Text(
+                                                    "This dialogue highlights the mermaid's realization\nof the value of her voice, its intangible beauty,\nand its role in her pursuit of true love and self-discovery.\nDespite losing her voice, she finds the strength to communicate\nthrough her heart and believes that love goes beyond words.\nThe journey becomes an opportunity for her to uncover\nher true essence and understand the essence of love and freedom.",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 1.8 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      fontFamily: 'Molengo',
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Stack(
+                                                alignment: Alignment.centerLeft,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          _sendVoiceRerecClickEvent(
+                                                              userState.userId,
+                                                              userState
+                                                                  .purchase,
+                                                              userState.record,
+                                                              userState
+                                                                  .voiceId);
+                                                          audioPlayer.stop();
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const RecRe(),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          width: 31.1 *
+                                                              SizeConfig
+                                                                  .defaultSize!,
+                                                          height: 4.5 *
+                                                              SizeConfig
+                                                                  .defaultSize!,
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            color: Color(
+                                                                0xFFFFA91A),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                            ),
                                                           ),
-                                                        ),
-                                                        child: Center(
-                                                          child: Text(
-                                                            'Re-make your voice',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 2.3 *
-                                                                  SizeConfig
-                                                                      .defaultSize!,
-                                                              fontFamily:
-                                                                  'Molengo',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Re-make your voice',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 2.3 *
+                                                                    SizeConfig
+                                                                        .defaultSize!,
+                                                                fontFamily:
+                                                                    'Molengo',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-                                                    )),
-                                                SizedBox(
-                                                  width: 5.3 *
-                                                      SizeConfig.defaultSize!,
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                    Icons.play_arrow,
-                                                    size: 3 *
-                                                        SizeConfig.defaultSize!,
-                                                    // color: const Color.fromARGB(
-                                                    //     255, 194, 120, 209),
+                                                      SizedBox(
+                                                        width: 5.3 *
+                                                            SizeConfig
+                                                                .defaultSize!,
+                                                      ),
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.play_arrow,
+                                                          size: 3 *
+                                                              SizeConfig
+                                                                  .defaultSize!,
+                                                          // color: const Color.fromARGB(
+                                                          //     255, 194, 120, 209),
+                                                        ),
+                                                        onPressed: () {
+                                                          _sendVoicePlayClickEvent(
+                                                              userState.userId,
+                                                              userState
+                                                                  .purchase,
+                                                              userState.record,
+                                                              userState
+                                                                  .voiceId!);
+                                                          audioPlayer.play(
+                                                              UrlSource(
+                                                                  inferenceUrl));
+                                                        },
+                                                      ),
+                                                    ],
                                                   ),
-                                                  onPressed: () {
-                                                    _sendVoicePlayClickEvent(
-                                                        userState.userId,
-                                                        userState.purchase,
-                                                        userState.record,
-                                                        userState.voiceId!);
-                                                    inferenceUrl == ""
-                                                        ? null
-                                                        : audioPlayer.play(
-                                                            UrlSource(
-                                                                inferenceUrl));
-                                                  },
-                                                ),
-                                              ],
-                                            ),
+                                                ],
+                                              ),
+                                            )
                                           ],
                                         ),
-                                      )
-                                    ],
-                                  ),
                                 ),
                               ])
                         ],
