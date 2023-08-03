@@ -155,7 +155,7 @@ class _PurchaseState extends State<Purchase> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendSubViewEvent(userState.purchase, userState.record);
+    _sendSubViewEvent(userState.userId, userState.purchase, userState.record);
     return Scaffold(
         body: Container(
       decoration: const BoxDecoration(
@@ -309,7 +309,7 @@ class _PurchaseState extends State<Purchase> {
                     GestureDetector(
                         // -------------------------------------------------------------
                         onTap: () async {
-                          _sendSubPayClickEvent(
+                          _sendSubPayClickEvent(userState.userId,
                               userState.purchase, userState.record);
                           userState.login
                               ? await startPurchase()
@@ -392,17 +392,19 @@ class _PurchaseState extends State<Purchase> {
     ));
   }
 
-  Future<void> _sendSubViewEvent(purchase, record) async {
+  Future<void> _sendSubViewEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'sub_view',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       await amplitude.logEvent('sub_view', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -412,12 +414,13 @@ class _PurchaseState extends State<Purchase> {
     }
   }
 
-  Future<void> _sendSubPayClickEvent(purchase, record) async {
+  Future<void> _sendSubPayClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'sub_pay_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -425,6 +428,7 @@ class _PurchaseState extends State<Purchase> {
       await amplitude.logEvent(
         'sub_pay_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
