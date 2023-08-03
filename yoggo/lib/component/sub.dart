@@ -8,7 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/rec_info.dart';
+import 'package:yoggo/component/sign_and.dart';
 import 'package:yoggo/size_config.dart';
+import 'dart:io' show Platform;
 
 import 'globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
@@ -316,8 +318,9 @@ class _PurchaseState extends State<Purchase> {
                               : Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const Login()), //HomeScreen()),
+                                      builder: (context) => Platform.isIOS
+                                          ? const Login()
+                                          : const LoginAnd()), //HomeScreen()),
                                 );
                           //await startPurchase();
                         },

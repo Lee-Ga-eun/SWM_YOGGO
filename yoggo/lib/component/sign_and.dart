@@ -15,14 +15,14 @@ import '../component/globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class LoginAnd extends StatefulWidget {
+  const LoginAnd({Key? key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _LoginAndState createState() => _LoginAndState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginAndState extends State<LoginAnd> {
   late UserCubit userCubit;
 
   String generateNonce([int length = 32]) {
@@ -84,6 +84,7 @@ class _LoginState extends State<Login> {
         final state = userCubit.state;
         if (state.isDataFetched) {
           OneSignal.shared.setExternalUserId(state.userId.toString());
+          LogInResult result = await Purchases.logIn(state.userId.toString());
           Navigator.of(context).pop();
           // Navigator.push(
           //   context,

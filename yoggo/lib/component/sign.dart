@@ -84,6 +84,7 @@ class _LoginState extends State<Login> {
         final state = userCubit.state;
         if (state.isDataFetched) {
           OneSignal.shared.setExternalUserId(state.userId.toString());
+          LogInResult result = await Purchases.logIn(state.userId.toString());
           Navigator.of(context).pop();
           // Navigator.push(
           //   context,

@@ -9,7 +9,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../sign_and.dart';
 import '../../voice.dart';
 import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -423,11 +426,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   userState.record);
                                               // dropdown 상태 토글
                                               Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
+                                                context,
+                                                MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const Login(),
-                                                  ));
+                                                        Platform.isIOS
+                                                            ? const Login()
+                                                            : const LoginAnd()),
+                                              );
                                             }),
                                     //    userState.login && showSignOutConfirmation
                                     userState.login && showSignOutConfirmation
