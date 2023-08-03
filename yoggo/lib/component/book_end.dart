@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yoggo/component/globalCubit/user/user_state.dart';
 import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/book_page.dart';
 import 'package:yoggo/component/rec_info.dart';
@@ -51,8 +52,8 @@ class _BookEndState extends State<BookEnd> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendBookEndViewEvent(widget.contentVoiceId, widget.contentId,
-        widget.voiceId, userState.purchase, userState.record);
+    _sendBookEndViewEvent(userState.userId, widget.contentVoiceId,
+        widget.contentId, widget.voiceId, userState.purchase, userState.record);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -88,12 +89,12 @@ class _BookEndState extends State<BookEnd> {
             ),
             userState.purchase != null
                 ? (userState.purchase == true && userState.record == false
-                    ? notRecordUser(
-                        userState.purchase, userState.record, widget.voiceId)
+                    ? notRecordUser(userState.userId, userState.purchase,
+                        userState.record, widget.voiceId)
                     : userState.purchase == true && userState.record == true
                         ? allPass()
-                        : notPurchaseUser(userState.purchase, userState.record,
-                            widget.voiceId))
+                        : notPurchaseUser(userState.userId, userState.purchase,
+                            userState.record, widget.voiceId))
                 : Container(),
             Expanded(
                 flex: SizeConfig.defaultSize!.toInt(),
@@ -104,6 +105,7 @@ class _BookEndState extends State<BookEnd> {
                         EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
                     onPressed: () {
                       _sendBookAgainClickEvent(
+                          userState.userId,
                           widget.contentVoiceId,
                           widget.contentId,
                           widget.voiceId,
@@ -136,6 +138,7 @@ class _BookEndState extends State<BookEnd> {
                         EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
                     onPressed: () {
                       _sendBookHomeClickEvent(
+                          userState.userId,
                           widget.contentVoiceId,
                           widget.contentId,
                           widget.voiceId,
@@ -201,7 +204,7 @@ class _BookEndState extends State<BookEnd> {
         ));
   }
 
-  Expanded notPurchaseUser(purchase, record, cvi) {
+  Expanded notPurchaseUser(userId, purchase, record, cvi) {
     // 구매를 안 한 사용자
     return Expanded(
       flex: SizeConfig.defaultSize!.toInt() * 3,
@@ -279,6 +282,7 @@ class _BookEndState extends State<BookEnd> {
                         InkWell(
                           onTap: () {
                             _sendBookEndSubClick(
+                                userId,
                                 widget.contentVoiceId,
                                 widget.contentId,
                                 widget.voiceId,
@@ -329,7 +333,7 @@ class _BookEndState extends State<BookEnd> {
     );
   }
 
-  Expanded notRecordUser(purchase, record, cvi) {
+  Expanded notRecordUser(userId, purchase, record, cvi) {
     // 녹음을 안 한 사용자
     return Expanded(
       flex: SizeConfig.defaultSize!.toInt() * 3,
@@ -407,6 +411,7 @@ class _BookEndState extends State<BookEnd> {
                         InkWell(
                           onTap: () {
                             _sendBookEndSubClick(
+                                userId,
                                 widget.contentVoiceId,
                                 widget.contentId,
                                 widget.voiceId,
@@ -458,12 +463,13 @@ class _BookEndState extends State<BookEnd> {
   }
 
   Future<void> _sendBookEndViewEvent(
-      contentVoiceId, contentId, voiceId, purchase, record) async {
+      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_end_view',
         parameters: <String, dynamic>{
+          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -472,6 +478,7 @@ class _BookEndState extends State<BookEnd> {
         },
       );
       amplitude.logEvent('book_end_view', eventProperties: {
+        'userId': userId,
         'contentVoiceId': contentVoiceId,
         'contentId': contentId,
         'voiceId': voiceId,
@@ -484,12 +491,13 @@ class _BookEndState extends State<BookEnd> {
   }
 
   Future<void> _sendBookEndSubClick(
-      contentVoiceId, contentId, voiceId, purchase, record) async {
+      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_end_sub_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -498,6 +506,7 @@ class _BookEndState extends State<BookEnd> {
         },
       );
       amplitude.logEvent('book_end_sub_click', eventProperties: {
+        'userId': userId,
         'contentVoiceId': contentVoiceId,
         'contentId': contentId,
         'voiceId': voiceId,
@@ -510,12 +519,13 @@ class _BookEndState extends State<BookEnd> {
   }
 
   Future<void> _sendBookAgainClickEvent(
-      contentVoiceId, contentId, voiceId, purchase, record) async {
+      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_again_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -524,6 +534,7 @@ class _BookEndState extends State<BookEnd> {
         },
       );
       amplitude.logEvent('book_again_click', eventProperties: {
+        'userId': userId,
         'contentVoiceId': contentVoiceId,
         'contentId': contentId,
         'voiceId': voiceId,
@@ -536,12 +547,13 @@ class _BookEndState extends State<BookEnd> {
   }
 
   Future<void> _sendBookHomeClickEvent(
-      contentVoiceId, contentId, voiceId, purchase, record) async {
+      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_home_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -550,6 +562,7 @@ class _BookEndState extends State<BookEnd> {
         },
       );
       amplitude.logEvent('book_home_click', eventProperties: {
+        'userId': userId,
         'contentVoiceId': contentVoiceId,
         'contentId': contentId,
         'voiceId': voiceId,

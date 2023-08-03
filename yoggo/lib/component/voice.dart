@@ -70,8 +70,8 @@ class _VoiceProfileState extends State<VoiceProfile> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendVoiceViewEvent(
-        userState.purchase, userState.record, userState.voiceId!);
+    _sendVoiceViewEvent(userState.userId, userState.purchase, userState.record,
+        userState.voiceId!);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -151,8 +151,11 @@ class _VoiceProfileState extends State<VoiceProfile> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  _sendVoiceIconClickEvent(userState.purchase,
-                                      userState.record, userState.voiceId);
+                                  _sendVoiceIconClickEvent(
+                                      userState.userId,
+                                      userState.purchase,
+                                      userState.record,
+                                      userState.voiceId);
                                 },
                                 child: Container(
                                   width: 18 * SizeConfig.defaultSize!,
@@ -181,8 +184,11 @@ class _VoiceProfileState extends State<VoiceProfile> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  _sendVoiceNameClickEvent(userState.purchase,
-                                      userState.record, userState.voiceId);
+                                  _sendVoiceNameClickEvent(
+                                      userState.userId,
+                                      userState.purchase,
+                                      userState.record,
+                                      userState.voiceId);
                                 },
                                 child: Container(
                                   width: 18 * SizeConfig.defaultSize!,
@@ -230,6 +236,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                       GestureDetector(
                                         onTap: () {
                                           _sendVoiceScriptClickEvent(
+                                              userState.userId,
                                               userState.purchase,
                                               userState.record,
                                               userState.voiceId);
@@ -263,6 +270,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                 InkWell(
                                                     onTap: () {
                                                       _sendVoiceRerecClickEvent(
+                                                          userState.userId,
                                                           userState.purchase,
                                                           userState.record,
                                                           userState.voiceId!);
@@ -278,6 +286,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                     child: GestureDetector(
                                                       onTap: () {
                                                         _sendVoiceRerecClickEvent(
+                                                            userState.userId,
                                                             userState.purchase,
                                                             userState.record,
                                                             userState.voiceId);
@@ -336,6 +345,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                   ),
                                                   onPressed: () {
                                                     _sendVoicePlayClickEvent(
+                                                        userState.userId,
                                                         userState.purchase,
                                                         userState.record,
                                                         userState.voiceId!);
@@ -366,12 +376,14 @@ class _VoiceProfileState extends State<VoiceProfile> {
     );
   }
 
-  Future<void> _sendVoiceRerecClickEvent(purchase, record, voiceId) async {
+  Future<void> _sendVoiceRerecClickEvent(
+      userId, purchase, record, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'voice_rerec_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -380,6 +392,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
       await amplitude.logEvent(
         'voice_rerec_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -391,12 +404,14 @@ class _VoiceProfileState extends State<VoiceProfile> {
     }
   }
 
-  Future<void> _sendVoiceScriptClickEvent(purchase, record, voiceId) async {
+  Future<void> _sendVoiceScriptClickEvent(
+      userId, purchase, record, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'voice_script_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -405,6 +420,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
       await amplitude.logEvent(
         'voice_script_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -416,12 +432,14 @@ class _VoiceProfileState extends State<VoiceProfile> {
     }
   }
 
-  Future<void> _sendVoiceIconClickEvent(purchase, record, voiceId) async {
+  Future<void> _sendVoiceIconClickEvent(
+      userId, purchase, record, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'voice_icon_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -430,6 +448,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
       await amplitude.logEvent(
         'voice_icon_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -441,12 +460,14 @@ class _VoiceProfileState extends State<VoiceProfile> {
     }
   }
 
-  Future<void> _sendVoiceNameClickEvent(purchase, record, voiceId) async {
+  Future<void> _sendVoiceNameClickEvent(
+      userId, purchase, record, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'voice_name_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -455,6 +476,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
       await amplitude.logEvent(
         'voice_name_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -466,12 +488,14 @@ class _VoiceProfileState extends State<VoiceProfile> {
     }
   }
 
-  Future<void> _sendVoicePlayClickEvent(purchase, record, voiceId) async {
+  Future<void> _sendVoicePlayClickEvent(
+      userId, purchase, record, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'voice_play_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -480,6 +504,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
       await amplitude.logEvent(
         'voice_play_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -491,12 +516,13 @@ class _VoiceProfileState extends State<VoiceProfile> {
     }
   }
 
-  Future<void> _sendVoiceViewEvent(purchase, record, voiceId) async {
+  Future<void> _sendVoiceViewEvent(userId, purchase, record, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'voice_view',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
@@ -505,6 +531,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
       await amplitude.logEvent(
         'voice_view',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'voiceId': voiceId,
