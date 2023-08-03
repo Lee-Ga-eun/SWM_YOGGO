@@ -169,6 +169,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final userCubit = context.watch<UserCubit>();
+    final userState = userCubit.state;
     SizeConfig().init(context);
     _sendSigninViewEvent();
     return Scaffold(
@@ -185,19 +187,40 @@ class _LoginState extends State<Login> {
             child: Container(
               alignment: Alignment.center,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(
+                    height: 1 * SizeConfig.defaultSize!,
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 1 * SizeConfig.defaultSize!,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.clear,
+                              size: 3 * SizeConfig.defaultSize!),
+                          onPressed: () {
+                            _sendSigninXClickEvent(
+                                userState.purchase, userState.record);
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ]),
                   Text('LOVEL', // 원하는 텍스트를 여기에 입력하세요
                       style: TextStyle(
-                        fontSize: 10 * SizeConfig.defaultSize!,
+                        fontSize: 8 * SizeConfig.defaultSize!,
                         color: Colors.black,
                         fontFamily: 'modak',
                       )),
                   SizedBox(height: 0 * SizeConfig.defaultSize!),
                   Text(
-                    'Unlimited linkage between devices\nthrough your account', // 원하는 텍스트를 여기에 입력하세요
+                    'Unlimited linkage between devices through your account', // 원하는 텍스트를 여기에 입력하세요
                     style: TextStyle(
-                      fontSize: 2.5 * SizeConfig.defaultSize!,
+                      fontSize: 2.2 * SizeConfig.defaultSize!,
                       color: Colors.black,
                       fontFamily: 'molengo',
                     ),
@@ -213,6 +236,7 @@ class _LoginState extends State<Login> {
                       'lib/images/login_google.png', // 로그인 버튼 이미지 파일 경로 (PNG 형식)
                     ),
                   ),
+                  SizedBox(height: 2 * SizeConfig.defaultSize!),
                   InkWell(
                     onTap: () {
                       _sendSigninAppleClickEvent();
@@ -242,6 +266,29 @@ class _LoginState extends State<Login> {
       await amplitude.logEvent(
         'signin_google_click',
         eventProperties: {},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendSigninXClickEvent(purchase, record) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'signin_x_click',
+        parameters: <String, dynamic>{
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
+      );
+      await amplitude.logEvent(
+        'signin_x_click',
+        eventProperties: {
+          'purchase': purchase ? 'true' : 'false',
+          'record': record ? 'true' : 'false',
+        },
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
