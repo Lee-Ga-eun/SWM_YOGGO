@@ -49,11 +49,12 @@ class _PurchaseState extends State<Purchase> {
       _inAppPurchase.purchaseStream.listen((List<PurchaseDetails> event) {
         PurchaseDetails e = event[0];
         print(
-            "📌 EVENT $e ${e.status} ${e.productID} ${e.pendingCompletePurchase}");
+            "📌 EVENT $e - ${e.status} - ${e.productID} - ${e.pendingCompletePurchase}");
 
         /// 구매 여부 pendingCompletePurchase - 승인 true / 취소 false
         if (e.pendingCompletePurchase) {
           if (!mounted) return;
+          _inAppPurchase.completePurchase(e);
           successPurchase();
           UserCubit().fetchUser();
           Navigator.of(context)
@@ -81,6 +82,7 @@ class _PurchaseState extends State<Purchase> {
   }
 
   Future<void> successPurchase() async {
+    await getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('purchase', true);
     var url = Uri.parse('https://yoggo-server.fly.dev/user/successPurchase');

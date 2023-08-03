@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
-    _sendHomeViewEvent(userState.purchase, userState.record);
+    _sendHomeViewEvent(userState.userId, userState.purchase, userState.record);
     SizeConfig().init(context);
     return BlocProvider(
         create: (context) => DataCubit()..loadData(), // DataCubit 생성 및 데이터 로드
@@ -83,7 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BlocBuilder<DataCubit, List<BookModel>>(
           builder: (context, state) {
             if (state.isEmpty) {
-              _sendHomeLoadingViewEvent(userState.purchase, userState.record);
+              _sendHomeLoadingViewEvent(
+                  userState.userId, userState.purchase, userState.record);
               return Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
@@ -188,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ? GestureDetector(
                                             onTap: () {
                                               _sendHbgVoiceBoxClickEvent(
+                                                  userState.userId,
                                                   userState.purchase,
                                                   userState.record);
                                             },
@@ -273,6 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     child: GestureDetector(
                                                         onTap: () {
                                                           _sendHbgVoiceClickEvent(
+                                                              userState.userId,
                                                               userState
                                                                   .purchase,
                                                               userState.record);
@@ -327,6 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         : GestureDetector(
                                             onTap: () {
                                               _sendHbgVoiceClickEvent(
+                                                  userState.userId,
                                                   userState.purchase,
                                                   userState.record);
                                               Navigator.push(
@@ -392,6 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             onTap: () {
                                               _sendSignOutClickEvent(
+                                                  userState.userId,
                                                   userState.purchase,
                                                   userState.record);
                                               setState(() {
@@ -413,6 +418,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             onTap: () {
                                               _sendSignOutClickEvent(
+                                                  userState.userId,
                                                   userState.purchase,
                                                   userState.record);
                                               // dropdown 상태 토글
@@ -447,6 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             //),
                                             onTap: () {
                                               _sendSignOutReallyClickEvent(
+                                                  userState.userId,
                                                   userState.purchase,
                                                   userState.record);
                                               logout();
@@ -507,7 +514,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 top: SizeConfig.defaultSize! * 2,
                                 child: InkWell(
                                   onTap: () {
-                                    _sendHbgClickEvent(
+                                    _sendHbgClickEvent(userState.userId,
                                         userState.purchase, userState.record);
                                     _scaffoldKey.currentState?.openDrawer();
                                   },
@@ -542,6 +549,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: GestureDetector(
                                         onTap: () {
                                           _sendBannerClickEvent(
+                                              userState.userId,
                                               userState.purchase,
                                               userState.record);
                                           Navigator.push(
@@ -598,6 +606,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           return GestureDetector(
                                             onTap: () {
                                               _sendBookClickEvent(
+                                                  userState.userId,
                                                   userState.purchase,
                                                   userState.record,
                                                   book.id);
@@ -698,12 +707,13 @@ class _HomeScreenState extends State<HomeScreen> {
     //);
   }
 
-  Future<void> _sendSignOutReallyClickEvent(purchase, record) async {
+  Future<void> _sendSignOutReallyClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'sign_out_really_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -711,6 +721,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'sign_out_really_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -720,12 +731,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendSignOutClickEvent(purchase, record) async {
+  Future<void> _sendSignOutClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'sign_out_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -733,6 +745,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'sign_out_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -742,12 +755,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHbgVoiceClickEvent(purchase, record) async {
+  Future<void> _sendHbgVoiceClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_voice_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -755,6 +769,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'hbg_voice_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -764,12 +779,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHbgVoiceBoxClickEvent(purchase, record) async {
+  Future<void> _sendHbgVoiceBoxClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_voice_box_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -777,6 +793,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'hbg_voice_box_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -786,12 +803,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHbgNameClickEvent(purchase, record) async {
+  Future<void> _sendHbgNameClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_name_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -799,6 +817,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'hbg_name_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -808,12 +827,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHomeViewEvent(purchase, record) async {
+  Future<void> _sendHomeViewEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'home_view',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -821,6 +841,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'home_view',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -830,12 +851,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendBookClickEvent(purchase, record, contentId) async {
+  Future<void> _sendBookClickEvent(userId, purchase, record, contentId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'contentId': contentId,
@@ -844,6 +866,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'book_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           'contentId': contentId,
@@ -854,12 +877,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendBannerClickEvent(purchase, record) async {
+  Future<void> _sendBannerClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'banner_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -867,6 +891,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'banner_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -876,12 +901,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHbgClickEvent(purchase, record) async {
+  Future<void> _sendHbgClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -889,6 +915,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'hbg_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -898,12 +925,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHomeLoadingViewEvent(purchase, record) async {
+  Future<void> _sendHomeLoadingViewEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'home_loading_view',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -911,6 +939,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'home_loading_view',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },

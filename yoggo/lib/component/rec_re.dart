@@ -129,7 +129,7 @@ class _RecReState extends State<RecRe> {
     }
   }
 
-  Future<void> _start(purchase, record) async {
+  Future<void> _start(userId, purchase, record) async {
     try {
       if (await _Rec.hasPermission()) {
         var myAppDir = await getAppDirectory();
@@ -147,7 +147,7 @@ class _RecReState extends State<RecRe> {
         _recordDuration = 0;
 
         _startTimer();
-        _sendRecStartClickEvent(purchase, record);
+        _sendRecStartClickEvent(userId, purchase, record);
       }
     } catch (e) {
       if (kDebugMode) {}
@@ -159,7 +159,7 @@ class _RecReState extends State<RecRe> {
     return directory.path;
   }
 
-  Future<void> _stop(purchase, record) async {
+  Future<void> _stop(userId, purchase, record) async {
     setState(() {
       stopped = true;
     });
@@ -167,7 +167,7 @@ class _RecReState extends State<RecRe> {
     _recordDuration = 0;
     //  if (Platform.isAndroid) stopRecording();
     path = await _Rec.stop(); //path받기
-    _sendRecStopClickEvent(purchase, record);
+    _sendRecStopClickEvent(userId, purchase, record);
     //  sendPathToKotlin(path);
     // if (path != null) {
     //   widget.onStop?.call(path);
@@ -392,7 +392,7 @@ class _RecReState extends State<RecRe> {
                               GestureDetector(
                                 onTap: () {
                                   path = ''; // 이 버전을 원하지 않는 경우 path 초기화
-                                  _sendRecRerecClickEvent(
+                                  _sendRecRerecClickEvent(userState.userId,
                                       userState.purchase, userState.record);
                                   Navigator.of(context).pop();
                                   Navigator.push(
@@ -431,7 +431,7 @@ class _RecReState extends State<RecRe> {
                                     widget.onStop?.call(path!);
                                     path_copy = path!.split('/').last;
                                     await sendRecord(path, path_copy);
-                                    _sendRecKeepClickEvent(
+                                    _sendRecKeepClickEvent(userState.userId,
                                         userState.purchase, userState.record);
                                   }
                                   Future.delayed(const Duration(seconds: 1),
@@ -512,8 +512,9 @@ class _RecReState extends State<RecRe> {
           ),
           onTap: () {
             (_recordState != RecordState.stop)
-                ? _stop(userState.purchase, userState.record)
-                : _start(userState.purchase, userState.record);
+                ? _stop(userState.userId, userState.purchase, userState.record)
+                : _start(
+                    userState.userId, userState.purchase, userState.record);
           },
         ),
       ),
@@ -595,17 +596,19 @@ class _RecReState extends State<RecRe> {
     });
   }
 
-  Future<void> _sendRecStartClickEvent(purchase, record) async {
+  Future<void> _sendRecStartClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_start_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('rec_start_click', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -615,18 +618,20 @@ class _RecReState extends State<RecRe> {
     }
   }
 
-  Future<void> _sendRecStopClickEvent(purchase, record) async {
+  Future<void> _sendRecStopClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_stop_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
 
       amplitude.logEvent('rec_stop_click', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -636,17 +641,19 @@ class _RecReState extends State<RecRe> {
     }
   }
 
-  Future<void> _sendRecIngViewEvent(purchase, record) async {
+  Future<void> _sendRecIngViewEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_ing_view',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('rec_ing_view', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -656,17 +663,19 @@ class _RecReState extends State<RecRe> {
     }
   }
 
-  Future<void> _sendRecRerecClickEvent(purchase, record) async {
+  Future<void> _sendRecRerecClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_rerec_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('rec_rerec_click', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -676,18 +685,20 @@ class _RecReState extends State<RecRe> {
     }
   }
 
-  Future<void> _sendRecKeepClickEvent(purchase, record) async {
+  Future<void> _sendRecKeepClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_keep_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           //'voiceId': voiceId,
         },
       );
       amplitude.logEvent('rec_keep_click', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
