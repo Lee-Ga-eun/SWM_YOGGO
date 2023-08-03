@@ -12,25 +12,25 @@ import 'package:yoggo/size_config.dart';
 
 import 'globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
-
-// final bool _kAutoConsume = Platform.isIOS || true;
-
-// const String _kConsumableId = 'consumable';
-// const String _kUpgradeId = 'upgrade';
-// const String _kSilverSubscriptionId = 'subscription_silver';
-// const String _kGoldSubscriptionId = 'subscription_gold';
-// const List<String> _kProductIds = <String>[
-//   _kConsumableId,
-//   _kUpgradeId,
-//   _kSilverSubscriptionId,
-//   _kGoldSubscriptionId,
-// ];
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 class Purchase extends StatefulWidget {
   const Purchase({super.key});
 
   @override
   _PurchaseState createState() => _PurchaseState();
+}
+
+class AppData {
+  static final AppData _appData = AppData._internal();
+
+  bool entitlementIsActive = false;
+  String appUserID = '';
+
+  factory AppData() {
+    return _appData;
+  }
+  AppData._internal();
 }
 
 class _PurchaseState extends State<Purchase> {
@@ -64,55 +64,7 @@ class _PurchaseState extends State<Purchase> {
     if (!mounted) return;
     setState(() {});
   }
-  //   final bool isAvailable = await _inAppPurchase.isAvailable();
-  //   if (!isAvailable) {
-  //     setState(() {
-  //       _isAvailable = isAvailable;
-  //       _products = <ProductDetails>[];
-  //       _purchases = <PurchaseDetails>[];
-  //       _notFoundIds = <String>[];
-  //       _consumables = <String>[];
-  //       _purchasePending = false;
-  //       _loading = false;
-  //     });
-  //     return;
-  //   }
-  //   if (Platform.isIOS) {
-  //     // final InAppPurchaseStoreKitPlatformAddition iosPlatformAddition =
-  //     //     _inAppPurchase
-  //     //         .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
-  //     // await iosPlatformAddition.setDelegate(ExamplePaymentQueueDelegate());
-  //   }
-  //   final ProductDetailsResponse productDetailResponse =
-  //       await _inAppPurchase.queryProductDetails(_kProductIds.toSet());
-  //   if (productDetailResponse.error != null) {
-  //     setState(() {
-  //       _queryProductError = productDetailResponse.error!.message;
-  //       _isAvailable = isAvailable;
-  //       _products = productDetailResponse.productDetails;
-  //       _purchases = <PurchaseDetails>[];
-  //       _notFoundIds = productDetailResponse.notFoundIDs;
-  //       _consumables = <String>[];
-  //       _purchasePending = false;
-  //       _loading = false;
-  //     });
-  //     return;
-  //   }
 
-  // if (productDetailResponse.productDetails.isEmpty) {
-  //   setState(() {
-  //     _queryProductError = null;
-  //     _isAvailable = isAvailable;
-  //     _products = productDetailResponse.productDetails;
-  //     _purchases = <PurchaseDetails>[];
-  //     _notFoundIds = productDetailResponse.notFoundIDs;
-  //     _consumables = <String>[];
-  //     _purchasePending = false;
-  //     _loading = false;
-  //   });
-  //   return;
-  // }
-  //}
   @override
   void initState() {
     Future(fetch);
@@ -147,27 +99,43 @@ class _PurchaseState extends State<Purchase> {
   }
 
   Future<void> startPurchase() async {
-    const Set<String> products = {'product1'};
-    final ProductDetailsResponse response =
-        await InAppPurchase.instance.queryProductDetails(products);
-    if (response.notFoundIDs.isNotEmpty) {
-      print('제품이 없어요');
-      return;
-    }
-
-    final ProductDetails productDetails = response.productDetails.first;
-
-    final PurchaseParam purchaseParam = PurchaseParam(
-      productDetails: productDetails,
-    );
     try {
-      final bool success = await InAppPurchase.instance.buyNonConsumable(
-        purchaseParam: purchaseParam,
-      );
-    } catch (error) {
-      // 결제 실패
-      print('결제 실패했어요');
+      Offerings? offerings = await Purchases.getOfferings();
+      if (offerings.current != null) {
+        var myProductList = offerings.current!.availablePackages;
+        CustomerInfo customerInfo =
+            await Purchases.purchasePackage(myProductList[0]);
+        EntitlementInfo? entitlement = customerInfo.entitlements.all['pro'];
+        final appData = AppData();
+        appData.entitlementIsActive = entitlement?.isActive ?? false;
+        successPurchase();
+        // Display packages for sale
+      }
+    } catch (e) {
+      // optional error handling
     }
+
+    // const Set<String> products = {'product1'};
+    // final ProductDetailsResponse response =
+    //     await InAppPurchase.instance.queryProductDetails(products);
+    // if (response.notFoundIDs.isNotEmpty) {
+    //   print('제품이 없어요');
+    //   return;
+    // }
+
+    // final ProductDetails productDetails = response.productDetails.first;
+
+    // final PurchaseParam purchaseParam = PurchaseParam(
+    //   productDetails: productDetails,
+    // );
+    // try {
+    //   final bool success = await InAppPurchase.instance.buyNonConsumable(
+    //     purchaseParam: purchaseParam,
+    //   );
+    // } catch (error) {
+    //   // 결제 실패
+    //   print('결제 실패했어요');
+    // }
   }
 
   @override
@@ -229,7 +197,6 @@ class _PurchaseState extends State<Purchase> {
                       ),
                     );
                   },
-                  //color: Colors.red,
                 ),
               ),
             ],
@@ -298,36 +265,6 @@ class _PurchaseState extends State<Purchase> {
                         )
                       ],
                     ),
-                    // RichText(
-                    //     textAlign: TextAlign.center,
-                    //     text: TextSpan(children: [
-                    //       TextSpan(
-                    //         text: '\$19.99/month\n',
-                    //         style: TextStyle(
-                    //             fontSize: SizeConfig.defaultSize! * 1.8,
-                    //             fontFamily: 'Molengo',
-                    //             color: Colors.grey,
-                    //             decoration: TextDecoration.lineThrough),
-                    //       ),
-                    //       TextSpan(
-                    //         text: '\$5.99/month',
-                    //         style: TextStyle(
-                    //             fontSize: SizeConfig.defaultSize! * 2,
-                    //             color: Colors.black,
-                    //             fontFamily: 'Molengo'),
-                    //       ),
-                    //     ])),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Image.asset(
-                    //       'lib/images/rocket.png',
-                    //       width: SizeConfig.defaultSize! * 5,
-                    //       alignment: Alignment.topCenter,
-                    //     ),
-                    //     SizedBox(
-                    //       width: SizeConfig.defaultSize! * 5,
-                    //     ),
                     RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(children: [
@@ -364,21 +301,11 @@ class _PurchaseState extends State<Purchase> {
                                 fontFamily: 'Molengo'),
                           ),
                         ])),
-                    //   SizedBox(
-                    //     width: SizeConfig.defaultSize! * 5,
-                    //   ),
-                    //   Image.asset(
-                    //     'lib/images/horse.png',
-                    //     width: SizeConfig.defaultSize! * 5,
-                    //     alignment: Alignment.topCenter,
-                    //   )
-                    // ],
-                    //),
                     SizedBox(
                       height: 0.2 * SizeConfig.defaultSize!,
                     ),
-
                     GestureDetector(
+                        // -------------------------------------------------------------
                         onTap: () async {
                           _sendSubPayClickEvent(
                               userState.purchase, userState.record);
@@ -455,36 +382,6 @@ class _PurchaseState extends State<Purchase> {
                             ),
                           ),
                         ])),
-                    // SizedBox(
-                    //   height: SizeConfig.defaultSize! * 0.7,
-                    // ),
-                    // Padding(
-                    //     padding: const EdgeInsets.only(),
-                    //     child: Container(
-                    //       width: SizeConfig.defaultSize! * 52.6,
-                    //       height: SizeConfig.defaultSize! * 4.5,
-                    //       decoration: BoxDecoration(
-                    //         color: const Color.fromARGB(152, 97, 1, 152),
-                    //         borderRadius: BorderRadius.all(
-                    //             Radius.circular(SizeConfig.defaultSize!)),
-                    //       ),
-                    //       child: Padding(
-                    //         padding: EdgeInsets.only(
-                    //           left: SizeConfig.defaultSize! * 5,
-                    //           right: SizeConfig.defaultSize! * 5,
-                    //           // top: SizeConfig.defaultSize! * 0.2,
-                    //           // bottom: SizeConfig.defaultSize! * 0.2,
-                    //         ),
-                    //         child: TextButton(
-                    //           onPressed: () async {
-                    //             _sendSubPayClickEvent(
-                    //                 userState.purchase, userState.record);
-                    //             await startPurchase();
-                    //           },
-                    //           child: Text(),
-                    //         ),
-                    //       ),
-                    //)
                   ],
                 )),
           ) //),

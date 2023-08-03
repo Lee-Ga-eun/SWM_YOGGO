@@ -13,6 +13,7 @@ import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
 import '../component/globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -154,6 +155,7 @@ class _LoginState extends State<Login> {
       final state = userCubit.state;
       if (state.isDataFetched) {
         OneSignal.shared.setExternalUserId(state.userId.toString());
+        LogInResult result = await Purchases.logIn(state.userId.toString());
         Navigator.of(context).pop();
       }
     }

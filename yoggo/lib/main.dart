@@ -9,12 +9,23 @@ import 'component/globalCubit/user/user_state.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'dart:io' show Platform;
+import 'package:purchases_flutter/purchases_flutter.dart';
 
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
+Future<void> initPlatformState() async {
+  await Purchases.setLogLevel(
+      LogLevel.debug); // Purchases.setDebugLogsEnabled(true);
+
+  PurchasesConfiguration? configuration;
+
+  if (Platform.isAndroid) {
+    configuration = PurchasesConfiguration('goog_wxdljqWvkKNlMpVlNSZjKnqVtQc');
+  } else if (Platform.isIOS) {
+    configuration = PurchasesConfiguration('appl_wPyySWQHJfhExnkjSTliaVxgpMx');
+  }
+  await Purchases.configure(configuration!); // Anonymous App User IDs
+}
 
 void main() async {
   // 사용자 Cubit을 초기화합니다.
@@ -50,37 +61,8 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  // 푸시
-  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  //     FlutterLocalNotificationsPlugin();
-// // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-//   const AndroidInitializationSettings initializationSettingsAndroid =
-//       AndroidInitializationSettings('ic_launcher');
-
-  // await flutterLocalNotificationsPlugin
-  //     .resolvePlatformSpecificImplementation<
-  //         AndroidFlutterLocalNotificationsPlugin>()
-  //     ?.requestPermission(); //권한 허용?
-
-  // final DarwinInitializationSettings initializationSettingsDarwin = //ios는 성공
-  //     DarwinInitializationSettings(
-  //   onDidReceiveLocalNotification:
-  //       (int? id, String? title, String? body, String? payload) async {},
-  // );
-  // const LinuxInitializationSettings initializationSettingsLinux =
-  //     LinuxInitializationSettings(defaultActionName: 'Open notification');
-  // final InitializationSettings initializationSettings = InitializationSettings(
-  //     android: initializationSettingsAndroid,
-  //     iOS: initializationSettingsDarwin,
-  //     macOS: initializationSettingsDarwin,
-  //     linux: initializationSettingsLinux);
-  // await flutterLocalNotificationsPlugin.initialize(
-  //   initializationSettings,
-  // );
-  // onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
-//푸시 종료
   final userCubit = UserCubit();
-
+  initPlatformState();
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
