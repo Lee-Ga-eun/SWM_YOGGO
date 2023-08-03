@@ -115,7 +115,7 @@ class _RecState extends State<Rec> {
     }
   }
 
-  Future<void> _start(purchase, record) async {
+  Future<void> _start(userId, purchase, record) async {
     try {
       if (await _Rec.hasPermission()) {
         var myAppDir = await getAppDirectory();
@@ -133,7 +133,7 @@ class _RecState extends State<Rec> {
         _recordDuration = 0;
 
         _startTimer();
-        _sendRecStartClickEvent(purchase, record);
+        _sendRecStartClickEvent(userId, purchase, record);
       }
     } catch (e) {
       if (kDebugMode) {}
@@ -145,7 +145,7 @@ class _RecState extends State<Rec> {
     return directory.path;
   }
 
-  Future<void> _stop(purchase, record) async {
+  Future<void> _stop(userId, purchase, record) async {
     setState(() {
       stopped = true;
     });
@@ -153,7 +153,7 @@ class _RecState extends State<Rec> {
     _recordDuration = 0;
     //  if (Platform.isAndroid) stopRecording();
     path = await _Rec.stop(); //path받기
-    _sendRecStopClickEvent(purchase, record);
+    _sendRecStopClickEvent(userId, purchase, record);
     //  sendPathToKotlin(path);
     // if (path != null) {
     //   widget.onStop?.call(path);
@@ -186,7 +186,7 @@ class _RecState extends State<Rec> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendRecViewEvent(userState.purchase, userState.record);
+    _sendRecViewEvent(userState.userId, userState.purchase, userState.record);
     return MaterialApp(
         home: Scaffold(
       body: Stack(
@@ -324,7 +324,7 @@ class _RecState extends State<Rec> {
                               GestureDetector(
                                 onTap: () {
                                   path = ''; // 이 버전을 원하지 않는 경우 path 초기화
-                                  _sendRecRerecClickEvent(
+                                  _sendRecRerecClickEvent(userState.userId,
                                       userState.purchase, userState.record);
                                   Navigator.of(context).pop();
                                   Navigator.push(
@@ -363,7 +363,7 @@ class _RecState extends State<Rec> {
                                     widget.onStop?.call(path!);
                                     path_copy = path!.split('/').last;
                                     await sendRecord(path, path_copy);
-                                    _sendRecKeepClickEvent(
+                                    _sendRecKeepClickEvent(userState.userId,
                                         userState.purchase, userState.record);
                                   }
                                   Future.delayed(const Duration(seconds: 1),
@@ -444,8 +444,9 @@ class _RecState extends State<Rec> {
           ),
           onTap: () {
             (_recordState != RecordState.stop)
-                ? _stop(userState.purchase, userState.record)
-                : _start(userState.purchase, userState.record);
+                ? _stop(userState.userId, userState.purchase, userState.record)
+                : _start(
+                    userState.userId, userState.purchase, userState.record);
           },
         ),
       ),
@@ -527,17 +528,19 @@ class _RecState extends State<Rec> {
     });
   }
 
-  Future<void> _sendRecStartClickEvent(purchase, record) async {
+  Future<void> _sendRecStartClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_start_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('rec_start_click', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -547,18 +550,20 @@ class _RecState extends State<Rec> {
     }
   }
 
-  Future<void> _sendRecStopClickEvent(purchase, record) async {
+  Future<void> _sendRecStopClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_stop_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
 
       amplitude.logEvent('rec_stop_click', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -568,17 +573,19 @@ class _RecState extends State<Rec> {
     }
   }
 
-  Future<void> _sendRecViewEvent(purchase, record) async {
+  Future<void> _sendRecViewEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_view',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('rec_view', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -588,17 +595,19 @@ class _RecState extends State<Rec> {
     }
   }
 
-  Future<void> _sendRecRerecClickEvent(purchase, record) async {
+  Future<void> _sendRecRerecClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_rerec_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('rec_rerec_click', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });
@@ -608,18 +617,20 @@ class _RecState extends State<Rec> {
     }
   }
 
-  Future<void> _sendRecKeepClickEvent(purchase, record) async {
+  Future<void> _sendRecKeepClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_keep_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
           //'voiceId': voiceId,
         },
       );
       amplitude.logEvent('rec_keep_click', eventProperties: {
+        'userId': userId,
         'purchase': purchase ? 'true' : 'false',
         'record': record ? 'true' : 'false',
       });

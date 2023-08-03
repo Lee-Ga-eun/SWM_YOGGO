@@ -172,7 +172,9 @@ class _LoginState extends State<Login> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendSigninViewEvent();
+    _sendSigninViewEvent(
+      userState.userId,
+    );
     return Scaffold(
       body: Stack(
         children: [
@@ -204,7 +206,7 @@ class _LoginState extends State<Login> {
                           icon: Icon(Icons.clear,
                               size: 3 * SizeConfig.defaultSize!),
                           onPressed: () {
-                            _sendSigninXClickEvent(
+                            _sendSigninXClickEvent(userState.userId,
                                 userState.purchase, userState.record);
                             Navigator.of(context).pop();
                           },
@@ -229,7 +231,9 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 4 * SizeConfig.defaultSize!),
                   InkWell(
                     onTap: () {
-                      _sendSigninGoogleClickEvent();
+                      _sendSigninGoogleClickEvent(
+                        userState.userId,
+                      );
                       signInWithGoogle(context);
                     },
                     child: Image.asset(
@@ -239,7 +243,9 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 2 * SizeConfig.defaultSize!),
                   InkWell(
                     onTap: () {
-                      _sendSigninAppleClickEvent();
+                      _sendSigninAppleClickEvent(
+                        userState.userId,
+                      );
                       //signInWithGoogle(context);
                       signInWithApple(context);
                     },
@@ -256,12 +262,14 @@ class _LoginState extends State<Login> {
     );
   }
 
-  static Future<void> _sendSigninViewEvent() async {
+  static Future<void> _sendSigninViewEvent(userId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'signin_view',
-        //parameters: <String, dynamic>{'contentId': contentId},
+        parameters: <String, dynamic>{
+          'userId': userId,
+        },
       );
       await amplitude.logEvent(
         'signin_google_click',
@@ -273,12 +281,13 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> _sendSigninXClickEvent(purchase, record) async {
+  Future<void> _sendSigninXClickEvent(userId, purchase, record) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'signin_x_click',
         parameters: <String, dynamic>{
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -286,6 +295,7 @@ class _LoginState extends State<Login> {
       await amplitude.logEvent(
         'signin_x_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
@@ -296,12 +306,16 @@ class _LoginState extends State<Login> {
     }
   }
 
-  static Future<void> _sendSigninGoogleClickEvent() async {
+  static Future<void> _sendSigninGoogleClickEvent(
+    userId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'signin_google_click',
-        //parameters: <String, dynamic>{'contentId': contentId},
+        parameters: <String, dynamic>{
+          'userId': userId,
+        },
       );
       await amplitude.logEvent(
         'signin_google_click',
@@ -313,17 +327,22 @@ class _LoginState extends State<Login> {
     }
   }
 
-  static Future<void> _sendSigninAppleClickEvent() async {
+  static Future<void> _sendSigninAppleClickEvent(
+    userId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'signin_apple_click',
-        //parameters: <String, dynamic>{'contentId': contentId},
+        parameters: <String, dynamic>{
+          'userId': userId,
+        },
       );
 
       await amplitude.logEvent(
         'signin_apple_click',
         eventProperties: {
+          'userId': userId,
           'purchase': purchase ? 'true' : 'false',
           'record': record ? 'true' : 'false',
         },
