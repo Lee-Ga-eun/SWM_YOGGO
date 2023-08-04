@@ -38,6 +38,7 @@ class _BookIntroState extends State<BookIntro> {
   bool isClicked1 = false;
   bool isClicked2 = false;
   //bool isPurchased = false;
+  bool isLoading = false;
   bool wantPurchase = false;
   bool goRecord = false;
   bool completeInference = true;
@@ -314,6 +315,7 @@ class _BookIntroState extends State<BookIntro> {
     if (response.statusCode == 200) {
       if (mounted) {
         setState(() {
+          isLoading = true;
           inferenceId = json.decode(response.body)['id'];
         });
       }
@@ -335,10 +337,18 @@ class _BookIntroState extends State<BookIntro> {
     );
     if (response.statusCode == 200) {
       setState(() {
+        isLoading = false;
         completeInference = true;
       });
       return true;
     } else {
+      setState(() {
+        isLoading = true;
+        //loadData(token);
+        Future.delayed(const Duration(seconds: 1), () {
+          checkInference(token);
+        });
+      });
       return false;
     }
   }
@@ -514,18 +524,32 @@ class _BookIntroState extends State<BookIntro> {
                                                       SizeConfig.defaultSize!),
                                               child: userState.record
                                                   ? isClicked
-                                                      ? Image.asset(
-                                                          'lib/images/icons/${userState.voiceIcon}-c.png',
-                                                          height: SizeConfig
-                                                                  .defaultSize! *
-                                                              7,
-                                                        )
-                                                      : Image.asset(
-                                                          'lib/images/icons/${userState.voiceIcon}-uc.png',
-                                                          height: SizeConfig
-                                                                  .defaultSize! *
-                                                              7,
-                                                        )
+                                                      ? Stack(children: [
+                                                          Image.asset(
+                                                            'lib/images/icons/${userState.voiceIcon}-c.png',
+                                                            height: SizeConfig
+                                                                    .defaultSize! *
+                                                                7,
+                                                          ),
+                                                          isLoading
+                                                              ? const CircularProgressIndicator(
+                                                                  color: Color(
+                                                                      0xFFFFA91A))
+                                                              : Container()
+                                                        ])
+                                                      : Stack(children: [
+                                                          Image.asset(
+                                                            'lib/images/icons/${userState.voiceIcon}-uc.png',
+                                                            height: SizeConfig
+                                                                    .defaultSize! *
+                                                                7,
+                                                          ),
+                                                          isLoading
+                                                              ? const CircularProgressIndicator(
+                                                                  color: Color(
+                                                                      0xFFFFA91A))
+                                                              : Container()
+                                                        ])
                                                   : Image.asset(
                                                       'lib/images/lock.png',
                                                       height: SizeConfig

@@ -402,13 +402,14 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                                     .record,
                                                                 userState
                                                                     .voiceId!);
-                                                            userState.inferenceUrl ==
+                                                            audioPlayer.play(userState
+                                                                        .inferenceUrl ==
                                                                     null
                                                                 ? UrlSource(
                                                                     inferenceUrl)
                                                                 : UrlSource(
                                                                     userState
-                                                                        .inferenceUrl!);
+                                                                        .inferenceUrl!));
                                                           },
                                                         ),
                                                       ],
