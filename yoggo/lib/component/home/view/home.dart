@@ -277,6 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         SizeConfig.defaultSize!,
                                                     child: GestureDetector(
                                                         onTap: () {
+                                                          userCubit.fetchUser();
                                                           _sendHbgVoiceClickEvent(
                                                               userState.userId,
                                                               userState

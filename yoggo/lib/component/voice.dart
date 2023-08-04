@@ -27,7 +27,6 @@ class VoiceProfile extends StatefulWidget {
 class _VoiceProfileState extends State<VoiceProfile> {
   AudioPlayer audioPlayer = AudioPlayer();
   late String token;
-  final userCubit = UserCubit();
   late String inferenceUrl = "";
   // void playAudio(String audioUrl) async {
   //   await audioPlayer.play(UrlSource(audioUrl));
@@ -55,14 +54,11 @@ class _VoiceProfileState extends State<VoiceProfile> {
     );
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print(data);
       if (data != [] && data.isNotEmpty) {
-        //데이터가 빈 값이 아닌 경우
-        print('들어옴');
+        // 데이터가 빈 값이 아닌 경우
         setState(() {
           inferenceUrl = data[0];
         });
-        userCubit.fetchUser();
       }
     }
   }
@@ -72,197 +68,219 @@ class _VoiceProfileState extends State<VoiceProfile> {
 
   @override
   Widget build(BuildContext context) {
-    //final userCubit = context.watch<UserCubit>();
+    final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
     _sendVoiceViewEvent(userState.userId, userState.purchase, userState.record,
         userState.voiceId!);
-    return BlocProvider(
-        create: (context) => userCubit, // DataCubit 생성 및 데이터 로드
-        child: Scaffold(
-          body: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/images/bkground.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: SafeArea(
-              bottom: false,
-              top: false,
-              minimum: EdgeInsets.only(left: 7 * SizeConfig.defaultSize!),
-              child: Column(
-                children: [
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/bkground.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          top: false,
+          minimum: EdgeInsets.only(left: 7 * SizeConfig.defaultSize!),
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Row(children: [
                   Expanded(
-                    flex: 1,
-                    child: Row(children: [
-                      Expanded(
-                          flex: 1,
-                          child: Container(
-                            // color: Color.fromARGB(200, 202, 20, 20),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.clear,
-                                        size: 3 * SizeConfig.defaultSize!),
-                                    onPressed: () {
-                                      audioPlayer.stop();
-                                      dispose();
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomeScreen(),
-                                        ),
-                                      );
-                                    },
-                                  )
-                                ]),
-                          )),
-                      Expanded(
-                          flex: 8,
-                          child: Container(
-                            // color: Color.fromARGB(232, 0, 26, 64),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'LOVEL',
-                                  style: TextStyle(
-                                    fontFamily: 'Modak',
-                                    fontSize: SizeConfig.defaultSize! * 5,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
-                      Expanded(
-                          flex: 1,
-                          child: Container(color: Color.fromARGB(0, 0, 0, 0)))
-                    ]),
-                  ),
-                  Expanded(
-                      flex: 5,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 1.5 * SizeConfig.defaultSize!,
-                          ),
-                          Row(
+                      flex: 1,
+                      child: Container(
+                        // color: Color.fromARGB(200, 202, 20, 20),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // SizedBox(
-                              //   width: SizeConfig.defaultSize!,
-                              // ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      _sendVoiceIconClickEvent(
-                                          userState.userId,
-                                          userState.purchase,
-                                          userState.record,
-                                          userState.voiceId);
-                                    },
-                                    child: Container(
-                                      width: 18 * SizeConfig.defaultSize!,
-                                      height: 19 * SizeConfig.defaultSize!,
-                                      margin: EdgeInsets.zero,
-                                      padding: EdgeInsets.zero,
-                                      decoration: ShapeDecoration(
-                                        color: Colors.white.withOpacity(0.5),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                      ),
-                                      child: Column(children: [
-                                        SizedBox(
-                                          height: SizeConfig.defaultSize! * 2.8,
-                                        ),
-                                        Image.asset(
-                                          'lib/images/icons/${userState.voiceIcon}-c.png',
-                                          height:
-                                              SizeConfig.defaultSize! * 13.5,
-                                        ),
-                                      ]),
+                              IconButton(
+                                icon: Icon(Icons.clear,
+                                    size: 3 * SizeConfig.defaultSize!),
+                                onPressed: () {
+                                  audioPlayer.stop();
+                                  dispose();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomeScreen(),
+                                    ),
+                                  );
+                                },
+                              )
+                            ]),
+                      )),
+                  Expanded(
+                      flex: 8,
+                      child: Container(
+                        // color: Color.fromARGB(232, 0, 26, 64),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'LOVEL',
+                              style: TextStyle(
+                                fontFamily: 'Modak',
+                                fontSize: SizeConfig.defaultSize! * 5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Container(color: Color.fromARGB(0, 0, 0, 0)))
+                ]),
+              ),
+              Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 1.5 * SizeConfig.defaultSize!,
+                      ),
+                      Row(
+                        children: [
+                          // SizedBox(
+                          //   width: SizeConfig.defaultSize!,
+                          // ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  _sendVoiceIconClickEvent(
+                                      userState.userId,
+                                      userState.purchase,
+                                      userState.record,
+                                      userState.voiceId);
+                                },
+                                child: Container(
+                                  width: 18 * SizeConfig.defaultSize!,
+                                  height: 19 * SizeConfig.defaultSize!,
+                                  margin: EdgeInsets.zero,
+                                  padding: EdgeInsets.zero,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 1.6 * SizeConfig.defaultSize!,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      _sendVoiceNameClickEvent(
-                                          userState.userId,
-                                          userState.purchase,
-                                          userState.record,
-                                          userState.voiceId);
-                                    },
-                                    child: Container(
-                                      width: 18 * SizeConfig.defaultSize!,
-                                      height: 9 * SizeConfig.defaultSize!,
-                                      decoration: ShapeDecoration(
-                                        color: Colors.white.withOpacity(0.5),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          userState.voiceName!,
-                                          style: TextStyle(
-                                            fontFamily: 'Molengo',
-                                            fontSize:
-                                                SizeConfig.defaultSize! * 2.3,
-                                          ),
-                                        ),
-                                      ),
+                                  child: Column(children: [
+                                    SizedBox(
+                                      height: SizeConfig.defaultSize! * 2.8,
                                     ),
-                                  )
-                                ],
+                                    Image.asset(
+                                      'lib/images/icons/${userState.voiceIcon}-c.png',
+                                      height: SizeConfig.defaultSize! * 13.5,
+                                    ),
+                                  ]),
+                                ),
                               ),
                               SizedBox(
-                                width: SizeConfig.defaultSize! * 2,
+                                height: 1.6 * SizeConfig.defaultSize!,
                               ),
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                        width: 55 * SizeConfig.defaultSize!,
-                                        height: 29.6 * SizeConfig.defaultSize!,
-                                        margin: EdgeInsets.zero,
-                                        decoration: ShapeDecoration(
-                                          color: Colors.white.withOpacity(0.5),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        ),
-                                        child:
-                                            BlocBuilder<UserCubit, UserState>(
-                                                builder: (context, userState) {
-                                          print(userState.inferenceUrl);
-                                          if (userState.inferenceUrl == null) {
-                                            return Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  const CircularProgressIndicator(
-                                                      color: Color(0xFFFFA91A)),
-                                                  SizedBox(
-                                                    height:
-                                                        SizeConfig.defaultSize!,
-                                                  ),
-                                                  Text(
-                                                    "We are making your voice!",
+                              GestureDetector(
+                                onTap: () {
+                                  _sendVoiceNameClickEvent(
+                                      userState.userId,
+                                      userState.purchase,
+                                      userState.record,
+                                      userState.voiceId);
+                                },
+                                child: Container(
+                                  width: 18 * SizeConfig.defaultSize!,
+                                  height: 9 * SizeConfig.defaultSize!,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      userState.voiceName!,
+                                      style: TextStyle(
+                                        fontFamily: 'Molengo',
+                                        fontSize: SizeConfig.defaultSize! * 2.3,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            width: SizeConfig.defaultSize! * 2,
+                          ),
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                    width: 55 * SizeConfig.defaultSize!,
+                                    height: 29.6 * SizeConfig.defaultSize!,
+                                    margin: EdgeInsets.zero,
+                                    decoration: ShapeDecoration(
+                                      color: Colors.white.withOpacity(0.5),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                    ),
+                                    child: BlocBuilder<UserCubit, UserState>(
+                                        builder: (context, userState) {
+                                      print(userState.inferenceUrl);
+                                      if (userState.inferenceUrl == null) {
+                                        return Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const CircularProgressIndicator(
+                                                  color: Color(0xFFFFA91A)),
+                                              SizedBox(
+                                                height: SizeConfig.defaultSize!,
+                                              ),
+                                              Text(
+                                                "We are making your voice!",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 3 *
+                                                      SizeConfig.defaultSize!,
+                                                  fontFamily: 'Molengo',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ]);
+                                      } else {
+                                        return Column(
+                                          children: [
+                                            SizedBox(
+                                                height: 3.2 *
+                                                    SizeConfig.defaultSize!),
+                                            GestureDetector(
+                                              onTap: () {
+                                                _sendVoiceScriptClickEvent(
+                                                    userState.userId,
+                                                    userState.purchase,
+                                                    userState.record,
+                                                    userState.voiceId);
+                                              },
+                                              child: Container(
+                                                width: 50 *
+                                                    SizeConfig.defaultSize!,
+                                                height: 16 *
+                                                    SizeConfig.defaultSize!,
+                                                child: Center(
+                                                  child: Text(
+                                                    "This dialogue highlights the mermaid's realization\nof the value of her voice, its intangible beauty,\nand its role in her pursuit of true love and self-discovery.\nDespite losing her voice, she finds the strength to communicate\nthrough her heart and believes that love goes beyond words.\nThe journey becomes an opportunity for her to uncover\nher true essence and understand the essence of love and freedom.",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 3 *
+                                                      fontSize: 1.8 *
                                                           SizeConfig
                                                               .defaultSize!,
                                                       fontFamily: 'Molengo',
@@ -270,166 +288,122 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                           FontWeight.w400,
                                                     ),
                                                   ),
-                                                ]);
-                                          } else {
-                                            return Column(
-                                              children: [
-                                                SizedBox(
-                                                    height: 3.2 *
-                                                        SizeConfig
-                                                            .defaultSize!),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    _sendVoiceScriptClickEvent(
-                                                        userState.userId,
-                                                        userState.purchase,
-                                                        userState.record,
-                                                        userState.voiceId);
-                                                  },
-                                                  child: Container(
-                                                    width: 50 *
-                                                        SizeConfig.defaultSize!,
-                                                    height: 16 *
-                                                        SizeConfig.defaultSize!,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "This dialogue highlights the mermaid's realization\nof the value of her voice, its intangible beauty,\nand its role in her pursuit of true love and self-discovery.\nDespite losing her voice, she finds the strength to communicate\nthrough her heart and believes that love goes beyond words.\nThe journey becomes an opportunity for her to uncover\nher true essence and understand the essence of love and freedom.",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 1.8 *
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Stack(
+                                                alignment: Alignment.centerLeft,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          _sendVoiceRerecClickEvent(
+                                                              userState.userId,
+                                                              userState
+                                                                  .purchase,
+                                                              userState.record,
+                                                              userState
+                                                                  .voiceId);
+                                                          audioPlayer.stop();
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const RecRe(),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          width: 31.1 *
                                                               SizeConfig
                                                                   .defaultSize!,
-                                                          fontFamily: 'Molengo',
-                                                          fontWeight:
-                                                              FontWeight.w400,
+                                                          height: 4.5 *
+                                                              SizeConfig
+                                                                  .defaultSize!,
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            color: Color(
+                                                                0xFFFFA91A),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                            ),
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Re-make your voice',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 2.3 *
+                                                                    SizeConfig
+                                                                        .defaultSize!,
+                                                                fontFamily:
+                                                                    'Molengo',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Stack(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              _sendVoiceRerecClickEvent(
-                                                                  userState
-                                                                      .userId,
-                                                                  userState
-                                                                      .purchase,
-                                                                  userState
-                                                                      .record,
-                                                                  userState
-                                                                      .voiceId);
-                                                              audioPlayer
-                                                                  .stop();
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          const RecRe(),
-                                                                ),
-                                                              );
-                                                            },
-                                                            child: Container(
-                                                              width: 31.1 *
-                                                                  SizeConfig
-                                                                      .defaultSize!,
-                                                              height: 4.5 *
-                                                                  SizeConfig
-                                                                      .defaultSize!,
-                                                              decoration:
-                                                                  ShapeDecoration(
-                                                                color: Color(
-                                                                    0xFFFFA91A),
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15),
-                                                                ),
-                                                              ),
-                                                              child: Center(
-                                                                child: Text(
-                                                                  'Re-make your voice',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize: 2.3 *
-                                                                        SizeConfig
-                                                                            .defaultSize!,
-                                                                    fontFamily:
-                                                                        'Molengo',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 5.3 *
-                                                                SizeConfig
-                                                                    .defaultSize!,
-                                                          ),
-                                                          IconButton(
-                                                            icon: Icon(
-                                                              Icons.play_arrow,
-                                                              size: 3 *
-                                                                  SizeConfig
-                                                                      .defaultSize!,
-                                                              // color: const Color.fromARGB(
-                                                              //     255, 194, 120, 209),
-                                                            ),
-                                                            onPressed: () {
-                                                              _sendVoicePlayClickEvent(
-                                                                  userState
-                                                                      .userId,
-                                                                  userState
-                                                                      .purchase,
-                                                                  userState
-                                                                      .record,
-                                                                  userState
-                                                                      .voiceId!);
-                                                              UrlSource(userState
-                                                                  .inferenceUrl!);
-                                                            },
-                                                          ),
-                                                        ],
+                                                      SizedBox(
+                                                        width: 5.3 *
+                                                            SizeConfig
+                                                                .defaultSize!,
+                                                      ),
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.play_arrow,
+                                                          size: 3 *
+                                                              SizeConfig
+                                                                  .defaultSize!,
+                                                          // color: const Color.fromARGB(
+                                                          //     255, 194, 120, 209),
+                                                        ),
+                                                        onPressed: () {
+                                                          _sendVoicePlayClickEvent(
+                                                              userState.userId,
+                                                              userState
+                                                                  .purchase,
+                                                              userState.record,
+                                                              userState
+                                                                  .voiceId!);
+                                                          UrlSource(userState
+                                                              .inferenceUrl!);
+                                                        },
                                                       ),
                                                     ],
                                                   ),
-                                                )
-                                              ],
-                                            );
-                                          }
-                                        })),
-                                  ])
-                            ],
-                          ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        );
+                                      }
+                                    })),
+                              ])
                         ],
-                      )),
-                ],
-              ),
-            ),
+                      ),
+                    ],
+                  )),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Future<void> _sendVoiceRerecClickEvent(
