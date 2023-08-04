@@ -3,7 +3,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/size_config.dart';
-import 'rec_info.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -41,6 +40,7 @@ class _RecState extends State<Rec> {
   //StreamSubscription<Amplitude>? _amplitudeSub;
   //Amplitude? _amplitude;
   AudioPlayer audioPlayer = AudioPlayer();
+  bool _waiting = false;
 
   static const platformChannel = MethodChannel('com.sayit.yoggo/channel');
 
@@ -234,7 +234,7 @@ class _RecState extends State<Rec> {
                             Expanded(
                                 flex: 1,
                                 child: Container(
-                                    color: Color.fromARGB(0, 0, 0, 0)))
+                                    color: const Color.fromARGB(0, 0, 0, 0)))
                           ])),
                       Expanded(
                         // BODY
@@ -422,16 +422,19 @@ class _RecState extends State<Rec> {
     late Widget icon;
 
     if (_recordState != RecordState.stop) {
+      _waiting = false;
       icon = Icon(
         Icons.stop,
         size: 5 * SizeConfig.defaultSize!,
-        color: Color.fromARGB(255, 255, 0, 0),
+        color: const Color.fromARGB(255, 255, 0, 0),
       );
+    } else if (_waiting) {
+      icon = const CircularProgressIndicator(color: Color(0xFFFFA91A));
     } else {
       final theme = Theme.of(context);
       icon = Icon(Icons.circle,
           size: 5 * SizeConfig.defaultSize!,
-          color: Color.fromARGB(255, 255, 0, 0));
+          color: const Color.fromARGB(255, 255, 0, 0));
     }
 
     return ClipOval(
@@ -443,10 +446,14 @@ class _RecState extends State<Rec> {
             child: icon,
           ),
           onTap: () {
-            (_recordState != RecordState.stop)
-                ? _stop(userState.userId, userState.purchase, userState.record)
-                : _start(
-                    userState.userId, userState.purchase, userState.record);
+            if (_recordState != RecordState.stop) {
+              _stop(userState.userId, userState.purchase, userState.record);
+            } else {
+              setState(() {
+                _waiting = true;
+              });
+              _start(userState.userId, userState.purchase, userState.record);
+            }
           },
         ),
       ),

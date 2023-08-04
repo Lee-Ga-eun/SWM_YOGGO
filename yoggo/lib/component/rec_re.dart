@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/rec_info_re.dart';
 import 'package:yoggo/component/rec_end.dart';
 import 'package:yoggo/size_config.dart';
-import 'rec_info.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -38,6 +37,7 @@ class _RecReState extends State<RecRe> {
   StreamSubscription<RecordState>? _recordSub;
   RecordState _recordState = RecordState.stop;
   String? path = '';
+  bool _waiting = false;
   //StreamSubscription<Amplitude>? _amplitudeSub;
   //Amplitude? _amplitude;
   AudioPlayer audioPlayer = AudioPlayer();
@@ -490,18 +490,20 @@ class _RecReState extends State<RecRe> {
     late Widget icon;
 
     if (_recordState != RecordState.stop) {
+      _waiting = false;
       icon = Icon(
         Icons.stop,
         size: 5 * SizeConfig.defaultSize!,
-        color: Color.fromARGB(255, 255, 0, 0),
+        color: const Color.fromARGB(255, 255, 0, 0),
       );
+    } else if (_waiting) {
+      icon = const CircularProgressIndicator(color: Color(0xFFFFA91A));
     } else {
       final theme = Theme.of(context);
       icon = Icon(Icons.circle,
           size: 5 * SizeConfig.defaultSize!,
-          color: Color.fromARGB(255, 255, 0, 0));
+          color: const Color.fromARGB(255, 255, 0, 0));
     }
-
     return ClipOval(
       child: Material(
         child: InkWell(
@@ -511,10 +513,14 @@ class _RecReState extends State<RecRe> {
             child: icon,
           ),
           onTap: () {
-            (_recordState != RecordState.stop)
-                ? _stop(userState.userId, userState.purchase, userState.record)
-                : _start(
-                    userState.userId, userState.purchase, userState.record);
+            if (_recordState != RecordState.stop) {
+              _stop(userState.userId, userState.purchase, userState.record);
+            } else {
+              setState(() {
+                _waiting = true;
+              });
+              _start(userState.userId, userState.purchase, userState.record);
+            }
           },
         ),
       ),
