@@ -51,6 +51,7 @@ class UserCubit extends Cubit<UserState> {
           final voiceId = data['voiceId'];
           final voiceName = data['voiceName'];
           final voiceIcon = data['voiceIcon'];
+          final inferenceUrl = data['inferenceUrl'];
           emit(UserState(
               userId: userId,
               userName: userName,
@@ -61,7 +62,8 @@ class UserCubit extends Cubit<UserState> {
               isDataFetched: isDataFetched,
               voiceId: voiceId,
               voiceName: voiceName,
-              voiceIcon: voiceIcon));
+              voiceIcon: voiceIcon,
+              inferenceUrl: inferenceUrl));
         }
         // 상태 업데이트
         else {
