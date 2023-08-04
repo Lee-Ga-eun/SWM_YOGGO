@@ -29,6 +29,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
   late String token;
   late String inferenceUrl = "";
   late bool isLoading = true;
+  late bool wantRemake = false;
   // void playAudio(String audioUrl) async {
   //   await audioPlayer.play(UrlSource(audioUrl));
   // }
@@ -84,7 +85,8 @@ class _VoiceProfileState extends State<VoiceProfile> {
     _sendVoiceViewEvent(userState.userId, userState.purchase, userState.record,
         userState.voiceId!);
     return Scaffold(
-      body: Container(
+        body: Stack(children: [
+      Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/images/bkground.png'),
@@ -330,14 +332,9 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                                 userState
                                                                     .voiceId);
                                                             audioPlayer.stop();
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        const RecRe(),
-                                                              ),
-                                                            );
+                                                            setState(() {
+                                                              wantRemake = true;
+                                                            });
                                                           },
                                                           child: Container(
                                                             width: 31.1 *
@@ -405,13 +402,14 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                                     .record,
                                                                 userState
                                                                     .voiceId!);
-                                                            userState.inferenceUrl ==
+                                                            audioPlayer.play(userState
+                                                                        .inferenceUrl ==
                                                                     null
                                                                 ? UrlSource(
                                                                     inferenceUrl)
                                                                 : UrlSource(
                                                                     userState
-                                                                        .inferenceUrl!);
+                                                                        .inferenceUrl!));
                                                           },
                                                         ),
                                                       ],
@@ -433,7 +431,99 @@ class _VoiceProfileState extends State<VoiceProfile> {
           ),
         ),
       ),
-    );
+      Visibility(
+        visible: wantRemake,
+        child: AlertDialog(
+          titlePadding: EdgeInsets.only(
+            left: SizeConfig.defaultSize! * 5,
+            right: SizeConfig.defaultSize! * 5,
+            top: SizeConfig.defaultSize! * 5,
+            bottom: SizeConfig.defaultSize! * 2,
+          ),
+          actionsPadding: EdgeInsets.only(
+            // left: SizeConfig.defaultSize! * 5,
+            // right: SizeConfig.defaultSize! * 5,
+            bottom: SizeConfig.defaultSize! * 5,
+            top: SizeConfig.defaultSize! * 1,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(SizeConfig.defaultSize! * 3),
+          ),
+          backgroundColor: Colors.white.withOpacity(0.9),
+          title: Text(
+            'If you record your voice again,\nyou need to recreate the book using your own voice.\nAre you still willing to continue?',
+            style: TextStyle(
+              fontSize: SizeConfig.defaultSize! * 2.5,
+              fontFamily: 'Molengo',
+            ),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RecRe(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: SizeConfig.defaultSize! * 24,
+                    height: SizeConfig.defaultSize! * 4.5,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.defaultSize! * 1.5),
+                      color: const Color(0xFFFFA91A),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Yes',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Molengo',
+                          fontSize: 2.2 * SizeConfig.defaultSize!,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: SizeConfig.defaultSize! * 4), // 간격 조정
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      wantRemake = false;
+                    });
+                  },
+                  child: Container(
+                    width: SizeConfig.defaultSize! * 24,
+                    height: SizeConfig.defaultSize! * 4.5,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.defaultSize! * 1.5),
+                      color: const Color(0xFFFFA91A),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'No',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Molengo',
+                          fontSize: 2.2 * SizeConfig.defaultSize!,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      )
+    ]));
   }
 
   Future<void> _sendVoiceRerecClickEvent(
