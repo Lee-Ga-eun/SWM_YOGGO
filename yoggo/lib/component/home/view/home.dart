@@ -388,14 +388,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                     userState.login
                                         ? GestureDetector(
-                                            child: Text(
-                                              'Sign Out',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 1.8 *
-                                                    SizeConfig.defaultSize!,
-                                                fontFamily: 'Molengo',
-                                                fontWeight: FontWeight.w400,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(0.2 *
+                                                  SizeConfig.defaultSize!),
+                                              child: Text(
+                                                'Sign Out',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 1.8 *
+                                                      SizeConfig.defaultSize!,
+                                                  fontFamily: 'Molengo',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                               ),
                                             ),
                                             onTap: () {
@@ -410,14 +414,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                             },
                                           )
                                         : GestureDetector(
-                                            child: Text(
-                                              'Sign In',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 1.8 *
-                                                    SizeConfig.defaultSize!,
-                                                fontFamily: 'Molengo',
-                                                fontWeight: FontWeight.w400,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(0.2 *
+                                                  SizeConfig.defaultSize!),
+                                              child: Text(
+                                                'Sign In',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 1.8 *
+                                                      SizeConfig.defaultSize!,
+                                                  fontFamily: 'Molengo',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                               ),
                                             ),
                                             onTap: () {
@@ -438,30 +446,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     //    userState.login && showSignOutConfirmation
                                     userState.login && showSignOutConfirmation
                                         ? GestureDetector(
-                                            child: Transform.translate(
-                                                offset: Offset(
-                                                    0.5 *
-                                                        SizeConfig.defaultSize!,
-                                                    0.5 *
-                                                        SizeConfig
-                                                            .defaultSize!),
-                                                child: Text(
-                                                  'Do you want to Sign Out?',
-                                                  style: TextStyle(
-                                                    color:
-                                                        const Color(0xFF599FED),
-                                                    fontSize: 1.2 *
-                                                        SizeConfig.defaultSize!,
-                                                    fontFamily: 'Molengo',
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                )),
-                                            //),
                                             onTap: () {
                                               _sendSignOutReallyClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record);
+                                                userState.userId,
+                                                userState.purchase,
+                                                userState.record,
+                                              );
                                               logout();
                                               userCubit.logout();
                                               OneSignal.shared
@@ -470,9 +460,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ?.closeDrawer();
                                               setState(() {
                                                 showSignOutConfirmation =
-                                                    !showSignOutConfirmation; // dropdown 상태 토글
-                                              }); //고민
+                                                    !showSignOutConfirmation;
+                                              });
                                             },
+                                            child: Container(
+                                              margin: EdgeInsets.all(0.5 *
+                                                  SizeConfig.defaultSize!),
+                                              padding: EdgeInsets.all(0.3 *
+                                                  SizeConfig.defaultSize!),
+                                              color: Colors
+                                                  .transparent, // 배경 터치 가능하게 하려면 배경 색상을 투명하게 설정
+                                              child: Text(
+                                                'Do you want to Sign Out?',
+                                                style: TextStyle(
+                                                  color:
+                                                      const Color(0xFF599FED),
+                                                  fontSize: 1.2 *
+                                                      SizeConfig.defaultSize!,
+                                                  fontFamily: 'Molengo',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
                                           )
                                         : Container()
                                   ],

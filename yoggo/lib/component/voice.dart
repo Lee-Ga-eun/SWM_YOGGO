@@ -110,19 +110,25 @@ class _VoiceProfileState extends State<VoiceProfile> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              IconButton(
-                                icon: Icon(Icons.clear,
-                                    size: 3 * SizeConfig.defaultSize!),
-                                onPressed: () {
-                                  audioPlayer.stop();
-                                  dispose();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const HomeScreen(),
-                                    ),
-                                  );
-                                },
+                              Padding(
+                                padding: EdgeInsets.all(0.5 *
+                                    SizeConfig
+                                        .defaultSize!), // 패딩 크기를 원하는 값으로 조정해주세요
+                                child: IconButton(
+                                  icon: Icon(Icons.clear,
+                                      size: 3 * SizeConfig.defaultSize!),
+                                  onPressed: () {
+                                    audioPlayer.stop();
+                                    dispose();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomeScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
                               )
                             ]),
                       )),
