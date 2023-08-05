@@ -310,7 +310,7 @@ class _RecState extends State<Rec> {
                         ),
                         backgroundColor: Colors.white.withOpacity(0.9),
                         title: Text(
-                          'Would you like to use the voice you just recorded?',
+                          'Are you sure?',
                           style: TextStyle(
                             fontSize: SizeConfig.defaultSize! * 2.5,
                             fontFamily: 'Molengo',
@@ -342,7 +342,7 @@ class _RecState extends State<Rec> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      'No, Re-make',
+                                      'No',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Molengo',
