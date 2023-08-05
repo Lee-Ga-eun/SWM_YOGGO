@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -68,7 +70,7 @@ class _BookEndState extends State<BookEnd> {
               height: SizeConfig.defaultSize!,
             ),
             Expanded(
-              flex: SizeConfig.defaultSize!.toInt(),
+              flex: 1,
               child: Stack(
                 alignment: Alignment.centerLeft,
                 children: [
@@ -97,68 +99,73 @@ class _BookEndState extends State<BookEnd> {
                             userState.record, widget.voiceId))
                 : Container(),
             Expanded(
-                flex: SizeConfig.defaultSize!.toInt(),
-                child:
+                flex: 2,
+                child: Column(
+                  children: [
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  IconButton(
-                    padding:
-                        EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
-                    onPressed: () {
-                      _sendBookAgainClickEvent(
-                          userState.userId,
-                          widget.contentVoiceId,
-                          widget.contentId,
-                          widget.voiceId,
-                          userState.purchase,
-                          userState.record);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BookPage(
-                            // 다음 화면으로 contetnVoiceId를 가지고 이동
-                            contentId: widget.contentId,
-                            contentVoiceId: widget.contentVoiceId,
-                            voiceId: widget.voiceId,
-                            lastPage: widget.lastPage,
-                            isSelected: widget.isSelected,
-                          ),
+                      IconButton(
+                        padding: EdgeInsets.all(0.2 * SizeConfig.defaultSize!),
+                        onPressed: () {
+                          _sendBookAgainClickEvent(
+                              userState.userId,
+                              widget.contentVoiceId,
+                              widget.contentId,
+                              widget.voiceId,
+                              userState.purchase,
+                              userState.record);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookPage(
+                                // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                contentId: widget.contentId,
+                                contentVoiceId: widget.contentVoiceId,
+                                voiceId: widget.voiceId,
+                                lastPage: widget.lastPage,
+                                isSelected: widget.isSelected,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.replay,
+                          size: SizeConfig.defaultSize! * 4,
                         ),
-                      );
-                    },
-                    icon: Icon(
-                      Icons.replay,
-                      size: SizeConfig.defaultSize! * 4,
-                    ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.defaultSize! * 2,
-                  ),
-                  IconButton(
-                    padding:
-                        EdgeInsets.only(bottom: SizeConfig.defaultSize! * 4),
-                    onPressed: () {
-                      _sendBookHomeClickEvent(
-                          userState.userId,
-                          widget.contentVoiceId,
-                          widget.contentId,
-                          widget.voiceId,
-                          userState.purchase,
-                          userState.record);
-                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      ),
+                      SizedBox(
+                        width: SizeConfig.defaultSize! * 2,
+                      ),
+                      IconButton(
+                        padding: EdgeInsets.all(0.2 * SizeConfig.defaultSize!),
+                        onPressed: () {
+                          _sendBookHomeClickEvent(
+                              userState.userId,
+                              widget.contentVoiceId,
+                              widget.contentId,
+                              widget.voiceId,
+                              userState.purchase,
+                              userState.record);
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
 
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const HomeScreen(),
-                      //   ),
-                      // );
-                    },
-                    icon: Icon(
-                      Icons.home,
-                      size: SizeConfig.defaultSize! * 4,
-                    ),
-                  ),
-                ]))
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => const HomeScreen(),
+                          //   ),
+                          // );
+                        },
+                        icon: Icon(
+                          Icons.home,
+                          size: SizeConfig.defaultSize! * 4,
+                        ),
+                      ),
+                    ]),
+                    SizedBox(
+                      height: 4 * SizeConfig.defaultSize!,
+                    )
+                  ],
+                ))
           ],
         ),
       ),
@@ -167,7 +174,7 @@ class _BookEndState extends State<BookEnd> {
 
   Expanded allPass() {
     return Expanded(
-        flex: SizeConfig.defaultSize!.toInt() * 3,
+        flex: 5,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Column(
@@ -209,7 +216,7 @@ class _BookEndState extends State<BookEnd> {
   Expanded notPurchaseUser(userId, purchase, record, cvi) {
     // 구매를 안 한 사용자
     return Expanded(
-      flex: SizeConfig.defaultSize!.toInt() * 3,
+      flex: 5,
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Column(
@@ -338,7 +345,7 @@ class _BookEndState extends State<BookEnd> {
   Expanded notRecordUser(userId, purchase, record, cvi) {
     // 녹음을 안 한 사용자
     return Expanded(
-      flex: SizeConfig.defaultSize!.toInt() * 3,
+      flex: 5,
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Column(
