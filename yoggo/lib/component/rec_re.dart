@@ -192,8 +192,7 @@ class _RecReState extends State<RecRe> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amp.Amplitude amplitude =
-      Amp.Amplitude.getInstance(instanceName: "SayIT");
+  final Amp.Amplitude amplitude = Amp.Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {

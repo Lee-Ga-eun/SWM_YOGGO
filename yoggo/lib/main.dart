@@ -28,6 +28,12 @@ Future<void> initPlatformState() async {
 }
 
 void main() async {
+  // Amplitude Event 수집을 위해서 꼭 개발 모드(dev)인지 릴리즈 모드(rel)인지 설정하고 앱을 실행하도록 해요
+  // 디폴트 값은 dev입니다
+
+  String mode = 'dev';
+  // String mode = 'rel';
+
   // 사용자 Cubit을 초기화합니다.
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding
@@ -51,10 +57,17 @@ void main() async {
           print('::::: one signal :::: ${value!.userId}'),
         },
       );
-  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
-  print(dotenv.get("AMPLITUDE_API"));
+  // final Amplitude amplitude = Amplitude.getInstance();
+  final Amplitude amplitude = Amplitude.getInstance();
+
+  String AMPLITUDE_API = mode == 'rel'
+      ? dotenv.get("AMPLITUDE_API_rel")
+      : dotenv.get("AMPLITUDE_API_dev");
+
+  print(AMPLITUDE_API);
+
   // Initialize SDK
-  await amplitude.init(dotenv.get("AMPLITUDE_API"));
+  await amplitude.init(AMPLITUDE_API);
 
   await amplitude.logEvent('startup');
 

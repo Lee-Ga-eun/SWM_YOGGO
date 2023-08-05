@@ -45,7 +45,7 @@ class _BookEndState extends State<BookEnd> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  final Amplitude amplitude = Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {
