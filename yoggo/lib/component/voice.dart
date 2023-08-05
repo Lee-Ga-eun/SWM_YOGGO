@@ -75,7 +75,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  static Amplitude amplitude = Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {

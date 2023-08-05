@@ -60,7 +60,7 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  final Amplitude amplitude = Amplitude.getInstance();
 
   Future<void> fetchAllBookPages() async {
     // API에서 모든 책 페이지 데이터를 불러와 pages 리스트에 저장
@@ -383,7 +383,7 @@ class PageWidget extends StatefulWidget {
 
 class _PageWidgetState extends State<PageWidget> {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  final Amplitude amplitude = Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {

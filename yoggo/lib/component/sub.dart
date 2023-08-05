@@ -150,7 +150,7 @@ class _PurchaseState extends State<Purchase> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  final Amplitude amplitude = Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {

@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  static Amplitude amplitude = Amplitude.getInstance();
 
   Future<void> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -92,7 +92,7 @@ class _BookIntroState extends State<BookIntro> {
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  static Amplitude amplitude = Amplitude.getInstance();
   // static Analytics_config.analytics.logEvent("suhwanc");
 
   Future<void> _sendBookMyVoiceClickEvent(
