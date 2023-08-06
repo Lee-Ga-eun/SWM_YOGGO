@@ -294,8 +294,8 @@ class _RecState extends State<Rec> {
                       visible: stopped,
                       child: AlertDialog(
                         titlePadding: EdgeInsets.only(
-                          left: SizeConfig.defaultSize! * 8,
-                          right: SizeConfig.defaultSize! * 8,
+                          left: SizeConfig.defaultSize! * 24,
+                          right: SizeConfig.defaultSize! * 24,
                           top: SizeConfig.defaultSize! * 7,
                           bottom: SizeConfig.defaultSize! * 2,
                         ),
@@ -310,11 +310,13 @@ class _RecState extends State<Rec> {
                               SizeConfig.defaultSize! * 3),
                         ),
                         backgroundColor: Colors.white.withOpacity(0.9),
-                        title: Text(
-                          'Are you sure?',
-                          style: TextStyle(
-                            fontSize: SizeConfig.defaultSize! * 2.5,
-                            fontFamily: 'Molengo',
+                        title: Center(
+                          child: Text(
+                            'Are you sure?',
+                            style: TextStyle(
+                              fontSize: SizeConfig.defaultSize! * 2.5,
+                              fontFamily: 'Molengo',
+                            ),
                           ),
                         ),
                         actions: [
