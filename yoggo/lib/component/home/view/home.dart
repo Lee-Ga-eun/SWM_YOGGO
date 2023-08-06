@@ -377,8 +377,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                     userState.login
                                         ? GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
                                             child: Padding(
-                                              padding: EdgeInsets.all(0.2 *
+                                              padding: EdgeInsets.all(0.5 *
                                                   SizeConfig.defaultSize!),
                                               child: Text(
                                                 'Sign Out',
@@ -401,10 +402,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             },
                                           )
                                         : GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
                                             child: Padding(
                                               padding: EdgeInsets.all(0.2 *
                                                   SizeConfig.defaultSize!),
-                                              child: Text(
+                                              child: Container(
+                                                  child: Text(
                                                 'Sign In',
                                                 style: TextStyle(
                                                   color: Colors.black,
@@ -413,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontFamily: 'Molengo',
                                                   fontWeight: FontWeight.w400,
                                                 ),
-                                              ),
+                                              )),
                                             ),
                                             onTap: () {
                                               _sendSignOutClickEvent();
@@ -431,6 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     //    userState.login && showSignOutConfirmation
                                     userState.login && showSignOutConfirmation
                                         ? GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
                                             onTap: () {
                                               _sendSignOutReallyClickEvent();
                                               logout();
