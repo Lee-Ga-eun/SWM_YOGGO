@@ -552,28 +552,25 @@ class _BookIntroState extends State<BookIntro> {
                                                       });
                                                     },
                                                     child: Column(children: [
-                                                      Padding(
-                                                          padding: EdgeInsets.only(
-                                                              right: 0 *
-                                                                  SizeConfig
-                                                                      .defaultSize!),
+                                                      Stack(children: [
+                                                        Image.asset(
+                                                          'lib/images/icons/${userState.voiceIcon}-uc.png',
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              7,
+                                                        ),
+                                                        const Positioned(
+                                                          left: 12,
+                                                          right: 12,
+                                                          bottom: 12,
+                                                          top: 12,
                                                           child:
-                                                              Stack(children: [
-                                                            Image.asset(
-                                                              'lib/images/icons/${userState.voiceIcon}-uc.png',
-                                                              height: SizeConfig
-                                                                      .defaultSize! *
-                                                                  7,
-                                                            ),
-                                                            const Positioned(
-                                                                left: 0,
-                                                                right: 0,
-                                                                bottom: 0,
-                                                                top: 0,
-                                                                child: CircularProgressIndicator(
-                                                                    color: Color(
-                                                                        0xFFFFA91A)))
-                                                          ])),
+                                                              CircularProgressIndicator(
+                                                            color: Color(
+                                                                0xFFFFA91A),
+                                                          ),
+                                                        )
+                                                      ]),
                                                       SizedBox(
                                                           height: SizeConfig
                                                                   .defaultSize! *

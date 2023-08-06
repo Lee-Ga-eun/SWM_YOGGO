@@ -260,12 +260,6 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                                const CircularProgressIndicator(
-                                                    color: Color(0xFFFFA91A)),
-                                                SizedBox(
-                                                  height:
-                                                      SizeConfig.defaultSize!,
-                                                ),
                                                 Text(
                                                   "We are making your voice!",
                                                   textAlign: TextAlign.center,
@@ -277,6 +271,12 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                     fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
+                                                SizedBox(
+                                                  height:
+                                                      SizeConfig.defaultSize!,
+                                                ),
+                                                const CircularProgressIndicator(
+                                                    color: Color(0xFFFFA91A)),
                                               ])
                                         : //} else {
                                         //return
@@ -441,10 +441,10 @@ class _VoiceProfileState extends State<VoiceProfile> {
         visible: wantRemake,
         child: AlertDialog(
           titlePadding: EdgeInsets.only(
-            left: SizeConfig.defaultSize! * 5,
-            right: SizeConfig.defaultSize! * 5,
+            left: SizeConfig.defaultSize! * 8,
+            right: SizeConfig.defaultSize! * 8,
             top: SizeConfig.defaultSize! * 5,
-            bottom: SizeConfig.defaultSize! * 2,
+            bottom: SizeConfig.defaultSize! * 3,
           ),
           actionsPadding: EdgeInsets.only(
             // left: SizeConfig.defaultSize! * 5,
@@ -457,7 +457,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
           ),
           backgroundColor: Colors.white.withOpacity(0.9),
           title: Text(
-            'If you record your voice again,\nyou need to recreate the book using your own voice.\nAre you still willing to continue?',
+            'If you record again, the previous voice will be deleted.\nYou need to recreate with a new voice.\nWould you like to continue?',
             style: TextStyle(
               fontSize: SizeConfig.defaultSize! * 2.5,
               fontFamily: 'Molengo',
@@ -487,7 +487,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                     ),
                     child: Center(
                       child: Text(
-                        'Yes',
+                        'YES',
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Molengo',
