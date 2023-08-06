@@ -584,10 +584,16 @@ class _PageWidgetState extends State<PageWidget> {
                                   IconButton(
                                       padding: EdgeInsets.all(
                                           0.2 * SizeConfig.defaultSize!),
-                                      icon: Icon(
-                                        Icons.arrow_back,
-                                        size: 3 * SizeConfig.defaultSize!,
-                                      ),
+                                      icon: widget.currentPageIndex == 0
+                                          ? Icon(
+                                              Icons.arrow_back,
+                                              color:
+                                                  Colors.black.withOpacity(0),
+                                            )
+                                          : Icon(
+                                              Icons.arrow_back,
+                                              size: 3 * SizeConfig.defaultSize!,
+                                            ),
                                       onPressed: () {
                                         _sendBookBackClickEvent(
                                             userState.userId,
@@ -604,8 +610,8 @@ class _PageWidgetState extends State<PageWidget> {
                             )),
                         Expanded(
                             flex: 8,
-                            child:
-                                Container(color: Color.fromARGB(0, 0, 0, 0))),
+                            child: Container(
+                                color: const Color.fromARGB(0, 0, 0, 0))),
                         Expanded(
                             flex: 1,
                             child: widget.currentPageIndex !=
