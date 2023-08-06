@@ -318,6 +318,7 @@ class _BookIntroState extends State<BookIntro> {
         setState(() {
           isLoading = true;
           inferenceId = json.decode(response.body)['id'];
+          checkInference(token);
         });
       }
     } else {
