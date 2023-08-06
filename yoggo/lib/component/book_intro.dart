@@ -173,7 +173,7 @@ class _BookIntroState extends State<BookIntro> {
   }
 
   Future<void> _sendBookIntroViewEvent(
-    d,
+    contentId,
   ) async {
     try {
       // 이벤트 로깅
