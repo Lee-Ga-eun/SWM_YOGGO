@@ -59,7 +59,7 @@ class _PurchaseState extends State<Purchase> {
           _inAppPurchase.completePurchase(e);
           successPurchase();
           UserCubit().fetchUser();
-          amplitude.setUserProperties({'subscribe': true, 'record': false});
+          amplitude.setUserProperties({'subscribe': true});
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => const RecInfo()));
         }
