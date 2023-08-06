@@ -54,8 +54,8 @@ class _BookEndState extends State<BookEnd> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendBookEndViewEvent(userState.userId, widget.contentVoiceId,
-        widget.contentId, widget.voiceId, userState.purchase, userState.record);
+    _sendBookEndViewEvent(
+        widget.contentVoiceId, widget.contentId, widget.voiceId);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -107,12 +107,10 @@ class _BookEndState extends State<BookEnd> {
                         padding: EdgeInsets.all(0.2 * SizeConfig.defaultSize!),
                         onPressed: () {
                           _sendBookAgainClickEvent(
-                              userState.userId,
-                              widget.contentVoiceId,
-                              widget.contentId,
-                              widget.voiceId,
-                              userState.purchase,
-                              userState.record);
+                            widget.contentVoiceId,
+                            widget.contentId,
+                            widget.voiceId,
+                          );
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -139,12 +137,10 @@ class _BookEndState extends State<BookEnd> {
                         padding: EdgeInsets.all(0.2 * SizeConfig.defaultSize!),
                         onPressed: () {
                           _sendBookHomeClickEvent(
-                              userState.userId,
-                              widget.contentVoiceId,
-                              widget.contentId,
-                              widget.voiceId,
-                              userState.purchase,
-                              userState.record);
+                            widget.contentVoiceId,
+                            widget.contentId,
+                            widget.voiceId,
+                          );
                           Navigator.of(context)
                               .popUntil((route) => route.isFirst);
 
@@ -291,12 +287,10 @@ class _BookEndState extends State<BookEnd> {
                         InkWell(
                           onTap: () {
                             _sendBookEndSubClick(
-                                userId,
-                                widget.contentVoiceId,
-                                widget.contentId,
-                                widget.voiceId,
-                                purchase,
-                                record);
+                              widget.contentVoiceId,
+                              widget.contentId,
+                              widget.voiceId,
+                            );
                             Navigator.push(
                               context,
                               //결제가 끝나면 RecInfo로 가야 함
@@ -420,12 +414,10 @@ class _BookEndState extends State<BookEnd> {
                         InkWell(
                           onTap: () {
                             _sendBookEndSubClick(
-                                userId,
-                                widget.contentVoiceId,
-                                widget.contentId,
-                                widget.voiceId,
-                                purchase,
-                                record);
+                              widget.contentVoiceId,
+                              widget.contentId,
+                              widget.voiceId,
+                            );
                             Navigator.push(
                               context,
                               //결제가 끝나면 RecInfo로 가야 함
@@ -472,27 +464,24 @@ class _BookEndState extends State<BookEnd> {
   }
 
   Future<void> _sendBookEndViewEvent(
-      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
+    contentVoiceId,
+    contentId,
+    voiceId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_end_view',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('book_end_view', eventProperties: {
-        'userId': userId,
         'contentVoiceId': contentVoiceId,
         'contentId': contentId,
         'voiceId': voiceId,
-        'purchase': purchase ? 'true' : 'false',
-        'record': record ? 'true' : 'false',
       });
     } catch (e) {
       print('Failed to log event: $e');
@@ -500,27 +489,24 @@ class _BookEndState extends State<BookEnd> {
   }
 
   Future<void> _sendBookEndSubClick(
-      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
+    contentVoiceId,
+    contentId,
+    voiceId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_end_sub_click',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('book_end_sub_click', eventProperties: {
-        'userId': userId,
         'contentVoiceId': contentVoiceId,
         'contentId': contentId,
         'voiceId': voiceId,
-        'purchase': purchase ? 'true' : 'false',
-        'record': record ? 'true' : 'false',
       });
     } catch (e) {
       print('Failed to log event: $e');
@@ -528,27 +514,24 @@ class _BookEndState extends State<BookEnd> {
   }
 
   Future<void> _sendBookAgainClickEvent(
-      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
+    contentVoiceId,
+    contentId,
+    voiceId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_again_click',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('book_again_click', eventProperties: {
-        'userId': userId,
         'contentVoiceId': contentVoiceId,
         'contentId': contentId,
         'voiceId': voiceId,
-        'purchase': purchase ? 'true' : 'false',
-        'record': record ? 'true' : 'false',
       });
     } catch (e) {
       print('Failed to log event: $e');
@@ -556,27 +539,24 @@ class _BookEndState extends State<BookEnd> {
   }
 
   Future<void> _sendBookHomeClickEvent(
-      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
+    contentVoiceId,
+    contentId,
+    voiceId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_home_click',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       amplitude.logEvent('book_home_click', eventProperties: {
-        'userId': userId,
         'contentVoiceId': contentVoiceId,
         'contentId': contentId,
         'voiceId': voiceId,
-        'purchase': purchase ? 'true' : 'false',
-        'record': record ? 'true' : 'false',
       });
     } catch (e) {
       print('Failed to log event: $e');

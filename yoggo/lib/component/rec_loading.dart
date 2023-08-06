@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:amplitude_flutter/amplitude.dart';
 
 class RecLoading extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -80,6 +81,8 @@ class _RecLoadingState extends State<RecLoading> {
       }
     }
     await sendRecord();
+    Amplitude.getInstance()
+        .setUserProperties({'subscribe': true, 'record': true});
   }
 
   Future<void> _callQueuebitFunction() async {

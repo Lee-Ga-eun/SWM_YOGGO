@@ -73,21 +73,20 @@ class _HomeScreenState extends State<HomeScreen> {
     //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
-    _sendHomeViewEvent(userState.userId, userState.purchase, userState.record);
+    _sendHomeViewEvent();
     SizeConfig().init(context);
     return BlocProvider(
         create: (context) => DataCubit()..loadData(), // DataCubit 생성 및 데이터 로드
         // child: DataList(
-        //   record: userState.record,
-        //   purchase: userState.purchase,
+        //   record:
+        //   purchase:
         // ),
         //final userCubit = context.watch<UserCubit>();
         //final userState = userCubit.state;
         child: BlocBuilder<DataCubit, List<BookModel>>(
           builder: (context, state) {
             if (state.isEmpty) {
-              _sendHomeLoadingViewEvent(
-                  userState.userId, userState.purchase, userState.record);
+              _sendHomeLoadingViewEvent();
               return Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
@@ -191,10 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     userState.record && userState.purchase
                                         ? GestureDetector(
                                             onTap: () {
-                                              _sendHbgVoiceBoxClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record);
+                                              _sendHbgVoiceBoxClickEvent();
                                             },
                                             child: SizedBox(
                                               width:
@@ -278,11 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     child: GestureDetector(
                                                         onTap: () {
                                                           userCubit.fetchUser();
-                                                          _sendHbgVoiceClickEvent(
-                                                              userState.userId,
-                                                              userState
-                                                                  .purchase,
-                                                              userState.record);
+                                                          _sendHbgVoiceClickEvent();
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
@@ -333,10 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           )
                                         : GestureDetector(
                                             onTap: () {
-                                              _sendHbgVoiceClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record);
+                                              _sendHbgVoiceClickEvent();
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -403,10 +392,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                             onTap: () {
-                                              _sendSignOutClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record);
+                                              _sendSignOutClickEvent();
+
                                               setState(() {
                                                 showSignOutConfirmation =
                                                     !showSignOutConfirmation; // dropdown 상태 토글
@@ -429,10 +416,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                             onTap: () {
-                                              _sendSignOutClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record);
+                                              _sendSignOutClickEvent();
+
                                               // dropdown 상태 토글
                                               Navigator.push(
                                                 context,
@@ -447,11 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     userState.login && showSignOutConfirmation
                                         ? GestureDetector(
                                             onTap: () {
-                                              _sendSignOutReallyClickEvent(
-                                                userState.userId,
-                                                userState.purchase,
-                                                userState.record,
-                                              );
+                                              _sendSignOutReallyClickEvent();
                                               logout();
                                               userCubit.logout();
                                               OneSignal.shared
@@ -529,8 +510,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 top: SizeConfig.defaultSize! * 2,
                                 child: InkWell(
                                   onTap: () {
-                                    _sendHbgClickEvent(userState.userId,
-                                        userState.purchase, userState.record);
+                                    _sendHbgClickEvent();
                                     _scaffoldKey.currentState?.openDrawer();
                                   },
                                   child: Image.asset(
@@ -563,10 +543,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           right: 0 * SizeConfig.defaultSize!),
                                       child: GestureDetector(
                                         onTap: () {
-                                          _sendBannerClickEvent(
-                                              userState.userId,
-                                              userState.purchase,
-                                              userState.record);
+                                          _sendBannerClickEvent();
+
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -620,11 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           final book = state[index];
                                           return GestureDetector(
                                             onTap: () {
-                                              _sendBookClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record,
-                                                  book.id);
+                                              _sendBookClickEvent(book.id);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -722,168 +696,114 @@ class _HomeScreenState extends State<HomeScreen> {
     //);
   }
 
-  Future<void> _sendSignOutReallyClickEvent(userId, purchase, record) async {
+  Future<void> _sendSignOutReallyClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'sign_out_really_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'sign_out_really_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendSignOutClickEvent(userId, purchase, record) async {
+  Future<void> _sendSignOutClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'sign_out_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'sign_out_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendHbgVoiceClickEvent(userId, purchase, record) async {
+  Future<void> _sendHbgVoiceClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_voice_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'hbg_voice_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendHbgVoiceBoxClickEvent(userId, purchase, record) async {
+  Future<void> _sendHbgVoiceBoxClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_voice_box_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'hbg_voice_box_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendHbgNameClickEvent(userId, purchase, record) async {
+  Future<void> _sendHbgNameClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_name_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'hbg_name_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendHomeViewEvent(userId, purchase, record) async {
+  Future<void> _sendHomeViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'home_view',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'home_view',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendBookClickEvent(userId, purchase, record, contentId) async {
+  Future<void> _sendBookClickEvent(contentId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_click',
         parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentId': contentId,
         },
       );
       await amplitude.logEvent(
         'book_click',
         eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentId': contentId,
         },
       );
@@ -892,72 +812,48 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendBannerClickEvent(userId, purchase, record) async {
+  Future<void> _sendBannerClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'banner_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'banner_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendHbgClickEvent(userId, purchase, record) async {
+  Future<void> _sendHbgClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'hbg_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'hbg_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendHomeLoadingViewEvent(userId, purchase, record) async {
+  Future<void> _sendHomeLoadingViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'home_loading_view',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'home_loading_view',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       print('Failed to log event: $e');

@@ -92,8 +92,7 @@ class _RecEndState extends State<RecEnd> {
   Widget build(BuildContext context) {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
-    _sendRecEndViewEvent(
-        userState.userId, userState.purchase, userState.record);
+    _sendRecEndViewEvent();
     print(userState.record);
     SizeConfig().init(context);
     return Scaffold(
@@ -244,22 +243,14 @@ class _RecEndState extends State<RecEnd> {
     );
   }
 
-  Future<void> _sendRecEndViewEvent(userId, purchase, record) async {
+  Future<void> _sendRecEndViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'rec_end_view',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
-      amplitude.logEvent('rec_end_view', eventProperties: {
-        'userId': userId,
-        'purchase': purchase ? 'true' : 'false',
-        'record': record ? 'true' : 'false',
-      });
+      amplitude.logEvent('rec_end_view', eventProperties: {});
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');

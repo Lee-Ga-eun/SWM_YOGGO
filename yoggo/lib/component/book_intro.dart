@@ -96,25 +96,18 @@ class _BookIntroState extends State<BookIntro> {
   static Amplitude amplitude = Amplitude.getInstance();
   // static Analytics_config.analytics.logEvent("suhwanc");
 
-  Future<void> _sendBookMyVoiceClickEvent(
-      userId, purchase, record, contentId) async {
+  Future<void> _sendBookMyVoiceClickEvent(contentId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_my_voice_click',
         parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentId': contentId,
         },
       );
       amplitude.logEvent(
         'book_my_voice_click',
         eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentId': contentId,
         },
       );
@@ -125,29 +118,23 @@ class _BookIntroState extends State<BookIntro> {
   }
 
   Future<void> _sendBookVoiceClickEvent(
-      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
+      contentVoiceId, contentId, voiceId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_voice_click',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       await amplitude.logEvent(
         'book_voice_click',
         eventProperties: {
-          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -157,29 +144,26 @@ class _BookIntroState extends State<BookIntro> {
   }
 
   Future<void> _sendBookStartClickEvent(
-      userId, contentVoiceId, contentId, voiceId, purchase, record) async {
+    contentVoiceId,
+    contentId,
+    voiceId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_start_click',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       await amplitude.logEvent(
         'book_start_click',
         eventProperties: {
-          'userId': userId,
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -189,25 +173,20 @@ class _BookIntroState extends State<BookIntro> {
   }
 
   Future<void> _sendBookIntroViewEvent(
-      userId, contentId, purchase, record) async {
+    d,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_intro_view',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentId': contentId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       await amplitude.logEvent(
         'book_intro_view',
         eventProperties: {
-          'userId': userId,
           'contentId': contentId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -217,25 +196,20 @@ class _BookIntroState extends State<BookIntro> {
   }
 
   Future<void> _sendBookIntroXClickEvent(
-      userId, contentId, purchase, record) async {
+    contentId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_intro_x_click',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentId': contentId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       await amplitude.logEvent(
         'book_intro_x_click',
         eventProperties: {
-          'userId': userId,
           'contentId': contentId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -245,25 +219,20 @@ class _BookIntroState extends State<BookIntro> {
   }
 
   Future<void> _sendBookLoadingViewEvent(
-      userId, contentVoiceId, purchase, record) async {
+    contentVoiceId,
+  ) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_loading_view',
         parameters: <String, dynamic>{
-          'userId': userId,
           'contentId': contentId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
       await amplitude.logEvent(
         'book_loading_view',
         eventProperties: {
-          'userId': userId,
           'contentId': contentId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
         },
       );
     } catch (e) {
@@ -366,8 +335,7 @@ class _BookIntroState extends State<BookIntro> {
     // precacheImages(context);
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
-    _sendBookIntroViewEvent(
-        userState.userId, widget.id, userState.purchase, userState.record);
+    _sendBookIntroViewEvent(widget.id);
     SizeConfig().init(context);
     if (cvi == 0) {
       return Scaffold(
@@ -425,10 +393,8 @@ class _BookIntroState extends State<BookIntro> {
                                         size: 3 * SizeConfig.defaultSize!),
                                     onPressed: () {
                                       _sendBookIntroXClickEvent(
-                                          userState.userId,
-                                          widget.id,
-                                          userState.purchase,
-                                          userState.record);
+                                        widget.id,
+                                      );
                                       Navigator.of(context).pop();
                                     },
                                   )
@@ -499,9 +465,6 @@ class _BookIntroState extends State<BookIntro> {
                                                 // no start Inference
                                                 onTap: () {
                                                   _sendBookMyVoiceClickEvent(
-                                                    userState.userId,
-                                                    userState.purchase,
-                                                    userState.record,
                                                     contentId,
                                                   );
                                                   setState(() {
@@ -540,9 +503,6 @@ class _BookIntroState extends State<BookIntro> {
                                                     // no complete inference
                                                     onTap: () {
                                                       _sendBookMyVoiceClickEvent(
-                                                        userState.userId,
-                                                        userState.purchase,
-                                                        userState.record,
                                                         contentId,
                                                       );
 
@@ -591,9 +551,6 @@ class _BookIntroState extends State<BookIntro> {
                                                     // complete Inference
                                                     onTap: () {
                                                       _sendBookMyVoiceClickEvent(
-                                                        userState.userId,
-                                                        userState.purchase,
-                                                        userState.record,
                                                         contentId,
                                                       );
 
@@ -645,9 +602,6 @@ class _BookIntroState extends State<BookIntro> {
                                             onTap: () {
                                               setState(() {
                                                 _sendBookMyVoiceClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record,
                                                   contentId,
                                                 );
                                                 wantRecord = true;
@@ -749,14 +703,8 @@ class _BookIntroState extends State<BookIntro> {
                                     onTap: () {
                                       cvi = voices[0]['contentVoiceId'];
                                       vi = voices[0]['voiceId'];
-                                      _sendBookVoiceClickEvent(
-                                          userState.userId,
-                                          cvi,
-                                          contentId,
-                                          vi,
-                                          userState.purchase,
-                                          userState
-                                              .record); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                      _sendBookVoiceClickEvent(cvi, contentId,
+                                          vi); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                       setState(() {
                                         isClicked0 = true;
                                         isClicked = !isClicked0;
@@ -837,13 +785,10 @@ class _BookIntroState extends State<BookIntro> {
                                       vi = voices[1]['voiceId'];
 
                                       _sendBookVoiceClickEvent(
-                                          userState.userId,
-                                          cvi,
-                                          contentId,
-                                          vi,
-                                          userState.purchase,
-                                          userState
-                                              .record); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
+                                        cvi,
+                                        contentId,
+                                        vi,
+                                      ); // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                       setState(() {
                                         isClicked1 = true;
                                         isClicked = !isClicked1;
@@ -924,12 +869,8 @@ class _BookIntroState extends State<BookIntro> {
                                       vi = voices[2]['voiceId'];
                                       // 1, 2, 3 등 --> 이 값을 밑에 화살표 부분에 넘겨준 것
                                       _sendBookVoiceClickEvent(
-                                          userState.userId,
-                                          cvi,
-                                          contentId,
-                                          vi,
-                                          userState.purchase,
-                                          userState.record);
+                                          cvi, contentId, vi);
+
                                       setState(() {
                                         isClicked2 = true;
                                         isClicked = !isClicked2;
@@ -1054,12 +995,10 @@ class _BookIntroState extends State<BookIntro> {
                                   ? await checkInference(token)
                                       ? {
                                           _sendBookStartClickEvent(
-                                              userState.userId,
-                                              cvi,
-                                              contentId,
-                                              vi,
-                                              userState.purchase,
-                                              userState.record),
+                                            cvi,
+                                            contentId,
+                                            vi,
+                                          ),
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -1079,12 +1018,10 @@ class _BookIntroState extends State<BookIntro> {
                                   : canChanged
                                       ? {
                                           _sendBookStartClickEvent(
-                                              userState.userId,
-                                              cvi,
-                                              contentId,
-                                              vi,
-                                              userState.purchase,
-                                              userState.record),
+                                            cvi,
+                                            contentId,
+                                            vi,
+                                          ),
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

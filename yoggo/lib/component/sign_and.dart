@@ -84,6 +84,9 @@ class _LoginAndState extends State<LoginAnd> {
         final state = userCubit.state;
         if (state.isDataFetched) {
           OneSignal.shared.setExternalUserId(state.userId.toString());
+          amplitude.setUserId(state.userId.toString());
+          amplitude
+              .setUserProperties({'subscribe': purchase, 'record': record});
           LogInResult result = await Purchases.logIn(state.userId.toString());
           Navigator.of(context).pop();
           // Navigator.push(
@@ -156,6 +159,8 @@ class _LoginAndState extends State<LoginAnd> {
       final state = userCubit.state;
       if (state.isDataFetched) {
         OneSignal.shared.setExternalUserId(state.userId.toString());
+        amplitude.setUserId(state.userId.toString());
+        amplitude.setUserProperties({'subscribe': purchase, 'record': record});
         LogInResult result = await Purchases.logIn(state.userId.toString());
         Navigator.of(context).pop();
       }
@@ -175,9 +180,7 @@ class _LoginAndState extends State<LoginAnd> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendSigninViewEvent(
-      userState.userId,
-    );
+    _sendSigninViewEvent();
     return Scaffold(
       body: Stack(
         children: [
@@ -209,8 +212,7 @@ class _LoginAndState extends State<LoginAnd> {
                           icon: Icon(Icons.clear,
                               size: 3 * SizeConfig.defaultSize!),
                           onPressed: () {
-                            _sendSigninXClickEvent(userState.userId,
-                                userState.purchase, userState.record);
+                            _sendSigninXClickEvent();
                             Navigator.of(context).pop();
                           },
                         )
@@ -234,9 +236,7 @@ class _LoginAndState extends State<LoginAnd> {
                   SizedBox(height: 4 * SizeConfig.defaultSize!),
                   InkWell(
                     onTap: () {
-                      _sendSigninGoogleClickEvent(
-                        userState.userId,
-                      );
+                      _sendSigninGoogleClickEvent();
                       signInWithGoogle(context);
                     },
                     child: Image.asset(
@@ -252,14 +252,12 @@ class _LoginAndState extends State<LoginAnd> {
     );
   }
 
-  static Future<void> _sendSigninViewEvent(userId) async {
+  static Future<void> _sendSigninViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'signin_view',
-        parameters: <String, dynamic>{
-          'userId': userId,
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'signin_google_click',
@@ -271,24 +269,16 @@ class _LoginAndState extends State<LoginAnd> {
     }
   }
 
-  Future<void> _sendSigninXClickEvent(userId, purchase, record) async {
+  Future<void> _sendSigninXClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'signin_x_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'signin_x_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
@@ -296,16 +286,12 @@ class _LoginAndState extends State<LoginAnd> {
     }
   }
 
-  static Future<void> _sendSigninGoogleClickEvent(
-    userId,
-  ) async {
+  static Future<void> _sendSigninGoogleClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'signin_google_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'signin_google_click',
@@ -317,25 +303,17 @@ class _LoginAndState extends State<LoginAnd> {
     }
   }
 
-  static Future<void> _sendSigninAppleClickEvent(
-    userId,
-  ) async {
+  static Future<void> _sendSigninAppleClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'signin_apple_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-        },
+        parameters: <String, dynamic>{},
       );
 
       await amplitude.logEvent(
         'signin_apple_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
