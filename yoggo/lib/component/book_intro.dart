@@ -40,7 +40,7 @@ class _BookIntroState extends State<BookIntro> {
   //bool isPurchased = false;
   bool isLoading = false;
   bool wantPurchase = false;
-  bool goRecord = false;
+  bool wantRecord = false;
   bool wantInference = false;
   bool completeInference = true;
   //late String voiceIcon = "😃";
@@ -491,203 +491,213 @@ class _BookIntroState extends State<BookIntro> {
                               //  mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 userState.purchase
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          _sendBookMyVoiceClickEvent(
-                                            userState.userId,
-                                            userState.purchase,
-                                            userState.record,
-                                            contentId,
-                                          );
+                                    ? userState.record
+                                        ? inferenceId == 0
+                                            ? GestureDetector(
+                                                // purchase & record
+                                                // no start Inference
+                                                onTap: () {
+                                                  _sendBookMyVoiceClickEvent(
+                                                    userState.userId,
+                                                    userState.purchase,
+                                                    userState.record,
+                                                    contentId,
+                                                  );
+                                                  setState(() {
+                                                    canChanged = false;
+                                                    wantInference = true;
+                                                  });
+                                                },
+                                                child: Column(children: [
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 0 *
+                                                              SizeConfig
+                                                                  .defaultSize!),
+                                                      child: Image.asset(
+                                                        'lib/images/icons/${userState.voiceIcon}-uc.png',
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            7,
+                                                      )),
+                                                  SizedBox(
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          0.3),
+                                                  Text(userState.voiceName!,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Gaegu',
+                                                          // fontWeight:
+                                                          //     FontWeight.w800,
+                                                          fontSize: 1.8 *
+                                                              SizeConfig
+                                                                  .defaultSize!))
+                                                ]))
+                                            : isLoading
+                                                ? GestureDetector(
+                                                    // purchase & record
+                                                    // no complete inference
+                                                    onTap: () {
+                                                      _sendBookMyVoiceClickEvent(
+                                                        userState.userId,
+                                                        userState.purchase,
+                                                        userState.record,
+                                                        contentId,
+                                                      );
 
-                                          setState(() {
-                                            isClicked = true;
-                                            isClicked0 = false;
-                                            isClicked1 = false;
-                                            isClicked2 = false;
-                                            canChanged = true;
-                                          });
-                                          userState.record
-                                              ? inferenceId == 0
-                                                  ? {
-                                                      //startInference(token),
                                                       setState(() {
                                                         canChanged = false;
-                                                        wantInference = true;
-                                                        // completeInference =
-                                                        //     false;
-                                                      }),
-                                                    } //인퍼런스 요청 보내기
-                                                  : {
-                                                      cvi = inferenceId,
-                                                      vi = userState.voiceId!,
-                                                    }
-                                              : setState(() {
-                                                  goRecord = true;
-                                                });
-                                        },
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  right: 0 *
-                                                      SizeConfig.defaultSize!),
-                                              child: userState.record
-                                                  ? isLoading
-                                                      ? Stack(children: [
-                                                          Image.asset(
-                                                            'lib/images/icons/${userState.voiceIcon}-uc.png',
-                                                            height: SizeConfig
-                                                                    .defaultSize! *
-                                                                7,
-                                                          ),
-                                                          const Positioned(
-                                                              left: 0,
-                                                              top: 0,
-                                                              child: CircularProgressIndicator(
-                                                                  color: Color(
-                                                                      0xFFFFA91A)))
-                                                        ])
-                                                      : isClicked
-                                                          ? Image.asset(
-                                                              'lib/images/icons/${userState.voiceIcon}-c.png',
-                                                              height: SizeConfig
-                                                                      .defaultSize! *
-                                                                  7,
-                                                            )
-                                                          : Image.asset(
+                                                        completeInference =
+                                                            false;
+                                                      });
+                                                    },
+                                                    child: Column(children: [
+                                                      Padding(
+                                                          padding: EdgeInsets.only(
+                                                              right: 0 *
+                                                                  SizeConfig
+                                                                      .defaultSize!),
+                                                          child:
+                                                              Stack(children: [
+                                                            Image.asset(
                                                               'lib/images/icons/${userState.voiceIcon}-uc.png',
                                                               height: SizeConfig
                                                                       .defaultSize! *
                                                                   7,
-                                                            )
-                                                  : Image.asset(
-                                                      'lib/images/lock.png',
+                                                            ),
+                                                            const Positioned(
+                                                                left: 0,
+                                                                right: 0,
+                                                                bottom: 0,
+                                                                top: 0,
+                                                                child: CircularProgressIndicator(
+                                                                    color: Color(
+                                                                        0xFFFFA91A)))
+                                                          ])),
+                                                      SizedBox(
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              0.3),
+                                                      Text(userState.voiceName!,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Gaegu',
+                                                              // fontWeight:
+                                                              //     FontWeight.w800,
+                                                              fontSize: 1.8 *
+                                                                  SizeConfig
+                                                                      .defaultSize!))
+                                                    ]))
+                                                : GestureDetector(
+                                                    // purchase & record
+                                                    // complete Inference
+                                                    onTap: () {
+                                                      _sendBookMyVoiceClickEvent(
+                                                        userState.userId,
+                                                        userState.purchase,
+                                                        userState.record,
+                                                        contentId,
+                                                      );
+
+                                                      setState(() {
+                                                        isClicked = true;
+                                                        isClicked0 = false;
+                                                        isClicked1 = false;
+                                                        isClicked2 = false;
+                                                        canChanged = true;
+                                                        cvi = inferenceId;
+                                                        vi = userState.voiceId!;
+                                                      });
+                                                    },
+                                                    child: Column(children: [
+                                                      Padding(
+                                                          padding: EdgeInsets.only(
+                                                              right: 0 *
+                                                                  SizeConfig
+                                                                      .defaultSize!),
+                                                          child: isClicked
+                                                              ? Image.asset(
+                                                                  'lib/images/icons/${userState.voiceIcon}-c.png',
+                                                                  height: SizeConfig
+                                                                          .defaultSize! *
+                                                                      7,
+                                                                )
+                                                              : Image.asset(
+                                                                  'lib/images/icons/${userState.voiceIcon}-uc.png',
+                                                                  height: SizeConfig
+                                                                          .defaultSize! *
+                                                                      7,
+                                                                )),
+                                                      SizedBox(
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              0.3),
+                                                      Text(userState.voiceName!,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Gaegu',
+                                                              // fontWeight:
+                                                              //     FontWeight.w800,
+                                                              fontSize: 1.8 *
+                                                                  SizeConfig
+                                                                      .defaultSize!))
+                                                    ]))
+                                        : GestureDetector(
+                                            // no record
+                                            onTap: () {
+                                              setState(() {
+                                                _sendBookMyVoiceClickEvent(
+                                                  userState.userId,
+                                                  userState.purchase,
+                                                  userState.record,
+                                                  contentId,
+                                                );
+                                                wantRecord = true;
+                                              });
+                                            },
+                                            child: Center(
+                                              child: Column(
+                                                // 결제 안 한 사람
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 0 *
+                                                            SizeConfig
+                                                                .defaultSize!,
+                                                        left: 0 *
+                                                            SizeConfig
+                                                                .defaultSize!),
+                                                    child: Image.asset(
+                                                        'lib/images/lock.png',
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            6.5,
+                                                        colorBlendMode:
+                                                            BlendMode.srcATop,
+                                                        color: isClicked
+                                                            ? null
+                                                            : const Color
+                                                                    .fromARGB(
+                                                                200,
+                                                                255,
+                                                                255,
+                                                                255)),
+                                                  ),
+                                                  SizedBox(
                                                       height: SizeConfig
                                                               .defaultSize! *
-                                                          6.5,
-                                                      colorBlendMode:
-                                                          BlendMode.srcATop,
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              200,
-                                                              255,
-                                                              255,
-                                                              255)),
-                                              /*
-                                      padding: EdgeInsets.only(
-                                          right: 0 *
-                                              SizeConfig
-                                                  .defaultSize!,
-                                          left: 0 *
-                                              SizeConfig
-                                                  .defaultSize!),
-                                      child: Stack(
-                                        children: [
-                                          Text(
-                                            userState.voiceIcon!,
-                                            style: TextStyle(
-                                              fontSize: SizeConfig
-                                                      .defaultSize! *
-                                                  7.1,
-                                            ),
-                                          ),
-                                          isClicked
-                                              ? Container()
-                                              : Transform
-                                                  .translate(
-                                                  offset: Offset(
-                                                      0.4 *
-                                                          SizeConfig
-                                                              .defaultSize!,
-                                                      1.4 *
-                                                          SizeConfig
-                                                              .defaultSize!),
-                                                  child: Image.asset(
-                                                      'lib/images/lock.png',
-                                                      height:
-                                                          SizeConfig.defaultSize! *
-                                                              6.5,
-                                                      color: Color
-                                                          .fromARGB(
-                                                              150,
-                                                              255,
-                                                              255,
-                                                              255)),
-                                                ),
-                                        ],
-                                      ) */ /*.asset('lib/images/mine.png',
-                                        height: SizeConfig
-                                                .defaultSize! *
-                                            6.5,
-                                        colorBlendMode:
-                                            BlendMode.srcATop,
-                                        color: isClicked
-                                            ? null
-                                            : const Color
-                                                    .fromARGB(150,
-                                                255, 255, 255)),
-                                  ),*/
-                                              /*child: isClicked
-                                          ? Container(
-                                              // height: SizeConfig
-                                              //         .defaultSize! *
-                                              //     6.6,
-                                              decoration:
-                                                  BoxDecoration(
-                                                shape: BoxShape
-                                                    .circle,
-                                                border:
-                                                    Border.all(
-                                                  color: const Color
-                                                          .fromARGB(
-                                                      255,
-                                                      77,
-                                                      252,
-                                                      255),
-                                                  width: 3.0,
-                                                ),
+                                                          0.3),
+                                                  Text('Mine',
+                                                      style: TextStyle(
+                                                          fontFamily: 'Gaegu',
+                                                          fontSize: 1.8 *
+                                                              SizeConfig
+                                                                  .defaultSize!))
+                                                ],
                                               ),
-                                              child: Transform
-                                                  .translate(
-                                                      offset: Offset(
-                                                          0.0,
-                                                          -1.2 *
-                                                              SizeConfig.defaultSize!),
-                                                      child: Text(
-                                                        voiceIcon,
-                                                        style:
-                                                            TextStyle(
-                                                          fontSize:
-                                                              SizeConfig.defaultSize! *
-                                                                  6.2,
-                                                        ),
-                                                      )))
-                                          : Text(
-                                              voiceIcon,
-                                              style: TextStyle(
-                                                  fontSize: SizeConfig
-                                                          .defaultSize! *
-                                                      6.5,
-                                                  fontFamily:
-                                                      'BreeSerif'),
-                                            )),*/
-                                            ),
-                                            Text(
-                                                userState.record
-                                                    ? userState.voiceName!
-                                                    : 'User',
-                                                style: TextStyle(
-                                                    fontFamily: 'Gaegu',
-                                                    // fontWeight:
-                                                    //     FontWeight.w800,
-                                                    fontSize: 1.8 *
-                                                        SizeConfig
-                                                            .defaultSize!))
-                                          ],
-                                        ),
-                                      )
+                                            ))
                                     : GestureDetector(
+                                        //no Purchase
                                         onTap: () {
                                           setState(() {
                                             wantPurchase = true;
@@ -995,10 +1005,11 @@ class _BookIntroState extends State<BookIntro> {
                               ],
                             ),
                             SizedBox(
-                              height: userState.purchase
-                                  ? 4
-                                  : 4 * SizeConfig.defaultSize!,
-                            ),
+                                height:
+                                    SizeConfig.defaultSize! //userState.purchase
+                                //? 4
+                                //: 4 * SizeConfig.defaultSize!,
+                                ),
                             Expanded(
                                 flex: 2,
                                 child: ListView(children: [
@@ -1156,7 +1167,7 @@ class _BookIntroState extends State<BookIntro> {
             ),
           ),
           Visibility(
-            visible: goRecord,
+            visible: wantRecord,
             child: AlertDialog(
               title: const Text('Register your voice!'),
               content: const Text(
@@ -1167,7 +1178,7 @@ class _BookIntroState extends State<BookIntro> {
                     // 1초 후에 다음 페이지로 이동
                     Future.delayed(const Duration(seconds: 1), () {
                       setState(() {
-                        goRecord = false;
+                        wantRecord = false;
                       });
                     });
                   },

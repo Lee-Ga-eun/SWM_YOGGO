@@ -200,7 +200,7 @@ class _RecEndState extends State<RecEnd> {
                             padding: const EdgeInsets.only(),
                             child: GestureDetector(
                               onTap: () async {
-                                await userCubit.fetchUser();
+                                //   await userCubit.fetchUser();
                                 //if (userState.record) {
                                 OneSignal.shared
                                     .promptUserForPushNotificationPermission()

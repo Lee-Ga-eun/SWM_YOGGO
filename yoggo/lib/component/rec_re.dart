@@ -3,7 +3,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/rec_info_re.dart';
-import 'package:yoggo/component/rec_end.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -17,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:amplitude_flutter/amplitude.dart' as Amp;
 import 'globalCubit/user/user_cubit.dart';
+import './rec_loading.dart';
 
 class RecRe extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -50,23 +50,6 @@ class _RecReState extends State<RecRe> {
       token = prefs.getString('token')!;
     });
   }
-
-  // void sendPathToKotlin(path) async {
-  //   try {
-  //     await platformChannel.invokeMethod('setPath', {'path': path});
-  //   } catch (e) {
-  //     print('Error sending path to Kotlin: $e');
-  //   }
-  // }
-
-  // Future<void> stopRecording() async {
-  //   try {
-  //     await platformChannel.invokeMethod('stopRecording');
-  //     print('Recording stopped.'); // 녹음이 정상적으로 중지되었음을 출력합니다.
-  //   } catch (e) {
-  //     print('Error: $e');
-  //   }
-  // }
 
   @override
   void initState() {
@@ -423,25 +406,29 @@ class _RecReState extends State<RecRe> {
                               SizedBox(
                                   width: SizeConfig.defaultSize! * 4), // 간격 조정
                               GestureDetector(
-                                onTap: () async {
+                                onTap: () {
                                   // 1초 후에 다음 페이지로 이동
-                                  if (path != null) {
-                                    // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
-                                    widget.onStop?.call(path!);
-                                    path_copy = path!.split('/').last;
-                                    await sendRecord(path, path_copy);
-                                    _sendRecKeepClickEvent(userState.userId,
-                                        userState.purchase, userState.record);
-                                  }
-                                  Future.delayed(const Duration(seconds: 1),
-                                      () async {
-                                    print(userState.record);
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const RecEnd()),
-                                    );
-                                  });
+                                  // if (path != null) {
+                                  //   // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
+                                  //   widget.onStop?.call(path!);
+                                  //   path_copy = path!.split('/').last;
+                                  //   await sendRecord(path, path_copy);
+                                  //   _sendRecKeepClickEvent(userState.userId,
+                                  //       userState.purchase, userState.record);
+                                  // }
+                                  // Future.delayed(const Duration(seconds: 1),
+                                  //     () async {
+                                  //   print(userState.record);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RecLoading(
+                                              onStop: widget.onStop,
+                                              path: path!,
+                                              retry: true,
+                                            )),
+                                  );
+                                  // });
                                 },
                                 child: Container(
                                   width: SizeConfig.defaultSize! * 24,
