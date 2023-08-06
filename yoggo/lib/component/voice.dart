@@ -468,33 +468,6 @@ class _VoiceProfileState extends State<VoiceProfile> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () async {
-                    setState(() {
-                      wantRemake = false;
-                    });
-                  },
-                  child: Container(
-                    width: SizeConfig.defaultSize! * 24,
-                    height: SizeConfig.defaultSize! * 4.5,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.defaultSize! * 1.5),
-                      color: const Color(0xFFFFA91A),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'No',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'Molengo',
-                          fontSize: 2.2 * SizeConfig.defaultSize!,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: SizeConfig.defaultSize! * 4), // 간격 조정
-                GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
                     Navigator.push(
@@ -515,6 +488,33 @@ class _VoiceProfileState extends State<VoiceProfile> {
                     child: Center(
                       child: Text(
                         'YES',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Molengo',
+                          fontSize: 2.2 * SizeConfig.defaultSize!,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: SizeConfig.defaultSize! * 4), // 간격 조정
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      wantRemake = false;
+                    });
+                  },
+                  child: Container(
+                    width: SizeConfig.defaultSize! * 24,
+                    height: SizeConfig.defaultSize! * 4.5,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.defaultSize! * 1.5),
+                      color: const Color(0xFFFFA91A),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'No',
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Molengo',
