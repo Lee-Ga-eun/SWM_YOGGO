@@ -146,7 +146,12 @@ class _AppState extends State<App> {
           //isDataFetched = true --> 데이터 불러왔단 뜻
           //return const SplashScreen(); //token이 없는 경우
           //} else {
-          OneSignal.shared.setExternalUserId(state.userId.toString());
+          if (state.isDataFetched) {
+            OneSignal.shared.setExternalUserId(state.userId.toString());
+            Amplitude.getInstance().setUserProperties(
+                {'subscribe': state.purchase, 'record': state.record});
+            // 여기서 User Property 다시 한번 설정해주기 ~~
+          }
 
           return const HomeScreen(); // token이 있는 경우
           //}
