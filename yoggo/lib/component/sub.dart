@@ -59,6 +59,7 @@ class _PurchaseState extends State<Purchase> {
           _inAppPurchase.completePurchase(e);
           successPurchase();
           UserCubit().fetchUser();
+          amplitude.setUserProperties({'subscribe': true, 'record': false});
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => const RecInfo()));
         }
@@ -157,7 +158,7 @@ class _PurchaseState extends State<Purchase> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendSubViewEvent(userState.userId, userState.purchase, userState.record);
+    _sendSubViewEvent();
     return Scaffold(
         body: Container(
       decoration: const BoxDecoration(
@@ -311,8 +312,7 @@ class _PurchaseState extends State<Purchase> {
                     GestureDetector(
                         // -------------------------------------------------------------
                         onTap: () async {
-                          _sendSubPayClickEvent(userState.userId,
-                              userState.purchase, userState.record);
+                          _sendSubPayClickEvent();
                           userState.login
                               ? await startPurchase()
                               : Navigator.push(
@@ -395,46 +395,30 @@ class _PurchaseState extends State<Purchase> {
     ));
   }
 
-  Future<void> _sendSubViewEvent(userId, purchase, record) async {
+  Future<void> _sendSubViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'sub_view',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
-      await amplitude.logEvent('sub_view', eventProperties: {
-        'userId': userId,
-        'purchase': purchase ? 'true' : 'false',
-        'record': record ? 'true' : 'false',
-      });
+      await amplitude.logEvent('sub_view', eventProperties: {});
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendSubPayClickEvent(userId, purchase, record) async {
+  Future<void> _sendSubPayClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'sub_pay_click',
-        parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'sub_pay_click',
-        eventProperties: {
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
-        },
+        eventProperties: {},
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력

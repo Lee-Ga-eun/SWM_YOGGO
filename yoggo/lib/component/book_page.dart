@@ -144,12 +144,7 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
     SizeConfig().init(context);
     if (pages.isEmpty) {
       _sendBookPageLoadingViewEvent(
-          userState.userId,
-          userState.purchase,
-          userState.record,
-          widget.contentVoiceId,
-          widget.contentId,
-          widget.voiceId);
+          widget.contentVoiceId, widget.contentId, widget.voiceId);
       return Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -167,14 +162,8 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
         ),
       );
     }
-    _sendBookPageViewEvent(
-        userState.userId,
-        userState.purchase,
-        userState.record,
-        widget.contentVoiceId,
-        widget.contentId,
-        widget.voiceId,
-        currentPageIndex + 1);
+    _sendBookPageViewEvent(widget.contentVoiceId, widget.contentId,
+        widget.voiceId, currentPageIndex + 1);
     return WillPopScope(
       child: Scaffold(
         body: Stack(
@@ -269,16 +258,13 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _sendBookPageViewEvent(userId, purchase, record, contentVoiceId,
-      contentId, voiceId, pageId) async {
+  Future<void> _sendBookPageViewEvent(
+      contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_page_view',
         parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -288,9 +274,6 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
       amplitude.logEvent(
         'book_page_view',
         eventProperties: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -304,14 +287,11 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   }
 
   Future<void> _sendBookPageLoadingViewEvent(
-      userId, purchase, record, contentVoiceId, contentId, voiceId) async {
+      contentVoiceId, contentId, voiceId) async {
     try {
       await analytics.logEvent(
         name: 'book_page_loading_view',
         parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -320,9 +300,6 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
       amplitude.logEvent(
         'book_page_loading_view',
         eventProperties: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -445,9 +422,6 @@ class _PageWidgetState extends State<PageWidget> {
                                 // stopAudio();
                                 widget.dispose();
                                 _sendBookPageXClickEvent(
-                                    userState.userId,
-                                    userState.purchase,
-                                    userState.record,
                                     widget.contentVoiceId,
                                     widget.contentId,
                                     widget.voiceId,
@@ -596,9 +570,6 @@ class _PageWidgetState extends State<PageWidget> {
                                             ),
                                       onPressed: () {
                                         _sendBookBackClickEvent(
-                                            userState.userId,
-                                            userState.purchase,
-                                            userState.record,
                                             widget.contentVoiceId,
                                             widget.contentId,
                                             widget.voiceId,
@@ -631,9 +602,6 @@ class _PageWidgetState extends State<PageWidget> {
                                             ),
                                             onPressed: () {
                                               _sendBookNextClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record,
                                                   widget.contentVoiceId,
                                                   widget.contentId,
                                                   widget.voiceId,
@@ -666,9 +634,6 @@ class _PageWidgetState extends State<PageWidget> {
                                             onPressed: () {
                                               widget.dispose();
                                               _sendBookLastClickEvent(
-                                                  userState.userId,
-                                                  userState.purchase,
-                                                  userState.record,
                                                   widget.contentVoiceId,
                                                   widget.contentId,
                                                   widget.voiceId,
@@ -731,16 +696,13 @@ class _PageWidgetState extends State<PageWidget> {
     );
   }
 
-  Future<void> _sendBookPageXClickEvent(userId, purchase, record,
+  Future<void> _sendBookPageXClickEvent(
       contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_page_x_click',
         parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -750,9 +712,6 @@ class _PageWidgetState extends State<PageWidget> {
       amplitude.logEvent(
         'book_page_x_click',
         eventProperties: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -765,16 +724,13 @@ class _PageWidgetState extends State<PageWidget> {
     }
   }
 
-  Future<void> _sendBookLastClickEvent(userId, purchase, record, contentVoiceId,
-      contentId, voiceId, pageId) async {
+  Future<void> _sendBookLastClickEvent(
+      contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_last_click',
         parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -784,9 +740,6 @@ class _PageWidgetState extends State<PageWidget> {
       amplitude.logEvent(
         'book_last_click',
         eventProperties: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -799,16 +752,13 @@ class _PageWidgetState extends State<PageWidget> {
     }
   }
 
-  Future<void> _sendBookNextClickEvent(userId, purchase, record, contentVoiceId,
-      contentId, voiceId, pageId) async {
+  Future<void> _sendBookNextClickEvent(
+      contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_next_click',
         parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -818,9 +768,6 @@ class _PageWidgetState extends State<PageWidget> {
       amplitude.logEvent(
         'book_next_click',
         eventProperties: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -833,16 +780,13 @@ class _PageWidgetState extends State<PageWidget> {
     }
   }
 
-  Future<void> _sendBookBackClickEvent(userId, purchase, record, contentVoiceId,
-      contentId, voiceId, pageId) async {
+  Future<void> _sendBookBackClickEvent(
+      contentVoiceId, contentId, voiceId, pageId) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'book_back_click',
         parameters: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
@@ -852,9 +796,6 @@ class _PageWidgetState extends State<PageWidget> {
       amplitude.logEvent(
         'book_back_click',
         eventProperties: <String, dynamic>{
-          'userId': userId,
-          'purchase': purchase ? 'true' : 'false',
-          'record': record ? 'true' : 'false',
           'contentVoiceId': contentVoiceId,
           'contentId': contentId,
           'voiceId': voiceId,
