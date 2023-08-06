@@ -1220,9 +1220,10 @@ class _BookIntroState extends State<BookIntro> {
           Visibility(
             visible: wantInference,
             child: AlertDialog(
-              title: const Text('Make a book with your voice'),
+              title: const Text('Read this book with your voice'),
               content: const Text(
-                  "You can making a book with your voice. \nDo you want to make?"),
+                "You can make this book with your voice. \nDo you want to make it?",
+              ),
               actions: [
                 TextButton(
                   onPressed: () {
