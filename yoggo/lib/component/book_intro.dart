@@ -41,6 +41,7 @@ class _BookIntroState extends State<BookIntro> {
   bool isLoading = false;
   bool wantPurchase = false;
   bool goRecord = false;
+  bool wantInference = false;
   bool completeInference = true;
   //late String voiceIcon = "😃";
   //late String voiceName = "";
@@ -276,6 +277,7 @@ class _BookIntroState extends State<BookIntro> {
     setState(() {
       token = prefs.getString('token')!;
       purchaseInfo(token);
+      checkInference(token);
     });
   }
 
@@ -290,7 +292,6 @@ class _BookIntroState extends State<BookIntro> {
         'Authorization': 'Bearer $token',
       },
     );
-
     if (response.statusCode == 200) {
       setState(() {
         inferenceId = json.decode(response.body)['inference'];
@@ -336,21 +337,27 @@ class _BookIntroState extends State<BookIntro> {
       },
     );
     if (response.statusCode == 200) {
-      setState(() {
-        isLoading = false;
-        completeInference = true;
-      });
-      return true;
-    } else {
-      setState(() {
-        isLoading = true;
-        //loadData(token);
-        Future.delayed(const Duration(seconds: 1), () {
-          checkInference(token);
+      List<dynamic> responseData = jsonDecode(response.body);
+      // print(responseData);
+      bool data = responseData[0];
+      if (data == true) {
+        setState(() {
+          isLoading = false;
+          completeInference = true;
         });
-      });
-      return false;
+        return true;
+      } else {
+        setState(() {
+          isLoading = true;
+          //loadData(token);
+          Future.delayed(const Duration(seconds: 1), () {
+            checkInference(token);
+          });
+        });
+        return false;
+      }
     }
+    return false;
   }
 
   @override
@@ -501,11 +508,12 @@ class _BookIntroState extends State<BookIntro> {
                                           userState.record
                                               ? inferenceId == 0
                                                   ? {
-                                                      startInference(token),
+                                                      //startInference(token),
                                                       setState(() {
                                                         canChanged = false;
-                                                        completeInference =
-                                                            false;
+                                                        wantInference = true;
+                                                        // completeInference =
+                                                        //     false;
                                                       }),
                                                     } //인퍼런스 요청 보내기
                                                   : {
@@ -523,33 +531,34 @@ class _BookIntroState extends State<BookIntro> {
                                                   right: 0 *
                                                       SizeConfig.defaultSize!),
                                               child: userState.record
-                                                  ? isClicked
+                                                  ? isLoading
                                                       ? Stack(children: [
-                                                          Image.asset(
-                                                            'lib/images/icons/${userState.voiceIcon}-c.png',
-                                                            height: SizeConfig
-                                                                    .defaultSize! *
-                                                                7,
-                                                          ),
-                                                          isLoading
-                                                              ? const CircularProgressIndicator(
-                                                                  color: Color(
-                                                                      0xFFFFA91A))
-                                                              : Container()
-                                                        ])
-                                                      : Stack(children: [
                                                           Image.asset(
                                                             'lib/images/icons/${userState.voiceIcon}-uc.png',
                                                             height: SizeConfig
                                                                     .defaultSize! *
                                                                 7,
                                                           ),
-                                                          isLoading
-                                                              ? const CircularProgressIndicator(
+                                                          const Positioned(
+                                                              left: 0,
+                                                              top: 0,
+                                                              child: CircularProgressIndicator(
                                                                   color: Color(
-                                                                      0xFFFFA91A))
-                                                              : Container()
+                                                                      0xFFFFA91A)))
                                                         ])
+                                                      : isClicked
+                                                          ? Image.asset(
+                                                              'lib/images/icons/${userState.voiceIcon}-c.png',
+                                                              height: SizeConfig
+                                                                      .defaultSize! *
+                                                                  7,
+                                                            )
+                                                          : Image.asset(
+                                                              'lib/images/icons/${userState.voiceIcon}-uc.png',
+                                                              height: SizeConfig
+                                                                      .defaultSize! *
+                                                                  7,
+                                                            )
                                                   : Image.asset(
                                                       'lib/images/lock.png',
                                                       height: SizeConfig
@@ -1182,13 +1191,40 @@ class _BookIntroState extends State<BookIntro> {
                 TextButton(
                   onPressed: () {
                     // 1초 후에 다음 페이지로 이동
-                    Future.delayed(const Duration(seconds: 1), () {
-                      setState(() {
-                        completeInference = true;
-                      });
+                    setState(() {
+                      completeInference = true;
                     });
                   },
                   child: const Text('OK'),
+                ),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: wantInference,
+            child: AlertDialog(
+              title: const Text('Make a book with your voice'),
+              content: const Text(
+                  "You can making a book with your voice. \nDo you want to make?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    // 1초 후에 다음 페이지로 이동
+                    startInference(token);
+                    setState(() {
+                      wantInference = false;
+                    });
+                  },
+                  child: const Text('YES'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // 1초 후에 다음 페이지로 이동
+                    setState(() {
+                      wantInference = false;
+                    });
+                  },
+                  child: const Text('No'),
                 ),
               ],
             ),
