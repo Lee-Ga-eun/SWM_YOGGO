@@ -344,8 +344,8 @@ class _RecReState extends State<RecRe> {
                       visible: stopped,
                       child: AlertDialog(
                         titlePadding: EdgeInsets.only(
-                          left: SizeConfig.defaultSize! * 8,
-                          right: SizeConfig.defaultSize! * 8,
+                          left: SizeConfig.defaultSize! * 24,
+                          right: SizeConfig.defaultSize! * 24,
                           top: SizeConfig.defaultSize! * 7,
                           bottom: SizeConfig.defaultSize! * 2,
                         ),
@@ -360,13 +360,14 @@ class _RecReState extends State<RecRe> {
                               SizeConfig.defaultSize! * 3),
                         ),
                         backgroundColor: Colors.white.withOpacity(0.9),
-                        title: Text(
-                          'Would you like to use the voice you just recorded?',
+                        title: Center(
+                            child: Text(
+                          'Are you sure?',
                           style: TextStyle(
                             fontSize: SizeConfig.defaultSize! * 2.5,
                             fontFamily: 'Molengo',
                           ),
-                        ),
+                        )),
                         actions: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
