@@ -13,7 +13,6 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:amplitude_flutter/amplitude.dart' as Amp;
 import 'globalCubit/user/user_cubit.dart';
 import './rec_loading.dart';
@@ -41,6 +40,7 @@ class _RecReState extends State<RecRe> {
   //StreamSubscription<Amplitude>? _amplitudeSub;
   //Amplitude? _amplitude;
   AudioPlayer audioPlayer = AudioPlayer();
+  bool hide_info = false;
 
   static const platformChannel = MethodChannel('com.sayit.yoggo/channel');
 
@@ -76,43 +76,40 @@ class _RecReState extends State<RecRe> {
     return id;
   }
 
-  Future<void> retryRecord() async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/retryRecord');
+  // Future<void> retryRecord() async {
+  //   var url = Uri.parse('https://yoggo-server.fly.dev/user/retryRecord');
 
-    var request = http.MultipartRequest('GET', url);
-    request.headers['Authorization'] = 'Bearer $token';
+  //   var request = http.MultipartRequest('GET', url);
+  //   request.headers['Authorization'] = 'Bearer $token';
 
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      print('inferenceUrl is updated');
-    } else {
-      print(
-          'Failed to update inferenceUrl. Status code: ${response.statusCode}');
-    }
-  }
+  //   var response = await request.send();
+  //   if (response.statusCode == 200) {
+  //     print('inferenceUrl is updated');
+  //   } else {
+  //     print(
+  //         'Failed to update inferenceUrl. Status code: ${response.statusCode}');
+  //   }
+  // }
 
-  Future<void> sendRecord(audioUrl, recordName) async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
+  // Future<void> sendRecord(audioUrl, recordName) async {
+  //   var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
 
-    var request = http.MultipartRequest('POST', url);
-    request.headers['Authorization'] = 'Bearer $token';
-    request.files.add(
-      await http.MultipartFile.fromPath('recordUrl', audioUrl,
-          contentType: MediaType('audio', 'x-wav')),
-    );
-    request.fields['recordName'] = recordName;
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('record', true);
-      print(prefs.getBool('record'));
-      print('Record sent successfully');
-    } else {
-      print('Failed to send record. Status code: ${response.statusCode}');
-    }
-  }
+  //   var request = http.MultipartRequest('POST', url);
+  //   request.headers['Authorization'] = 'Bearer $token';
+  //   request.files.add(
+  //     await http.MultipartFile.fromPath('recordUrl', audioUrl,
+  //         contentType: MediaType('audio', 'x-wav')),
+  //   );
+  //   request.fields['recordName'] = recordName;
+  //   var response = await request.send();
+  //   if (response.statusCode == 200) {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     await prefs.setBool('record', true);
+  //   } else {}
+  // }
 
   Future<void> _start(userId, purchase, record) async {
+    hide_info = true;
     try {
       if (await _Rec.hasPermission()) {
         var myAppDir = await getAppDirectory();
@@ -143,6 +140,7 @@ class _RecReState extends State<RecRe> {
   }
 
   Future<void> _stop(userId, purchase, record) async {
+    hide_info = false;
     setState(() {
       stopped = true;
     });
@@ -244,12 +242,20 @@ class _RecReState extends State<RecRe> {
                                         height: 0 * SizeConfig.defaultSize!,
                                       ),
                                       IconButton(
-                                        icon: Icon(
-                                          Icons.info_outline, // "info" 아이콘 사용
-                                          size: SizeConfig.defaultSize! * 3.5,
-                                        ),
+                                        icon: hide_info
+                                            ? Icon(
+                                                Icons.abc,
+                                                color:
+                                                    Colors.black.withOpacity(0),
+                                              )
+                                            : Icon(
+                                                Icons
+                                                    .info_outline, // "info" 아이콘 사용
+                                                size: SizeConfig.defaultSize! *
+                                                    3.5,
+                                              ),
                                         onPressed: () async {
-                                          Navigator.push(
+                                          await Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>

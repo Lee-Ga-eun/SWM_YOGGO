@@ -52,10 +52,7 @@ class _RecLoadingState extends State<RecLoading> {
     var response = await request.send();
     if (response.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      print('Record sent successfully');
-    } else {
-      print('Failed to send record. Status code: ${response.statusCode}');
-    }
+    } else {}
   }
 
   Future<void> retryRecord() async {
@@ -66,15 +63,10 @@ class _RecLoadingState extends State<RecLoading> {
 
     var response = await request.send();
     if (response.statusCode == 200) {
-      print('inferenceUrl is updated');
-    } else {
-      print(
-          'Failed to update inferenceUrl. Status code: ${response.statusCode}');
-    }
+    } else {}
   }
 
   Future<void> _callApi() async {
-    print('callAPi호출');
     if (widget.retry != null) {
       if (widget.retry == true) {
         await retryRecord();
@@ -87,9 +79,7 @@ class _RecLoadingState extends State<RecLoading> {
 
   Future<void> _callQueuebitFunction() async {
     final userCubit = BlocProvider.of<UserCubit>(context);
-    print('fetchUser호출 시작');
     await userCubit.fetchUser();
-    print('fetchUser호출 끝');
   }
 
   @override
@@ -128,7 +118,7 @@ class _RecLoadingState extends State<RecLoading> {
         ),
         child: const Center(
           child: CircularProgressIndicator(
-            color: const Color(0xFFFFA91A),
+            color: Color(0xFFFFA91A),
           ),
         ),
       ),
