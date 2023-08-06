@@ -1226,21 +1226,21 @@ class _BookIntroState extends State<BookIntro> {
                 TextButton(
                   onPressed: () {
                     // 1초 후에 다음 페이지로 이동
+                    setState(() {
+                      wantInference = false;
+                    });
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // 1초 후에 다음 페이지로 이동
                     startInference(token);
                     setState(() {
                       wantInference = false;
                     });
                   },
                   child: const Text('YES'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // 1초 후에 다음 페이지로 이동
-                    setState(() {
-                      wantInference = false;
-                    });
-                  },
-                  child: const Text('No'),
                 ),
               ],
             ),
