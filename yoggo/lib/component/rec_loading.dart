@@ -124,7 +124,9 @@ class _RecLoadingState extends State<RecLoading> {
           ),
         ),
         child: const Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            color: const Color(0xFFFFA91A),
+          ),
         ),
       ),
     );
