@@ -60,7 +60,7 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  final Amplitude amplitude = Amplitude.getInstance();
 
   Future<void> fetchAllBookPages() async {
     // API에서 모든 책 페이지 데이터를 불러와 pages 리스트에 저장
@@ -383,7 +383,7 @@ class PageWidget extends StatefulWidget {
 
 class _PageWidgetState extends State<PageWidget> {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  final Amplitude amplitude = Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -433,6 +433,8 @@ class _PageWidgetState extends State<PageWidget> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             IconButton(
+                              padding:
+                                  EdgeInsets.all(0.2 * SizeConfig.defaultSize!),
                               alignment: Alignment.centerLeft,
                               icon: Icon(
                                 Icons.clear,
@@ -580,6 +582,8 @@ class _PageWidgetState extends State<PageWidget> {
                                     MainAxisAlignment.start, // 아이콘을 맨 왼쪽으로 정렬
                                 children: [
                                   IconButton(
+                                      padding: EdgeInsets.all(
+                                          0.2 * SizeConfig.defaultSize!),
                                       icon: Icon(
                                         Icons.arrow_back,
                                         size: 3 * SizeConfig.defaultSize!,
@@ -613,6 +617,8 @@ class _PageWidgetState extends State<PageWidget> {
                                           .end, // 아이콘을 맨 왼쪽으로 정렬
                                       children: [
                                         IconButton(
+                                            padding: EdgeInsets.all(
+                                                0.2 * SizeConfig.defaultSize!),
                                             icon: Icon(
                                               Icons.arrow_forward,
                                               size: 3 * SizeConfig.defaultSize!,
@@ -637,64 +643,73 @@ class _PageWidgetState extends State<PageWidget> {
                                       mainAxisAlignment: MainAxisAlignment
                                           .end, // 아이콘을 맨 왼쪽으로 정렬
                                       children: [
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.check,
-                                            color: const Color.fromARGB(
-                                                255, 0, 0, 0),
-                                            size: 3 * SizeConfig.defaultSize!,
-                                          ),
-                                          // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
-                                          // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~
-                                          // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
-                                          onPressed: () {
-                                            widget.dispose();
-                                            _sendBookLastClickEvent(
-                                                userState.userId,
-                                                userState.purchase,
-                                                userState.record,
-                                                widget.contentVoiceId,
-                                                widget.contentId,
-                                                widget.voiceId,
-                                                widget.currentPageIndex + 1);
+                                        Padding(
+                                          padding: EdgeInsets.all(0.2 *
+                                              SizeConfig
+                                                  .defaultSize!), // 패딩 크기를 원하는 값으로 조정해주세요
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.check,
+                                              color: const Color.fromARGB(
+                                                  255, 0, 0, 0),
+                                              size: 3 * SizeConfig.defaultSize!,
+                                            ),
+                                            // 결제와 목소리 등록을 완료한 사용자는 바로 종료시킨다
+                                            // 결제만 한 사용자는 등록을 하라는 메시지를 보낸다 // 아직 등록하지 않았어요~~
+                                            // 결제를 안 한 사용자는 결제하는 메시지를 보여준다 >> 목소리로 할 수 있아요~~
+                                            onPressed: () {
+                                              widget.dispose();
+                                              _sendBookLastClickEvent(
+                                                  userState.userId,
+                                                  userState.purchase,
+                                                  userState.record,
+                                                  widget.contentVoiceId,
+                                                  widget.contentId,
+                                                  widget.voiceId,
+                                                  widget.currentPageIndex + 1);
 
-                                            if (widget.record != null &&
-                                                widget.record == true &&
-                                                widget.purchase == true) {
-                                              //Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => BookEnd(
-                                                    voiceId: widget.voiceId,
-                                                    contentVoiceId:
-                                                        widget.contentVoiceId,
-                                                    contentId: widget.contentId,
-                                                    lastPage: widget.lastPage,
-                                                    isSelected:
-                                                        widget.isSelected,
+                                              if (widget.record != null &&
+                                                  widget.record == true &&
+                                                  widget.purchase == true) {
+                                                //Navigator.pop(context);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BookEnd(
+                                                      voiceId: widget.voiceId,
+                                                      contentVoiceId:
+                                                          widget.contentVoiceId,
+                                                      contentId:
+                                                          widget.contentId,
+                                                      lastPage: widget.lastPage,
+                                                      isSelected:
+                                                          widget.isSelected,
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            } else {
-                                              Navigator.push(
-                                                context,
-                                                //결제가 끝나면 RecInfo로 가야 함
-                                                MaterialPageRoute(
-                                                  builder: (context) => BookEnd(
-                                                    contentVoiceId:
-                                                        widget.contentVoiceId,
-                                                    contentId: widget.contentId,
-                                                    voiceId: widget.voiceId,
-                                                    lastPage: widget.lastPage,
-                                                    isSelected:
-                                                        widget.isSelected,
+                                                );
+                                              } else {
+                                                Navigator.push(
+                                                  context,
+                                                  //결제가 끝나면 RecInfo로 가야 함
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BookEnd(
+                                                      contentVoiceId:
+                                                          widget.contentVoiceId,
+                                                      contentId:
+                                                          widget.contentId,
+                                                      voiceId: widget.voiceId,
+                                                      lastPage: widget.lastPage,
+                                                      isSelected:
+                                                          widget.isSelected,
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                        ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        )
                                       ],
                                     ),
                                   )),

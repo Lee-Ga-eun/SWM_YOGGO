@@ -93,7 +93,7 @@ class _BookIntroState extends State<BookIntro> {
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  static Amplitude amplitude = Amplitude.getInstance();
   // static Analytics_config.analytics.logEvent("suhwanc");
 
   Future<void> _sendBookMyVoiceClickEvent(
@@ -418,6 +418,8 @@ class _BookIntroState extends State<BookIntro> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   IconButton(
+                                    padding: EdgeInsets.all(
+                                        0.2 * SizeConfig.defaultSize!),
                                     icon: Icon(Icons.clear,
                                         size: 3 * SizeConfig.defaultSize!),
                                     onPressed: () {
@@ -1098,11 +1100,17 @@ class _BookIntroState extends State<BookIntro> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.end, // 아이콘을 맨 왼쪽으로 정렬
                                 children: [
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    size: 3 * SizeConfig.defaultSize!,
-                                    color: Colors.black,
-                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(
+                                        0.2 * SizeConfig.defaultSize!),
+                                    child: Icon(
+                                      // padding: EdgeInsets.all(
+                                      //     0.2 * SizeConfig.defaultSize!),
+                                      Icons.arrow_forward,
+                                      size: 3 * SizeConfig.defaultSize!,
+                                      color: Colors.black,
+                                    ),
+                                  )
                                 ],
                               ),
                             )),

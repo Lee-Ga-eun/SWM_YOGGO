@@ -86,7 +86,7 @@ class _RecEndState extends State<RecEnd> {
   // }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  final Amplitude amplitude = Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {

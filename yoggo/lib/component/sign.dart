@@ -168,7 +168,7 @@ class _LoginState extends State<Login> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static Amplitude amplitude = Amplitude.getInstance(instanceName: "SayIT");
+  static Amplitude amplitude = Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {

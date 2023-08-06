@@ -178,8 +178,7 @@ class _RecState extends State<Rec> {
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final Amp.Amplitude amplitude =
-      Amp.Amplitude.getInstance(instanceName: "SayIT");
+  final Amp.Amplitude amplitude = Amp.Amplitude.getInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +310,7 @@ class _RecState extends State<Rec> {
                         ),
                         backgroundColor: Colors.white.withOpacity(0.9),
                         title: Text(
-                          'Would you like to use the voice you just recorded?',
+                          'Are you sure?',
                           style: TextStyle(
                             fontSize: SizeConfig.defaultSize! * 2.5,
                             fontFamily: 'Molengo',
@@ -343,7 +342,7 @@ class _RecState extends State<Rec> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      'No, Re-make',
+                                      'No',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Molengo',
