@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoggo/component/rec_loading.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -12,16 +13,16 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:amplitude_flutter/amplitude.dart' as Amp;
 
 import 'globalCubit/user/user_cubit.dart';
-import 'rec_end.dart';
 
 class Rec extends StatefulWidget {
   final void Function(String path)? onStop;
-
-  const Rec({Key? key, this.onStop}) : super(key: key);
+  const Rec({
+    Key? key,
+    this.onStop,
+  }) : super(key: key);
 
   @override
   State<Rec> createState() => _RecState();
@@ -93,27 +94,27 @@ class _RecState extends State<Rec> {
     return id;
   }
 
-  Future<void> sendRecord(audioUrl, recordName) async {
-    final UserCubit userCubit;
-    var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
+  // Future<void> sendRecord(audioUrl, recordName) async {
+  //   final UserCubit userCubit;
+  //   var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
 
-    var request = http.MultipartRequest('POST', url);
-    request.headers['Authorization'] = 'Bearer $token';
-    request.files.add(
-      await http.MultipartFile.fromPath('recordUrl', audioUrl,
-          contentType: MediaType('audio', 'x-wav')),
-    );
-    request.fields['recordName'] = recordName;
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      //await prefs.setBool('record', true);
-      //  await userCubit.fetchUser();
-      print('Record sent successfully');
-    } else {
-      print('Failed to send record. Status code: ${response.statusCode}');
-    }
-  }
+  //   var request = http.MultipartRequest('POST', url);
+  //   request.headers['Authorization'] = 'Bearer $token';
+  //   request.files.add(
+  //     await http.MultipartFile.fromPath('recordUrl', audioUrl,
+  //         contentType: MediaType('audio', 'x-wav')),
+  //   );
+  //   request.fields['recordName'] = recordName;
+  //   var response = await request.send();
+  //   if (response.statusCode == 200) {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     //await prefs.setBool('record', true);
+  //     //  await userCubit.fetchUser();
+  //     print('Record sent successfully');
+  //   } else {
+  //     print('Failed to send record. Status code: ${response.statusCode}');
+  //   }
+  // }
 
   Future<void> _start(userId, purchase, record) async {
     try {
@@ -355,25 +356,28 @@ class _RecState extends State<Rec> {
                               SizedBox(
                                   width: SizeConfig.defaultSize! * 4), // 간격 조정
                               GestureDetector(
-                                onTap: () async {
+                                onTap: () {
                                   // 1초 후에 다음 페이지로 이동
-                                  if (path != null) {
-                                    // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
-                                    widget.onStop?.call(path!);
-                                    path_copy = path!.split('/').last;
-                                    await sendRecord(path, path_copy);
-                                    _sendRecKeepClickEvent(userState.userId,
-                                        userState.purchase, userState.record);
-                                  }
-                                  Future.delayed(const Duration(seconds: 1),
-                                      () async {
-                                    print(userState.record);
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const RecEnd()),
-                                    );
-                                  });
+                                  // if (path != null) {
+                                  //   // 녹음을 해도 괜찮다고 판단했을 경우 백엔드에 보낸다
+                                  //   widget.onStop?.call(path!);
+                                  //   path_copy = path!.split('/').last;
+                                  //   await sendRecord(path, path_copy);
+                                  //   _sendRecKeepClickEvent(userState.userId,
+                                  //       userState.purchase, userState.record);
+                                  // }
+                                  // Future.delayed(const Duration(seconds: 1),
+                                  //     () async {
+                                  //   print(userState.record);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RecLoading(
+                                              onStop: widget.onStop,
+                                              path: path!,
+                                            )),
+                                  );
+                                  // });
                                 },
                                 child: Container(
                                   width: SizeConfig.defaultSize! * 24,
