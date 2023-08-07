@@ -419,7 +419,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               )),
                                             ),
                                             onTap: () {
-                                              _sendSignOutClickEvent();
+                                              _sendSignInClickEvent();
 
                                               // dropdown 상태 토글
                                               Navigator.push(
@@ -725,6 +725,22 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       await amplitude.logEvent(
         'sign_out_click',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendSignInClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'sign_in_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'sign_in_click',
         eventProperties: {},
       );
     } catch (e) {
