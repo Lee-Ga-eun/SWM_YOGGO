@@ -377,8 +377,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                     userState.login
                                         ? GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
                                             child: Padding(
-                                              padding: EdgeInsets.all(0.2 *
+                                              padding: EdgeInsets.all(0.5 *
                                                   SizeConfig.defaultSize!),
                                               child: Text(
                                                 'Sign Out',
@@ -401,10 +402,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             },
                                           )
                                         : GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
                                             child: Padding(
                                               padding: EdgeInsets.all(0.2 *
                                                   SizeConfig.defaultSize!),
-                                              child: Text(
+                                              child: Container(
+                                                  child: Text(
                                                 'Sign In',
                                                 style: TextStyle(
                                                   color: Colors.black,
@@ -413,10 +416,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontFamily: 'Molengo',
                                                   fontWeight: FontWeight.w400,
                                                 ),
-                                              ),
+                                              )),
                                             ),
                                             onTap: () {
-                                              _sendSignOutClickEvent();
+                                              _sendSignInClickEvent();
 
                                               // dropdown 상태 토글
                                               Navigator.push(
@@ -431,6 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     //    userState.login && showSignOutConfirmation
                                     userState.login && showSignOutConfirmation
                                         ? GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
                                             onTap: () {
                                               _sendSignOutReallyClickEvent();
                                               logout();
@@ -721,6 +725,22 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       await amplitude.logEvent(
         'sign_out_click',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendSignInClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'sign_in_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'sign_in_click',
         eventProperties: {},
       );
     } catch (e) {
