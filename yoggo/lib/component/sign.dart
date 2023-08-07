@@ -180,7 +180,7 @@ class _LoginState extends State<Login> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendSigninViewEvent();
+    _sendSignInViewEvent();
     return Scaffold(
       body: Stack(
         children: [
@@ -263,15 +263,15 @@ class _LoginState extends State<Login> {
     );
   }
 
-  static Future<void> _sendSigninViewEvent() async {
+  static Future<void> _sendSignInViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'signin_view',
+        name: 'sign_in_view',
         parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
-        'signin_google_click',
+        'sign_in_view',
         eventProperties: {},
       );
     } catch (e) {

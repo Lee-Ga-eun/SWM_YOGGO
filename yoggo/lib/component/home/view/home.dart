@@ -325,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           )
                                         : GestureDetector(
                                             onTap: () {
-                                              _sendHbgVoiceClickEvent();
+                                              _sendHbgAddVoiceClickEvent();
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -737,6 +737,22 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       await amplitude.logEvent(
         'hbg_voice_click',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHbgAddVoiceClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'hbg_add_voice_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'hbg_add_voice_click',
         eventProperties: {},
       );
     } catch (e) {

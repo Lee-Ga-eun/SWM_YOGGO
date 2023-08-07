@@ -260,7 +260,7 @@ class _LoginAndState extends State<LoginAnd> {
         parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
-        'signin_google_click',
+        'signin_view',
         eventProperties: {},
       );
     } catch (e) {
