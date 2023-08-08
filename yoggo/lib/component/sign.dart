@@ -284,11 +284,11 @@ class _LoginState extends State<Login> {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'signin_x_click',
+        name: 'sign_in_x_click',
         parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
-        'signin_x_click',
+        'sign_in_x_click',
         eventProperties: {},
       );
     } catch (e) {
@@ -301,11 +301,11 @@ class _LoginState extends State<Login> {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'signin_google_click',
+        name: 'sign_in_google_click',
         parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
-        'signin_google_click',
+        'sign_in_google_click',
         eventProperties: {},
       );
     } catch (e) {
@@ -318,12 +318,12 @@ class _LoginState extends State<Login> {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'signin_apple_click',
+        name: 'sign_in_apple_click',
         parameters: <String, dynamic>{},
       );
 
       await amplitude.logEvent(
-        'signin_apple_click',
+        'sign_in_apple_click',
         eventProperties: {},
       );
     } catch (e) {
