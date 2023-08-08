@@ -162,6 +162,17 @@ flutter:
       fonts:
         - asset: assets/fonts/ComingSoon-Regular.ttf
           weight: 400
+    - family: DMSans
+      fonts:
+        - asset: assets/fonts/DMSans_36pt-Light.ttf
+          weight: 300
+        - asset: assets/fonts/DMSans_36pt-Regular.ttf
+          weight: 400
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Medium.ttf
+          
+        
 
         # Prata-Regular.ttf
     # - family: Schyler
