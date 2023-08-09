@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -204,6 +205,54 @@ class _PurchaseState extends State<Purchase> {
                   },
                 ),
               ),
+              // ios 앱 심사를 위한 restore 버튼
+              Positioned(
+                right: 3 * SizeConfig.defaultSize!,
+                child: GestureDetector(
+                    onTap: () async {
+                      try {
+                        if (userState.login == false) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Platform.isIOS
+                                    ? const Login()
+                                    : const LoginAnd()), //HomeScreen()),
+                          );
+                        } else {
+                          CustomerInfo customerInfo =
+                              await Purchases.restorePurchases();
+                          EntitlementInfo? entitlement =
+                              customerInfo.entitlements.all['pro'];
+                          if (entitlement != null) {
+                            if (entitlement.isActive) {
+                              successPurchase();
+                            }
+                          }
+                        }
+
+                        // ... check restored purchaserInfo to see if entitlement is now active
+                      } on PlatformException catch (e) {
+                        // Error restoring purchases
+                      }
+                    },
+                    child: Container(
+                      width: 15 * SizeConfig.defaultSize!,
+                      height: 3 * SizeConfig.defaultSize!,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(128, 255, 255, 255),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.defaultSize! * 1))),
+                      child: Center(
+                          child: Text(
+                        'Already Purchase?',
+                        style: TextStyle(
+                            fontFamily: 'Molengo',
+                            fontSize: SizeConfig.defaultSize! * 1.5),
+                      )),
+                    )),
+              ),
+              // ios 앱 심사를 위한 restore 버튼
             ],
           ),
           SizedBox(height: SizeConfig.defaultSize! * 0.5),
