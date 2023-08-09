@@ -10,6 +10,7 @@ import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'package:http/http.dart' as http;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../sign_and.dart';
@@ -36,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late int userId;
   bool showEmail = false;
   bool showSignOutConfirmation = false;
+  bool wantDelete = false;
   double dropdownHeight = 0.0;
   bool isDataFetched = false; // 데이터를 받아온 여부를 나타내는 플래그
 
@@ -62,6 +64,21 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     await _googleSignIn.disconnect();
+  }
+
+  void deleteAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var tokens = prefs.getString('token')!;
+    var response = await http.get(
+      Uri.parse('https://yoggo-server.fly.dev/auth/delete'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $tokens',
+      },
+    );
+    if (response.statusCode == 200) {
+      logout();
+    }
   }
 
   void pointFunction() {
@@ -468,7 +485,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                           )
-                                        : Container()
+                                        : Container(),
+                                    userState.login
+                                        ? GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(0.5 *
+                                                  SizeConfig.defaultSize!),
+                                              child: Text(
+                                                'Delete Account',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 1.8 *
+                                                      SizeConfig.defaultSize!,
+                                                  fontFamily: 'Molengo',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              setState(() {
+                                                _scaffoldKey.currentState
+                                                    ?.closeDrawer();
+                                                wantDelete = true;
+                                              });
+                                            },
+                                          )
+                                        : Container(),
                                   ],
                                 ),
                               ),
@@ -479,218 +522,259 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   )),
                 ),
-                body: Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('lib/images/bkground.png'),
-                      fit: BoxFit.cover,
+                body: Stack(children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('lib/images/bkground.png'),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  child: SafeArea(
-                    bottom: false,
-                    top: false,
-                    minimum: EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: SizeConfig.defaultSize!.toInt(),
-                          child: Stack(
-                            alignment: Alignment.centerLeft,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'LOVEL',
-                                    style: TextStyle(
-                                      fontFamily: 'Modak',
-                                      fontSize: SizeConfig.defaultSize! * 5,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Positioned(
-                                //left: 20,
-                                top: SizeConfig.defaultSize! * 2,
-                                child: InkWell(
-                                  onTap: () {
-                                    _sendHbgClickEvent();
-                                    _scaffoldKey.currentState?.openDrawer();
-                                  },
-                                  child: Image.asset(
-                                    'lib/images/hamburger.png',
-                                    width: 3.5 *
-                                        SizeConfig.defaultSize!, // 이미지의 폭 설정
-                                    height: 3.5 *
-                                        SizeConfig.defaultSize!, // 이미지의 높이 설정
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // SizedBox(
-                        //   height: SizeConfig.defaultSize! * 1.5,
-                        // ),
-                        userState.record && userState.purchase
-                            ? Container()
-                            //     : Expanded(
-                            : Expanded(
-                                // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
-                                flex: SizeConfig.defaultSize!.toInt() * 1,
-                                child: Column(
+                    child: SafeArea(
+                      bottom: false,
+                      top: false,
+                      minimum:
+                          EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: SizeConfig.defaultSize!.toInt(),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 0 * SizeConfig.defaultSize!,
-                                          right: 0 * SizeConfig.defaultSize!),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          _sendBannerClickEvent();
-
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  userState.purchase
-                                                      ? const RecInfo()
-                                                      : const Purchase(),
-                                            ),
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
-                                            color: Color(0xFFFFA91A),
-                                            //   border: Border.all(
-                                            //   color: const Color.fromARGB(255, 255, 169, 26)),
-                                          ),
-                                          // color: Colors.white,
-                                          height: SizeConfig.defaultSize! * 4,
-                                          child: Center(
-                                            child: Text(
-                                              'Do you want to read a book in your voice?',
-                                              style: TextStyle(
-                                                  fontSize: 2 *
-                                                      SizeConfig.defaultSize!,
-                                                  fontFamily: 'Molengo',
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ),
+                                    Text(
+                                      'LOVEL',
+                                      style: TextStyle(
+                                        fontFamily: 'Modak',
+                                        fontSize: SizeConfig.defaultSize! * 5,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ), // 배너 종료
-                        Expanded(
-                          flex: SizeConfig.defaultSize!.toInt() * 4,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: SizeConfig.defaultSize! * 36,
-                                  child: BlocProvider(
-                                      create: (context) => DataCubit()
-                                        ..loadData(), // DataCubit 생성 및 데이터 로드
-                                      child: ListView.separated(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: state.length,
-                                        itemBuilder: (context, index) {
-                                          final book = state[index];
-                                          return GestureDetector(
-                                            onTap: () {
-                                              _sendBookClickEvent(book.id);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BookIntro(
-                                                    title: book.title,
-                                                    thumb: book.thumbUrl,
-                                                    id: book.id,
-                                                    summary: book.summary,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            child: Column(
-                                              children: [
-                                                Hero(
-                                                  tag: book.id,
-                                                  child: Container(
-                                                    clipBehavior: Clip.hardEdge,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    height: SizeConfig
-                                                            .defaultSize! *
-                                                        22,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl: book.thumbUrl,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height:
-                                                      SizeConfig.defaultSize! *
-                                                          1,
-                                                ),
-                                                SizedBox(
-                                                  width:
-                                                      SizeConfig.defaultSize! *
-                                                          20,
-                                                  child: Text(
-                                                    book.title,
-                                                    style: TextStyle(
-                                                      fontFamily: 'BreeSerif',
-                                                      fontSize: SizeConfig
-                                                              .defaultSize! *
-                                                          1.6,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                    maxLines: 2,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) =>
-                                            SizedBox(
-                                                width: 2 *
-                                                    SizeConfig.defaultSize!),
-                                      )),
+                                Positioned(
+                                  //left: 20,
+                                  top: SizeConfig.defaultSize! * 2,
+                                  child: InkWell(
+                                    onTap: () {
+                                      _sendHbgClickEvent();
+                                      _scaffoldKey.currentState?.openDrawer();
+                                    },
+                                    child: Image.asset(
+                                      'lib/images/hamburger.png',
+                                      width: 3.5 *
+                                          SizeConfig.defaultSize!, // 이미지의 폭 설정
+                                      height: 3.5 *
+                                          SizeConfig.defaultSize!, // 이미지의 높이 설정
+                                    ),
+                                  ),
                                 ),
-                                // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
-                                // Container(
-                                //   color: Colors.yellow,
-                                //   height: 300,
-                                //   child: const Center(
-                                //     child: Text(
-                                //       'Scrollable Content 2',
-                                //       style: TextStyle(fontSize: 24),
-                                //     ),
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
+                          // SizedBox(
+                          //   height: SizeConfig.defaultSize! * 1.5,
+                          // ),
+                          userState.record && userState.purchase
+                              ? Container()
+                              //     : Expanded(
+                              : Expanded(
+                                  // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
+                                  flex: SizeConfig.defaultSize!.toInt() * 1,
+                                  child: Column(
+                                    children: [
+                                      // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 0 * SizeConfig.defaultSize!,
+                                            right: 0 * SizeConfig.defaultSize!),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            _sendBannerClickEvent();
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    userState.purchase
+                                                        ? const RecInfo()
+                                                        : const Purchase(),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                              color: Color(0xFFFFA91A),
+                                              //   border: Border.all(
+                                              //   color: const Color.fromARGB(255, 255, 169, 26)),
+                                            ),
+                                            // color: Colors.white,
+                                            height: SizeConfig.defaultSize! * 4,
+                                            child: Center(
+                                              child: Text(
+                                                'Do you want to read a book in your voice?',
+                                                style: TextStyle(
+                                                    fontSize: 2 *
+                                                        SizeConfig.defaultSize!,
+                                                    fontFamily: 'Molengo',
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ), // 배너 종료
+                          Expanded(
+                            flex: SizeConfig.defaultSize!.toInt() * 4,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: SizeConfig.defaultSize! * 36,
+                                    child: BlocProvider(
+                                        create: (context) => DataCubit()
+                                          ..loadData(), // DataCubit 생성 및 데이터 로드
+                                        child: ListView.separated(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: state.length,
+                                          itemBuilder: (context, index) {
+                                            final book = state[index];
+                                            return GestureDetector(
+                                              onTap: () {
+                                                _sendBookClickEvent(book.id);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BookIntro(
+                                                      title: book.title,
+                                                      thumb: book.thumbUrl,
+                                                      id: book.id,
+                                                      summary: book.summary,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  Hero(
+                                                    tag: book.id,
+                                                    child: Container(
+                                                      clipBehavior:
+                                                          Clip.hardEdge,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      height: SizeConfig
+                                                              .defaultSize! *
+                                                          22,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              book.thumbUrl,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: SizeConfig
+                                                            .defaultSize! *
+                                                        1,
+                                                  ),
+                                                  SizedBox(
+                                                    width: SizeConfig
+                                                            .defaultSize! *
+                                                        20,
+                                                    child: Text(
+                                                      book.title,
+                                                      style: TextStyle(
+                                                        fontFamily: 'BreeSerif',
+                                                        fontSize: SizeConfig
+                                                                .defaultSize! *
+                                                            1.6,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      maxLines: 2,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) =>
+                                              SizedBox(
+                                                  width: 2 *
+                                                      SizeConfig.defaultSize!),
+                                        )),
+                                  ),
+                                  // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
+                                  // Container(
+                                  //   color: Colors.yellow,
+                                  //   height: 300,
+                                  //   child: const Center(
+                                  //     child: Text(
+                                  //       'Scrollable Content 2',
+                                  //       style: TextStyle(fontSize: 24),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: wantDelete,
+                    child: AlertDialog(
+                      title: const Text('Delete Account'),
+                      content:
+                          const Text('Do you want to DELETE your account?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            // 1초 후에 다음 페이지로 이동
+                            userCubit.logout();
+                            OneSignal.shared.removeExternalUserId();
+                            deleteAccount();
+                            Future.delayed(const Duration(seconds: 1), () {
+                              setState(() {
+                                wantDelete = false;
+                              });
+                            });
+                          },
+                          child: const Text('YES'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // 1초 후에 다음 페이지로 이동
+                            setState(() {
+                              wantDelete = false;
+                            });
+                          },
+                          child: const Text('No'),
                         ),
                       ],
                     ),
                   ),
-                ),
-                //   ),
+                ]
+                    //   ),
+                    ),
               );
             }
           },
