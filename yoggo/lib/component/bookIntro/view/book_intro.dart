@@ -712,10 +712,11 @@ class _BookIntroState extends State<BookIntro> {
                                                 ))
                                         : GestureDetector(
                                             //no Purchase
+                                            onTap: () {
+                                              
                                           _sendBookMyVoiceClickEvent(
                                                             contentId,
                                                           );
-                                            onTap: () {
                                               setState(() {
                                                 wantPurchase = true;
                                               });
