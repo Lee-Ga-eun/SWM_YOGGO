@@ -32,7 +32,7 @@ void main() async {
   // 디폴트 값은 dev입니다
 
   String mode = 'dev';
-  // String mode = 'rel';
+  //String mode = 'rel';
 
   // 사용자 Cubit을 초기화합니다.
   await dotenv.load(fileName: ".env");
@@ -45,7 +45,7 @@ void main() async {
   Platform.isAndroid
       ? OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_android"))
       : OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_ios"));
-  OneSignal.shared.setAppId('2d42b96d-78df-43fe-b6d1-3899c3684ac5'); //ios
+  // OneSignal.shared.setAppId('2d42b96d-78df-43fe-b6d1-3899c3684ac5'); //ios
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
   // OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
