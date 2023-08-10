@@ -658,10 +658,10 @@ class _BookIntroState extends State<BookIntro> {
                                             : GestureDetector(
                                                 // no record
                                                 onTap: () {
-                                                  setState(() {
                                                     _sendBookMyVoiceClickEvent(
                                                       contentId,
                                                     );
+                                                  setState(() {
                                                     // wantRecord = true;
                                                   });
                                                   wantRecord.value = true;
