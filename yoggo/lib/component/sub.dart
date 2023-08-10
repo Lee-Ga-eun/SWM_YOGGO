@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
