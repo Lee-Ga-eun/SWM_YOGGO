@@ -1,5 +1,4 @@
 {
     "cmake.configureOnOpen": true,
-    "java.configuration.updateBuildConfiguration": "interactive",
-    "cmake.sourceDirectory": "/Users/iga-eun/Projects/YOGGO_FE_ME/yoggo/windows/runner"
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
