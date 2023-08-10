@@ -658,10 +658,10 @@ class _BookIntroState extends State<BookIntro> {
                                             : GestureDetector(
                                                 // no record
                                                 onTap: () {
-                                                  setState(() {
                                                     _sendBookMyVoiceClickEvent(
                                                       contentId,
                                                     );
+                                                  setState(() {
                                                     // wantRecord = true;
                                                   });
                                                   wantRecord.value = true;
@@ -712,6 +712,9 @@ class _BookIntroState extends State<BookIntro> {
                                                 ))
                                         : GestureDetector(
                                             //no Purchase
+                                          _sendBookMyVoiceClickEvent(
+                                                            contentId,
+                                                          );
                                             onTap: () {
                                               setState(() {
                                                 wantPurchase = true;
