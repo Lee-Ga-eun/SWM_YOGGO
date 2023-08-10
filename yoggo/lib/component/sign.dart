@@ -180,7 +180,7 @@ class _LoginState extends State<Login> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendSigninViewEvent();
+    _sendSignInViewEvent();
     return Scaffold(
       body: Stack(
         children: [
@@ -234,25 +234,86 @@ class _LoginState extends State<Login> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 4 * SizeConfig.defaultSize!),
-                  InkWell(
+                  GestureDetector(
                     onTap: () {
                       _sendSigninGoogleClickEvent();
                       signInWithGoogle(context);
                     },
-                    child: Image.asset(
-                      'lib/images/login_google.png', // 로그인 버튼 이미지 파일 경로 (PNG 형식)
+                    child: Stack( children: [
+                    Container(
+                     height: 4.5 * SizeConfig.defaultSize!,
+                     width: 27.5 * SizeConfig.defaultSize!,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(1.5 * SizeConfig.defaultSize!),
+                      ),),
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                      child:Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'lib/images/logo-google.png', // 본인의 이미지 경로로 변경
+                            height: 24.0,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                           'Continue with Google',
+                  style: TextStyle(
+                      fontSize: 1.9 * SizeConfig.defaultSize!,
+                      color: Colors.black,
+                      fontFamily: 'Roboto',
+                      // fontWeight: FontWeight.w600
                     ),
+                         ),
+                        ],
+                      ),)]
+                    )
                   ),
                   SizedBox(height: 2 * SizeConfig.defaultSize!),
-                  InkWell(
+                  GestureDetector(
                     onTap: () {
                       _sendSigninAppleClickEvent();
-                      //signInWithGoogle(context);
                       signInWithApple(context);
                     },
-                    child: Image.asset(
-                      'lib/images/login_apple.png', // 로그인 버튼 이미지 파일 경로 (PNG 형식)
+                    child: Stack( children: [
+                    Container(
+                     height: 4.5 * SizeConfig.defaultSize!,
+                     width: 27.5 * SizeConfig.defaultSize!,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(1.5 * SizeConfig.defaultSize!),
+                      ),),
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                      child:Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'lib/images/logo-apple.png', // 본인의 이미지 경로로 변경
+                            height: 24.0,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                           'Continue with Apple',
+                  style: TextStyle(
+                      fontSize: 1.9 * SizeConfig.defaultSize!,
+                      color: Colors.black,
+                      fontFamily: 'Roboto',
+                      // fontWeight: FontWeight.w600
                     ),
+                         ),
+                        ],
+                      ),)]
+                    )
                   ),
                 ],
               ),
@@ -263,15 +324,15 @@ class _LoginState extends State<Login> {
     );
   }
 
-  static Future<void> _sendSigninViewEvent() async {
+  static Future<void> _sendSignInViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'signin_view',
+        name: 'sign_in_view',
         parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
-        'signin_google_click',
+        'sign_in_view',
         eventProperties: {},
       );
     } catch (e) {
@@ -284,11 +345,11 @@ class _LoginState extends State<Login> {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'signin_x_click',
+        name: 'sign_in_x_click',
         parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
-        'signin_x_click',
+        'sign_in_x_click',
         eventProperties: {},
       );
     } catch (e) {
@@ -301,11 +362,11 @@ class _LoginState extends State<Login> {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'signin_google_click',
+        name: 'sign_in_google_click',
         parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
-        'signin_google_click',
+        'sign_in_google_click',
         eventProperties: {},
       );
     } catch (e) {
@@ -318,12 +379,12 @@ class _LoginState extends State<Login> {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'signin_apple_click',
+        name: 'sign_in_apple_click',
         parameters: <String, dynamic>{},
       );
 
       await amplitude.logEvent(
-        'signin_apple_click',
+        'sign_in_apple_click',
         eventProperties: {},
       );
     } catch (e) {
