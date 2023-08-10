@@ -1,11 +1,10 @@
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/bookIntro/view/book_intro.dart';
-import 'package:yoggo/component/home/viewModel/home_screen_book_model.dart';
 import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/sub.dart';
 import 'package:yoggo/component/rec_info.dart';
+import 'package:yoggo/component/book_intro.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -14,7 +13,6 @@ import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../bookIntro/viewModel/book_intro_cubit.dart';
 import '../../sign_and.dart';
 import '../../voice.dart';
 import '../viewModel/home_screen_cubit.dart';
@@ -95,15 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
     _sendHomeViewEvent();
     SizeConfig().init(context);
     return BlocProvider(
-        create: (context) =>
-            DataCubit()..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
+        create: (context) => DataCubit()..loadData(), // DataCubit 생성 및 데이터 로드
         // child: DataList(
         //   record:
         //   purchase:
         // ),
         //final userCubit = context.watch<UserCubit>();
         //final userState = userCubit.state;
-        child: BlocBuilder<DataCubit, List<HomeScreenBookModel>>(
+        child: BlocBuilder<DataCubit, List<BookModel>>(
           builder: (context, state) {
             if (state.isEmpty) {
               _sendHomeLoadingViewEvent();
@@ -600,205 +597,149 @@ class _HomeScreenState extends State<HomeScreen> {
                                           onTap: () {
                                             _sendBannerClickEvent();
 
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    userState.purchase
-                                                        ? const RecInfo()
-                                                        : const Purchase(),
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10)),
-                                              color: Color(0xFFFFA91A),
-                                              //   border: Border.all(
-                                              //   color: const Color.fromARGB(255, 255, 169, 26)),
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  userState.purchase
+                                                      ? const RecInfo()
+                                                      : const Purchase(),
                                             ),
-                                            // color: Colors.white,
-                                            height: SizeConfig.defaultSize! * 4,
-                                            child: Center(
-                                              child: Text(
-                                                'Do you want to read a book in your voice?',
-                                                style: TextStyle(
-                                                    fontSize: 2 *
-                                                        SizeConfig.defaultSize!,
-                                                    fontFamily: 'Molengo',
-                                                    color: Colors.black),
-                                              ),
+                                          );
+                                        },
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            color: Color(0xFFFFA91A),
+                                            //   border: Border.all(
+                                            //   color: const Color.fromARGB(255, 255, 169, 26)),
+                                          ),
+                                          // color: Colors.white,
+                                          height: SizeConfig.defaultSize! * 4,
+                                          child: Center(
+                                            child: Text(
+                                              'Do you want to read a book in your voice?',
+                                              style: TextStyle(
+                                                  fontSize: 2 *
+                                                      SizeConfig.defaultSize!,
+                                                  fontFamily: 'Molengo',
+                                                  color: Colors.black),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ), // 배너 종료
-                          Expanded(
-                            flex: SizeConfig.defaultSize!.toInt() * 4,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: SizeConfig.defaultSize! * 36,
-                                    child: BlocProvider(
-                                        create: (context) => DataCubit()
-                                          ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
-                                        child: ListView.separated(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: state.length,
-                                          itemBuilder: (context, index) {
-                                            final book = state[index];
-                                            return GestureDetector(
-                                              onTap: () {
-                                                _sendBookClickEvent(book.id);
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BlocProvider(
-                                                      create: (context) =>
-                                                          // BookIntroCubit(),
-                                                          // DataCubit()..loadHomeBookData()
-                                                          BookIntroCubit()
-                                                            ..loadBookIntroData(
-                                                                book.id),
-                                                      child: BookIntro(
-                                                        title: book.title,
-                                                        thumb: book.thumbUrl,
-                                                        id: book.id,
-                                                        summary: book.summary,
-                                                      ),
-                                                    ),
+                                    ),
+                                  ],
+                                ),
+                              ), // 배너 종료
+                        Expanded(
+                          flex: SizeConfig.defaultSize!.toInt() * 4,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: SizeConfig.defaultSize! * 36,
+                                  child: BlocProvider(
+                                      create: (context) => DataCubit()
+                                        ..loadData(), // DataCubit 생성 및 데이터 로드
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: state.length,
+                                        itemBuilder: (context, index) {
+                                          final book = state[index];
+                                          return GestureDetector(
+                                            onTap: () {
+                                              _sendBookClickEvent(book.id);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BookIntro(
+                                                    title: book.title,
+                                                    thumb: book.thumbUrl,
+                                                    id: book.id,
+                                                    summary: book.summary,
                                                   ),
-                                                  // MaterialPageRoute(
-                                                  //   builder: (context) =>
-                                                  //       BookIntro(
-                                                  // title: book.title,
-                                                  // thumb: book.thumbUrl,
-                                                  // id: book.id,
-                                                  // summary: book.summary,
-                                                  //   ),
-                                                  // ),
-                                                );
-                                              },
-                                              child: Column(
-                                                children: [
-                                                  Hero(
-                                                    tag: book.id,
-                                                    child: Container(
-                                                      clipBehavior:
-                                                          Clip.hardEdge,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      height: SizeConfig
-                                                              .defaultSize! *
-                                                          22,
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              book.thumbUrl,
-                                                        ),
-                                                      ),
+                                                ),
+                                              );
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Hero(
+                                                  tag: book.id,
+                                                  child: Container(
+                                                    clipBehavior: Clip.hardEdge,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                     ),
-                                                  ),
-                                                  SizedBox(
                                                     height: SizeConfig
                                                             .defaultSize! *
-                                                        1,
-                                                  ),
-                                                  SizedBox(
-                                                    width: SizeConfig
-                                                            .defaultSize! *
-                                                        20,
-                                                    child: Text(
-                                                      book.title,
-                                                      style: TextStyle(
-                                                        fontFamily: 'BreeSerif',
-                                                        fontSize: SizeConfig
-                                                                .defaultSize! *
-                                                            1.6,
+                                                        22,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: book.thumbUrl,
                                                       ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      maxLines: 2,
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) =>
-                                              SizedBox(
-                                                  width: 2 *
-                                                      SizeConfig.defaultSize!),
-                                        )),
-                                  ),
-                                  // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
-                                  // Container(
-                                  //   color: Colors.yellow,
-                                  //   height: 300,
-                                  //   child: const Center(
-                                  //     child: Text(
-                                  //       'Scrollable Content 2',
-                                  //       style: TextStyle(fontSize: 24),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
+                                                ),
+                                                SizedBox(
+                                                  height:
+                                                      SizeConfig.defaultSize! *
+                                                          1,
+                                                ),
+                                                SizedBox(
+                                                  width:
+                                                      SizeConfig.defaultSize! *
+                                                          20,
+                                                  child: Text(
+                                                    book.title,
+                                                    style: TextStyle(
+                                                      fontFamily: 'BreeSerif',
+                                                      fontSize: SizeConfig
+                                                              .defaultSize! *
+                                                          1.6,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(
+                                                width: 2 *
+                                                    SizeConfig.defaultSize!),
+                                      )),
+                                ),
+                                // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
+                                // Container(
+                                //   color: Colors.yellow,
+                                //   height: 300,
+                                //   child: const Center(
+                                //     child: Text(
+                                //       'Scrollable Content 2',
+                                //       style: TextStyle(fontSize: 24),
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: wantDelete,
-                    child: AlertDialog(
-                      title: const Text('Delete Account'),
-                      content:
-                          const Text('Do you want to DELETE your account?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            // 1초 후에 다음 페이지로 이동
-                            userCubit.logout();
-                            OneSignal.shared.removeExternalUserId();
-                            deleteAccount();
-                            Future.delayed(const Duration(seconds: 1), () {
-                              setState(() {
-                                wantDelete = false;
-                              });
-                            });
-                          },
-                          child: const Text('YES'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // 1초 후에 다음 페이지로 이동
-                            setState(() {
-                              wantDelete = false;
-                            });
-                          },
-                          child: const Text('No'),
                         ),
                       ],
                     ),
                   ),
-                ]
-                    //   ),
-                    ),
-              )
+                ),
+                //   ),
+              );
             }
           },
         ));
