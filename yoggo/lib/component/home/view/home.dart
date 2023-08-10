@@ -1,10 +1,11 @@
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoggo/component/bookIntro/view/book_intro.dart';
+import 'package:yoggo/component/home/viewModel/home_screen_book_model.dart';
 import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/sub.dart';
 import 'package:yoggo/component/rec_info.dart';
-import 'package:yoggo/component/book_intro.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,6 +14,7 @@ import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bookIntro/viewModel/book_intro_cubit.dart';
 import '../../sign_and.dart';
 import '../../voice.dart';
 import '../viewModel/home_screen_cubit.dart';
@@ -93,14 +95,15 @@ class _HomeScreenState extends State<HomeScreen> {
     _sendHomeViewEvent();
     SizeConfig().init(context);
     return BlocProvider(
-        create: (context) => DataCubit()..loadData(), // DataCubit 생성 및 데이터 로드
+        create: (context) =>
+            DataCubit()..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
         // child: DataList(
         //   record:
         //   purchase:
         // ),
         //final userCubit = context.watch<UserCubit>();
         //final userState = userCubit.state;
-        child: BlocBuilder<DataCubit, List<BookModel>>(
+        child: BlocBuilder<DataCubit, List<HomeScreenBookModel>>(
           builder: (context, state) {
             if (state.isEmpty) {
               _sendHomeLoadingViewEvent();
@@ -627,38 +630,58 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ), // 배너 종료
-                          Expanded(
-                            flex: SizeConfig.defaultSize!.toInt() * 4,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: SizeConfig.defaultSize! * 36,
-                                    child: BlocProvider(
-                                        create: (context) => DataCubit()
-                                          ..loadData(), // DataCubit 생성 및 데이터 로드
-                                        child: ListView.separated(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: state.length,
-                                          itemBuilder: (context, index) {
-                                            final book = state[index];
-                                            return GestureDetector(
-                                              onTap: () {
-                                                _sendBookClickEvent(book.id);
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BookIntro(
+                                    ),
+                                  ],
+                                ),
+                              ), // 배너 종료
+                        Expanded(
+                          flex: SizeConfig.defaultSize!.toInt() * 4,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: SizeConfig.defaultSize! * 36,
+                                  child: BlocProvider(
+                                      create: (context) => DataCubit()
+                                        ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: state.length,
+                                        itemBuilder: (context, index) {
+                                          final book = state[index];
+                                          return GestureDetector(
+                                            onTap: () {
+                                              _sendBookClickEvent(book.id);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BlocProvider(
+                                                    create: (context) =>
+                                                        // BookIntroCubit(),
+                                                        // DataCubit()..loadHomeBookData()
+                                                        BookIntroCubit()
+                                                          ..loadBookIntroData(
+                                                              book.id),
+                                                    child: BookIntro(
                                                       title: book.title,
                                                       thumb: book.thumbUrl,
                                                       id: book.id,
                                                       summary: book.summary,
                                                     ),
                                                   ),
+                                                ),
+                                                // MaterialPageRoute(
+                                                //   builder: (context) =>
+                                                //       BookIntro(
+                                                // title: book.title,
+                                                // thumb: book.thumbUrl,
+                                                // id: book.id,
+                                                // summary: book.summary,
+                                                //   ),
+                                                // ),
+                                              );
+                                            },
                                                 );
                                               },
                                               child: Column(
