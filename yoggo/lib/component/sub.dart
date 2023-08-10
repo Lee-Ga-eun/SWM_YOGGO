@@ -237,7 +237,7 @@ class _PurchaseState extends State<Purchase> {
                         }
 
                         // ... check restored purchaserInfo to see if entitlement is now active
-                      } on PlatformException catch (e) {
+                      } on PlatformException {
                         // Error restoring purchases
                       }
                     },
