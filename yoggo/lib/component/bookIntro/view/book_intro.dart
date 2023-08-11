@@ -16,6 +16,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../viewModel/book_intro_model.dart';
 import '../viewModel/book_intro_cubit.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'dart:io' show Platform;
 
 class BookIntro extends StatefulWidget {
   final String title, thumb, summary;
@@ -67,6 +69,7 @@ class _BookIntroState extends State<BookIntro> {
   //bool canChanged = true;
   // int lastPage = 0;
   int contentId = 1;
+  final audioPlayer = AudioPlayer();
 
   @override
   void dispose() {
@@ -430,6 +433,7 @@ class _BookIntroState extends State<BookIntro> {
                                           _sendBookIntroXClickEvent(
                                             widget.id,
                                           );
+                                          audioPlayer.stop();
                                           Navigator.of(context).pop();
                                         },
                                       )
@@ -658,9 +662,9 @@ class _BookIntroState extends State<BookIntro> {
                                             : GestureDetector(
                                                 // no record
                                                 onTap: () {
-                                                    _sendBookMyVoiceClickEvent(
-                                                      contentId,
-                                                    );
+                                                  _sendBookMyVoiceClickEvent(
+                                                    contentId,
+                                                  );
                                                   setState(() {
                                                     // wantRecord = true;
                                                   });
@@ -716,10 +720,9 @@ class _BookIntroState extends State<BookIntro> {
                                                             contentId,
                                                           );
                                             onTap: () {
-                                              
-                                          _sendBookMyVoiceClickEvent(
-                                                            contentId,
-                                                          );
+                                              _sendBookMyVoiceClickEvent(
+                                                contentId,
+                                              );
                                               setState(() {
                                                 wantPurchase = true;
                                               });
@@ -822,6 +825,11 @@ class _BookIntroState extends State<BookIntro> {
                                     GestureDetector(
                                       //Jolly
                                       onTap: () {
+                                        Platform.isAndroid
+                                            ? audioPlayer.play(
+                                                AssetSource('scripts/Jolly'
+                                                    '${widget.id % 2 + 1}.wav'))
+                                            : null;
                                         cvi = voices[0]['contentVoiceId'];
                                         vi = voices[0]['voiceId'];
                                         _sendBookVoiceClickEvent(
@@ -881,6 +889,11 @@ class _BookIntroState extends State<BookIntro> {
                                     // Morgan
                                     GestureDetector(
                                       onTap: () {
+                                        Platform.isAndroid
+                                            ? audioPlayer.play(
+                                                AssetSource('scripts/Morgan'
+                                                    '${widget.id % 2 + 1}.wav'))
+                                            : null;
                                         cvi = voices[1]['contentVoiceId'];
                                         vi = voices[1]['voiceId'];
                                         _sendBookVoiceClickEvent(
@@ -940,6 +953,11 @@ class _BookIntroState extends State<BookIntro> {
                                     // Eric
                                     GestureDetector(
                                       onTap: () {
+                                        Platform.isAndroid
+                                            ? audioPlayer
+                                                .play(AssetSource('scripts/Eric'
+                                                    '${widget.id % 2 + 1}.wav'))
+                                            : null;
                                         cvi = voices[2]['contentVoiceId'];
                                         vi = voices[2]['voiceId'];
                                         _sendBookVoiceClickEvent(
@@ -1089,7 +1107,8 @@ class _BookIntroState extends State<BookIntro> {
                                                     isSelected: true,
                                                   ),
                                                 ),
-                                              )
+                                              ),
+                                              audioPlayer.stop(),
                                             }
                                           : null;
                                 },
