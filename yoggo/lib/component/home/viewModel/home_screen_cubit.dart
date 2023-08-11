@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import './home_screen_book_model.dart';
-import '../../../Repositories/Repository.dart';
+import '../../../repositories/Repository.dart';
 
 class DataCubit extends Cubit<List<HomeScreenBookModel>> {
   final DataRepository repository = DataRepository();
