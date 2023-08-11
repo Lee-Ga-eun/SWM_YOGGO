@@ -99,7 +99,8 @@ flutter:
     - lib/images/
     - .env
     - lib/images/icons/
-    # - lib/images/logo.png
+    - assets/scripts/
+        # - lib/images/logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
