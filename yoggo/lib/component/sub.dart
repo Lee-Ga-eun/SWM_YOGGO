@@ -58,6 +58,7 @@ class _PurchaseState extends State<Purchase> {
         if (e.pendingCompletePurchase) {
           if (!mounted) return;
           _inAppPurchase.completePurchase(e);
+          if (e.status == PurchaseStatus.error) return;
           successPurchase();
           UserCubit().fetchUser();
           amplitude.setUserProperties({'subscribe': true});
@@ -114,6 +115,9 @@ class _PurchaseState extends State<Purchase> {
         EntitlementInfo? entitlement = customerInfo.entitlements.all['pro'];
         final appData = AppData();
         appData.entitlementIsActive = entitlement?.isActive ?? false;
+        if (entitlement!.isActive) {
+          successPurchase();
+        }
         successPurchase();
         // Display packages for sale
       }
