@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/rec_info.dart';
@@ -262,12 +264,12 @@ class _PurchaseState extends State<Purchase> {
           SizedBox(height: SizeConfig.defaultSize! * 0.5),
           //),
           Container(
-            width: 72 * SizeConfig.defaultSize!,
-            height: 29.4 * SizeConfig.defaultSize!,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(128, 255, 255, 255),
-                borderRadius: BorderRadius.all(
-                    Radius.circular(SizeConfig.defaultSize! * 3))),
+            //width: 72 * SizeConfig.defaultSize!,
+            //height: 29.4 * SizeConfig.defaultSize!,
+            //decoration: BoxDecoration(
+            //color: const Color.fromARGB(128, 255, 255, 255),
+            //borderRadius: BorderRadius.all(
+            //Radius.circular(SizeConfig.defaultSize! * 3))),
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0),
                 child: Column(
@@ -380,11 +382,11 @@ class _PurchaseState extends State<Purchase> {
                         child: Stack(children: [
                           SizedBox(
                             width: 52 * SizeConfig.defaultSize!,
-                            height: 9.5 * SizeConfig.defaultSize!,
+                            height: 8 * SizeConfig.defaultSize!,
                           ),
                           Positioned(
                               //left: 39 * SizeConfig.defaultSize!,
-                              bottom: 2.5 * SizeConfig.defaultSize!,
+                              bottom: 1 * SizeConfig.defaultSize!,
                               child: Container(
                                   width: 52 * SizeConfig.defaultSize!,
                                   height: 4.5 * SizeConfig.defaultSize!,
@@ -395,7 +397,7 @@ class _PurchaseState extends State<Purchase> {
                                               SizeConfig.defaultSize! * 1.5))),
                                   child: Center(
                                       child: Text(
-                                    "Let's Invest in Recording UNDER ONE minute",
+                                    "CONTINUE with FREE Trial",
                                     style: TextStyle(
                                       fontFamily: 'Molengo',
                                       fontSize: SizeConfig.defaultSize! * 2.2,
@@ -405,7 +407,7 @@ class _PurchaseState extends State<Purchase> {
                                   )))),
                           Positioned(
                             left: 39 * SizeConfig.defaultSize!,
-                            bottom: 6.2 * SizeConfig.defaultSize!,
+                            bottom: 4.7 * SizeConfig.defaultSize!,
                             child: Container(
                                 width: 12 * SizeConfig.defaultSize!,
                                 height: 3 * SizeConfig.defaultSize!,
@@ -425,21 +427,74 @@ class _PurchaseState extends State<Purchase> {
                                   textAlign: TextAlign.center,
                                 ))),
                           ),
-                          Positioned(
-                            bottom: 0 * SizeConfig.defaultSize!,
-                            left: 10 * SizeConfig.defaultSize!,
-                            child: Text(
-                              "You can cancel this subscription at any time if you wish.",
-                              style: TextStyle(
-                                fontFamily: 'Molengo',
-                                decoration: TextDecoration.underline,
-                                fontSize: SizeConfig.defaultSize! * 1.5,
-                                color: Colors.black,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                          // Positioned(
+                          //   bottom: 0 * SizeConfig.defaultSize!,
+                          //   left: 10 * SizeConfig.defaultSize!,
+                          //   child: Text(
+                          //     "You can cancel this subscription at any time if you wish.",
+                          //     style: TextStyle(
+                          //       fontFamily: 'Molengo',
+                          //       decoration: TextDecoration.underline,
+                          //       fontSize: SizeConfig.defaultSize! * 1.5,
+                          //       color: Colors.black,
+                          //     ),
+                          //     textAlign: TextAlign.center,
+                          //   ),
+                          //),
                         ])),
+                    SizedBox(
+                        width: 61 * SizeConfig.defaultSize!,
+                        child: Column(children: [
+                          Center(
+                              child: Text(
+                                  "Subscription Terms: After free trial, LOVEL monthly subscription is \$5.99, automatically renews unless turned off in Account Settings at least 24h before current period ends. Payment is charged ",
+                                  style: TextStyle(
+                                      fontSize: 1.5 * SizeConfig.defaultSize!,
+                                      fontFamily: 'Molengo'))),
+                          RichText(
+                              text: TextSpan(children: [
+                            TextSpan(
+                                style: TextStyle(
+                                    fontSize: 1.5 * SizeConfig.defaultSize!,
+                                    fontFamily: 'Molengo',
+                                    color: Colors.black),
+                                text:
+                                    "to your iTunes account. By tapping Continue, you agree to our "),
+                            TextSpan(
+                                text: "Terms",
+                                style: TextStyle(
+                                  fontSize: 1.5 * SizeConfig.defaultSize!,
+                                  fontFamily: 'Molengo',
+                                  color: Colors.black,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    launch(
+                                        'http://www.apple.com/legal/itunes/appstore/dev/stdeula');
+                                  }),
+                            TextSpan(
+                              text: " and ",
+                              style: TextStyle(
+                                  fontSize: 1.5 * SizeConfig.defaultSize!,
+                                  fontFamily: 'Molengo',
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                                text: "Privacy Policy.",
+                                style: TextStyle(
+                                  fontSize: 1.5 * SizeConfig.defaultSize!,
+                                  fontFamily: 'Molengo',
+                                  color: Colors.black,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    launch(
+                                        'https://doc-hosting.flycricket.io/lovel-privacy-policy/f8c6f57c-dd5f-4b67-8859-bc4afe251396/privacy');
+                                  })
+                          ]))
+                        ]))
                   ],
                 )),
           ) //),
