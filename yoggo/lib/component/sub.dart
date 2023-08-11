@@ -61,11 +61,15 @@ class _PurchaseState extends State<Purchase> {
           if (!mounted) return;
           _inAppPurchase.completePurchase(e);
           if (e.status == PurchaseStatus.error) return;
-          successPurchase();
-          UserCubit().fetchUser();
-          amplitude.setUserProperties({'subscribe': true});
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const RecInfo()));
+          if (e.status == PurchaseStatus.canceled) return;
+          if (e.status == PurchaseStatus.purchased ||
+              e.status == PurchaseStatus.restored) {
+            successPurchase();
+            UserCubit().fetchUser();
+            amplitude.setUserProperties({'subscribe': true});
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const RecInfo()));
+          }
         }
       });
     }
