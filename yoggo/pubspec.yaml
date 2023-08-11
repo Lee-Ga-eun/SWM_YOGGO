@@ -68,6 +68,7 @@ dependencies:
   equatable: ^2.0.5
   json_annotation: ^4.8.1
   meta: ^1.9.1
+  url_launcher: ^6.1.12
   #audioplayers: ^0.18.3
 
 dev_dependencies:
