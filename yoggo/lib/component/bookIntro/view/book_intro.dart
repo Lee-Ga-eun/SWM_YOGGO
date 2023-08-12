@@ -826,7 +826,9 @@ class _BookIntroState extends State<BookIntro> {
                                             ? audioPlayer.play(
                                                 AssetSource('scripts/Jolly'
                                                     '${widget.id % 2 + 1}.wav'))
-                                            : null;
+                                            : audioPlayer.play(AssetSource(
+                                                'scripts/Jolly'
+                                                '${widget.id % 2 + 1}.flac'));
                                         cvi = voices[0]['contentVoiceId'];
                                         vi = voices[0]['voiceId'];
                                         _sendBookVoiceClickEvent(
@@ -890,7 +892,9 @@ class _BookIntroState extends State<BookIntro> {
                                             ? audioPlayer.play(
                                                 AssetSource('scripts/Morgan'
                                                     '${widget.id % 2 + 1}.wav'))
-                                            : null;
+                                            : audioPlayer.play(AssetSource(
+                                                'scripts/Morgan'
+                                                '${widget.id % 2 + 1}.flac'));
                                         cvi = voices[1]['contentVoiceId'];
                                         vi = voices[1]['voiceId'];
                                         _sendBookVoiceClickEvent(
@@ -954,7 +958,9 @@ class _BookIntroState extends State<BookIntro> {
                                             ? audioPlayer
                                                 .play(AssetSource('scripts/Eric'
                                                     '${widget.id % 2 + 1}.wav'))
-                                            : null;
+                                            : audioPlayer.play(AssetSource(
+                                                'scripts/Eric'
+                                                '${widget.id % 2 + 1}.flac'));
                                         cvi = voices[2]['contentVoiceId'];
                                         vi = voices[2]['voiceId'];
                                         _sendBookVoiceClickEvent(
