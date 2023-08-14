@@ -449,7 +449,7 @@ class _BookIntroState extends State<BookIntro> {
                           ])),
                       Expanded(
                         // BODY
-                        flex: 74,
+                        flex: 70,
                         child: Row(children: [
                           Expanded(
                             // 썸네일 사진
