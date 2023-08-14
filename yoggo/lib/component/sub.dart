@@ -208,12 +208,7 @@ class _PurchaseState extends State<Purchase> {
                 child: IconButton(
                   icon: Icon(Icons.clear, size: 3 * SizeConfig.defaultSize!),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
-                      ),
-                    );
+                    Navigator.of(context).pop();
                   },
                 ),
               ),
