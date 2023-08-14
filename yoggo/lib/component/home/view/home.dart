@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isDataFetched = false; // 데이터를 받아온 여부를 나타내는 플래그
   bool showOverlay = false; // Initially show the overlay
   bool showBanner = false;
-  ValueNotifier<bool> showshow = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -70,10 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
     // 앱 최초 사용 접속 : 온보딩 화면 보여주기
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
-    bool haveRead = prefs.getBool('haveNotRead') ?? false;
+    bool haveRead = prefs.getBool('haveRead') ?? false;
     print(prefs.getBool('haveRead'));
     if (haveRead) {
-      showshow.value = true;
       setState(() {
         showBanner = true;
       });
@@ -319,7 +317,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         SizeConfig.defaultSize!,
                                                     child: GestureDetector(
                                                         onTap: () {
-                                                          showshow.value = true;
                                                           userCubit.fetchUser();
                                                           _sendHbgVoiceClickEvent();
                                                           Navigator.push(
@@ -613,7 +610,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           userState.record && userState.purchase
                               ? Container()
                               //     : Expanded(
-                              : showshow.value
+                              : showBanner
                                   ? Expanded(
                                       // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
                                       flex: SizeConfig.defaultSize!.toInt() * 1,
@@ -837,6 +834,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // )
                   GestureDetector(
                     onTap: () {
+                      _sendHomeFirstClick();
                       setState(() {
                         // Toggle the value of showOverlay when the overlay is tapped
                         showOverlay = !showOverlay;
@@ -1135,6 +1133,22 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       await amplitude.logEvent(
         'home_loading_view',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHomeFirstClick() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'home_first_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'home_first_click',
         eventProperties: {},
       );
     } catch (e) {
