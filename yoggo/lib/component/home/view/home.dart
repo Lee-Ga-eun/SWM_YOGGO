@@ -42,11 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
   bool wantDelete = false;
   double dropdownHeight = 0.0;
   bool isDataFetched = false; // 데이터를 받아온 여부를 나타내는 플래그
+  bool showOverlay = false; // Initially show the overlay
+  bool showBanner = false;
+  ValueNotifier<bool> showshow = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
     getToken();
+    _checkFirstTimeAccess(); // 앱 최초 사용 접속 : 온보딩 화면 보여주기
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
@@ -60,6 +64,28 @@ class _HomeScreenState extends State<HomeScreen> {
       //userInfo(token);
       //getVoiceInfo(token);
     });
+  }
+
+  Future<void> _checkFirstTimeAccess() async {
+    // 앱 최초 사용 접속 : 온보딩 화면 보여주기
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+    bool haveRead = prefs.getBool('haveNotRead') ?? false;
+    print(prefs.getBool('haveRead'));
+    if (haveRead) {
+      showshow.value = true;
+      setState(() {
+        showBanner = true;
+      });
+      print('dkdkdk');
+    }
+    if (isFirstTime) {
+      setState(() {
+        showOverlay = true;
+      });
+      // Set isFirstTime to false after showing overlay
+      await prefs.setBool('isFirstTime', false);
+    }
   }
 
   void logout() async {
@@ -293,6 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         SizeConfig.defaultSize!,
                                                     child: GestureDetector(
                                                         onTap: () {
+                                                          showshow.value = true;
                                                           userCubit.fetchUser();
                                                           _sendHbgVoiceClickEvent();
                                                           Navigator.push(
@@ -586,56 +613,63 @@ class _HomeScreenState extends State<HomeScreen> {
                           userState.record && userState.purchase
                               ? Container()
                               //     : Expanded(
-                              : Expanded(
-                                  // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
-                                  flex: SizeConfig.defaultSize!.toInt() * 1,
-                                  child: Column(
-                                    children: [
-                                      // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 0 * SizeConfig.defaultSize!,
-                                            right: 0 * SizeConfig.defaultSize!),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            _sendBannerClickEvent();
+                              : showshow.value
+                                  ? Expanded(
+                                      // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
+                                      flex: SizeConfig.defaultSize!.toInt() * 1,
+                                      child: Column(
+                                        children: [
+                                          // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left:
+                                                    0 * SizeConfig.defaultSize!,
+                                                right: 0 *
+                                                    SizeConfig.defaultSize!),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                _sendBannerClickEvent();
 
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    userState.purchase
-                                                        ? const RecInfo()
-                                                        : const Purchase(),
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10)),
-                                              color: Color(0xFFFFA91A),
-                                              //   border: Border.all(
-                                              //   color: const Color.fromARGB(255, 255, 169, 26)),
-                                            ),
-                                            // color: Colors.white,
-                                            height: SizeConfig.defaultSize! * 4,
-                                            child: Center(
-                                              child: Text(
-                                                'Do you want to read a book in your voice?',
-                                                style: TextStyle(
-                                                    fontSize: 2 *
-                                                        SizeConfig.defaultSize!,
-                                                    fontFamily: 'Molengo',
-                                                    color: Colors.black),
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        userState.purchase
+                                                            ? const RecInfo()
+                                                            : const Purchase(),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10)),
+                                                  color: Color(0xFFFFA91A),
+                                                  //   border: Border.all(
+                                                  //   color: const Color.fromARGB(255, 255, 169, 26)),
+                                                ),
+                                                // color: Colors.white,
+                                                height:
+                                                    SizeConfig.defaultSize! * 4,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Do you want to read a book in your voice?',
+                                                    style: TextStyle(
+                                                        fontSize: 2 *
+                                                            SizeConfig
+                                                                .defaultSize!,
+                                                        fontFamily: 'Molengo',
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ), // 배너 종료
+                                    )
+                                  : Container(), // 배너 종료
                           Expanded(
                             flex: SizeConfig.defaultSize!.toInt() * 4,
                             child: SingleChildScrollView(
@@ -793,6 +827,111 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: const Text('No'),
                         ),
                       ],
+                    ),
+                  ),
+                  // Container(
+                  //   color: Colors.white.withOpacity(0.6),
+                  //   child: GestureDetector(
+                  //     onTap: ,
+                  //   ),
+                  // )
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        // Toggle the value of showOverlay when the overlay is tapped
+                        showOverlay = !showOverlay;
+                      });
+                    },
+                    child: Visibility(
+                      visible: showOverlay,
+                      child: Stack(
+                        children: [
+                          Container(
+                            color: Colors.white.withOpacity(0.6),
+                          ),
+                          SafeArea(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: SizeConfig.defaultSize!.toInt(),
+                                  child: Container(),
+                                ),
+                                Expanded(
+                                    flex: SizeConfig.defaultSize!.toInt() * 2,
+                                    child: Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          left: SizeConfig.defaultSize!,
+                                          right: SizeConfig.defaultSize!,
+                                          // top: SizeConfig.defaultSize! * 10,
+                                          // 안내 글씨
+                                          child: Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: TextButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(
+                                                  const Color.fromARGB(
+                                                      255, 255, 169, 26),
+                                                ),
+                                                padding: MaterialStateProperty
+                                                    .all<EdgeInsetsGeometry>(
+                                                  EdgeInsets.symmetric(
+                                                    vertical: SizeConfig
+                                                            .defaultSize! *
+                                                        3, // 수직 방향 패딩
+                                                  ),
+                                                ),
+                                              ),
+                                              onPressed: null,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                      width: SizeConfig
+                                                              .defaultSize! *
+                                                          25),
+                                                  Text(
+                                                    'Hi~ You can read all the books for free. \nClick on the book you want to read!',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Molengo',
+                                                        color: Colors.black,
+                                                        fontSize: SizeConfig
+                                                                .defaultSize! *
+                                                            2.5),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          left: SizeConfig.defaultSize! * 1,
+                                          bottom: SizeConfig.defaultSize! * 5,
+                                          child: Image.asset(
+                                            'lib/images/showOverlayFairy.png',
+                                            width: SizeConfig.defaultSize! * 20,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          left: SizeConfig.defaultSize! * 42,
+                                          top: SizeConfig.defaultSize! * 2,
+                                          child: Image.asset(
+                                            'lib/images/overlayClick.png',
+                                            width: SizeConfig.defaultSize! * 10,
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ]

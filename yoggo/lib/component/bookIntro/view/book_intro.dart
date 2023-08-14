@@ -145,6 +145,13 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
+  Future<void> _checkHaveRead() async {
+    // 앱 최초 사용 접속 : 온보딩 화면 보여주기
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Set isFirstTime to false after showing overlay
+    await prefs.setBool('haveRead', true);
+  }
+
   Future<void> _sendBookVoiceClickEvent(
       contentVoiceId, contentId, voiceId) async {
     try {
@@ -410,8 +417,9 @@ class _BookIntroState extends State<BookIntro> {
                   child: SafeArea(
                     bottom: false,
                     top: false,
-                    minimum:
-                        EdgeInsets.only(right: 3 * SizeConfig.defaultSize!),
+                    minimum: EdgeInsets.only(
+                        right: 3 * SizeConfig.defaultSize!,
+                        left: 3 * SizeConfig.defaultSize!),
                     child: Column(children: [
                       Expanded(
                           // HEADER
@@ -449,7 +457,7 @@ class _BookIntroState extends State<BookIntro> {
                           ])),
                       Expanded(
                         // BODY
-                        flex: 74,
+                        flex: 70,
                         child: Row(children: [
                           Expanded(
                             // 썸네일 사진
@@ -1065,6 +1073,7 @@ class _BookIntroState extends State<BookIntro> {
                             flex: 1,
                             child: GestureDetector(
                                 onTap: () async {
+                                  _checkHaveRead();
                                   (cvi == inferenceId) // 원래는 cvi==inferenceId
                                       ? await checkInference(token)
                                           ? {
