@@ -718,7 +718,6 @@ class _BookIntroState extends State<BookIntro> {
                                                 },
                                                 child: Center(
                                                   child: Column(
-                                                    // 결제 안 한 사람
                                                     children: [
                                                       Padding(
                                                         padding: EdgeInsets.only(
@@ -729,7 +728,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                 SizeConfig
                                                                     .defaultSize!),
                                                         child: Image.asset(
-                                                            'lib/images/lock.png',
+                                                            'lib/images/icons/grinning-face-uc.png',
                                                             height: SizeConfig
                                                                     .defaultSize! *
                                                                 6.5,
@@ -750,7 +749,7 @@ class _BookIntroState extends State<BookIntro> {
                                                           height: SizeConfig
                                                                   .defaultSize! *
                                                               0.3),
-                                                      Text('Mine',
+                                                      Text('My voice',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'Gaegu',
@@ -775,34 +774,35 @@ class _BookIntroState extends State<BookIntro> {
                                                 // 결제 안 한 사람
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 0 *
-                                                            SizeConfig
-                                                                .defaultSize!,
-                                                        left: 0 *
-                                                            SizeConfig
-                                                                .defaultSize!),
-                                                    child: Image.asset(
-                                                        'lib/images/lock.png',
+                                                      padding: EdgeInsets.only(
+                                                          right: 0 *
+                                                              SizeConfig
+                                                                  .defaultSize!,
+                                                          left: 0 *
+                                                              SizeConfig
+                                                                  .defaultSize!),
+                                                      child: Image.asset(
+                                                        'lib/images/locked_face.png',
                                                         height: SizeConfig
                                                                 .defaultSize! *
                                                             6.5,
-                                                        colorBlendMode:
-                                                            BlendMode.srcATop,
-                                                        color: isClicked.value
-                                                            ? null
-                                                            : const Color
-                                                                    .fromARGB(
-                                                                200,
-                                                                255,
-                                                                255,
-                                                                255)),
-                                                  ),
+                                                      )
+                                                      // colorBlendMode:
+                                                      //     BlendMode.srcATop,
+                                                      // color: isClicked.value
+                                                      //     ? null
+                                                      //     : const Color
+                                                      //             .fromARGB(
+                                                      //         200,
+                                                      //         255,
+                                                      //         255,
+                                                      //         255)),
+                                                      ),
                                                   SizedBox(
                                                       height: SizeConfig
                                                               .defaultSize! *
                                                           0.3),
-                                                  Text('Mine',
+                                                  Text('My voice',
                                                       style: TextStyle(
                                                           fontFamily: 'Gaegu',
                                                           fontSize: 1.8 *
