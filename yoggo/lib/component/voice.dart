@@ -445,6 +445,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
               children: [
                 GestureDetector(
                   onTap: () {
+                    _sendVoiceRemakeYesClickEvent();
                     Navigator.of(context).pop();
                     Navigator.push(
                       context,
@@ -477,6 +478,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                 GestureDetector(
                   onTap: () async {
                     setState(() {
+                      _sendVoiceRemakeNoClickEvent();
                       wantRemake = false;
                     });
                   },
@@ -627,6 +629,40 @@ class _VoiceProfileState extends State<VoiceProfile> {
         eventProperties: {
           'voiceId': voiceId,
         },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendVoiceRemakeNoClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_remake_no_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'voice_remake_no_click',
+        eventProperties: {},
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendVoiceRemakeYesClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'voice_remake_yes_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'voice_remake_yes_click',
+        eventProperties: {},
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력

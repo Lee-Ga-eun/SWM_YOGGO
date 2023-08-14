@@ -255,6 +255,7 @@ class _RecReState extends State<RecRe> {
                                                     3.5,
                                               ),
                                         onPressed: () async {
+                                          _sendRecReinfoClickEvent();
                                           await Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -662,6 +663,20 @@ class _RecReState extends State<RecRe> {
       amplitude.logEvent('rec_keep_click', eventProperties: {});
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력r
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendRecReinfoClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'rec_reinfo_click',
+        parameters: <String, dynamic>{},
+      );
+      amplitude.logEvent('rec_reinfo_click', eventProperties: {});
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
     }
   }

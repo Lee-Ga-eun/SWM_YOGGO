@@ -269,6 +269,52 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
+  Future<void> _sendBookIntroRegisterLaterClickEvent(
+    contentVoiceId,
+  ) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_intro_register_later_click',
+        parameters: <String, dynamic>{
+          'contentId': contentId,
+        },
+      );
+      await amplitude.logEvent(
+        'book_intro_register_later_click',
+        eventProperties: {
+          'contentId': contentId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBookIntroRegisterOkClickEvent(
+    contentVoiceId,
+  ) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_intro_register_ok_click',
+        parameters: <String, dynamic>{
+          'contentId': contentId,
+        },
+      );
+      await amplitude.logEvent(
+        'book_intro_register_ok_click',
+        eventProperties: {
+          'contentId': contentId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
   Future<void> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -1153,6 +1199,7 @@ class _BookIntroState extends State<BookIntro> {
                   actions: [
                     TextButton(
                       onPressed: () {
+                        _sendBookIntroRegisterLaterClickEvent(contentId);
                         // 1초 후에 다음 페이지로 이동
                         Future.delayed(const Duration(seconds: 1), () {
                           setState(() {
@@ -1164,6 +1211,7 @@ class _BookIntroState extends State<BookIntro> {
                     ),
                     TextButton(
                       onPressed: () {
+                        _sendBookIntroRegisterOkClickEvent(contentId);
                         // 1초 후에 다음 페이지로 이동
                         Future.delayed(const Duration(seconds: 1), () {
                           Navigator.push(
@@ -1190,6 +1238,7 @@ class _BookIntroState extends State<BookIntro> {
                       actions: [
                         TextButton(
                           onPressed: () {
+                            _sendBookIntroRegisterLaterClickEvent(contentId);
                             Future.delayed(const Duration(seconds: 1), () {
                               wantRecord.value = false;
                             });
@@ -1198,6 +1247,7 @@ class _BookIntroState extends State<BookIntro> {
                         ),
                         TextButton(
                           onPressed: () {
+                            _sendBookIntroRegisterOkClickEvent(contentId);
                             Future.delayed(const Duration(seconds: 1), () {
                               Navigator.push(
                                 context,
