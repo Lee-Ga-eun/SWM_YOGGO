@@ -749,7 +749,7 @@ class _BookIntroState extends State<BookIntro> {
                                                           height: SizeConfig
                                                                   .defaultSize! *
                                                               0.3),
-                                                      Text('Mine',
+                                                      Text('My voice',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'Gaegu',
@@ -802,7 +802,7 @@ class _BookIntroState extends State<BookIntro> {
                                                       height: SizeConfig
                                                               .defaultSize! *
                                                           0.3),
-                                                  Text('Mine',
+                                                  Text('My voice',
                                                       style: TextStyle(
                                                           fontFamily: 'Gaegu',
                                                           fontSize: 1.8 *
