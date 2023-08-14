@@ -834,6 +834,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // )
                   GestureDetector(
                     onTap: () {
+                      _sendHomeFirstClick();
                       setState(() {
                         // Toggle the value of showOverlay when the overlay is tapped
                         showOverlay = !showOverlay;
@@ -1132,6 +1133,22 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       await amplitude.logEvent(
         'home_loading_view',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHomeFirstClick() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'home_first_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'home_first_click',
         eventProperties: {},
       );
     } catch (e) {
