@@ -105,8 +105,10 @@ class _PurchaseState extends State<Purchase> {
       },
     );
     if (response.statusCode == 200) {
+      _sendSubSuccessEvent();
       print('정보 등록 완료');
     } else {
+      _sendSubFailEvent(response.statusCode);
       throw Exception('Failed to start inference');
     }
   }
@@ -532,6 +534,35 @@ class _PurchaseState extends State<Purchase> {
         'sub_pay_click',
         eventProperties: {},
       );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendSubSuccessEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'sub_success',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent('sub_success', eventProperties: {});
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendSubFailEvent(response) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'sub_fail',
+        parameters: <String, dynamic>{'response': response},
+      );
+      await amplitude
+          .logEvent('sub_fail', eventProperties: {'response': response});
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
