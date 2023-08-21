@@ -178,7 +178,15 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Medium.ttf
-
+    - family: Libre
+      fonts:
+        - asset: assets/fonts/LibreBaskerville-Regular.ttf
+    - family: EmilysCandy
+      fonts:
+        - asset: assets/fonts/EmilysCandy-Regular.ttf
+    - family: GenBkBasR
+      fonts:
+        - asset: assets/fonts/GenBkBasR.ttf
         # Prata-Regular.ttf
     # - family: Schyler
     #   fonts:
