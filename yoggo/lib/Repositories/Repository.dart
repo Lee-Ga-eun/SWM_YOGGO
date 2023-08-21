@@ -14,7 +14,10 @@ class DataRepository {
     // home screen에서 책 목록들
     if (!_isLoaded) {
       final response =
+          // release 버전
           await http.get(Uri.parse('https://yoggo-server.fly.dev/content/all'));
+      // dev 버전
+      // await http.get(Uri.parse('https://yoggo-server.fly.dev/content/dev'));
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List<dynamic>;
         final data =
