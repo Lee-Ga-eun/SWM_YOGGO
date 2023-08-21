@@ -11,6 +11,7 @@ class BookIntroModel extends Equatable {
   final String summary;
   final int last;
   final List voice;
+  final String font;
 
   const BookIntroModel({
     required this.contentId,
@@ -19,6 +20,7 @@ class BookIntroModel extends Equatable {
     required this.summary,
     required this.last,
     required this.voice,
+    required this.font,
   });
 
   factory BookIntroModel.fromJson(Map<String, dynamic> json) =>
@@ -27,5 +29,6 @@ class BookIntroModel extends Equatable {
   Map<String, dynamic> toJson() => _$BookIntroModelToJson(this);
 
   @override
-  List<Object?> get props => [contentId, title, thumbUrl, summary, last, voice];
+  List<Object?> get props =>
+      [contentId, title, thumbUrl, summary, last, voice, font];
 }
