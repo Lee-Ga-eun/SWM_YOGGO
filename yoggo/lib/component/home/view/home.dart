@@ -45,6 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showOverlay = false; // Initially show the overlay
   bool showBanner = false;
 
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -116,8 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
     //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
-    _sendHomeViewEvent();
     SizeConfig().init(context);
+    _sendHomeViewEvent();
+
     return BlocProvider(
         create: (context) =>
             DataCubit()..loadHomeBookData(), // DataCubit 생성 및 데이터 로드

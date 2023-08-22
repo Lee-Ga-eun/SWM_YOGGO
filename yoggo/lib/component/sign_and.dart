@@ -170,6 +170,7 @@ class _LoginAndState extends State<LoginAnd> {
   @override
   void initState() {
     super.initState();
+    _sendSigninViewEvent();
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
@@ -180,7 +181,6 @@ class _LoginAndState extends State<LoginAnd> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendSigninViewEvent();
     return Scaffold(
       body: Stack(
         children: [
@@ -235,45 +235,47 @@ class _LoginAndState extends State<LoginAnd> {
                   ),
                   SizedBox(height: 4 * SizeConfig.defaultSize!),
                   GestureDetector(
-                    onTap: () {
-                      _sendSigninGoogleClickEvent();
-                      signInWithGoogle(context);
-                    },
-                    child: Stack( children: [
-                    Container(
-                     height: 4.5 * SizeConfig.defaultSize!,
-                     width: 27.5 * SizeConfig.defaultSize!,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(1.5 * SizeConfig.defaultSize!),
-                      ),),
-                      Positioned(
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                      child:Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'lib/images/logo-google.png', // 본인의 이미지 경로로 변경
-                            height: 24.0,
+                      onTap: () {
+                        _sendSigninGoogleClickEvent();
+                        signInWithGoogle(context);
+                      },
+                      child: Stack(children: [
+                        Container(
+                          height: 4.5 * SizeConfig.defaultSize!,
+                          width: 27.5 * SizeConfig.defaultSize!,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                                1.5 * SizeConfig.defaultSize!),
                           ),
-                          SizedBox(width: 10),
-                          Text(
-                           'Continue with Google',
-                  style: TextStyle(
-                      fontSize: 1.9 * SizeConfig.defaultSize!,
-                      color: Colors.black,
-                      fontFamily: 'Roboto',
-                      // fontWeight: FontWeight.w600
-                    ),
-                         ),
-                        ],
-                      ),)]
-                    )
-                  ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'lib/images/logo-google.png', // 본인의 이미지 경로로 변경
+                                height: 24.0,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'Continue with Google',
+                                style: TextStyle(
+                                  fontSize: 1.9 * SizeConfig.defaultSize!,
+                                  color: Colors.black,
+                                  fontFamily: 'Roboto',
+                                  // fontWeight: FontWeight.w600
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ])),
                 ],
               ),
             ),

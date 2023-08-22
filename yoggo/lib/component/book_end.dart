@@ -37,6 +37,8 @@ class _BookEndState extends State<BookEnd> {
   @override
   void initState() {
     super.initState();
+    _sendBookEndViewEvent(
+        widget.contentVoiceId, widget.contentId, widget.voiceId);
     // TODO: Add initialization code
   }
 
@@ -54,8 +56,7 @@ class _BookEndState extends State<BookEnd> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendBookEndViewEvent(
-        widget.contentVoiceId, widget.contentId, widget.voiceId);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

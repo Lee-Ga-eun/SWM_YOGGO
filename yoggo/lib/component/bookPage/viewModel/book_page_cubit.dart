@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/bookPage/viewModel/book_page_model.dart';
-import '../../../repositories/Repository.dart';
+import '../../../Repositories/Repository.dart';
 import 'dart:convert';
 
 class BookPageCubit extends Cubit<List<BookPageModel>> {
