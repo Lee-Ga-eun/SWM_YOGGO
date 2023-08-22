@@ -63,6 +63,7 @@ class _RecReState extends State<RecRe> {
 
     getToken();
     super.initState();
+    _sendRecRetryViewEvent();
   }
 
   Future<int> getId() async {
@@ -623,14 +624,14 @@ class _RecReState extends State<RecRe> {
     }
   }
 
-  Future<void> _sendRecIngViewEvent() async {
+  Future<void> _sendRecRetryViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'rec_ing_view',
+        name: 'rec_retry_view',
         parameters: <String, dynamic>{},
       );
-      amplitude.logEvent('rec_ing_view', eventProperties: {});
+      amplitude.logEvent('rec_retry_view', eventProperties: {});
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');

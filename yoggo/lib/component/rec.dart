@@ -81,6 +81,7 @@ class _RecState extends State<Rec> {
 
     getToken();
     super.initState();
+    _sendRecViewEvent();
   }
 
   Future<int> getId() async {
@@ -186,7 +187,6 @@ class _RecState extends State<Rec> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendRecViewEvent();
     return MaterialApp(
         home: Scaffold(
       body: Stack(
