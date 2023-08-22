@@ -325,46 +325,62 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                             });
                                                           },
                                                           child: Container(
-                                                            width: 31.1 *
-                                                                SizeConfig
-                                                                    .defaultSize!,
-                                                            height: 4.5 *
-                                                                SizeConfig
-                                                                    .defaultSize!,
-                                                            decoration:
-                                                                ShapeDecoration(
-                                                              color: Color(
-                                                                  0xFFFFA91A),
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15),
-                                                              ),
-                                                            ),
-                                                            child: Center(
-                                                              child: Text(
-                                                                'Re-make your voice',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 2.3 *
-                                                                      SizeConfig
-                                                                          .defaultSize!,
-                                                                  fontFamily:
-                                                                      'Molengo',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
+                                                              width: 31.1 *
+                                                                  SizeConfig
+                                                                      .defaultSize!,
+                                                              height: 4.5 *
+                                                                  SizeConfig
+                                                                      .defaultSize!,
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                color: Color(
+                                                                    0xFFFFA91A),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              30),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ),
+                                                              child: Stack(
+                                                                  children: [
+                                                                    Positioned(
+                                                                        right: 1 *
+                                                                            SizeConfig
+                                                                                .defaultSize!,
+                                                                        top: 0.75 *
+                                                                            SizeConfig
+                                                                                .defaultSize!,
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .chevron_right,
+                                                                          color:
+                                                                              Colors.black,
+                                                                          size: SizeConfig.defaultSize! *
+                                                                              3,
+                                                                        )),
+                                                                    Center(
+                                                                      child:
+                                                                          Text(
+                                                                        'Re-make your voice',
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              2.3 * SizeConfig.defaultSize!,
+                                                                          fontFamily:
+                                                                              'Molengo',
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ])),
                                                         ),
                                                         SizedBox(
                                                           width: 5.3 *
@@ -459,7 +475,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                     height: SizeConfig.defaultSize! * 4.5,
                     decoration: BoxDecoration(
                       borderRadius:
-                          BorderRadius.circular(SizeConfig.defaultSize! * 1.5),
+                          BorderRadius.circular(SizeConfig.defaultSize! * 3),
                       color: const Color(0xFFFFA91A),
                     ),
                     child: Center(
@@ -487,7 +503,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                     height: SizeConfig.defaultSize! * 4.5,
                     decoration: BoxDecoration(
                       borderRadius:
-                          BorderRadius.circular(SizeConfig.defaultSize! * 1.5),
+                          BorderRadius.circular(SizeConfig.defaultSize! * 3),
                       color: const Color(0xFFFFA91A),
                     ),
                     child: Center(

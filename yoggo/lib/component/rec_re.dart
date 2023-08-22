@@ -396,7 +396,7 @@ class _RecReState extends State<RecRe> {
                                   height: SizeConfig.defaultSize! * 4.5,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(
-                                        SizeConfig.defaultSize! * 1.5),
+                                        SizeConfig.defaultSize! * 3),
                                     color: const Color(0xFFFFA91A),
                                   ),
                                   child: Center(
@@ -442,7 +442,7 @@ class _RecReState extends State<RecRe> {
                                   height: SizeConfig.defaultSize! * 4.5,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(
-                                        SizeConfig.defaultSize! * 1.5),
+                                        SizeConfig.defaultSize! * 3),
                                     color: const Color(0xFFFFA91A),
                                   ),
                                   child: Center(

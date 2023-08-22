@@ -220,7 +220,7 @@ class _RecEndState extends State<RecEnd> {
                                     color: const Color(0xFFFFA91A),
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(
-                                            SizeConfig.defaultSize! * 1.5)),
+                                            SizeConfig.defaultSize! * 3)),
                                   ),
                                   child: Center(
                                     child: Text(

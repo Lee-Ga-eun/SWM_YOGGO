@@ -302,28 +302,38 @@ class _BookEndState extends State<BookEnd> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFA91A),
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  SizeConfig.defaultSize! * 0.9)),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(SizeConfig.defaultSize! * 3)),
                             ),
                             width: SizeConfig.defaultSize! * 24,
                             height: 4.5 * SizeConfig.defaultSize!,
-                            child: Center(
-                              //Padding(
-                              //   padding: EdgeInsets.only(
-                              //     left: SizeConfig.defaultSize! * 5,
-                              //     right: SizeConfig.defaultSize! * 5,
-                              //     top: SizeConfig.defaultSize! * 0.5,
-                              //     bottom: SizeConchild: fig.defaultSize! * 0.5,
-                              //   ),
-                              child: Text(
-                                'Go to Record',
-                                style: TextStyle(
-                                  fontFamily: 'Molengo',
-                                  fontSize: SizeConfig.defaultSize! * 2.3,
-                                  color: Colors.black,
+                            child: Stack(children: [
+                              Positioned(
+                                  right: 1 * SizeConfig.defaultSize!,
+                                  top: 0.75 * SizeConfig.defaultSize!,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.black,
+                                    size: SizeConfig.defaultSize! * 3,
+                                  )),
+                              Center(
+                                //Padding(
+                                //   padding: EdgeInsets.only(
+                                //     left: SizeConfig.defaultSize! * 5,
+                                //     right: SizeConfig.defaultSize! * 5,
+                                //     top: SizeConfig.defaultSize! * 0.5,
+                                //     bottom: SizeConchild: fig.defaultSize! * 0.5,
+                                //   ),
+                                child: Text(
+                                  'Go to Record',
+                                  style: TextStyle(
+                                    fontFamily: 'Molengo',
+                                    fontSize: SizeConfig.defaultSize! * 2.3,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ]),
                           ),
                         )
                       ],
@@ -429,28 +439,38 @@ class _BookEndState extends State<BookEnd> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFA91A),
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  SizeConfig.defaultSize! * 0.9)),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(SizeConfig.defaultSize! * 3)),
                             ),
                             width: SizeConfig.defaultSize! * 24,
                             height: 4.5 * SizeConfig.defaultSize!,
-                            child: Center(
-                              //Padding(
-                              //   padding: EdgeInsets.only(
-                              //     left: SizeConfig.defaultSize! * 5,
-                              //     right: SizeConfig.defaultSize! * 5,
-                              //     top: SizeConfig.defaultSize! * 0.5,
-                              //     bottom: SizeConchild: fig.defaultSize! * 0.5,
-                              //   ),
-                              child: Text(
-                                'Go to Record',
-                                style: TextStyle(
-                                  fontFamily: 'Molengo',
-                                  fontSize: SizeConfig.defaultSize! * 2.3,
-                                  color: Colors.black,
+                            child: Stack(children: [
+                              Positioned(
+                                  right: 1 * SizeConfig.defaultSize!,
+                                  top: 0.75 * SizeConfig.defaultSize!,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.black,
+                                    size: SizeConfig.defaultSize! * 3,
+                                  )),
+                              Center(
+                                //Padding(
+                                //   padding: EdgeInsets.only(
+                                //     left: SizeConfig.defaultSize! * 5,
+                                //     right: SizeConfig.defaultSize! * 5,
+                                //     top: SizeConfig.defaultSize! * 0.5,
+                                //     bottom: SizeConchild: fig.defaultSize! * 0.5,
+                                //   ),
+                                child: Text(
+                                  'Go to Record',
+                                  style: TextStyle(
+                                    fontFamily: 'Molengo',
+                                    fontSize: SizeConfig.defaultSize! * 2.3,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ]),
                           ),
                         )
                       ],
