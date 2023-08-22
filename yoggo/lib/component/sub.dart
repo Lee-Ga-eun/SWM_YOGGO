@@ -214,52 +214,54 @@ class _PurchaseState extends State<Purchase> {
                 ),
               ),
               // ios 앱 심사를 위한 restore 버튼
-              Positioned(
-                right: 3 * SizeConfig.defaultSize!,
-                child: GestureDetector(
-                    onTap: () async {
-                      try {
-                        if (userState.login == false) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Platform.isIOS
-                                    ? const Login()
-                                    : const LoginAnd()), //HomeScreen()),
-                          );
-                        } else {
-                          CustomerInfo customerInfo =
-                              await Purchases.restorePurchases();
-                          EntitlementInfo? entitlement =
-                              customerInfo.entitlements.all['pro'];
-                          if (entitlement != null) {
-                            if (entitlement.isActive) {
-                              successPurchase();
-                            }
-                          }
-                        }
+              Platform.isIOS
+                  ? Positioned(
+                      right: 3 * SizeConfig.defaultSize!,
+                      child: GestureDetector(
+                          onTap: () async {
+                            try {
+                              if (userState.login == false) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Platform.isIOS
+                                          ? const Login()
+                                          : const LoginAnd()), //HomeScreen()),
+                                );
+                              } else {
+                                CustomerInfo customerInfo =
+                                    await Purchases.restorePurchases();
+                                EntitlementInfo? entitlement =
+                                    customerInfo.entitlements.all['pro'];
+                                if (entitlement != null) {
+                                  if (entitlement.isActive) {
+                                    successPurchase();
+                                  }
+                                }
+                              }
 
-                        // ... check restored purchaserInfo to see if entitlement is now active
-                      } on PlatformException catch (e) {
-                        // Error restoring purchases
-                      }
-                    },
-                    child: Container(
-                      width: 15 * SizeConfig.defaultSize!,
-                      height: 3 * SizeConfig.defaultSize!,
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(128, 255, 255, 255),
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(SizeConfig.defaultSize! * 1))),
-                      child: Center(
-                          child: Text(
-                        'Already Purchase?',
-                        style: TextStyle(
-                            fontFamily: 'Molengo',
-                            fontSize: SizeConfig.defaultSize! * 1.5),
-                      )),
-                    )),
-              ),
+                              // ... check restored purchaserInfo to see if entitlement is now active
+                            } on PlatformException catch (e) {
+                              // Error restoring purchases
+                            }
+                          },
+                          child: Container(
+                            width: 15 * SizeConfig.defaultSize!,
+                            height: 3 * SizeConfig.defaultSize!,
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(128, 255, 255, 255),
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    SizeConfig.defaultSize! * 1))),
+                            child: Center(
+                                child: Text(
+                              'Already Purchase?',
+                              style: TextStyle(
+                                  fontFamily: 'Molengo',
+                                  fontSize: SizeConfig.defaultSize! * 1.5),
+                            )),
+                          )),
+                    )
+                  : Container(),
               // ios 앱 심사를 위한 restore 버튼
             ],
           ),
@@ -446,57 +448,70 @@ class _PurchaseState extends State<Purchase> {
                         ])),
                     SizedBox(
                         width: 61 * SizeConfig.defaultSize!,
-                        child: Column(children: [
-                          Center(
-                              child: Text(
-                                  "Subscription Terms: After free trial, LOVEL monthly subscription is \$5.99, automatically renews unless turned off in Account Settings at least 24h before current period ends. Payment is charged ",
-                                  style: TextStyle(
-                                      fontSize: 1.5 * SizeConfig.defaultSize!,
-                                      fontFamily: 'Molengo'))),
-                          RichText(
-                              text: TextSpan(children: [
-                            TextSpan(
+                        child: Platform.isAndroid
+                            ? Text(
+                                "You can cancel this subscription at any time if you wish.",
                                 style: TextStyle(
-                                    fontSize: 1.5 * SizeConfig.defaultSize!,
-                                    fontFamily: 'Molengo',
-                                    color: Colors.black),
-                                text:
-                                    "to your iTunes account. By tapping Continue, you agree to our "),
-                            TextSpan(
-                                text: "Terms",
-                                style: TextStyle(
-                                  fontSize: 1.5 * SizeConfig.defaultSize!,
                                   fontFamily: 'Molengo',
-                                  color: Colors.black,
                                   decoration: TextDecoration.underline,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    launch(
-                                        'http://www.apple.com/legal/itunes/appstore/dev/stdeula');
-                                  }),
-                            TextSpan(
-                              text: " and ",
-                              style: TextStyle(
-                                  fontSize: 1.5 * SizeConfig.defaultSize!,
-                                  fontFamily: 'Molengo',
-                                  color: Colors.black),
-                            ),
-                            TextSpan(
-                                text: "Privacy Policy.",
-                                style: TextStyle(
-                                  fontSize: 1.5 * SizeConfig.defaultSize!,
-                                  fontFamily: 'Molengo',
+                                  fontSize: SizeConfig.defaultSize! * 1.5,
                                   color: Colors.black,
-                                  decoration: TextDecoration.underline,
                                 ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    launch(
-                                        'https://doc-hosting.flycricket.io/lovel-privacy-policy/f8c6f57c-dd5f-4b67-8859-bc4afe251396/privacy');
-                                  })
-                          ]))
-                        ]))
+                                textAlign: TextAlign.center,
+                              )
+                            : Column(children: [
+                                Center(
+                                    child: Text(
+                                        "Subscription Terms: After free trial, LOVEL monthly subscription is \$5.99, automatically renews unless turned off in Account Settings at least 24h before current period ends. Payment is charged ",
+                                        style: TextStyle(
+                                            fontSize:
+                                                1.5 * SizeConfig.defaultSize!,
+                                            fontFamily: 'Molengo'))),
+                                RichText(
+                                    text: TextSpan(children: [
+                                  TextSpan(
+                                      style: TextStyle(
+                                          fontSize:
+                                              1.5 * SizeConfig.defaultSize!,
+                                          fontFamily: 'Molengo',
+                                          color: Colors.black),
+                                      text:
+                                          "to your iTunes account. By tapping Continue, you agree to our "),
+                                  TextSpan(
+                                      text: "Terms",
+                                      style: TextStyle(
+                                        fontSize: 1.5 * SizeConfig.defaultSize!,
+                                        fontFamily: 'Molengo',
+                                        color: Colors.black,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          launch(
+                                              'http://www.apple.com/legal/itunes/appstore/dev/stdeula');
+                                        }),
+                                  TextSpan(
+                                    text: " and ",
+                                    style: TextStyle(
+                                        fontSize: 1.5 * SizeConfig.defaultSize!,
+                                        fontFamily: 'Molengo',
+                                        color: Colors.black),
+                                  ),
+                                  TextSpan(
+                                      text: "Privacy Policy.",
+                                      style: TextStyle(
+                                        fontSize: 1.5 * SizeConfig.defaultSize!,
+                                        fontFamily: 'Molengo',
+                                        color: Colors.black,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          launch(
+                                              'https://doc-hosting.flycricket.io/lovel-privacy-policy/f8c6f57c-dd5f-4b67-8859-bc4afe251396/privacy');
+                                        })
+                                ]))
+                              ]))
                   ],
                 )),
           ) //),

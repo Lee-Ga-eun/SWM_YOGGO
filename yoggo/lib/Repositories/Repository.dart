@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:yoggo/component/bookIntro/viewModel/book_intro_model.dart';
 import 'dart:convert';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:yoggo/component/home/viewModel/home_screen_book_model.dart';
 
 class DataRepository {
@@ -13,11 +13,13 @@ class DataRepository {
   static Future<List<HomeScreenBookModel>> loadHomeBookRepository() async {
     // home screen에서 책 목록들
     if (!_isLoaded) {
+      await dotenv.load(fileName: ".env");
+
       final response =
-          // release 버전
-          // await http.get(Uri.parse('https://yoggo-server.fly.dev/content/all'));
-          // dev 버전
-          await http.get(Uri.parse('https://yoggo-server.fly.dev/content/dev'));
+          // // release 버전
+          await http.get(Uri.parse(dotenv.get("API_SERVER") + 'content/all'));
+      // // dev 버전
+      // await http.get(Uri.parse('https://yoggo-server.fly.dev/content/dev'));
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List<dynamic>;
         final data =
