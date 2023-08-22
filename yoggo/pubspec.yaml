@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-version: 1.0.3+13
+version: 1.1.2+28
 
 environment:
   sdk: ">=3.0.2 <4.0.0"
@@ -36,6 +36,7 @@ dependencies:
   animated_background: ^2.0.0
   flutter_native_splash: ^2.3.0
   animated_text_kit: ^4.2.2
+  amplitude_flutter: ^3.13.0
 
   http: ^0.13.5
 
@@ -61,8 +62,13 @@ dependencies:
   firebase_analytics: ^10.4.4
   flutter_animation_progress_bar: ^2.3.1
   flutter_svg: ^2.0.7
-  vibration: ^1.8.1
   loading_animation_widget: ^1.2.0+4
+  onesignal_flutter: ^3.5.1
+  purchases_flutter: ^5.5.0
+  equatable: ^2.0.5
+  json_annotation: ^4.8.1
+  meta: ^1.9.1
+  url_launcher: ^6.1.12
   #audioplayers: ^0.18.3
 
 dev_dependencies:
@@ -75,6 +81,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner: ^2.4.6
+  json_serializable: ^6.7.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -90,7 +98,9 @@ flutter:
   assets:
     - lib/images/
     - .env
-    # - lib/images/logo.png
+    - lib/images/icons/
+    - assets/scripts/
+        # - lib/images/logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -123,8 +133,60 @@ flutter:
     - family: Gloria
       fonts:
         - asset: assets/fonts/GloriaHallelujah-Regular.ttf
-    
-
+    - family: NanumMyeongjo
+      fonts:
+        - asset: assets/fonts/NanumMyeongjo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NanumMyeongjo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/NanumMyeongjo-ExtraBold.ttf
+          weight: 800
+    - family: Oxygen
+      fonts:
+        - asset: assets/fonts/Oxygen-Regular.ttf
+          weight: 300
+        - asset: assets/fonts/Oxygen-light.ttf
+          weight: 400
+        - asset: assets/fonts/Oxygen-Bold.ttf
+          weight: 700
+    - family: Capriola
+      fonts:
+        - asset: assets/fonts/Capriola-Regular.ttf
+          weight: 400
+    - family: LoveYaLikeASister
+      fonts:
+        - asset: assets/fonts/LoveYaLikeASister-Regular.ttf
+          weight: 400
+    - family: Gaegu
+      fonts:
+        - asset: assets/fonts/Gaegu-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Gaegu-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Gaegu-Bold.ttf
+          weight: 700
+    - family: ComingSoon
+      fonts:
+        - asset: assets/fonts/ComingSoon-Regular.ttf
+          weight: 400
+    - family: DMSans
+      fonts:
+        - asset: assets/fonts/DMSans_36pt-Light.ttf
+          weight: 300
+        - asset: assets/fonts/DMSans_36pt-Regular.ttf
+          weight: 400
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Medium.ttf
+    - family: Libre
+      fonts:
+        - asset: assets/fonts/LibreBaskerville-Regular.ttf
+    - family: EmilysCandy
+      fonts:
+        - asset: assets/fonts/EmilysCandy-Regular.ttf
+    - family: GenBkBasR
+      fonts:
+        - asset: assets/fonts/GenBkBasR.ttf
         # Prata-Regular.ttf
     # - family: Schyler
     #   fonts:
