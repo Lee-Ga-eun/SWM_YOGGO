@@ -470,7 +470,7 @@ class _BookIntroState extends State<BookIntro> {
                     child: Column(children: [
                       Expanded(
                           // HEADER
-                          flex: 12,
+                          flex: 11,
                           child: Row(children: [
                             Expanded(
                                 flex: 1,
@@ -494,7 +494,7 @@ class _BookIntroState extends State<BookIntro> {
                                       )
                                     ])),
                             Expanded(
-                                flex: 12,
+                                flex: 11,
                                 child: Container(
                                   alignment: Alignment.center,
                                   //color: Colors.black12,
@@ -503,23 +503,19 @@ class _BookIntroState extends State<BookIntro> {
                                     style: TextStyle(
                                         fontSize: 3.2 * SizeConfig.defaultSize!,
                                         fontFamily: bookIntro.first.font,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w200),
                                   ),
                                 )),
-                            // Expanded(
-                            //   flex: 1,
-                            //   child: Container(
-                            //       //   color: Colors.orange,
-                            //       ),
-                            // )
+                            Expanded(flex: 1, child: Container())
                           ])),
+
                       Expanded(
                         // BODY
                         flex: 70,
                         child: Row(children: [
                           Expanded(
                             // 썸네일 사진
-                            flex: 3,
+                            flex: 2,
                             child: Column(
                               children: [
                                 SizedBox(
@@ -561,7 +557,7 @@ class _BookIntroState extends State<BookIntro> {
                           ),
                           Expanded(
                             // 제목, 성우, 요약
-                            flex: 5,
+                            flex: 3,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -585,7 +581,7 @@ class _BookIntroState extends State<BookIntro> {
                                     Container(
                                       width: SizeConfig.defaultSize! * 34,
                                       padding: EdgeInsets.only(
-                                          left: SizeConfig.defaultSize! * 2,
+                                          left: SizeConfig.defaultSize! * 1.2,
                                           top: SizeConfig.defaultSize!,
                                           bottom: SizeConfig.defaultSize!),
                                       // color: Colors.red,
@@ -1102,13 +1098,14 @@ class _BookIntroState extends State<BookIntro> {
                                   ],
                                 ),
                                 SizedBox(
-                                    height: SizeConfig
-                                        .defaultSize! //userState.purchase
+                                    height: 1.5 *
+                                        SizeConfig
+                                            .defaultSize! //userState.purchase
                                     //? 4
                                     //: 4 * SizeConfig.defaultSize!,
                                     ),
                                 Expanded(
-                                    flex: 2,
+                                    flex: 3,
                                     child: Scrollbar(
                                       thumbVisibility: true,
                                       trackVisibility: true,
@@ -1116,7 +1113,7 @@ class _BookIntroState extends State<BookIntro> {
                                         Padding(
                                           // Summary
                                           padding: EdgeInsets.only(
-                                            right: 0 * SizeConfig.defaultSize!,
+                                            right: 1 * SizeConfig.defaultSize!,
                                             top: 0 * SizeConfig.defaultSize!,
                                           ),
                                           child: Text(
@@ -1131,13 +1128,16 @@ class _BookIntroState extends State<BookIntro> {
                                         ),
                                       ]),
                                     )),
+                                SizedBox(
+                                  height: SizeConfig.defaultSize! * 1.5,
+                                ),
                                 Expanded(
                                   flex: 2,
                                   child: Stack(
                                     children: [
                                       // 다른 위젯들...
                                       Align(
-                                        alignment: Alignment.center,
+                                        alignment: Alignment.topCenter,
                                         // right: SizeConfig.defaultSize! * 12,
                                         // top: SizeConfig.defaultSize! * 1.4,
                                         child: TextButton(
@@ -1173,7 +1173,7 @@ class _BookIntroState extends State<BookIntro> {
                                           child: Stack(
                                             children: [
                                               Text(
-                                                'READ NOW',
+                                                '   READ NOW   ',
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: SizeConfig
@@ -1186,7 +1186,8 @@ class _BookIntroState extends State<BookIntro> {
                                         ),
                                       ),
                                       Align(
-                                        alignment: Alignment.center,
+                                        alignment: Alignment.topCenter,
+                                        //alignment: Alignment.topLeft,
                                         // right: SizeConfig.defaultSize! * 8,
                                         // top: SizeConfig.defaultSize! * 1.4,
                                         child: TextButton(
@@ -1284,10 +1285,8 @@ class _BookIntroState extends State<BookIntro> {
                                           ),
                                           child: Container(
                                               width:
-                                                  SizeConfig.defaultSize! * 18,
-                                              alignment: Alignment.centerRight,
-                                              // padding: const EdgeInsets.only(
-                                              //     left: 200),
+                                                  SizeConfig.defaultSize! * 20,
+                                              alignment: Alignment.topRight,
                                               //color: Colors.red,
                                               child: Positioned(
                                                 child: Icon(

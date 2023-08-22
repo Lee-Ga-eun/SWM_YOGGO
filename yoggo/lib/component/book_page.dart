@@ -478,7 +478,7 @@ class _PageWidgetState extends State<PageWidget> {
                                             style: TextStyle(
                                                 fontSize: 2.3 *
                                                     SizeConfig.defaultSize!,
-                                                fontFamily: 'Gaegu',
+                                                fontFamily: 'GenBkBasR',
                                                 fontWeight: FontWeight.w400),
                                           ),
                                         ],
@@ -529,7 +529,7 @@ class _PageWidgetState extends State<PageWidget> {
                                                 fontSize:
                                                     SizeConfig.defaultSize! *
                                                         2.3,
-                                                fontFamily: 'Gaegu',
+                                                fontFamily: 'GenBkBasR',
                                                 fontWeight: FontWeight.w400),
                                           ),
                                         ],
