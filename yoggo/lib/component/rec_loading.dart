@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yoggo/component/rec_end.dart';
+import 'package:yoggo/size_config.dart';
 import 'globalCubit/user/user_cubit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -116,10 +117,26 @@ class _RecLoadingState extends State<RecLoading> {
             fit: BoxFit.cover,
           ),
         ),
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: Color(0xFFFFA91A),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFFFFA91A),
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.defaultSize! * 2,
+            ),
+            Text(
+              'Do not exit the screen. Your precious voice is being transmitted. \nIf you leave the screen, the process will be erased.',
+              style: TextStyle(
+                  fontFamily: 'Molengo',
+                  fontSize: SizeConfig.defaultSize! * 2.5),
+              textAlign: TextAlign.center,
+            )
+          ],
         ),
       ),
     );
