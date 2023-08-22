@@ -65,6 +65,7 @@ class _PurchaseState extends State<Purchase> {
           if (e.status == PurchaseStatus.purchased ||
               e.status == PurchaseStatus.restored) {
             successPurchase();
+            _sendSubSuccessEvent();
             UserCubit().fetchUser();
             amplitude.setUserProperties({'subscribe': true});
             Navigator.of(context)
@@ -105,7 +106,7 @@ class _PurchaseState extends State<Purchase> {
       },
     );
     if (response.statusCode == 200) {
-      _sendSubSuccessEvent();
+      // _sendSubSuccessEvent();
       print('정보 등록 완료');
     } else {
       _sendSubFailEvent(response.statusCode);
