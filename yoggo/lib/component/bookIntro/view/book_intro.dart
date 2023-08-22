@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/sub.dart';
 import 'package:yoggo/component/rec_info.dart';
-import '../../book_page.dart';
+import '../../bookPage/view/book_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
@@ -1203,23 +1203,23 @@ class _BookIntroState extends State<BookIntro> {
                                                           vi,
                                                         ),
                                                         Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      BookPage(
-                                                                // 다음 화면으로 contetnVoiceId를 가지고 이동
-                                                                contentVoiceId:
-                                                                    cvi,
-                                                                voiceId: vi,
-                                                                contentId:
-                                                                    contentId,
-                                                                lastPage:
-                                                                    lastPage,
-                                                                isSelected:
-                                                                    true,
-                                                              ),
-                                                            ))
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    BookPage(
+                                                              // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                                              contentVoiceId:
+                                                                  cvi,
+                                                              voiceId: vi,
+                                                              contentId:
+                                                                  contentId,
+                                                              lastPage:
+                                                                  lastPage,
+                                                              isSelected: true,
+                                                            ),
+                                                          ),
+                                                        )
                                                       }
                                                     : setState(() {
                                                         completeInference =
@@ -1284,19 +1284,15 @@ class _BookIntroState extends State<BookIntro> {
                                             ),
                                           ),
                                           child: Container(
-                                              width:
-                                                  SizeConfig.defaultSize! * 20,
-                                              alignment: Alignment.topRight,
-                                              //color: Colors.red,
-                                              child: Positioned(
-                                                child: Icon(
-                                                  Icons.chevron_right,
-                                                  color: Colors.black,
-                                                  size:
-                                                      SizeConfig.defaultSize! *
-                                                          3,
-                                                ),
-                                              )),
+                                            width: SizeConfig.defaultSize! * 20,
+                                            alignment: Alignment.topRight,
+                                            //color: Colors.red,
+                                            child: Icon(
+                                              Icons.chevron_right,
+                                              color: Colors.black,
+                                              size: SizeConfig.defaultSize! * 3,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ],
