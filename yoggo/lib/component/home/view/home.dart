@@ -168,7 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: Colors.white.withOpacity(0.5)),
                             child: SafeArea(
                               minimum: EdgeInsets.only(
-                                  left: 3 * SizeConfig.defaultSize!),
+                                left: 3 * SizeConfig.defaultSize!,
+                                right: 3 * SizeConfig.defaultSize!,
+                              ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,7 +212,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             SafeArea(
                               minimum: EdgeInsets.only(
-                                  left: 3 * SizeConfig.defaultSize!),
+                                  left: 3 * SizeConfig.defaultSize!,
+                                  right: 3 * SizeConfig.defaultSize!),
                               child: ListTile(
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -563,8 +566,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SafeArea(
                       bottom: false,
                       top: false,
-                      minimum:
-                          EdgeInsets.only(left: 3 * SizeConfig.defaultSize!),
+                      minimum: EdgeInsets.only(
+                          left: 2 * SizeConfig.defaultSize!,
+                          right: 2 * SizeConfig.defaultSize!),
                       child: Column(
                         children: [
                           Expanded(
@@ -638,29 +642,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 );
                                               },
                                               child: Container(
-                                                decoration: const BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(10)),
-                                                  color: Color(0xFFFFA91A),
-                                                  //   border: Border.all(
-                                                  //   color: const Color.fromARGB(255, 255, 169, 26)),
-                                                ),
-                                                // color: Colors.white,
-                                                height:
-                                                    SizeConfig.defaultSize! * 4,
-                                                child: Center(
-                                                  child: Text(
-                                                    'Do you want to read a book in your voice?',
-                                                    style: TextStyle(
-                                                        fontSize: 2 *
-                                                            SizeConfig
-                                                                .defaultSize!,
-                                                        fontFamily: 'Molengo',
-                                                        color: Colors.black),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10)),
+                                                    color: Color(0xFFFFA91A),
+                                                    //   border: Border.all(
+                                                    //   color: const Color.fromARGB(255, 255, 169, 26)),
                                                   ),
-                                                ),
-                                              ),
+                                                  // color: Colors.white,
+                                                  height:
+                                                      SizeConfig.defaultSize! *
+                                                          4,
+                                                  child: Stack(children: [
+                                                    Positioned(
+                                                      left: SizeConfig
+                                                          .defaultSize!,
+                                                      top: SizeConfig
+                                                              .defaultSize! *
+                                                          0.6,
+                                                      child: Icon(Icons.flag),
+                                                    ),
+                                                    Center(
+                                                      child: Text(
+                                                        'Do you want to read a book in your voice?',
+                                                        style: TextStyle(
+                                                            fontSize: 2 *
+                                                                SizeConfig
+                                                                    .defaultSize!,
+                                                            fontFamily:
+                                                                'Molengo',
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ),
+                                                  ])),
                                             ),
                                           ),
                                         ],
@@ -754,7 +772,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     child: Text(
                                                       book.title,
                                                       style: TextStyle(
-                                                        fontFamily: 'BreeSerif',
+                                                        fontFamily: 'GenBkBasR',
                                                         fontSize: SizeConfig
                                                                 .defaultSize! *
                                                             1.6,

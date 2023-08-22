@@ -439,6 +439,8 @@ class _PageWidgetState extends State<PageWidget> {
           SafeArea(
             top: false,
             bottom: false,
+            minimum: EdgeInsets.only(
+                left: SizeConfig.defaultSize!, right: SizeConfig.defaultSize!),
             child: Padding(
               padding: EdgeInsets.all(SizeConfig.defaultSize!),
               child: Column(
@@ -537,6 +539,7 @@ class _PageWidgetState extends State<PageWidget> {
                                             style: TextStyle(
                                                 fontSize: 2.3 *
                                                     SizeConfig.defaultSize!,
+                                                height: 1.3,
                                                 fontFamily: 'GenBkBasR',
                                                 fontWeight: FontWeight.w400),
                                           ),
@@ -587,6 +590,7 @@ class _PageWidgetState extends State<PageWidget> {
                                                 fontSize:
                                                     SizeConfig.defaultSize! *
                                                         2.3,
+                                                height: 1.3,
                                                 fontFamily: 'GenBkBasR',
                                                 fontWeight: FontWeight.w400),
                                           ),
