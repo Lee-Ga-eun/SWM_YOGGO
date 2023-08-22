@@ -3,15 +3,17 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:yoggo/component/bookPage/viewModel/book_page_cubit.dart';
+import 'package:yoggo/component/bookPage/viewModel/book_page_model.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:yoggo/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'book_end.dart';
+import '../../book_end.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import 'globalCubit/user/user_cubit.dart';
+import '../../globalCubit/user/user_cubit.dart';
 
 class BookPage extends StatefulWidget {
   final int contentVoiceId; //detail_screen에서 받아오는 것들
@@ -35,7 +37,7 @@ class BookPage extends StatefulWidget {
 
 class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   // List<BookPage> pages = []; // 책 페이지 데이터 리스트
-  List<Map<String, dynamic>> pages = [];
+  //List<Map<String, dynamic>> pages = [];
   int currentPageIndex = 0; // 현재 페이지 인덱스
   bool isPlaying = true;
   bool pauseFunction = false;
@@ -54,8 +56,6 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // 책 페이지 데이터 미리 불러오기
-    fetchAllBookPages();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -70,7 +70,7 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
       final jsonData = json.decode(response.body);
       if (jsonData is List<dynamic>) {
         setState(() {
-          pages = List<Map<String, dynamic>>.from(jsonData);
+          // pages = List<Map<String, dynamic>>.from(jsonData);
         });
       }
     } else {
@@ -142,120 +142,157 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    if (pages.isEmpty) {
-      _sendBookPageLoadingViewEvent(
-          widget.contentVoiceId, widget.contentId, widget.voiceId);
-      return Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('lib/images/bkground.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Center(
-            child: LoadingAnimationWidget.fourRotatingDots(
-              color: const Color.fromARGB(255, 255, 169, 26),
-              size: SizeConfig.defaultSize! * 10,
-            ),
-          ),
-        ),
-      );
-    }
-    _sendBookPageViewEvent(widget.contentVoiceId, widget.contentId,
-        widget.voiceId, currentPageIndex + 1);
-    return WillPopScope(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            // 현재 페이지 위젯
-            Visibility(
-              visible: true,
-              child: PageWidget(
-                page: currentPageIndex < widget.lastPage
-                    ? pages[currentPageIndex]
-                    : pages[widget.lastPage - 1],
-                audioUrl: pages[currentPageIndex]['audioUrl'],
-                realCurrent: true,
-                currentPage: currentPageIndex,
-                audioPlayer: audioPlayer,
-                pauseFunction: pauseFunction,
-                previousPage: previousPage,
-                currentPageIndex: currentPageIndex,
-                nextPage: nextPage,
-                lastPage: widget.lastPage,
-                voiceId: widget.voiceId,
-                contentVoiceId: widget.contentVoiceId,
-                contentId: widget.contentId,
-                isSelected: widget.isSelected,
-                dispose: dispose,
-                stopAudio: stopAudio,
+    return BlocProvider(
+        create: (context) =>
+            BookPageCubit()..loadBookPageData(widget.contentVoiceId),
+        child: BlocBuilder<BookPageCubit, List<BookPageModel>>(
+            builder: (context, bookPage) {
+          if (bookPage.isEmpty) {
+            return Scaffold(
+              body: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('lib/images/bkground.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Center(
+                  // 로딩 화면
+                  child: LoadingAnimationWidget.fourRotatingDots(
+                    color: const Color.fromARGB(255, 255, 169, 26),
+                    size: SizeConfig.defaultSize! * 10,
+                  ),
+                ),
               ),
-            ),
-            // 다음 페이지 위젯
-            Offstage(
-              offstage: true, // 화면에 보이지 않도록 설정
-              child: PageWidget(
-                page: currentPageIndex < widget.lastPage
-                    ? currentPageIndex == widget.lastPage - 1
-                        ? pages[currentPageIndex]
-                        : pages[currentPageIndex + 1]
-                    : pages[widget.lastPage - 1],
-                realCurrent: false,
-                audioUrl: currentPageIndex != widget.lastPage - 1
-                    ? pages[currentPageIndex + 1]['audioUrl']
-                    : pages[currentPageIndex]['audioUrl'],
-                currentPage: currentPageIndex != widget.lastPage - 1
-                    ? currentPageIndex + 1
-                    : currentPageIndex,
-                audioPlayer: audioPlayer,
-                pauseFunction: pauseFunction,
-                previousPage: previousPage,
-                currentPageIndex: currentPageIndex,
-                nextPage: nextPage,
-                lastPage: widget.lastPage,
-                voiceId: widget.voiceId,
-                contentVoiceId: widget.contentVoiceId,
-                contentId: widget.contentId,
-                isSelected: widget.isSelected,
-                dispose: dispose,
-                stopAudio: stopAudio,
+            );
+          } else {
+            _sendBookPageViewEvent(widget.contentVoiceId, widget.contentId,
+                widget.voiceId, currentPageIndex + 1);
+            return WillPopScope(
+              child: Scaffold(
+                body: Stack(
+                  children: [
+                    // 현재 페이지 위젯
+                    Visibility(
+                      visible: true,
+                      child: PageWidget(
+                        // page: currentPageIndex < widget.lastPage
+                        //     ? bookPage[currentPageIndex]
+                        //     : bookPage[widget.lastPage - 1],
+                        text: currentPageIndex < widget.lastPage
+                            ? bookPage[currentPageIndex].text
+                            : bookPage[widget.lastPage - 1].text,
+                        imageUrl: currentPageIndex < widget.lastPage
+                            ? bookPage[currentPageIndex].imageUrl
+                            : bookPage[widget.lastPage - 1].imageUrl,
+                        position: currentPageIndex < widget.lastPage
+                            ? bookPage[currentPageIndex].position
+                            : bookPage[widget.lastPage - 1].position,
+                        audioUrl: bookPage[currentPageIndex].audioUrl,
+                        realCurrent: true,
+                        currentPage: currentPageIndex,
+                        audioPlayer: audioPlayer,
+                        pauseFunction: pauseFunction,
+                        previousPage: previousPage,
+                        currentPageIndex: currentPageIndex,
+                        nextPage: nextPage,
+                        lastPage: widget.lastPage,
+                        voiceId: widget.voiceId,
+                        contentVoiceId: widget.contentVoiceId,
+                        contentId: widget.contentId,
+                        isSelected: widget.isSelected,
+                        dispose: dispose,
+                        stopAudio: stopAudio,
+                      ),
+                    ),
+                    // 다음 페이지 위젯
+                    Offstage(
+                      offstage: true, // 화면에 보이지 않도록 설정
+                      child: PageWidget(
+                        text: currentPageIndex < widget.lastPage
+                            ? currentPageIndex == widget.lastPage - 1
+                                ? bookPage[currentPageIndex].text
+                                : bookPage[currentPageIndex + 1].text
+                            : bookPage[widget.lastPage - 1].text,
+                        imageUrl: currentPageIndex < widget.lastPage
+                            ? currentPageIndex == widget.lastPage - 1
+                                ? bookPage[currentPageIndex].imageUrl
+                                : bookPage[currentPageIndex + 1].imageUrl
+                            : bookPage[widget.lastPage - 1].imageUrl,
+                        position: currentPageIndex < widget.lastPage
+                            ? currentPageIndex == widget.lastPage - 1
+                                ? bookPage[currentPageIndex].position
+                                : bookPage[currentPageIndex + 1].position
+                            : bookPage[widget.lastPage - 1].position,
+                        //text: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].text:bookPage[currentPageIndex+1].text,
+                        //  imageUrl: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].imageUrl:bookPage[currentPageIndex+1].imageUrl,
+                        //  position: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].position:bookPage[currentPageIndex+1].position,
+                        realCurrent: false,
+                        audioUrl: currentPageIndex != widget.lastPage - 1
+                            ? bookPage[currentPageIndex + 1].audioUrl
+                            : bookPage[currentPageIndex].audioUrl,
+                        currentPage: currentPageIndex != widget.lastPage - 1
+                            ? currentPageIndex + 1
+                            : currentPageIndex,
+                        audioPlayer: audioPlayer,
+                        pauseFunction: pauseFunction,
+                        previousPage: previousPage,
+                        currentPageIndex: currentPageIndex,
+                        nextPage: nextPage,
+                        lastPage: widget.lastPage,
+                        voiceId: widget.voiceId,
+                        contentVoiceId: widget.contentVoiceId,
+                        contentId: widget.contentId,
+                        isSelected: widget.isSelected,
+                        dispose: dispose,
+                        stopAudio: stopAudio,
+                      ),
+                    ),
+                    Offstage(
+                      offstage: true, // 화면에 보이지 않도록 설정
+                      child: PageWidget(
+                        // page: currentPageIndex != 0
+                        //     ? pages[currentPageIndex - 1]
+                        //     : pages[0],
+                        text: currentPageIndex != 0
+                            ? bookPage[currentPageIndex].text
+                            : bookPage[currentPageIndex + 1].text,
+                        imageUrl: currentPageIndex != 0
+                            ? bookPage[currentPageIndex].imageUrl
+                            : bookPage[currentPageIndex + 1].imageUrl,
+                        position: currentPageIndex != 0
+                            ? bookPage[currentPageIndex].position
+                            : bookPage[currentPageIndex + 1].position,
+                        realCurrent: false,
+                        audioUrl: currentPageIndex != 0
+                            ? bookPage[currentPageIndex - 1].audioUrl
+                            : bookPage[0].audioUrl,
+                        currentPage: currentPageIndex,
+                        audioPlayer: audioPlayer,
+                        pauseFunction: pauseFunction,
+                        previousPage: previousPage,
+                        currentPageIndex: currentPageIndex,
+                        nextPage: nextPage,
+                        lastPage: widget.lastPage,
+                        voiceId: widget.voiceId,
+                        contentVoiceId: widget.contentVoiceId,
+                        contentId: widget.contentId,
+                        isSelected: widget.isSelected,
+                        dispose: dispose,
+                        stopAudio: stopAudio,
+                      ),
+                    ),
+                  ],
+                ),
+                // ),
               ),
-            ),
-            Offstage(
-              offstage: true, // 화면에 보이지 않도록 설정
-              child: PageWidget(
-                page: currentPageIndex != 0
-                    ? pages[currentPageIndex - 1]
-                    : pages[0],
-                realCurrent: false,
-                audioUrl: currentPageIndex != 0
-                    ? pages[currentPageIndex - 1]['audioUrl']
-                    : pages[0]['audioUrl'],
-                currentPage: currentPageIndex,
-                audioPlayer: audioPlayer,
-                pauseFunction: pauseFunction,
-                previousPage: previousPage,
-                currentPageIndex: currentPageIndex,
-                nextPage: nextPage,
-                lastPage: widget.lastPage,
-                voiceId: widget.voiceId,
-                contentVoiceId: widget.contentVoiceId,
-                contentId: widget.contentId,
-                isSelected: widget.isSelected,
-                dispose: dispose,
-                stopAudio: stopAudio,
-              ),
-            ),
-          ],
-        ),
-        // ),
-      ),
-      onWillPop: () {
-        stopAudio();
-        return Future.value(true);
-      },
-    );
+              onWillPop: () {
+                stopAudio();
+                return Future.value(true);
+              },
+            );
+          }
+        }));
   }
 
   Future<void> _sendBookPageViewEvent(
@@ -313,7 +350,10 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
 }
 
 class PageWidget extends StatefulWidget {
-  final Map<String, dynamic> page;
+  //final Map<String, dynamic> page;
+  final String text;
+  final String imageUrl;
+  final int position;
   final String audioUrl;
   final int currentPage;
   final AudioPlayer audioPlayer;
@@ -334,7 +374,10 @@ class PageWidget extends StatefulWidget {
 
   const PageWidget({
     Key? key,
-    required this.page,
+    //  required this.page,
+    required this.text,
+    required this.imageUrl,
+    required this.position,
     required this.audioUrl,
     required this.currentPage,
     required this.audioPlayer,
@@ -375,12 +418,12 @@ class _PageWidgetState extends State<PageWidget> {
     }
 
     playAudio(widget.audioUrl);
-    final text = widget.page['text'] as String;
-    final imageUrl = widget.page['imageUrl'];
-    final imagePostion = widget.page['position'];
+    //final text = widget.page['text'] as String;
+    //final imageUrl = widget.page['imageUrl'];
+    //final imagePostion = widget.page['position'];
 
     CachedNetworkImage(
-      imageUrl: imageUrl,
+      imageUrl: widget.imageUrl,
     );
     return Scaffold(
       body: Stack(
@@ -407,28 +450,46 @@ class _PageWidgetState extends State<PageWidget> {
                       child: Container(
                         // [X]
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            IconButton(
-                              padding:
-                                  EdgeInsets.all(0.2 * SizeConfig.defaultSize!),
-                              alignment: Alignment.centerLeft,
-                              icon: Icon(
-                                Icons.clear,
-                                color: Colors.black,
-                                size: 3 * SizeConfig.defaultSize!,
+                            Expanded(
+                              child: IconButton(
+                                padding: EdgeInsets.all(
+                                    0.2 * SizeConfig.defaultSize!),
+                                alignment: Alignment.centerLeft,
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: Colors.black,
+                                  size: 3 * SizeConfig.defaultSize!,
+                                ),
+                                onPressed: () {
+                                  // stopAudio();
+                                  widget.dispose();
+                                  _sendBookPageXClickEvent(
+                                      widget.contentVoiceId,
+                                      widget.contentId,
+                                      widget.voiceId,
+                                      widget.currentPageIndex + 1);
+                                  Navigator.of(context).pop();
+                                },
                               ),
-                              onPressed: () {
-                                // stopAudio();
-                                widget.dispose();
-                                _sendBookPageXClickEvent(
-                                    widget.contentVoiceId,
-                                    widget.contentId,
-                                    widget.voiceId,
-                                    widget.currentPageIndex + 1);
-                                Navigator.of(context).pop();
-                              },
                             ),
+                            Expanded(
+                              flex: 11,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '${widget.currentPageIndex + 1} / ${widget.lastPage}',
+                                  style: TextStyle(
+                                      fontFamily: 'GenBkBasR',
+                                      fontSize: SizeConfig.defaultSize! * 2),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(),
+                            )
                           ],
                         ),
                       )),
@@ -438,29 +499,27 @@ class _PageWidgetState extends State<PageWidget> {
                     child: Row(
                       children: [
                         Expanded(
-                          flex: imagePostion == 1 ? 1 : 2,
+                          flex: widget.position == 1 ? 1 : 2,
                           child: Container(
                             // color: Colors.red,
-                            child: imagePostion == 1
+                            child: widget.position == 1
                                 ? Stack(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            20), // 모서리를 원형으로 설정
-                                        child: Image.asset(
-                                          'lib/images/gray.png',
+                                        borderRadius: BorderRadius.circular(20),
+                                        child:
+                                            Image.asset('lib/images/gray.png'),
+                                      ),
+                                      Positioned.fill(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: CachedNetworkImage(
+                                            imageUrl: widget.imageUrl,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            20), // 모서리를 원형으로 설정
-                                        child: Image.network(
-                                          imageUrl,
-                                          fit: BoxFit.cover,
-                                          //height: SizeConfig.defaultSize! * 30,
-                                          //width: SizeConfig.defaultSize! * 30,
-                                        ),
-                                      )
                                     ],
                                   )
                                 : Padding(
@@ -474,7 +533,7 @@ class _PageWidgetState extends State<PageWidget> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            text,
+                                            widget.text,
                                             style: TextStyle(
                                                 fontSize: 2.3 *
                                                     SizeConfig.defaultSize!,
@@ -489,31 +548,30 @@ class _PageWidgetState extends State<PageWidget> {
                           ),
                         ),
                         Expanded(
-                          flex: imagePostion == 0 ? 1 : 2,
+                          flex: widget.position == 0 ? 1 : 2,
                           child: Container(
                             //color: position == 2 ? Colors.red : Colors.white,
-                            child: imagePostion == 0
+                            child: widget.position == 0
                                 ? Stack(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            20), // 모서리를 원형으로 설정
-                                        child: Image.asset(
-                                          'lib/images/gray.png',
+                                        borderRadius: BorderRadius.circular(20),
+                                        child:
+                                            Image.asset('lib/images/gray.png'),
+                                      ),
+                                      Positioned.fill(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: CachedNetworkImage(
+                                            imageUrl: widget.imageUrl,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            20), // 모서리를 원형으로 설정
-                                        child: Image.network(
-                                          imageUrl,
-                                          fit: BoxFit.cover,
-                                          //height: SizeConfig.defaultSize! * 30,
-                                          //width: SizeConfig.defaultSize! * 30,
-                                        ),
-                                      )
                                     ],
-                                  ) //그림을 2번 화면에 배치
+                                  )
+                                //그림을 2번 화면에 배치
                                 : Padding(
                                     padding: EdgeInsets.only(
                                         right: 0.5 * SizeConfig.defaultSize!,
@@ -524,7 +582,7 @@ class _PageWidgetState extends State<PageWidget> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            text,
+                                            widget.text,
                                             style: TextStyle(
                                                 fontSize:
                                                     SizeConfig.defaultSize! *

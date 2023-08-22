@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yoggo/component/bookIntro/viewModel/book_intro_model.dart';
 import '../../../repositories/Repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class BookIntroCubit extends Cubit<List<BookIntroModel>> {
   final DataRepository repository = DataRepository();
@@ -9,13 +11,19 @@ class BookIntroCubit extends Cubit<List<BookIntroModel>> {
   BookIntroCubit() : super([]);
 
   void loadBookIntroData(int? contentId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final cachedData = prefs.getStringList('book_contentId_$contentId');
     if (contentId == null) {
       return;
     }
     // if (_dataMap.containsKey(contentId)) {
-    if (_dataMap[contentId] != null) {
+    if (cachedData != null) {
       // 이미 데이터가 로드되어 있다면, 저장된 데이터를 사용하여 emit합니다.
-      emit(_dataMap[contentId]!);
+      //  emit(_dataMap[contentId]!);
+      final cachedBookIntroData = cachedData
+          .map((item) => BookIntroModel.fromJson(json.decode(item)))
+          .toList();
+      emit(cachedBookIntroData);
       return;
     }
 
@@ -23,7 +31,11 @@ class BookIntroCubit extends Cubit<List<BookIntroModel>> {
 
     // 캐시된 데이터가 하나도 없으면, 레포지토리에서 데이터를 가져옵니다.
     final data = await DataRepository.bookIntroRepository(contentId);
+    final serializedData =
+        data.map((item) => json.encode(item.toJson())).toList();
     _dataMap[contentId] = data; // 가져온 데이터를 Map에 저장합니다.
+    prefs.setStringList('book_contentId_$contentId', serializedData);
+
     emit(data);
   }
 }
