@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: SafeArea(
                               minimum: EdgeInsets.only(
                                 left: 3 * SizeConfig.defaultSize!,
-                                right: 3 * SizeConfig.defaultSize!,
+                                //right: 3 * SizeConfig.defaultSize!,
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -212,8 +212,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             SafeArea(
                               minimum: EdgeInsets.only(
-                                  left: 3 * SizeConfig.defaultSize!,
-                                  right: 3 * SizeConfig.defaultSize!),
+                                left: 3 * SizeConfig.defaultSize!,
+                              ),
+                              //right: 3 * SizeConfig.defaultSize!),
                               child: ListTile(
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -659,11 +660,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: Stack(children: [
                                                     Positioned(
                                                       left: SizeConfig
-                                                          .defaultSize!,
+                                                              .defaultSize! *
+                                                          1.5,
                                                       top: SizeConfig
                                                               .defaultSize! *
-                                                          0.6,
-                                                      child: Icon(Icons.flag),
+                                                          1,
+                                                      child: Icon(Icons.flag,
+                                                          size: SizeConfig
+                                                                  .defaultSize! *
+                                                              2),
                                                     ),
                                                     Center(
                                                       child: Text(
@@ -775,7 +780,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontFamily: 'GenBkBasR',
                                                         fontSize: SizeConfig
                                                                 .defaultSize! *
-                                                            1.6,
+                                                            2,
                                                       ),
                                                       textAlign:
                                                           TextAlign.center,
