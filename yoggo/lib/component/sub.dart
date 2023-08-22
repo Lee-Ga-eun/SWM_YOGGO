@@ -83,6 +83,8 @@ class _PurchaseState extends State<Purchase> {
     Future(fetch);
     super.initState();
     getToken();
+    _sendSubViewEvent();
+
     // TODO: Add initialization code
   }
 
@@ -172,7 +174,6 @@ class _PurchaseState extends State<Purchase> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendSubViewEvent();
     return Scaffold(
         body: Container(
       decoration: const BoxDecoration(

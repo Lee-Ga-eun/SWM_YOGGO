@@ -24,6 +24,7 @@ class _RecEndState extends State<RecEnd> {
   void initState() {
     super.initState();
     getToken();
+    _sendRecEndViewEvent();
   }
 
   Future<void> getToken() async {
@@ -92,7 +93,6 @@ class _RecEndState extends State<RecEnd> {
   Widget build(BuildContext context) {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
-    _sendRecEndViewEvent();
     print(userState.record);
     SizeConfig().init(context);
     return Scaffold(

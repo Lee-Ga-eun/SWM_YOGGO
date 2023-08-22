@@ -18,6 +18,8 @@ class _RecInfoState extends State<RecReInfo> {
   @override
   void initState() {
     super.initState();
+    _sendRecInfoViewEvent();
+
     // TODO: Add initialization code
   }
 
@@ -35,7 +37,6 @@ class _RecInfoState extends State<RecReInfo> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendRecInfoViewEvent();
     return Scaffold(
         body: Container(
       decoration: const BoxDecoration(

@@ -529,22 +529,29 @@ class _PageWidgetState extends State<PageWidget> {
                                     padding: EdgeInsets.only(
                                         right: 1 * SizeConfig.defaultSize!,
                                         left: 1 * SizeConfig.defaultSize!),
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            widget.text,
-                                            style: TextStyle(
-                                                fontSize: 2.3 *
-                                                    SizeConfig.defaultSize!,
-                                                height: 1.3,
-                                                fontFamily: 'GenBkBasR',
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        ],
-                                      ),
+                                    child: Scrollbar(
+                                      controller: ScrollController(),
+                                      thumbVisibility: true,
+                                      trackVisibility: true,
+                                      scrollbarOrientation:
+                                          ScrollbarOrientation.right,
+                                      child: SingleChildScrollView(
+                                          child: Center(
+                                        //alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 1 *
+                                                    SizeConfig.defaultSize!),
+                                            child: Text(
+                                              widget.text,
+                                              style: TextStyle(
+                                                  fontSize: 2.1 *
+                                                      SizeConfig.defaultSize!,
+                                                  height: 1.4,
+                                                  fontFamily: 'GenBkBasR',
+                                                  fontWeight: FontWeight.w400),
+                                            )),
+                                      )),
                                     ),
                                   ),
                             // ), // 글자를 2번 화면에 배치
@@ -579,23 +586,29 @@ class _PageWidgetState extends State<PageWidget> {
                                     padding: EdgeInsets.only(
                                         right: 0.5 * SizeConfig.defaultSize!,
                                         left: 2 * SizeConfig.defaultSize!),
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            widget.text,
-                                            style: TextStyle(
-                                                fontSize:
-                                                    SizeConfig.defaultSize! *
-                                                        2.3,
-                                                height: 1.3,
-                                                fontFamily: 'GenBkBasR',
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        ],
-                                      ),
+                                    child: Scrollbar(
+                                      controller: ScrollController(),
+                                      thumbVisibility: true,
+                                      trackVisibility: true,
+                                      scrollbarOrientation:
+                                          ScrollbarOrientation.right,
+                                      child: SingleChildScrollView(
+                                          child: Center(
+                                        //alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 1 *
+                                                    SizeConfig.defaultSize!),
+                                            child: Text(
+                                              widget.text,
+                                              style: TextStyle(
+                                                  fontSize: 2.1 *
+                                                      SizeConfig.defaultSize!,
+                                                  height: 1.4,
+                                                  fontFamily: 'GenBkBasR',
+                                                  fontWeight: FontWeight.w400),
+                                            )),
+                                      )),
                                     ),
                                   ), // 글자를 1번 화면에 배치
                           ),

@@ -36,6 +36,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
   void initState() {
     super.initState();
     getToken();
+    _sendVoiceViewEvent();
   }
 
   Future<void> getToken() async {
@@ -82,7 +83,6 @@ class _VoiceProfileState extends State<VoiceProfile> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    _sendVoiceViewEvent(userState.voiceId!);
     return Scaffold(
         body: Stack(children: [
       Container(
@@ -631,20 +631,16 @@ class _VoiceProfileState extends State<VoiceProfile> {
     }
   }
 
-  Future<void> _sendVoiceViewEvent(voiceId) async {
+  Future<void> _sendVoiceViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
         name: 'voice_view',
-        parameters: <String, dynamic>{
-          'voiceId': voiceId,
-        },
+        parameters: <String, dynamic>{},
       );
       await amplitude.logEvent(
         'voice_view',
-        eventProperties: {
-          'voiceId': voiceId,
-        },
+        eventProperties: {},
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
