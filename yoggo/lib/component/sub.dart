@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/component/sign_and.dart';
@@ -189,7 +188,7 @@ class _PurchaseState extends State<Purchase> {
           //Expanded(
           //flex: 7,
           //child:
-          SizedBox(height: SizeConfig.defaultSize! * 1),
+          SizedBox(height: SizeConfig.defaultSize! * 2),
           Stack(
             alignment: Alignment.centerLeft,
             children: [
@@ -197,12 +196,26 @@ class _PurchaseState extends State<Purchase> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
+                    'NOW, Read ',
+                    style: TextStyle(
+                      fontFamily: 'Molengo',
+                      fontSize: SizeConfig.defaultSize! * 2.8,
+                    ),
+                  ),
+                  Text(
                     'LOVEL',
                     style: TextStyle(
                       fontFamily: 'Modak',
-                      fontSize: SizeConfig.defaultSize! * 5,
+                      fontSize: SizeConfig.defaultSize! * 4.8,
                     ),
                   ),
+                  Text(
+                    ' with your own voice.',
+                    style: TextStyle(
+                      fontFamily: 'Molengo',
+                      fontSize: SizeConfig.defaultSize! * 2.8,
+                    ),
+                  )
                 ],
               ),
               Positioned(
@@ -242,7 +255,7 @@ class _PurchaseState extends State<Purchase> {
                               }
 
                               // ... check restored purchaserInfo to see if entitlement is now active
-                            } on PlatformException catch (e) {
+                            } on PlatformException {
                               // Error restoring purchases
                             }
                           },
@@ -285,176 +298,215 @@ class _PurchaseState extends State<Purchase> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: 'Molengo',
-                          fontSize: SizeConfig.defaultSize! * 2.2),
+                          fontSize: SizeConfig.defaultSize! * 1.6,
+                          color: const Color.fromARGB(255, 104, 104, 104)),
                     ),
                     SizedBox(
-                      height: SizeConfig.defaultSize! * 2.5,
+                      height: SizeConfig.defaultSize! * 3,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'lib/images/rocket.png',
-                          width: SizeConfig.defaultSize! * 5,
+                    Stack(children: [
+                      // 다른 위젯들...
+                      Align(
                           alignment: Alignment.topCenter,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.defaultSize! * 10,
-                        ),
-                        RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(children: [
-                              TextSpan(
-                                text: '\$19.99/month\n',
-                                style: TextStyle(
-                                    fontSize: SizeConfig.defaultSize! * 1.8,
-                                    fontFamily: 'Molengo',
-                                    color: Colors.grey,
-                                    decoration: TextDecoration.lineThrough),
-                              ),
-                              TextSpan(
-                                text: '\$5.99/month',
-                                style: TextStyle(
-                                    fontSize: SizeConfig.defaultSize! * 2,
-                                    color: Colors.black,
-                                    fontFamily: 'Molengo'),
-                              ),
-                            ])),
-                        SizedBox(
-                          width: SizeConfig.defaultSize! * 10,
-                        ),
-                        Image.asset(
-                          'lib/images/horse.png',
-                          width: SizeConfig.defaultSize! * 5,
-                          alignment: Alignment.topCenter,
-                        )
-                      ],
-                    ),
-                    RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(children: [
-                          TextSpan(
-                            text: '70% ',
-                            style: TextStyle(
-                                height: 0,
-                                fontSize: SizeConfig.defaultSize! * 2.3,
-                                color: Colors.red,
-                                fontFamily: 'Molengo'),
-                          ),
-                          TextSpan(
-                            text: 'OFF + 1 ',
-                            style: TextStyle(
-                                height: 0,
-                                fontSize: SizeConfig.defaultSize! * 2.3,
-                                color: Colors.black,
-                                fontFamily: 'Molengo'),
-                          ),
-                          TextSpan(
-                            text: 'FREE ',
-                            style: TextStyle(
-                                height: 0,
-                                fontSize: SizeConfig.defaultSize! * 2.3,
-                                color: Colors.red,
-                                fontFamily: 'Molengo'),
-                          ),
-                          TextSpan(
-                            text: 'WEEK',
-                            style: TextStyle(
-                                height: 0,
-                                fontSize: SizeConfig.defaultSize! * 2.3,
-                                color: Colors.black,
-                                fontFamily: 'Molengo'),
-                          ),
-                        ])),
-                    SizedBox(
-                      height: 0.2 * SizeConfig.defaultSize!,
-                    ),
-                    GestureDetector(
-                        // -------------------------------------------------------------
-                        onTap: () async {
-                          _sendSubPayClickEvent();
-                          userState.login
-                              ? await startPurchase()
-                              : Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Platform.isIOS
-                                          ? const Login()
-                                          : const LoginAnd()), //HomeScreen()),
-                                );
-                          //await startPurchase();
-                        },
-                        child: Stack(children: [
-                          SizedBox(
-                            width: 52 * SizeConfig.defaultSize!,
-                            height: 8 * SizeConfig.defaultSize!,
-                          ),
-                          Positioned(
-                              //left: 39 * SizeConfig.defaultSize!,
-                              bottom: 1 * SizeConfig.defaultSize!,
-                              child: Container(
-                                  width: 52 * SizeConfig.defaultSize!,
-                                  height: 4.5 * SizeConfig.defaultSize!,
+                          // right: SizeConfig.defaultSize! * 12,
+                          // top: SizeConfig.defaultSize! * 1.4,
+                          child: GestureDetector(
+                              onTap: () async {
+                                // 버튼 클릭 시 동작
+                                _sendSubPayClickEvent();
+                                userState.login
+                                    ? await startPurchase()
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Platform.isIOS
+                                                ? const Login()
+                                                : const LoginAnd()), //HomeScreen()),
+                                      );
+                                //await startPurchase();
+                              },
+                              child: SizedBox(
+                                width: 31.1 * SizeConfig.defaultSize!,
+                                height: 13 * SizeConfig.defaultSize!,
+                                child: Container(
                                   decoration: BoxDecoration(
-                                      color: const Color(0xFFFFA91A),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                              SizeConfig.defaultSize! * 1.5))),
-                                  child: Center(
-                                      child: Text(
-                                    "CONTINUE with FREE Trial",
-                                    style: TextStyle(
-                                      fontFamily: 'Molengo',
-                                      fontSize: SizeConfig.defaultSize! * 2.2,
-                                      color: Colors.black,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  )))),
-                          Positioned(
-                            left: 39 * SizeConfig.defaultSize!,
-                            bottom: 4.7 * SizeConfig.defaultSize!,
-                            child: Container(
-                                width: 12 * SizeConfig.defaultSize!,
-                                height: 3 * SizeConfig.defaultSize!,
-                                decoration: BoxDecoration(
-                                    color: const Color(0xFF1787FF),
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            SizeConfig.defaultSize! * 1))),
-                                child: Center(
-                                    child: Text(
-                                  "Try it FREE",
-                                  style: TextStyle(
-                                    fontFamily: 'Molengo',
-                                    fontSize: SizeConfig.defaultSize! * 1.6,
-                                    color: Colors.white,
+                                      color: const Color.fromARGB(
+                                              255, 255, 255, 255)
+                                          .withOpacity(0.4),
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.defaultSize! * 1.5),
+                                      border: Border.all(
+                                        width: SizeConfig.defaultSize! * 0.25,
+                                        color: const Color.fromARGB(
+                                            255, 255, 167, 26),
+                                      )),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        height: SizeConfig.defaultSize! * 4,
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              255, 255, 167, 26),
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.defaultSize! * 1.15),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.defaultSize! * 0.4),
+                                        child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Text(
+                                            '70% OFF',
+                                            style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize:
+                                                    SizeConfig.defaultSize! *
+                                                        2.3),
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              height:
+                                                  SizeConfig.defaultSize! * 2.5,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '\$5.99',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 4 *
+                                                        SizeConfig.defaultSize!,
+                                                    fontFamily: 'Molengo',
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: SizeConfig
+                                                              .defaultSize! *
+                                                          1.8),
+                                                  child: Text(
+                                                    '/mo',
+                                                    //  textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 2.3 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      fontFamily: 'Molengo',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              '\$19.99',
+                                              style: TextStyle(
+                                                  color: const Color.fromARGB(
+                                                      136, 0, 0, 0),
+                                                  fontFamily: 'Molengo',
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  fontSize: 1.9 *
+                                                      SizeConfig.defaultSize!),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  textAlign: TextAlign.center,
-                                ))),
-                          ),
-                          // Positioned(
-                          //   bottom: 0 * SizeConfig.defaultSize!,
-                          //   left: 10 * SizeConfig.defaultSize!,
-                          //   child: Text(
-                          //     "You can cancel this subscription at any time if you wish.",
-                          //     style: TextStyle(
-                          //       fontFamily: 'Molengo',
-                          //       decoration: TextDecoration.underline,
-                          //       fontSize: SizeConfig.defaultSize! * 1.5,
-                          //       color: Colors.black,
-                          //     ),
-                          //     textAlign: TextAlign.center,
-                          //   ),
-                          //),
-                        ])),
+                                ),
+                              )))
+                    ]),
+                    SizedBox(
+                      height: 2.2 * SizeConfig.defaultSize!,
+                    ),
+                    Stack(children: [
+                      // 다른 위젯들...
+                      Align(
+                          alignment: Alignment.topCenter,
+                          // right: SizeConfig.defaultSize! * 12,
+                          // top: SizeConfig.defaultSize! * 1.4,
+                          child: GestureDetector(
+                              onTap: () async {
+                                // 버튼 클릭 시 동작
+                                _sendSubPayClickEvent();
+                                userState.login
+                                    ? await startPurchase()
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Platform.isIOS
+                                                ? const Login()
+                                                : const LoginAnd()), //HomeScreen()),
+                                      );
+                                //await startPurchase();
+                              },
+                              child: SizedBox(
+                                width: 37 * SizeConfig.defaultSize!,
+                                height: 4.5 * SizeConfig.defaultSize!,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(227, 251, 82, 60),
+                                    borderRadius: BorderRadius.circular(30),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        offset: const Offset(0, 3),
+                                        blurRadius: 6,
+                                        spreadRadius: 0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        right: 1 * SizeConfig.defaultSize!,
+                                        top: 0.75 * SizeConfig.defaultSize!,
+                                        child: Icon(
+                                          Icons.chevron_right,
+                                          color: Colors.white,
+                                          size: SizeConfig.defaultSize! * 3,
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'Start 7-days FREE Trial',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize:
+                                                2.3 * SizeConfig.defaultSize!,
+                                            fontFamily: 'Molengo',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )))
+                    ]),
+                    SizedBox(
+                      height: 1 * SizeConfig.defaultSize!,
+                    ),
                     SizedBox(
                         width: 61 * SizeConfig.defaultSize!,
                         child: Platform.isAndroid
                             ? Text(
-                                "You can cancel this subscription at any time if you wish.",
+                                "After free trial, LOVEL monthly subscription is \$5.99.",
                                 style: TextStyle(
                                   fontFamily: 'Molengo',
-                                  decoration: TextDecoration.underline,
                                   fontSize: SizeConfig.defaultSize! * 1.5,
                                   color: Colors.black,
                                 ),
