@@ -620,8 +620,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     //     : Expanded(
                                     : showFairy
                                         ? Positioned(
-                                            top: SizeConfig.defaultSize! * 1,
-                                            right: SizeConfig.defaultSize! * 4,
+                                            top: SizeConfig.defaultSize! * 1.2,
+                                            right:
+                                                SizeConfig.defaultSize! * 0.5,
                                             child: Container(
                                                 child: GestureDetector(
                                               onTap: () async {
