@@ -668,15 +668,218 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 children: [
                                   SizedBox(
+                                    height: SizeConfig.defaultSize! * 29,
+                                    child: BlocProvider(
+                                      create: (context) => DataCubit()
+                                        ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        // itemCount: state.length,
+                                        itemCount: 4,
+                                        itemBuilder: (context, index) {
+                                          final book = state[index];
+                                          return GestureDetector(
+                                            onTap: () async {
+                                              _sendBookClickEvent(book.id);
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              await prefs.setBool(
+                                                  'haveClickedBook', true);
+                                              setState(() {
+                                                showFairy = true;
+                                              });
+                                              // showFairy = true;
+                                              // print(showFairy);
+                                              book.title !=
+                                                      'The Three Little Pigs'
+                                                  ? Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            BlocProvider(
+                                                          create: (context) =>
+                                                              // BookIntroCubit(),
+                                                              // DataCubit()..loadHomeBookData()
+                                                              BookIntroCubit()
+                                                                ..loadBookIntroData(
+                                                                    book.id),
+                                                          child: BookIntro(
+                                                            title: book.title,
+                                                            thumb:
+                                                                book.thumbUrl,
+                                                            id: book.id,
+                                                            summary:
+                                                                book.summary,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            userState.purchase
+                                                                ? const RecInfo()
+                                                                : const Purchase(),
+                                                      ));
+                                            },
+                                            child: book.title ==
+                                                    'The Three Little Pigs' //제목이 성냥팔이 소녀일 경우 ==> 나중에는, lock=true인 경우
+                                                ? Column(
+                                                    children: [
+                                                      Hero(
+                                                        tag: book.id,
+                                                        child: Container(
+                                                          clipBehavior:
+                                                              Clip.hardEdge,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              22,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            child: Stack(
+                                                                children: [
+                                                                  CachedNetworkImage(
+                                                                    imageUrl: book
+                                                                        .thumbUrl,
+                                                                  ),
+                                                                  Container(
+                                                                    width: SizeConfig
+                                                                            .defaultSize! *
+                                                                        22,
+                                                                    color: const Color.fromARGB(
+                                                                            255,
+                                                                            220,
+                                                                            220,
+                                                                            220)
+                                                                        .withOpacity(
+                                                                            0.6),
+                                                                  ),
+                                                                  Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topLeft,
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'lib/images/locked.png',
+                                                                      width: 80,
+                                                                    ),
+                                                                  )
+                                                                ]),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            1,
+                                                      ),
+                                                      SizedBox(
+                                                        width: SizeConfig
+                                                                .defaultSize! *
+                                                            20,
+                                                        child: Text(
+                                                          book.title,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'GenBkBasR',
+                                                            fontSize: SizeConfig
+                                                                    .defaultSize! *
+                                                                2,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          maxLines: 2,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Column(
+                                                    children: [
+                                                      Hero(
+                                                        tag: book.id,
+                                                        child: Container(
+                                                          clipBehavior:
+                                                              Clip.hardEdge,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          height: SizeConfig
+                                                                  .defaultSize! *
+                                                              22,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              imageUrl:
+                                                                  book.thumbUrl,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: SizeConfig
+                                                                .defaultSize! *
+                                                            1,
+                                                      ),
+                                                      SizedBox(
+                                                        width: SizeConfig
+                                                                .defaultSize! *
+                                                            20,
+                                                        child: Text(
+                                                          book.title,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'GenBkBasR',
+                                                            fontSize: SizeConfig
+                                                                    .defaultSize! *
+                                                                2,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          maxLines: 2,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(
+                                                width: 2 *
+                                                    SizeConfig.defaultSize!),
+                                      ),
+                                    ),
+                                  ), //첫 줄 종료
+                                  SizedBox(
+                                    //두 번째 줄 시작
                                     height: SizeConfig.defaultSize! * 36,
                                     child: BlocProvider(
                                         create: (context) => DataCubit()
                                           ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
                                         child: ListView.separated(
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: state.length,
+                                          itemCount: state.length - 4,
                                           itemBuilder: (context, index) {
-                                            final book = state[index];
+                                            final book = state[index + 4];
                                             return GestureDetector(
                                               onTap: () async {
                                                 _sendBookClickEvent(book.id);
@@ -691,34 +894,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 // showFairy = true;
                                                 // print(showFairy);
                                                 Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BlocProvider(
-                                                      create: (context) =>
-                                                          // BookIntroCubit(),
-                                                          // DataCubit()..loadHomeBookData()
-                                                          BookIntroCubit()
-                                                            ..loadBookIntroData(
-                                                                book.id),
-                                                      child: BookIntro(
-                                                        title: book.title,
-                                                        thumb: book.thumbUrl,
-                                                        id: book.id,
-                                                        summary: book.summary,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  // MaterialPageRoute(
-                                                  //   builder: (context) =>
-                                                  //       BookIntro(
-                                                  // title: book.title,
-                                                  // thumb: book.thumbUrl,
-                                                  // id: book.id,
-                                                  // summary: book.summary,
-                                                  //   ),
-                                                  // ),
-                                                );
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          userState.purchase
+                                                              ? const RecInfo()
+                                                              : const Purchase(),
+                                                    )
+                                                    //   BlocProvider(
+                                                    // create: (context) =>
+                                                    //     // BookIntroCubit(),
+                                                    //     // DataCubit()..loadHomeBookData()
+                                                    //     BookIntroCubit()
+                                                    //       ..loadBookIntroData(
+                                                    //           book.id),
+                                                    // child: BookIntro(
+                                                    //   title: book.title,
+                                                    //   thumb: book.thumbUrl,
+                                                    //   id: book.id,
+                                                    //   summary: book.summary,
+                                                    // ),
+                                                    //   ),
+
+                                                    );
                                               },
                                               child: Column(
                                                 children: [
@@ -739,11 +937,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(8),
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              book.thumbUrl,
-                                                        ),
+                                                        child: Stack(children: [
+                                                          CachedNetworkImage(
+                                                            imageUrl:
+                                                                book.thumbUrl,
+                                                          ),
+                                                          Container(
+                                                            width: SizeConfig
+                                                                    .defaultSize! *
+                                                                22,
+                                                            color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    220,
+                                                                    220,
+                                                                    220)
+                                                                .withOpacity(
+                                                                    0.6),
+                                                          ),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .topLeft,
+                                                            child: Image.asset(
+                                                              'lib/images/locked.png',
+                                                              width: 80,
+                                                            ),
+                                                          )
+                                                        ]),
                                                       ),
                                                     ),
                                                   ),
