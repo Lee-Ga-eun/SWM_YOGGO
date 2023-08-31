@@ -44,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isDataFetched = false; // 데이터를 받아온 여부를 나타내는 플래그
   bool showOverlay = false; // Initially show the overlay
   bool showBanner = false;
+  bool showFairy = false;
+  bool showToolTip = false;
 
   // @override
   // void didChangeDependencies() {
@@ -74,13 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
     // 앱 최초 사용 접속 : 온보딩 화면 보여주기
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
-    bool haveRead = prefs.getBool('haveRead') ?? false;
-    print(prefs.getBool('haveRead'));
-    if (haveRead) {
+    bool haveClickedBook = prefs.getBool('haveClickedBook') ?? false;
+    // bool haveClickedFairy = prefs.getBool('haveClickedFairy') ?? false;
+    print(prefs.getBool('haveClickedBook'));
+    if (haveClickedBook) {
       setState(() {
-        showBanner = true;
+        showFairy = haveClickedBook;
       });
-      print('dkdkdk');
+      print('showFairy');
     }
     if (isFirstTime) {
       setState(() {
@@ -612,32 +615,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          // SizedBox(
-                          //   height: SizeConfig.defaultSize! * 1.5,
-                          // ),
-                          userState.record && userState.purchase
-                              ? Container()
-                              //     : Expanded(
-                              : showBanner
-                                  ? Expanded(
-                                      // 녹음까지 마치지 않은 사용자 - 위에 배너 보여줌
-                                      flex: SizeConfig.defaultSize!.toInt() * 1,
-                                      child: Column(
-                                        children: [
-                                          // 구매한 사용자면 보여지게, 구매하지 않은 사용자면 보여지지 않게
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left:
-                                                    0 * SizeConfig.defaultSize!,
-                                                right: 0 *
-                                                    SizeConfig.defaultSize!),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                _sendBannerClickEvent();
-
+                                userState.record && userState.purchase
+                                    ? Container()
+                                    //     : Expanded(
+                                    : showFairy
+                                        ? Positioned(
+                                            top: SizeConfig.defaultSize! * 1,
+                                            right: SizeConfig.defaultSize! * 4,
+                                            child: Container(
+                                                child: GestureDetector(
+                                              onTap: () async {
+                                                _sendToolTipClickEvent();
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                setState(() {
+                                                  showToolTip = false;
+                                                });
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -648,54 +642,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                 );
                                               },
-                                              child: Container(
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10)),
-                                                    color: Color(0xFFFFA91A),
-                                                    //   border: Border.all(
-                                                    //   color: const Color.fromARGB(255, 255, 169, 26)),
-                                                  ),
-                                                  // color: Colors.white,
-                                                  height:
-                                                      SizeConfig.defaultSize! *
-                                                          4,
-                                                  child: Stack(children: [
-                                                    Positioned(
-                                                      left: SizeConfig
-                                                              .defaultSize! *
-                                                          1.5,
-                                                      top: SizeConfig
-                                                              .defaultSize! *
-                                                          1,
-                                                      child: Icon(Icons.flag,
-                                                          size: SizeConfig
-                                                                  .defaultSize! *
-                                                              2),
-                                                    ),
-                                                    Center(
-                                                      child: Text(
-                                                        'Do you want to read a book in your voice?',
-                                                        style: TextStyle(
-                                                            fontSize: 2 *
-                                                                SizeConfig
-                                                                    .defaultSize!,
-                                                            fontFamily:
-                                                                'Molengo',
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                    ),
-                                                  ])),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : Container(), // 배너 종료
+                                              child: Transform(
+                                                  // 좌우반전
+                                                  alignment: Alignment.center,
+                                                  transform: Matrix4.identity()
+                                                    ..scale(-1.0, 1.0),
+                                                  child: Image.asset(
+                                                    'lib/images/fairy.png',
+                                                    width: 50,
+                                                    height: 50,
+                                                  )),
+                                            )))
+                                        : Container(),
+                              ],
+                            ),
+                          ),
+                          // SizedBox(
+                          //   height: SizeConfig.defaultSize! * 1.5,
+                          // ),
+                          // 배너 종료
                           Expanded(
                             flex: SizeConfig.defaultSize!.toInt() * 4,
                             child: SingleChildScrollView(
@@ -712,8 +677,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           itemBuilder: (context, index) {
                                             final book = state[index];
                                             return GestureDetector(
-                                              onTap: () {
+                                              onTap: () async {
                                                 _sendBookClickEvent(book.id);
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                await prefs.setBool(
+                                                    'haveClickedBook', true);
+                                                setState(() {
+                                                  showFairy = true;
+                                                });
+                                                // showFairy = true;
+                                                // print(showFairy);
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -936,7 +911,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           left: SizeConfig.defaultSize! * 1,
                                           bottom: SizeConfig.defaultSize! * 5,
                                           child: Image.asset(
-                                            'lib/images/showOverlayFairy.png',
+                                            'lib/images/fairy.png',
                                             width: SizeConfig.defaultSize! * 20,
                                           ),
                                         ),
@@ -1130,6 +1105,38 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       await amplitude.logEvent(
         'banner_click',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendFairyClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'fairy_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'fairy_click',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendToolTipClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'tooltip_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'tooltip_click',
         eventProperties: {},
       );
     } catch (e) {
