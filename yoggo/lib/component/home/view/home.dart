@@ -720,12 +720,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       MaterialPageRoute(
                                                         builder: (context) =>
                                                             userState.purchase
-                                                                ? const RecInfo()
+                                                                ? BlocProvider(
+                                                                    create: (context) =>
+                                                                        // BookIntroCubit(),
+                                                                        // DataCubit()..loadHomeBookData()
+                                                                        BookIntroCubit()..loadBookIntroData(book.id),
+                                                                    child:
+                                                                        BookIntro(
+                                                                      title: book
+                                                                          .title,
+                                                                      thumb: book
+                                                                          .thumbUrl,
+                                                                      id: book
+                                                                          .id,
+                                                                      summary: book
+                                                                          .summary,
+                                                                    ),
+                                                                  )
                                                                 : const Purchase(),
                                                       ));
                                             },
                                             child: book.title ==
-                                                    'The Three Little Pigs' //제목이 성냥팔이 소녀일 경우 ==> 나중에는, lock=true인 경우
+                                                        'The Three Little Pigs' &&
+                                                    userState.purchase ==
+                                                        false //제목이 성냥팔이 소녀일 경우 ==> 나중에는, lock=true인 경우
                                                 ? Column(
                                                     children: [
                                                       Hero(
