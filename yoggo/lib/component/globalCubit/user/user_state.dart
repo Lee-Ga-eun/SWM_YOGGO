@@ -5,6 +5,7 @@ class UserState {
   final bool record;
   final bool purchase;
   final bool login;
+  final int point;
   int? voiceId;
   String? voiceName;
   String? voiceIcon;
@@ -18,6 +19,7 @@ class UserState {
     required this.record,
     required this.purchase,
     required this.login,
+    required this.point,
     required this.isDataFetched,
     this.voiceId,
     this.voiceName,
@@ -33,6 +35,7 @@ class UserState {
     bool? purchase,
     bool? isDataFetched,
     bool? login,
+    int? point,
     int? voiceId,
     String? voiceName,
     String? voiceIcon,
@@ -45,6 +48,7 @@ class UserState {
       record: record ?? this.record,
       purchase: purchase ?? this.purchase,
       login: login ?? this.login,
+      point: point ?? this.point,
       isDataFetched: isDataFetched ?? this.isDataFetched,
       voiceId: voiceId ?? this.voiceId,
       voiceIcon: voiceIcon ?? this.voiceIcon,
