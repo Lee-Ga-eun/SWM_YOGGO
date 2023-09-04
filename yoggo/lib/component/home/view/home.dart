@@ -696,10 +696,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           Align(
                               alignment: Alignment.center,
                               child: SizedBox(
-                                width: 53 * SizeConfig.defaultSize!,
-                                height: 33.7 * SizeConfig.defaultSize!,
+                                width: 55 * SizeConfig.defaultSize!,
+                                height: 34 * SizeConfig.defaultSize!,
                                 child: Container(
                                   decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                            SizeConfig.defaultSize!)),
                                     color:
                                         const Color.fromARGB(255, 255, 255, 255)
                                             .withOpacity(1),
@@ -708,12 +711,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       Container(
                                         height: SizeConfig.defaultSize! * 6,
-                                        decoration: const BoxDecoration(
-                                          color:
-                                              Color.fromARGB(255, 255, 167, 26),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(
+                                                  SizeConfig.defaultSize!),
+                                              topLeft: Radius.circular(
+                                                  SizeConfig.defaultSize!)),
+                                          color: const Color.fromARGB(
+                                              255, 255, 167, 26),
                                         ),
                                       ),
                                       Padding(
+                                        //첫줄가로
                                         padding: EdgeInsets.only(
                                             top: SizeConfig.defaultSize! * 0.4),
                                         child: Align(
@@ -724,6 +733,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             )),
                                       ),
                                       Padding(
+                                        //첫번째줄가로
                                         padding: EdgeInsets.only(
                                             left: SizeConfig.defaultSize! * 6,
                                             top: SizeConfig.defaultSize! * 13),
@@ -735,6 +745,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       Padding(
+                                        //두번째줄가로
                                         padding: EdgeInsets.only(
                                             left: SizeConfig.defaultSize! * 6,
                                             top: SizeConfig.defaultSize! * 20),
@@ -746,14 +757,118 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       Padding(
+                                        //두번째줄세로
+                                        padding: EdgeInsets.only(
+                                            left: SizeConfig.defaultSize! * 36,
+                                            top: SizeConfig.defaultSize! * 13),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 0.5,
+                                          height: SizeConfig.defaultSize! * 7.5,
+                                          color: const Color.fromARGB(
+                                              255, 204, 165, 107),
+                                        ),
+                                      ),
+                                      Padding(
+                                        //두번째줄세로
+                                        padding: EdgeInsets.only(
+                                            left: SizeConfig.defaultSize! * 6,
+                                            top: SizeConfig.defaultSize! * 20),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 0.5,
+                                          height: SizeConfig.defaultSize! * 7,
+                                          color: const Color.fromARGB(
+                                              255, 204, 165, 107),
+                                        ),
+                                      ),
+                                      Padding(
+                                        //세번째줄가로
                                         padding: EdgeInsets.only(
                                             left: SizeConfig.defaultSize! * 6,
                                             top: SizeConfig.defaultSize! * 27),
                                         child: Container(
                                           height: SizeConfig.defaultSize! * 0.5,
-                                          width: SizeConfig.defaultSize! * 30,
+                                          width: SizeConfig.defaultSize! * 40,
                                           color: const Color.fromARGB(
                                               255, 204, 165, 107),
+                                        ),
+                                      ), //선 끝
+                                      eachDayCoin(
+                                        top: SizeConfig.defaultSize! * 8,
+                                        left: SizeConfig.defaultSize! * 3,
+                                        imageAsset: 'lib/images/oneCoin.png',
+                                        text: '100',
+                                      ),
+                                      eachDayCoin(
+                                          top: SizeConfig.defaultSize! * 8,
+                                          left: SizeConfig.defaultSize! * 16,
+                                          imageAsset: 'lib/images/oneCoin.png',
+                                          text: '200'),
+                                      eachDayCoin(
+                                          top: SizeConfig.defaultSize! * 8,
+                                          left: SizeConfig.defaultSize! * 29,
+                                          imageAsset: 'lib/images/oneCoin.png',
+                                          text: '200'),
+                                      eachDayCoin(
+                                          top: SizeConfig.defaultSize! * 22,
+                                          left: SizeConfig.defaultSize! * 3,
+                                          imageAsset: 'lib/images/oneCoin.png',
+                                          text: '300'),
+                                      eachDayCoin(
+                                          top: SizeConfig.defaultSize! * 22,
+                                          left: SizeConfig.defaultSize! * 16,
+                                          imageAsset: 'lib/images/oneCoin.png',
+                                          text: '400'),
+                                      // 22 29
+                                      eachDayCoin(
+                                          top: SizeConfig.defaultSize! * 22,
+                                          left: SizeConfig.defaultSize! * 29,
+                                          imageAsset: 'lib/images/oneCoin.png',
+                                          text: '500'),
+                                      // 8 42
+                                      Padding(
+                                        //100점
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.defaultSize! * 8,
+                                            left: SizeConfig.defaultSize! * 42),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 10,
+                                          height: SizeConfig.defaultSize! * 24,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 222, 220, 220),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                height:
+                                                    SizeConfig.defaultSize! *
+                                                        0.7,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7,
+                                                    right: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7),
+                                                child: Image.asset(
+                                                  'lib/images/oneCoin.png',
+                                                ),
+                                              ),
+                                              Text(
+                                                '1000',
+                                                style: TextStyle(
+                                                    fontSize: SizeConfig
+                                                            .defaultSize! *
+                                                        1.9,
+                                                    fontFamily: 'Lillita'),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -770,9 +885,45 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ));
-    //  ),
-    //],
-    //);
+  }
+
+  Padding eachDayCoin(
+      {required double top,
+      required double left,
+      required String imageAsset,
+      required String text}) {
+    return Padding(
+      //100점
+      padding: EdgeInsets.only(top: top, left: left),
+      child: Container(
+        width: SizeConfig.defaultSize! * 10,
+        height: SizeConfig.defaultSize! * 10,
+        decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 222, 220, 220),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        child: Column(
+          children: [
+            SizedBox(
+              height: SizeConfig.defaultSize! * 0.7,
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: SizeConfig.defaultSize! * 1.7,
+                  right: SizeConfig.defaultSize! * 1.7),
+              child: Image.asset(
+                imageAsset,
+              ),
+            ),
+            Text(
+              text,
+              style: TextStyle(
+                  fontSize: SizeConfig.defaultSize! * 1.9,
+                  fontFamily: 'Lillita'),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Drawer _Drawer(

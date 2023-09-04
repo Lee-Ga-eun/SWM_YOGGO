@@ -187,6 +187,10 @@ flutter:
     - family: GenBkBasR
       fonts:
         - asset: assets/fonts/GenBkBasR.ttf
+    - family: Lillita
+      fonts:
+        - asset: assets/fonts/LilitaOne-Regular.ttf
+          weight: 400
         # Prata-Regular.ttf
     # - family: Schyler
     #   fonts:
