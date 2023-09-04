@@ -18,6 +18,7 @@ class UserCubit extends Cubit<UserState> {
             record: false,
             purchase: false,
             login: true,
+            point: 0,
             isDataFetched: false)) {
     fetchUser();
   }
@@ -41,7 +42,7 @@ class UserCubit extends Cubit<UserState> {
         final userName = data['name'];
 
         final email = data['email'];
-
+        final point = data['point'];
         final purchase = data['purchase'] as bool;
         final userId = data['id'];
         final record = data['record'] as bool;
@@ -59,6 +60,7 @@ class UserCubit extends Cubit<UserState> {
               purchase: purchase,
               record: record,
               login: login,
+              point: point,
               isDataFetched: isDataFetched,
               voiceId: voiceId,
               voiceName: voiceName,
@@ -75,6 +77,7 @@ class UserCubit extends Cubit<UserState> {
                 purchase: purchase,
                 record: record,
                 login: true,
+                point: point,
                 isDataFetched: isDataFetched),
           );
         }
@@ -112,6 +115,7 @@ class UserCubit extends Cubit<UserState> {
           record: false,
           purchase: false,
           login: false,
+          point: 0,
           isDataFetched: false),
     );
     return Future.value();
