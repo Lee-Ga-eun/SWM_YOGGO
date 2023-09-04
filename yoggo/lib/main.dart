@@ -1,9 +1,18 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home.dart';
+import 'package:yoggo/component/splash.dart';
+import 'package:yoggo/models/anonymous.dart';
+import 'package:yoggo/models/user.dart';
+import 'package:yoggo/size_config.dart';
 import 'component/globalCubit/user/user_cubit.dart';
 import 'component/globalCubit/user/user_state.dart';
 import 'package:flutter/services.dart';
@@ -97,22 +106,33 @@ class App extends StatefulWidget {
 
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
   bool _initialized = false;
-
+  Future<void>? anonymousLoginFuture;
+  String? userToken;
   @override
   void initState() {
     super.initState();
     initialize();
+    getToken();
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.white.withOpacity(0), // 투명한 배경 색상으로 설정
     ));
+  }
+
+  Future<void> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userToken = prefs.getString('token');
+      print('hihi');
+    });
   }
 
   Future<void> initialize() async {
@@ -122,22 +142,63 @@ class _AppState extends State<App> {
     });
   }
 
-  Future<void> initializeFirebase() async {
+  Future<void> anonymousLogin(BuildContext context) async {
     try {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
+      final userCredential = await FirebaseAuth.instance.signInAnonymously();
+      print("Signed in with temporary account.");
+      AnonymousUserModel user = await AnonymousUserModel(
+        anonymousId: userCredential.user!.uid,
       );
-      setState(() {
-        _initialized = true;
-      });
-    } catch (e) {
-      // Firebase 초기화 실패 시 에러 처리
-      print('Failed to initialize Firebase: $e');
+
+      var url = Uri.parse('https://yoggo-server.fly.dev/auth/anonymousLogin');
+      var response = await http.post(url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(user.toJson()));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // 로그인 성공
+        var responseData = json.decode(response.body);
+        var token = responseData['token'];
+        var purchase = responseData['purchase'];
+        var record = responseData['record'];
+        var username = responseData['username'];
+        var prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        await prefs.setBool('purchase', purchase);
+        await prefs.setBool('record', record);
+        await prefs.setString('username', username);
+
+        UserCubit userCubit = context.read<UserCubit>();
+
+        await userCubit.fetchUser();
+
+        final state = userCubit.state;
+        if (state.isDataFetched) {
+          OneSignal.shared.setExternalUserId(state.userId.toString());
+          Amplitude.getInstance().setUserId(state.userId.toString());
+          Amplitude.getInstance()
+              .setUserProperties({'subscribe': purchase, 'record': record});
+          LogInResult result = await Purchases.logIn(state.userId.toString());
+        }
+      } else {
+        // 로그인 실패
+        print('로그인 실패. 상태 코드: ${response.statusCode}');
+      }
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          print("Anonymous auth hasn't been enabled for this project.");
+          break;
+        default:
+          print(e);
+          print("Unknown error.");
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<UserCubit, UserState>(
@@ -152,8 +213,37 @@ class _AppState extends State<App> {
                 {'subscribe': state.purchase, 'record': state.record});
             // 여기서 User Property 다시 한번 설정해주기 ~~
           }
-
-          return const HomeScreen(); // token이 있는 경우
+          if (userToken != null) {
+            print(userToken);
+            return const HomeScreen();
+          } else {
+            if (anonymousLoginFuture == null) {
+              anonymousLoginFuture = anonymousLogin(context);
+            }
+            return FutureBuilder(
+              future: anonymousLoginFuture,
+              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return const HomeScreen();
+                } else {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('lib/images/bkground.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Center(
+                      child: LoadingAnimationWidget.fourRotatingDots(
+                        color: const Color.fromARGB(255, 255, 169, 26),
+                        size: 100, //SizeConfig.defaultSize! * 10,
+                      ),
+                    ),
+                  );
+                }
+              },
+            );
+          } // token이 있는 경우
           //}
         },
       ),
