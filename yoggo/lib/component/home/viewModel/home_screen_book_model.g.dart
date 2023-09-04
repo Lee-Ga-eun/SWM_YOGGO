@@ -16,6 +16,8 @@ HomeScreenBookModel _$HomeScreenBookModelFromJson(Map<String, dynamic> json) =>
       last: json['last'] as int,
       age: json['age'] as int,
       visible: json['visible'] as bool,
+      sequence: json['sequence'] as int?,
+      lock: json['lock'] as bool,
     );
 
 Map<String, dynamic> _$HomeScreenBookModelToJson(
@@ -29,4 +31,6 @@ Map<String, dynamic> _$HomeScreenBookModelToJson(
       'last': instance.last,
       'age': instance.age,
       'visible': instance.visible,
+      'sequence': instance.sequence,
+      'lock': instance.lock,
     };

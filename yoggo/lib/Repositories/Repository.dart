@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:yoggo/component/home/viewModel/home_screen_book_model.dart';
 
 import 'package:yoggo/component/bookPage/viewModel/book_page_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DataRepository {
   static bool _isLoaded = false;
@@ -17,9 +18,23 @@ class DataRepository {
     if (!_isLoaded) {
       await dotenv.load(fileName: ".env");
 
-      final response =
-          // // release 버전
-          await http.get(Uri.parse(dotenv.get("API_SERVER") + 'content/all'));
+      // final response =
+      //     // // release 버전
+      //     await http.get(Uri.parse(dotenv.get("API_SERVER") + 'content/all'));
+
+      //
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      var url = Uri.parse('${dotenv.get("API_SERVER")}content/v2');
+      var response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      //
+
       // // dev 버전
       // await http.get(Uri.parse('https://yoggo-server.fly.dev/content/dev'));
       if (response.statusCode == 200) {
@@ -30,6 +45,7 @@ class DataRepository {
         _isLoaded = true;
       }
     }
+
     return _loadedHomeScreenData;
   }
 

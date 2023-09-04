@@ -9,7 +9,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home.dart';
-import 'package:yoggo/component/splash.dart';
 import 'package:yoggo/models/anonymous.dart';
 import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
@@ -69,14 +68,14 @@ void main() async {
   // final Amplitude amplitude = Amplitude.getInstance();
   final Amplitude amplitude = Amplitude.getInstance();
 
-  String AMPLITUDE_API = mode == 'rel'
+  String amplitudeApi = mode == 'rel'
       ? dotenv.get("AMPLITUDE_API_rel")
       : dotenv.get("AMPLITUDE_API_dev");
 
-  print(AMPLITUDE_API);
+  print(amplitudeApi);
 
   // Initialize SDK
-  await amplitude.init(AMPLITUDE_API);
+  await amplitude.init(amplitudeApi);
 
   await amplitude.logEvent('startup');
 
@@ -146,7 +145,7 @@ class _AppState extends State<App> {
     try {
       final userCredential = await FirebaseAuth.instance.signInAnonymously();
       print("Signed in with temporary account.");
-      AnonymousUserModel user = await AnonymousUserModel(
+      AnonymousUserModel user = AnonymousUserModel(
         anonymousId: userCredential.user!.uid,
       );
 
@@ -217,9 +216,7 @@ class _AppState extends State<App> {
             print(userToken);
             return const HomeScreen();
           } else {
-            if (anonymousLoginFuture == null) {
-              anonymousLoginFuture = anonymousLogin(context);
-            }
+            anonymousLoginFuture ??= anonymousLogin(context);
             return FutureBuilder(
               future: anonymousLoginFuture,
               builder: (BuildContext context, AsyncSnapshot<void> snapshot) {

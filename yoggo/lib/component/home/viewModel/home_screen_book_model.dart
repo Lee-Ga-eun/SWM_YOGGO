@@ -13,8 +13,10 @@ class HomeScreenBookModel extends Equatable {
   final int last;
   final int age;
   final bool visible;
+  int? sequence;
+  final bool lock;
 
-  const HomeScreenBookModel({
+  HomeScreenBookModel({
     required this.id,
     required this.title,
     required this.thumbUrl,
@@ -23,6 +25,8 @@ class HomeScreenBookModel extends Equatable {
     required this.last,
     required this.age,
     required this.visible,
+    this.sequence,
+    required this.lock,
   });
 
   factory HomeScreenBookModel.fromJson(Map<String, dynamic> json) =>
@@ -31,6 +35,16 @@ class HomeScreenBookModel extends Equatable {
   Map<String, dynamic> toJson() => _$HomeScreenBookModelToJson(this);
 
   @override
-  List<Object?> get props =>
-      [id, title, thumbUrl, summary, createdAt, last, age, visible];
+  List<Object?> get props => [
+        id,
+        title,
+        thumbUrl,
+        summary,
+        createdAt,
+        last,
+        age,
+        visible,
+        sequence,
+        lock
+      ];
 }
