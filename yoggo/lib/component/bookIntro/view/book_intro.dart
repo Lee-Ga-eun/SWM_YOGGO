@@ -535,16 +535,44 @@ class _BookIntroState extends State<BookIntro> {
                                           duration:
                                               const Duration(milliseconds: 300),
                                           builder: (context, value, child) {
-                                            return Container(
-                                              //  width: 20,
-                                              //height: 20,
-                                              clipBehavior: Clip.hardEdge,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
+                                            return Stack(children: [
+                                              Container(
+                                                //  width: 20,
+                                                //height: 20,
+                                                clipBehavior: Clip.hardEdge,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: child,
                                               ),
-                                              child: child,
-                                            );
+                                              Positioned(
+                                                left: SizeConfig.defaultSize!,
+                                                top: SizeConfig.defaultSize!,
+                                                child: Container(
+                                                  width: 6.2 *
+                                                      SizeConfig.defaultSize!,
+                                                  height: 3.5 *
+                                                      SizeConfig.defaultSize!,
+                                                  //clipBehavior: Clip.hardEdge,
+                                                  decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(
+                                                        128, 255, 255, 255),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                  ),
+                                                  child: Center(
+                                                      child: Text('$lastPage p',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'GenBkBasR',
+                                                              fontSize: 2 *
+                                                                  SizeConfig
+                                                                      .defaultSize!))),
+                                                ),
+                                              )
+                                            ]);
                                           },
                                           child: CachedNetworkImage(
                                             imageUrl: widget.thumb,
