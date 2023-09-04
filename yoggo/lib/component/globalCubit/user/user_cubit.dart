@@ -17,7 +17,7 @@ class UserCubit extends Cubit<UserState> {
             email: '',
             record: false,
             purchase: false,
-            login: false,
+            login: true,
             isDataFetched: false)) {
     fetchUser();
   }
