@@ -202,7 +202,7 @@ class _PurchaseState extends State<Purchase> {
             Platform.isIOS
                 ? Positioned(
                     top: 1.2 * SizeConfig.defaultSize!,
-                    right: 12 * SizeConfig.defaultSize!,
+                    right: 11.5 * SizeConfig.defaultSize!,
                     child: GestureDetector(
                         onTap: () async {
                           try {
@@ -232,10 +232,10 @@ class _PurchaseState extends State<Purchase> {
                           }
                         },
                         child: Container(
-                          width: 15 * SizeConfig.defaultSize!,
+                          width: 17 * SizeConfig.defaultSize!,
                           height: 4 * SizeConfig.defaultSize!,
                           decoration: BoxDecoration(
-                              color: const Color.fromARGB(0, 255, 255, 255),
+                              color: const Color.fromARGB(128, 255, 255, 255),
                               borderRadius: BorderRadius.all(Radius.circular(
                                   SizeConfig.defaultSize! * 1))),
                           child: Center(
@@ -261,19 +261,28 @@ class _PurchaseState extends State<Purchase> {
                         borderRadius: BorderRadius.all(
                             Radius.circular(SizeConfig.defaultSize! * 1))),
                     child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                              width: 2 * SizeConfig.defaultSize!,
-                              child: Image.asset('lib/images/oneCoin.png')),
                           SizedBox(
                             width: 0.5 * SizeConfig.defaultSize!,
                           ),
-                          Text(
-                            '40068',
-                            style: TextStyle(
-                                fontFamily: 'lilita',
-                                fontSize: SizeConfig.defaultSize! * 2),
+                          Container(
+                              width: 2 * SizeConfig.defaultSize!,
+                              child: Image.asset('lib/images/oneCoin.png')),
+                          // SizedBox(
+                          //   width: 0.5 * SizeConfig.defaultSize!,
+                          // ),
+                          Container(
+                            width: 7 * SizeConfig.defaultSize!,
+                            alignment: Alignment.center,
+                            // decoration: BoxDecoration(color: Colors.blue),
+                            child: Text(
+                              '${userState.point + 0}',
+                              style: TextStyle(
+                                  fontFamily: 'lilita',
+                                  fontSize: SizeConfig.defaultSize! * 2),
+                              textAlign: TextAlign.center,
+                            ),
                           )
                         ])),
               ]),
@@ -608,6 +617,7 @@ class _PurchaseState extends State<Purchase> {
                             color: const Color.fromARGB(255, 255, 167, 26),
                           ))),
                 )),
+
             pointGood(
                 top: 7.5,
                 right: 21.5,
@@ -673,70 +683,86 @@ class _PurchaseState extends State<Purchase> {
       required double right,
       required double wid,
       required double hei,
-      required coinImage,
+      required String coinImage,
       required double coinWid,
       required int coinNum,
       required price}) {
     return Positioned(
         top: top * SizeConfig.defaultSize!,
         right: right * SizeConfig.defaultSize!,
-        child: Column(
-          children: [
-            Stack(
-              alignment: Alignment.center, // 자식 위젯을 중앙 정렬
-              children: [
-                Container(
-                  width: wid * SizeConfig.defaultSize!,
-                  height: hei * SizeConfig.defaultSize!,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 167, 26),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.6), // 그림자 색상 및 투명도
-                        spreadRadius: 0, // 그림자 확산 반경
-                        blurRadius: 3, // 그림자의 흐림 정도
-                        offset: Offset(5, 5), // 그림자의 위치 (가로, 세로)
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                    width: coinWid * SizeConfig.defaultSize!, //
-                    child: Image.asset('lib/images/${coinImage}.png')),
-                Positioned(
-                    right: 0.5 * SizeConfig.defaultSize!,
-                    bottom: 0.5 * SizeConfig.defaultSize!,
-                    child: Text(
-                      '${coinNum}',
-                      style: TextStyle(
-                          fontFamily: 'Lilita',
-                          fontSize: SizeConfig.defaultSize! * 2.8),
-                    ))
-              ],
-            ),
-            Stack(
+        child: GestureDetector(
+          onTap: () async {
+            _sendSubPayClickEvent();
+            startPurchase(); // 이거 프로덕트에 맞게 바꿔야 함
+            // userState.login
+            //     ? await startPurchase()
+            //     : Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => Platform.isIOS
+            //                 ? const Login()
+            //                 : const LoginAnd()), //HomeScreen()),
+            //       );
+          },
+          child: Column(
+            children: [
+              Stack(
                 alignment: Alignment.center, // 자식 위젯을 중앙 정렬
                 children: [
                   Container(
                     width: wid * SizeConfig.defaultSize!,
-                    height: 4 * SizeConfig.defaultSize!,
-                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.6), // 그림자 색상 및 투명도
-                        spreadRadius: 0, // 그림자 확산 반경
-                        blurRadius: 3, // 그림자의 흐림 정도
-                        offset: Offset(5, 5), // 그림자의 위치 (가로, 세로)
-                      ),
-                    ]),
+                    height: hei * SizeConfig.defaultSize!,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 167, 26),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.6), // 그림자 색상 및 투명도
+                          spreadRadius: 0, // 그림자 확산 반경
+                          blurRadius: 3, // 그림자의 흐림 정도
+                          offset: Offset(5, 5), // 그림자의 위치 (가로, 세로)
+                        ),
+                      ],
+                    ),
                   ),
-                  Text(
-                    '${price}',
-                    style: TextStyle(
-                        fontFamily: 'Molengo',
-                        fontSize: SizeConfig.defaultSize! * 2.5),
-                  )
-                ])
-          ],
+                  SizedBox(
+                      width: coinWid * SizeConfig.defaultSize!, //
+                      child: Image.asset('lib/images/${coinImage}.png')),
+                  Positioned(
+                      right: 0.5 * SizeConfig.defaultSize!,
+                      bottom: 0.5 * SizeConfig.defaultSize!,
+                      child: Text(
+                        '${coinNum}',
+                        style: TextStyle(
+                            fontFamily: 'Lilita',
+                            fontSize: SizeConfig.defaultSize! * 2.8),
+                      ))
+                ],
+              ),
+              Stack(
+                  alignment: Alignment.center, // 자식 위젯을 중앙 정렬
+                  children: [
+                    Container(
+                      width: wid * SizeConfig.defaultSize!,
+                      height: 4 * SizeConfig.defaultSize!,
+                      decoration:
+                          BoxDecoration(color: Colors.white, boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.6), // 그림자 색상 및 투명도
+                          spreadRadius: 0, // 그림자 확산 반경
+                          blurRadius: 3, // 그림자의 흐림 정도
+                          offset: Offset(5, 5), // 그림자의 위치 (가로, 세로)
+                        ),
+                      ]),
+                    ),
+                    Text(
+                      '${price}',
+                      style: TextStyle(
+                          fontFamily: 'Molengo',
+                          fontSize: SizeConfig.defaultSize! * 2.5),
+                    )
+                  ])
+            ],
+          ),
         ));
   }
 
