@@ -5,7 +5,8 @@ import 'package:yoggo/component/bookIntro/view/book_intro.dart';
 import 'package:yoggo/component/globalCubit/user/user_state.dart';
 import 'package:yoggo/component/home/viewModel/home_screen_book_model.dart';
 import 'package:yoggo/component/sign.dart';
-import 'package:yoggo/component/sub.dart';
+// import 'package:yoggo/component/sub.dart';
+import 'package:yoggo/component/shop.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
@@ -278,11 +279,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        userState.purchase
-                                                            ? const RecInfo()
-                                                            : const Purchase(),
-                                                  ),
+                                                      builder: (context) =>
+                                                          const Purchase()
+                                                      // userState.purchase
+                                                      //     ? const RecInfo()
+                                                      //     : const Purchase(),
+                                                      ),
                                                 );
                                               },
                                               child: Transform(
@@ -865,7 +867,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     fontSize: SizeConfig
                                                             .defaultSize! *
                                                         1.9,
-                                                    fontFamily: 'Lillita'),
+                                                    fontFamily: 'Lilita'),
                                               )
                                             ],
                                           ),
@@ -918,7 +920,7 @@ class _HomeScreenState extends State<HomeScreen> {
               text,
               style: TextStyle(
                   fontSize: SizeConfig.defaultSize! * 1.9,
-                  fontFamily: 'Lillita'),
+                  fontFamily: 'Lilita'),
             )
           ],
         ),
