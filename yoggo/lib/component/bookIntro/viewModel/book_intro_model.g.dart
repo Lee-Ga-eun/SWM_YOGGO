@@ -15,6 +15,7 @@ BookIntroModel _$BookIntroModelFromJson(Map<String, dynamic> json) =>
       last: json['last'] as int,
       voice: json['voice'] as List<dynamic>,
       font: json['font'] as String,
+      lock: json['lock'] as bool,
     );
 
 Map<String, dynamic> _$BookIntroModelToJson(BookIntroModel instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$BookIntroModelToJson(BookIntroModel instance) =>
       'last': instance.last,
       'voice': instance.voice,
       'font': instance.font,
+      'lock': instance.lock,
     };

@@ -22,7 +22,7 @@ class DataRepository {
       //     // // release 버전
       //     await http.get(Uri.parse(dotenv.get("API_SERVER") + 'content/all'));
 
-      //
+      // release 버전
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
       var url = Uri.parse('${dotenv.get("API_SERVER")}content/v2');
@@ -36,7 +36,7 @@ class DataRepository {
       //
 
       // // dev 버전
-      // await http.get(Uri.parse('https://yoggo-server.fly.dev/content/dev'));
+      // await http.get(Uri.parse('${dotenv.get("API_SERVER")}content/dev'));
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List<dynamic>;
         final data =
@@ -75,6 +75,8 @@ class DataRepository {
   static final List<int> _loadedBookNumber = [];
 
   static Future<List<BookIntroModel>> bookIntroRepository(int contentId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
     if (_loadedBookNumber.contains(contentId)) {
       // 이미 로드한 데이터가 있다면 해당 contentId에 맞는 데이터를 추출하여 리턴
       final loadedData = _loadedBookIntroData
@@ -83,8 +85,39 @@ class DataRepository {
       return loadedData;
     }
     _loadedBookNumber.add(contentId);
-    final response = await http
-        .get(Uri.parse('https://yoggo-server.fly.dev/content/$contentId'));
+    final response = await http.get(
+      Uri.parse('${dotenv.get("API_SERVER")}content/v2/$contentId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      final data =
+          jsonData.map((item) => BookIntroModel.fromJson(item)).toList();
+      _loadedBookIntroData.addAll(data); // 로드한 데이터를 저장
+      return data;
+    } else {
+      return []; // 에러 발생 시 빈 리스트 리턴
+    }
+  }
+
+  static Future<List<BookIntroModel>> bookIntroRepository2(
+      int contentId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    if (_loadedBookNumber.contains(contentId)) {
+      // 이미 로드한 데이터가 있다면 해당 contentId에 맞는 데이터를 추출하여 리턴
+      _loadedBookIntroData.removeWhere((data) => data.contentId == contentId);
+    }
+    final response = await http.get(
+      Uri.parse('${dotenv.get("API_SERVER")}content/v2/$contentId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List<dynamic>;
       final data =
@@ -109,12 +142,11 @@ class DataRepository {
 
     _loadedBookPageNumber.add(contentVoiceId);
     final response = await http.get(Uri.parse(
-        'https://yoggo-server.fly.dev/content/page?contentVoiceId=$contentVoiceId'));
+        '${dotenv.get("API_SERVER")}content/page?contentVoiceId=$contentVoiceId'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List<dynamic>;
       final bookPageData =
           jsonData.map((item) => BookPageModel.fromJson(item)).toList();
-
       _loadedBookPageDataMap[contentVoiceId] = bookPageData; // 로드한 데이터를 저장
       return bookPageData;
     } else {

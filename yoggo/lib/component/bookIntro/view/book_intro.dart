@@ -3,9 +3,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yoggo/component/sub.dart';
 import 'package:yoggo/component/rec_info.dart';
 import '../../bookPage/view/book_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:yoggo/size_config.dart';
@@ -14,6 +15,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../globalCubit/user/user_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../shop.dart';
 import '../viewModel/book_intro_model.dart';
 import '../viewModel/book_intro_cubit.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -53,6 +55,9 @@ class _BookIntroState extends State<BookIntro> {
   bool isPurchased = false;
   bool isLoading = false;
   bool wantPurchase = false;
+  bool buyPoints = false;
+  bool animation = false;
+  String lackingPoint = '';
   // bool wantRecord = false;
   //bool wantInference = false;
   bool completeInference = true;
@@ -84,7 +89,9 @@ class _BookIntroState extends State<BookIntro> {
   }
 
   Future<void> fetchPageData() async {
-    final url = 'https://yoggo-server.fly.dev/content/${widget.id}';
+    await dotenv.load(fileName: ".env");
+
+    final url = '${dotenv.get("API_SERVER")}content/v2/${widget.id}';
     final response = await http.get(Uri.parse(url));
     if (mounted) {
       if (response.statusCode == 200) {
@@ -113,6 +120,8 @@ class _BookIntroState extends State<BookIntro> {
   @override
   void initState() {
     super.initState();
+    UserCubit().fetchUser();
+
     //  cvi = 0;
     contentId = widget.id; // contentId는 init에서
     // fetchPageData();
@@ -332,6 +341,25 @@ class _BookIntroState extends State<BookIntro> {
     });
   }
 
+  Future<String> buyContent() async {
+    final url = '${dotenv.get("API_SERVER")}content/buy';
+    final response = await http.post(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'contentId': widget.id.toString()}));
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      UserCubit().fetchUser();
+      return response.statusCode.toString();
+    } else if (response.statusCode == 400) {
+      return json.decode(response.body)[0].toString();
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+
 //구매한 사람인지, 이 책이 인퍼런스되어 있는지 확인
   Future<String> purchaseInfo(String token) async {
     var url = Uri.parse(
@@ -355,7 +383,7 @@ class _BookIntroState extends State<BookIntro> {
 
 //인퍼런스 안 되어 있다면 시작하도록
   Future<void> startInference(String token) async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/producer/book');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}producer/book');
     Map data = {'contentId': widget.id};
     var response = await http.post(url,
         headers: {
@@ -378,8 +406,8 @@ class _BookIntroState extends State<BookIntro> {
 
 //인퍼런스 완료 되었는지 (ContentVoice) 확인
   Future<bool> checkInference(String token) async {
-    var url = Uri.parse(
-        'https://yoggo-server.fly.dev/content/inference/${widget.id}');
+    var url =
+        Uri.parse('${dotenv.get("API_SERVER")}content/inference/${widget.id}');
     var response = await http.get(
       url,
       headers: {
@@ -420,7 +448,6 @@ class _BookIntroState extends State<BookIntro> {
         builder: (context, bookIntro) {
       final userCubit = context.watch<UserCubit>();
       final userState = userCubit.state;
-
       SizeConfig().init(context);
       if (bookIntro.isEmpty) {
         return Scaffold(
@@ -1194,132 +1221,229 @@ class _BookIntroState extends State<BookIntro> {
                                                 alignment: Alignment.topCenter,
                                                 // right: SizeConfig.defaultSize! * 12,
                                                 // top: SizeConfig.defaultSize! * 1.4,
-                                                child: GestureDetector(
-                                                    onTap: () async {
-                                                      // 버튼 클릭 시 동작
-                                                      // _checkHaveRead();
-                                                      (cvi ==
-                                                              inferenceId) // 원래는 cvi==inferenceId
-                                                          ? await checkInference(
-                                                                  token)
-                                                              ? {
-                                                                  _sendBookStartClickEvent(
-                                                                    cvi,
-                                                                    contentId,
-                                                                    vi,
+                                                child: bookIntro.first.lock
+                                                    ? InkWell(
+                                                        onTap: () async {
+                                                          userCubit.fetchUser();
+                                                          if (userState.point <
+                                                              3000) {
+                                                            lackingPoint = (3000 -
+                                                                    userState
+                                                                        .point)
+                                                                .toString();
+                                                            setState(() {
+                                                              buyPoints = true;
+                                                            });
+                                                          }
+                                                          var result =
+                                                              await buyContent();
+                                                          if (result == '200') {
+                                                            setState(() {
+                                                              animation = true;
+                                                            });
+                                                            bookIntroCubit
+                                                                .changeBookIntroData(
+                                                                    widget.id);
+                                                            userCubit
+                                                                .fetchUser();
+                                                          }
+                                                        },
+                                                        child:
+                                                            AnimatedContainer(
+                                                                width: animation
+                                                                    ? 31.1 *
+                                                                        SizeConfig
+                                                                            .defaultSize!
+                                                                    : 24 *
+                                                                        SizeConfig
+                                                                            .defaultSize!,
+                                                                height: 4.5 *
+                                                                    SizeConfig
+                                                                        .defaultSize!,
+                                                                decoration:
+                                                                    ShapeDecoration(
+                                                                  color: Color(
+                                                                      0xFFFFA91A),
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            30),
                                                                   ),
-                                                                  Navigator
-                                                                      .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              BookPage(
-                                                                        // 다음 화면으로 contetnVoiceId를 가지고 이동
-                                                                        contentVoiceId:
-                                                                            cvi,
-                                                                        voiceId:
-                                                                            vi,
-                                                                        contentId:
-                                                                            contentId,
-                                                                        lastPage:
-                                                                            lastPage,
-                                                                        isSelected:
-                                                                            true,
+                                                                ),
+                                                                duration:
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            350),
+                                                                child: Stack(
+                                                                    children: [
+                                                                      // Positioned(
+                                                                      //     right: 1 *
+                                                                      //         SizeConfig
+                                                                      //             .defaultSize!,
+                                                                      //     top: 0.75 *
+                                                                      //         SizeConfig
+                                                                      //             .defaultSize!,
+                                                                      //     child:
+                                                                      //         Icon(
+                                                                      //       Icons
+                                                                      //           .chevron_right,
+                                                                      //       color: Colors
+                                                                      //           .black,
+                                                                      //       size: SizeConfig.defaultSize! *
+                                                                      //           3,
+                                                                      //     )),
+                                                                      Center(
+                                                                        child: animation
+                                                                            //? Text('')
+                                                                            ? Text(
+                                                                                'READ NOW',
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(color: Colors.black, fontSize: 2.3 * SizeConfig.defaultSize!, fontFamily: 'GenBkBasR'),
+                                                                              )
+                                                                            : Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  Image.asset(
+                                                                                    'lib/images/oneCoin.png',
+                                                                                    width: SizeConfig.defaultSize! * 2.7,
+                                                                                  ),
+                                                                                  SizedBox(width: SizeConfig.defaultSize!),
+                                                                                  Text(
+                                                                                    '3000',
+                                                                                    textAlign: TextAlign.center,
+                                                                                    style: TextStyle(color: Colors.black, fontSize: 2.7 * SizeConfig.defaultSize!, fontFamily: 'GenBkBasR'),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
                                                                       ),
-                                                                    ),
-                                                                  )
-                                                                }
-                                                              : setState(() {
-                                                                  completeInference =
-                                                                      false;
-                                                                })
-                                                          : canChanged.value
-                                                              ? {
-                                                                  _sendBookStartClickEvent(
-                                                                    cvi,
-                                                                    contentId,
-                                                                    vi,
-                                                                  ),
-                                                                  Navigator
-                                                                      .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              BookPage(
-                                                                        // 다음 화면으로 contetnVoiceId를 가지고 이동
-                                                                        contentVoiceId:
-                                                                            cvi,
-                                                                        voiceId:
-                                                                            vi,
-                                                                        contentId:
-                                                                            contentId,
-                                                                        lastPage:
-                                                                            lastPage,
-                                                                        isSelected:
-                                                                            true,
+                                                                    ])))
+                                                    : GestureDetector(
+                                                        onTap: () async {
+                                                          // 버튼 클릭 시 동작
+                                                          // _checkHaveRead();
+                                                          (cvi ==
+                                                                  inferenceId) // 원래는 cvi==inferenceId
+                                                              ? await checkInference(
+                                                                      token)
+                                                                  ? {
+                                                                      _sendBookStartClickEvent(
+                                                                        cvi,
+                                                                        contentId,
+                                                                        vi,
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                  audioPlayer
-                                                                      .stop(),
-                                                                }
-                                                              : null;
-                                                    },
-                                                    child: Container(
-                                                        width: 31.1 *
-                                                            SizeConfig
-                                                                .defaultSize!,
-                                                        height: 4.5 *
-                                                            SizeConfig
-                                                                .defaultSize!,
-                                                        decoration:
-                                                            ShapeDecoration(
-                                                          color:
-                                                              Color(0xFFFFA91A),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        30),
-                                                          ),
-                                                        ),
-                                                        child: Stack(children: [
-                                                          Positioned(
-                                                              right: 1 *
-                                                                  SizeConfig
-                                                                      .defaultSize!,
-                                                              top: 0.75 *
-                                                                  SizeConfig
-                                                                      .defaultSize!,
-                                                              child: Icon(
-                                                                Icons
-                                                                    .chevron_right,
-                                                                color: Colors
-                                                                    .black,
-                                                                size: SizeConfig
-                                                                        .defaultSize! *
-                                                                    3,
-                                                              )),
-                                                          Center(
-                                                            child: Text(
-                                                              'READ NOW',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 2.3 *
-                                                                      SizeConfig
-                                                                          .defaultSize!,
-                                                                  fontFamily:
-                                                                      'GenBkBasR'),
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              BookPage(
+                                                                            // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                                                            contentVoiceId:
+                                                                                cvi,
+                                                                            voiceId:
+                                                                                vi,
+                                                                            contentId:
+                                                                                contentId,
+                                                                            lastPage:
+                                                                                lastPage,
+                                                                            isSelected:
+                                                                                true,
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    }
+                                                                  : setState(
+                                                                      () {
+                                                                      completeInference =
+                                                                          false;
+                                                                    })
+                                                              : canChanged.value
+                                                                  ? {
+                                                                      _sendBookStartClickEvent(
+                                                                        cvi,
+                                                                        contentId,
+                                                                        vi,
+                                                                      ),
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              BookPage(
+                                                                            // 다음 화면으로 contetnVoiceId를 가지고 이동
+                                                                            contentVoiceId:
+                                                                                cvi,
+                                                                            voiceId:
+                                                                                vi,
+                                                                            contentId:
+                                                                                contentId,
+                                                                            lastPage:
+                                                                                lastPage,
+                                                                            isSelected:
+                                                                                true,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      audioPlayer
+                                                                          .stop(),
+                                                                    }
+                                                                  : null;
+                                                        },
+                                                        child: Container(
+                                                            width: 31.1 *
+                                                                SizeConfig
+                                                                    .defaultSize!,
+                                                            height: 4.5 *
+                                                                SizeConfig
+                                                                    .defaultSize!,
+                                                            decoration:
+                                                                ShapeDecoration(
+                                                              color: Color(
+                                                                  0xFFFFA91A),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            30),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ]))))
+                                                            child: Stack(
+                                                                children: [
+                                                                  Positioned(
+                                                                      right: 1 *
+                                                                          SizeConfig
+                                                                              .defaultSize!,
+                                                                      top: 0.75 *
+                                                                          SizeConfig
+                                                                              .defaultSize!,
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .chevron_right,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        size: SizeConfig.defaultSize! *
+                                                                            3,
+                                                                      )),
+                                                                  Center(
+                                                                    child: Text(
+                                                                      'READ NOW',
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize: 2.3 *
+                                                                              SizeConfig
+                                                                                  .defaultSize!,
+                                                                          fontFamily:
+                                                                              'GenBkBasR'),
+                                                                    ),
+                                                                  ),
+                                                                ]))))
                                           ]))
                                     ]))
                           ])),
@@ -1443,6 +1567,41 @@ class _BookIntroState extends State<BookIntro> {
                     TextButton(
                       onPressed: () {
                         _sendBookIntroRegisterOkClickEvent(contentId);
+                        // 1초 후에 다음 페이지로 이동
+                        Future.delayed(const Duration(seconds: 1), () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Purchase()),
+                          );
+                        });
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
+              Visibility(
+                visible: buyPoints,
+                child: AlertDialog(
+                  title: Text('you need more ${lackingPoint} points!'),
+                  content: const Text('Click OK to go shop!'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        _sendBookIntroRegisterLaterClickEvent(contentId);
+                        // 1초 후에 다음 페이지로 이동
+                        Future.delayed(const Duration(seconds: 1), () {
+                          setState(() {
+                            buyPoints = false;
+                          });
+                        });
+                      },
+                      child: const Text('later'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        //_sendBookIntroRegisterOkClickEvent(contentId);
                         // 1초 후에 다음 페이지로 이동
                         Future.delayed(const Duration(seconds: 1), () {
                           Navigator.push(
