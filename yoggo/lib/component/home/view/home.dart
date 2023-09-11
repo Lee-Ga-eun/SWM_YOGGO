@@ -368,11 +368,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const Purchase()
-                                                      // userState.purchase
-                                                      //     ? const RecInfo()
-                                                      //     : const Purchase(),
-                                                      ),
+                                                          const Purchase()),
                                                 );
                                               },
                                               child: Transform(
@@ -431,59 +427,58 @@ class _HomeScreenState extends State<HomeScreen> {
                                               // showFairy = true;
                                               // print(showFairy);
                                               // --------
-                                              userState.purchase == true ||
-                                                      book.lock == false ||
-                                                      (book.title ==
-                                                              'Snow White and the Seven Dwarfs' ||
-                                                          book.title ==
-                                                              'The Little Match Girl') // 구독자인지 확인하기 and 포인트로 푼 책인지 확인하기
-                                                  ? Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            BlocProvider(
-                                                          create: (context) =>
-                                                              // BookIntroCubit(),
-                                                              // DataCubit()..loadHomeBookData()
-                                                              BookIntroCubit()
-                                                                ..loadBookIntroData(
-                                                                    book.id),
-                                                          child: BookIntro(
-                                                            title: book.title,
-                                                            thumb:
-                                                                book.thumbUrl,
-                                                            id: book.id,
-                                                            summary:
-                                                                book.summary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : Navigator.push(
-                                                      //구독자가 아니면 purchase로 보낸다?
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            userState.purchase
-                                                                ? BlocProvider(
-                                                                    create: (context) =>
-                                                                        // BookIntroCubit(),
-                                                                        // DataCubit()..loadHomeBookData()
-                                                                        BookIntroCubit()..loadBookIntroData(book.id),
-                                                                    child:
-                                                                        BookIntro(
-                                                                      title: book
-                                                                          .title,
-                                                                      thumb: book
-                                                                          .thumbUrl,
-                                                                      id: book
-                                                                          .id,
-                                                                      summary: book
-                                                                          .summary,
-                                                                    ),
-                                                                  )
-                                                                : const Purchase(),
-                                                      ));
+                                              // userState.purchase == true ||
+                                              //         book.lock == false ||
+                                              //         (book.title ==
+                                              //                 'Snow White and the Seven Dwarfs' ||
+                                              //             book.title ==
+                                              //                 'The Little Match Girl') // 구독자인지 확인하기 and 포인트로 푼 책인지 확인하기
+                                              //     ?
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BlocProvider(
+                                                    create: (context) =>
+                                                        // BookIntroCubit(),
+                                                        // DataCubit()..loadHomeBookData()
+                                                        BookIntroCubit()
+                                                          ..loadBookIntroData(
+                                                              book.id),
+                                                    child: BookIntro(
+                                                      title: book.title,
+                                                      thumb: book.thumbUrl,
+                                                      id: book.id,
+                                                      summary: book.summary,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                              // : Navigator.push(
+                                              //     //구독자가 아니면 purchase로 보낸다?
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //       builder: (context) =>
+                                              //           userState.purchase
+                                              //               ? BlocProvider(
+                                              //                   create: (context) =>
+                                              //                       // BookIntroCubit(),
+                                              //                       // DataCubit()..loadHomeBookData()
+                                              //                       BookIntroCubit()..loadBookIntroData(book.id),
+                                              //                   child:
+                                              //                       BookIntro(
+                                              //                     title: book
+                                              //                         .title,
+                                              //                     thumb: book
+                                              //                         .thumbUrl,
+                                              //                     id: book
+                                              //                         .id,
+                                              //                     summary: book
+                                              //                         .summary,
+                                              //                   ),
+                                              //                 )
+                                              //               : const Purchase(),
+                                              //     ));
                                             }, //onTap 종료
                                             child: userState.purchase == true
                                                 ? unlockedBook(book)
@@ -528,59 +523,58 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 });
                                                 // showFairy = true;
                                                 // print(showFairy);
-                                                userState.purchase == true ||
-                                                        book.lock == false ||
-                                                        (book.title ==
-                                                                'Snow White and the Seven Dwarfs' ||
-                                                            book.title ==
-                                                                'The Little Match Girl') // 구독자인지 확인하기 and 포인트로 푼 책인지 확인하기
-                                                    ? Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              BlocProvider(
-                                                            create: (context) =>
-                                                                // BookIntroCubit(),
-                                                                // DataCubit()..loadHomeBookData()
-                                                                BookIntroCubit()
-                                                                  ..loadBookIntroData(
-                                                                      book.id),
-                                                            child: BookIntro(
-                                                              title: book.title,
-                                                              thumb:
-                                                                  book.thumbUrl,
-                                                              id: book.id,
-                                                              summary:
-                                                                  book.summary,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : Navigator.push(
-                                                        //구독자가 아니면 purchase로 보낸다?
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              userState.purchase
-                                                                  ? BlocProvider(
-                                                                      create: (context) =>
-                                                                          // BookIntroCubit(),
-                                                                          // DataCubit()..loadHomeBookData()
-                                                                          BookIntroCubit()..loadBookIntroData(book.id),
-                                                                      child:
-                                                                          BookIntro(
-                                                                        title: book
-                                                                            .title,
-                                                                        thumb: book
-                                                                            .thumbUrl,
-                                                                        id: book
-                                                                            .id,
-                                                                        summary:
-                                                                            book.summary,
-                                                                      ),
-                                                                    )
-                                                                  : const Purchase(),
-                                                        ));
+                                                // userState.purchase == true ||
+                                                //         book.lock == false ||
+                                                //         (book.title ==
+                                                //                 'Snow White and the Seven Dwarfs' ||
+                                                //             book.title ==
+                                                //                 'The Little Match Girl') // 구독자인지 확인하기 and 포인트로 푼 책인지 확인하기
+                                                //     ?
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BlocProvider(
+                                                      create: (context) =>
+                                                          // BookIntroCubit(),
+                                                          // DataCubit()..loadHomeBookData()
+                                                          BookIntroCubit()
+                                                            ..loadBookIntroData(
+                                                                book.id),
+                                                      child: BookIntro(
+                                                        title: book.title,
+                                                        thumb: book.thumbUrl,
+                                                        id: book.id,
+                                                        summary: book.summary,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                                // : Navigator.push(
+                                                //     //구독자가 아니면 purchase로 보낸다?
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //       builder: (context) =>
+                                                //           userState.purchase
+                                                //               ? BlocProvider(
+                                                //                   create: (context) =>
+                                                //                       // BookIntroCubit(),
+                                                //                       // DataCubit()..loadHomeBookData()
+                                                //                       BookIntroCubit()..loadBookIntroData(book.id),
+                                                //                   child:
+                                                //                       BookIntro(
+                                                //                     title: book
+                                                //                         .title,
+                                                //                     thumb: book
+                                                //                         .thumbUrl,
+                                                //                     id: book
+                                                //                         .id,
+                                                //                     summary:
+                                                //                         book.summary,
+                                                //                   ),
+                                                //                 )
+                                                //               : const Purchase(),
+                                                //     ));
                                                 //   BlocProvider(
                                                 // create: (context) =>
                                                 //     // BookIntroCubit(),
@@ -1596,120 +1590,120 @@ class _HomeScreenState extends State<HomeScreen> {
                       //     },
                       //     icon: const Icon(Icons.check)),
 
-                      userState.login
-                          ? GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                    0.5 * SizeConfig.defaultSize!),
-                                child: Text(
-                                  'Sign Out',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 1.8 * SizeConfig.defaultSize!,
-                                    fontFamily: 'Molengo',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                _sendSignOutClickEvent();
+                      // userState.login
+                      //     ? GestureDetector(
+                      //         behavior: HitTestBehavior.opaque,
+                      //         child: Padding(
+                      //           padding: EdgeInsets.all(
+                      //               0.5 * SizeConfig.defaultSize!),
+                      //           child: Text(
+                      //             'Sign Out',
+                      //             style: TextStyle(
+                      //               color: Colors.black,
+                      //               fontSize: 1.8 * SizeConfig.defaultSize!,
+                      //               fontFamily: 'Molengo',
+                      //               fontWeight: FontWeight.w400,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         onTap: () {
+                      //           _sendSignOutClickEvent();
 
-                                setState(() {
-                                  showSignOutConfirmation =
-                                      !showSignOutConfirmation; // dropdown 상태 토글
-                                });
-                              },
-                            )
-                          : GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                    0.2 * SizeConfig.defaultSize!),
-                                child: Container(
-                                    child: Text(
-                                  'Sign In',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 1.8 * SizeConfig.defaultSize!,
-                                    fontFamily: 'Molengo',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                )),
-                              ),
-                              onTap: () {
-                                _sendSignInClickEvent();
+                      //           setState(() {
+                      //             showSignOutConfirmation =
+                      //                 !showSignOutConfirmation; // dropdown 상태 토글
+                      //           });
+                      //         },
+                      //       )
+                      //     : GestureDetector(
+                      //         behavior: HitTestBehavior.opaque,
+                      //         child: Padding(
+                      //           padding: EdgeInsets.all(
+                      //               0.2 * SizeConfig.defaultSize!),
+                      //           child: Container(
+                      //               child: Text(
+                      //             'Sign In',
+                      //             style: TextStyle(
+                      //               color: Colors.black,
+                      //               fontSize: 1.8 * SizeConfig.defaultSize!,
+                      //               fontFamily: 'Molengo',
+                      //               fontWeight: FontWeight.w400,
+                      //             ),
+                      //           )),
+                      //         ),
+                      //         onTap: () {
+                      //           _sendSignInClickEvent();
 
-                                // dropdown 상태 토글
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Platform.isIOS
-                                          ? const Login()
-                                          : const LoginAnd()),
-                                );
-                              }),
+                      //           // dropdown 상태 토글
+                      //           Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (context) => Platform.isIOS
+                      //                     ? const Login()
+                      //                     : const LoginAnd()),
+                      //           );
+                      //         }),
                       //    userState.login && showSignOutConfirmation
-                      userState.login && showSignOutConfirmation
-                          ? GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                _sendSignOutReallyClickEvent();
-                                logout();
-                                userCubit.logout();
-                                OneSignal.shared.removeExternalUserId();
-                                _scaffoldKey.currentState?.closeDrawer();
-                                setState(() {
-                                  showSignOutConfirmation =
-                                      !showSignOutConfirmation;
-                                });
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(
-                                    0.5 * SizeConfig.defaultSize!),
-                                padding: EdgeInsets.all(
-                                    0.3 * SizeConfig.defaultSize!),
-                                color: Colors
-                                    .transparent, // 배경 터치 가능하게 하려면 배경 색상을 투명하게 설정
-                                child: Text(
-                                  'Do you want to Sign Out?',
-                                  style: TextStyle(
-                                    color: const Color(0xFF599FED),
-                                    fontSize: 1.2 * SizeConfig.defaultSize!,
-                                    fontFamily: 'Molengo',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Container(),
-                      SizedBox(
-                        height: 1 * SizeConfig.defaultSize!,
-                      ),
-                      userState.login
-                          ? GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                    0.5 * SizeConfig.defaultSize!),
-                                child: Text(
-                                  'Delete Account',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 1.8 * SizeConfig.defaultSize!,
-                                    fontFamily: 'Molengo',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  _scaffoldKey.currentState?.closeDrawer();
-                                  wantDelete = true;
-                                });
-                              },
-                            )
-                          : Container(),
+                      // userState.login && showSignOutConfirmation
+                      //     ? GestureDetector(
+                      //         behavior: HitTestBehavior.opaque,
+                      //         onTap: () {
+                      //           _sendSignOutReallyClickEvent();
+                      //           logout();
+                      //           userCubit.logout();
+                      //           OneSignal.shared.removeExternalUserId();
+                      //           _scaffoldKey.currentState?.closeDrawer();
+                      //           setState(() {
+                      //             showSignOutConfirmation =
+                      //                 !showSignOutConfirmation;
+                      //           });
+                      //         },
+                      //         child: Container(
+                      //           margin: EdgeInsets.all(
+                      //               0.5 * SizeConfig.defaultSize!),
+                      //           padding: EdgeInsets.all(
+                      //               0.3 * SizeConfig.defaultSize!),
+                      //           color: Colors
+                      //               .transparent, // 배경 터치 가능하게 하려면 배경 색상을 투명하게 설정
+                      //           child: Text(
+                      //             'Do you want to Sign Out?',
+                      //             style: TextStyle(
+                      //               color: const Color(0xFF599FED),
+                      //               fontSize: 1.2 * SizeConfig.defaultSize!,
+                      //               fontFamily: 'Molengo',
+                      //               fontWeight: FontWeight.w400,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       )
+                      //     : Container(),
+                      // SizedBox(
+                      //   height: 1 * SizeConfig.defaultSize!,
+                      // ),
+                      // userState.login
+                      //     ? GestureDetector(
+                      //         behavior: HitTestBehavior.opaque,
+                      //         child: Padding(
+                      //           padding: EdgeInsets.all(
+                      //               0.5 * SizeConfig.defaultSize!),
+                      //           child: Text(
+                      //             'Delete Account',
+                      //             style: TextStyle(
+                      //               color: Colors.black,
+                      //               fontSize: 1.8 * SizeConfig.defaultSize!,
+                      //               fontFamily: 'Molengo',
+                      //               fontWeight: FontWeight.w400,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         onTap: () {
+                      //           setState(() {
+                      //             _scaffoldKey.currentState?.closeDrawer();
+                      //             wantDelete = true;
+                      //           });
+                      //         },
+                      //       )
+                      //     : Container(),
                     ],
                   ),
                 ),
@@ -1733,11 +1727,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             height: SizeConfig.defaultSize! * 22,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: CachedNetworkImage(
-                imageUrl: book.thumbUrl,
-              ),
-            ),
+                borderRadius: BorderRadius.circular(8),
+                child: Stack(children: [
+                  Container(
+                    width: SizeConfig.defaultSize! * 22,
+                    color: const Color.fromARGB(255, 220, 220, 220)
+                        .withOpacity(0.6),
+                  ),
+                  CachedNetworkImage(
+                    imageUrl: book.thumbUrl,
+                  ),
+                ])),
           ),
         ),
         SizedBox(
