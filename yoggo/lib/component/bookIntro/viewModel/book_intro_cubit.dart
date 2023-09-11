@@ -4,6 +4,8 @@ import '../../../repositories/Repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../../home/viewModel/home_screen_cubit.dart';
+
 class BookIntroCubit extends Cubit<List<BookIntroModel>> {
   final DataRepository repository = DataRepository();
   static final Map<int, List<BookIntroModel>> _dataMap = {}; // Map으로 변경
@@ -17,7 +19,7 @@ class BookIntroCubit extends Cubit<List<BookIntroModel>> {
       return;
     }
     // if (_dataMap.containsKey(contentId)) {
-    if (cachedData != null) {
+    if (cachedData != [] && cachedData != null) {
       // 이미 데이터가 로드되어 있다면, 저장된 데이터를 사용하여 emit합니다.
       //  emit(_dataMap[contentId]!);
       final cachedBookIntroData = cachedData
@@ -36,6 +38,21 @@ class BookIntroCubit extends Cubit<List<BookIntroModel>> {
     _dataMap[contentId] = data; // 가져온 데이터를 Map에 저장합니다.
     prefs.setStringList('book_contentId_$contentId', serializedData);
 
+    emit(data);
+  }
+
+  void changeBookIntroData(int? contentId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //final cachedData = prefs.getStringList('book_contentId_$contentId');
+    if (contentId == null) {
+      return;
+    }
+    // if (_dataMap.containsKey(contentId)) {
+    final data = await DataRepository.bookIntroRepository2(contentId);
+    final serializedData =
+        data.map((item) => json.encode(item.toJson())).toList();
+    _dataMap[contentId] = data; // 가져온 데이터를 Map에 저장합니다.
+    prefs.setStringList('book_contentId_$contentId', serializedData);
     emit(data);
   }
 }
