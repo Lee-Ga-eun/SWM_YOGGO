@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ffi';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/gestures.dart';
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/rec_info.dart';
@@ -42,6 +44,7 @@ class _PurchaseState extends State<Purchase> {
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   List<ProductDetails> view = [];
   late String token;
+  bool paySuccessed = false;
   Future fetch() async {
     final bool available = await InAppPurchase.instance.isAvailable();
     if (available) {
@@ -60,16 +63,28 @@ class _PurchaseState extends State<Purchase> {
         if (e.pendingCompletePurchase) {
           if (!mounted) return;
           _inAppPurchase.completePurchase(e);
-          if (e.status == PurchaseStatus.error) return;
-          if (e.status == PurchaseStatus.canceled) return;
+          if (e.status == PurchaseStatus.error) {
+            return;
+          }
+          if (e.status == PurchaseStatus.canceled) {
+            return;
+          }
           if (e.status == PurchaseStatus.purchased ||
               e.status == PurchaseStatus.restored) {
-            successPurchase();
-            _sendSubSuccessEvent();
-            UserCubit().fetchUser();
-            amplitude.setUserProperties({'subscribe': true});
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const RecInfo()));
+            if (e.productID == 'monthly_ios' ||
+                e.productID == 'product1:product1') {
+              subSuccess();
+              _sendSubSuccessEvent();
+              UserCubit().fetchUser();
+              amplitude.setUserProperties({'subscribe': true});
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const RecInfo()));
+            } else {
+              paySuccess(e.productID.substring(7));
+              setState(() {
+                paySuccessed = true;
+              });
+            }
           }
         }
       });
@@ -84,8 +99,6 @@ class _PurchaseState extends State<Purchase> {
     super.initState();
     getToken();
     _sendSubViewEvent();
-
-    // TODO: Add initialization code
   }
 
   Future<void> getToken() async {
@@ -95,7 +108,7 @@ class _PurchaseState extends State<Purchase> {
     });
   }
 
-  Future<void> successPurchase() async {
+  Future<void> subSuccess() async {
     await getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('purchase', true);
@@ -116,21 +129,75 @@ class _PurchaseState extends State<Purchase> {
     }
   }
 
-  Future<void> startPurchase() async {
+  Future<void> subStart() async {
     try {
       Offerings? offerings = await Purchases.getOfferings();
-      if (offerings.current != null) {
-        var myProductList = offerings.current!.availablePackages;
-        CustomerInfo customerInfo =
-            await Purchases.purchasePackage(myProductList[0]);
+      if (offerings.getOffering("default")!.availablePackages.isNotEmpty) {
+        var product = offerings.getOffering("default")!.availablePackages;
+        CustomerInfo customerInfo = await Purchases.purchasePackage(product[0]);
         EntitlementInfo? entitlement = customerInfo.entitlements.all['pro'];
         final appData = AppData();
         appData.entitlementIsActive = entitlement?.isActive ?? false;
         if (entitlement!.isActive) {
-          successPurchase();
+          subSuccess();
         }
-        successPurchase();
+        subSuccess();
         // Display packages for sale
+      }
+    } catch (e) {
+      // optional error handling
+    }
+
+    // const Set<String> products = {'product1'};
+    // final ProductDetailsResponse response =
+    //     await InAppPurchase.instance.queryProductDetails(products);
+    // if (response.notFoundIDs.isNotEmpty) {
+    //   print('제품이 없어요');
+    //   return;
+    // }
+
+    // final ProductDetails productDetails = response.productDetails.first;
+
+    // final PurchaseParam purchaseParam = PurchaseParam(
+    //   productDetails: productDetails,
+    // );
+    // try {
+    //   final bool success = await InAppPurchase.instance.buyNonConsumable(
+    //     purchaseParam: purchaseParam,
+    //   );
+    // } catch (error) {
+    //   // 결제 실패
+    //   print('결제 실패했어요');
+    // }
+  }
+
+  Future<void> paySuccess(points) async {
+    await getToken();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('purchase', true);
+    var url = Uri.parse('https://yoggo-server.fly.dev/point/plus');
+    var response = await http.post(url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'point': toInt(points)}));
+    if (response.statusCode == 200) {
+      // _sendSubSuccessEvent();
+      print('정보 등록 완료');
+    } else {
+      _sendSubFailEvent(response.statusCode);
+      throw Exception('Failed to start inference');
+    }
+  }
+
+  Future<void> payCashToPoint(points) async {
+    try {
+      Offerings offerings = await Purchases.getOfferings();
+      if (offerings.getOffering("point")!.availablePackages.isNotEmpty) {
+        var product =
+            offerings.getOffering("point")!.getPackage("points-$points")!;
+        CustomerInfo customerInfo = await Purchases.purchasePackage(product);
       }
     } catch (e) {
       // optional error handling
@@ -173,6 +240,15 @@ class _PurchaseState extends State<Purchase> {
   Widget build(BuildContext context) {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
+
+    paySuccessed
+        ? {
+            userCubit.fetchUser(),
+            setState(() {
+              paySuccessed = false;
+            })
+          }
+        : ();
     SizeConfig().init(context);
     return Scaffold(
         body: Container(
@@ -188,66 +264,43 @@ class _PurchaseState extends State<Purchase> {
         child: Stack(
           fit: StackFit.expand, // Stack이 화면 전체를 덮도록 확장
           children: [
-            Positioned(
-              top: 0.5 * SizeConfig.defaultSize!,
-              left: 1 * SizeConfig.defaultSize!,
-              child: IconButton(
-                icon: Icon(Icons.clear, size: 3 * SizeConfig.defaultSize!),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
             // ios 앱 심사를 위한 restore 버튼 시작
-            Platform.isIOS
-                ? Positioned(
-                    top: 1.2 * SizeConfig.defaultSize!,
-                    right: 11.5 * SizeConfig.defaultSize!,
-                    child: GestureDetector(
-                        onTap: () async {
-                          try {
-                            if (userState.login == false) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Platform.isIOS
-                                        ? const Login()
-                                        : const LoginAnd()), //HomeScreen()),
-                              );
-                            } else {
-                              CustomerInfo customerInfo =
-                                  await Purchases.restorePurchases();
-                              EntitlementInfo? entitlement =
-                                  customerInfo.entitlements.all['pro'];
-                              if (entitlement != null) {
-                                if (entitlement.isActive) {
-                                  successPurchase();
-                                }
-                              }
-                            }
-
-                            // ... check restored purchaserInfo to see if entitlement is now active
-                          } on PlatformException {
-                            // Error restoring purchases
-                          }
-                        },
-                        child: Container(
-                          width: 17 * SizeConfig.defaultSize!,
-                          height: 4 * SizeConfig.defaultSize!,
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(128, 255, 255, 255),
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  SizeConfig.defaultSize! * 1))),
-                          child: Center(
-                              child: Text(
-                            'Already Subscribed?',
-                            style: TextStyle(
-                                fontFamily: 'Molengo',
-                                fontSize: SizeConfig.defaultSize! * 1.6),
-                          )),
-                        )),
-                  )
-                : Container(),
+            Positioned(
+              top: 1.2 * SizeConfig.defaultSize!,
+              right: 11.5 * SizeConfig.defaultSize!,
+              child: GestureDetector(
+                  onTap: () async {
+                    try {
+                      CustomerInfo customerInfo =
+                          await Purchases.restorePurchases();
+                      EntitlementInfo? entitlement =
+                          customerInfo.entitlements.all['pro'];
+                      if (entitlement != null) {
+                        if (entitlement.isActive) {
+                          subSuccess();
+                        }
+                      }
+                      // ... check restored purchaserInfo to see if entitlement is now active
+                    } on PlatformException {
+                      // Error restoring purchases
+                    }
+                  },
+                  child: Container(
+                    width: 17 * SizeConfig.defaultSize!,
+                    height: 3.5 * SizeConfig.defaultSize!,
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(128, 255, 255, 255),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.defaultSize! * 1))),
+                    child: Center(
+                        child: Text(
+                      'Already Subscribed?',
+                      style: TextStyle(
+                          fontFamily: 'Molengo',
+                          fontSize: SizeConfig.defaultSize! * 1.6),
+                    )),
+                  )),
+            ),
             // ios 앱 심사를 위한 restore 버튼 끝
             Positioned(
               top: 1.2 * SizeConfig.defaultSize!,
@@ -255,7 +308,7 @@ class _PurchaseState extends State<Purchase> {
               child: Stack(children: [
                 Container(
                     width: 10 * SizeConfig.defaultSize!,
-                    height: 4 * SizeConfig.defaultSize!,
+                    height: 3.5 * SizeConfig.defaultSize!,
                     decoration: BoxDecoration(
                         color: const Color.fromARGB(128, 255, 255, 255),
                         borderRadius: BorderRadius.all(
@@ -304,16 +357,7 @@ class _PurchaseState extends State<Purchase> {
                             onTap: () async {
                               // 버튼 클릭 시 동작
                               _sendSubPayClickEvent();
-                              userState.login
-                                  ? await startPurchase()
-                                  : Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Platform.isIOS
-                                              ? const Login()
-                                              : const LoginAnd()), //HomeScreen()),
-                                    );
-                              //await startPurchase();
+                              await subStart();
                             },
                             child: SizedBox(
                               width: 35 * SizeConfig.defaultSize!,
@@ -672,6 +716,17 @@ class _PurchaseState extends State<Purchase> {
                 child: SizedBox(
                     width: 11.5 * SizeConfig.defaultSize!, //
                     child: Image.asset('lib/images/bestProduct.png'))),
+
+            Positioned(
+              top: 0.5 * SizeConfig.defaultSize!,
+              left: 1 * SizeConfig.defaultSize!,
+              child: IconButton(
+                icon: Icon(Icons.clear, size: 3 * SizeConfig.defaultSize!),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -693,16 +748,7 @@ class _PurchaseState extends State<Purchase> {
         child: GestureDetector(
           onTap: () async {
             _sendSubPayClickEvent();
-            startPurchase(); // 이거 프로덕트에 맞게 바꿔야 함
-            // userState.login
-            //     ? await startPurchase()
-            //     : Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => Platform.isIOS
-            //                 ? const Login()
-            //                 : const LoginAnd()), //HomeScreen()),
-            //       );
+            payCashToPoint(coinNum);
           },
           child: Column(
             children: [
