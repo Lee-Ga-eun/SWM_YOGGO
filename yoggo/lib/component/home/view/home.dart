@@ -24,6 +24,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import '../../globalCubit/user/user_cubit.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -48,7 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showBanner = false;
   bool showFairy = false;
   bool showToolTip = false;
-
+  // 받을 수 있는 포인트 day : availableGetPoint // 1일차, 2일차 ...
+  // 마지막으로 받은 날짜: lastPointYMD // 2023년9월22일
+  // 마지막으로 받은 포인트의 일수: lastPointDay --> 1일차, 2일차, 3일차... --> 마지막 기록이 1일차이면 2일차 포인트를 받게 해야한다
+  late int availableGetPoint;
+  late String lastPointYMD;
+  int lastPointDay = -1;
+  String formattedTime = '';
   // @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
@@ -59,6 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getToken();
     _checkFirstTimeAccess(); // 앱 최초 사용 접속 : 온보딩 화면 보여주기
+    Future.delayed(Duration.zero, () async {
+      await saveRewardStatus();
+    });
   }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
@@ -121,16 +131,94 @@ class _HomeScreenState extends State<HomeScreen> {
     // AppBar 아이콘 클릭
   }
 
+  Future<void> saveRewardStatus() async {
+    DateTime currentTime = DateTime.now();
+
+    formattedTime = DateFormat('yyyy-MM-dd').format(currentTime);
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getInt('availableGetPoint') == null) {
+      // 첫사용자인 경우
+      prefs.setInt('availableGetPoint', 0); // 1일차 포인트를 받을 수 있음
+      availableGetPoint = 0;
+    } else {
+      availableGetPoint = prefs.getInt('availableGetPoint')!;
+      print('aaa $availableGetPoint');
+    }
+
+    if (prefs.getString('lastPointYMD') == null) {
+      // 내가 마지막으로 받은 날짜
+      prefs.setString('lastPointYMD', formattedTime); //
+      lastPointYMD = formattedTime;
+    } else {
+      lastPointYMD = prefs.getString('lastPointYMD')!;
+    }
+    if (prefs.getInt('lastPointDay') == null) {
+      // 내가 마지막으로 받은 일차
+      prefs.setInt('lastPointDay', 0); // 일차
+      lastPointDay = 0;
+    } else {
+      lastPointDay = prefs.getInt('lastPointDay')!;
+    }
+  }
+
   bool openCalendar = false;
 
-  void _openCalendarFunc() {
+  void _openCalendarFunc() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DateTime currentTime = DateTime.now();
+    formattedTime = DateFormat('yyyy-MM-dd').format(currentTime);
+    // 받을 수 있는 포인트 day : availableGetPoint // 1일차, 2일차 ...
+    // 마지막으로 받은 날짜: lastPointYMD // 2023년9월22일
+    // 마지막으로 받은 포인트의 일수: lastPointDay --> 1일차, 2일차, 3일차... --> 마지막 기록이 1일차이면 2일차 포인트를 받게 해야한다
+
+    // if (prefs.getInt('availableGetPoint') == null) {
+    //   // 첫사용자인 경우
+    //   prefs.setInt('availableGetPoint', 1); // 1일차 포인트를 받을 수 있음
+    // } else {
+    //   availableGetPoint = prefs.getInt('availableGetPoint')!;
+    // }
+
+    // if (prefs.getString('lastPointYMD') == null) {
+    //   // 내가 마지막으로 받은 날짜
+    //   prefs.setString('lastPointYMD', formattedTime); //
+    // } else {
+    //   lastPointYMD = prefs.getString('lastPointYMD')!;
+    // }
+    // if (prefs.getInt('lastPointDay') == null) {
+    //   // 내가 마지막으로 받은 일차
+    //   prefs.setInt('lastPointDay', 0); // 일차
+    // } else {
+    //   lastPointDay = prefs.getInt('lastPointDay')!;
+    // }
+
+    // lastPointDay가 7이면
+    print('lastPointDay $lastPointDay');
+    if (lastPointDay == 7 && prefs.getString('lastPointYMD') != formattedTime) {
+      //저장된 lastPointDay가 7이고 다음 날 들어왔으면 --> 즉 포인트 다시 리셋되어야 하면
+      setState(() {
+        lastPointDay = 0;
+        prefs.setInt('lastPointDay', 0);
+        prefs.setInt('availableGetPoint', 0);
+        lastPointDay = prefs.getInt('lastPointDay')!;
+        availableGetPoint = prefs.getInt('availableGetPoint')!;
+      });
+    }
+
     setState(() {
-      openCalendar = !openCalendar;
+      openCalendar = true;
+    });
+  }
+
+  void _closeCalendarFunc() {
+    setState(() {
+      openCalendar = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(lastPointDay);
     //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
@@ -731,7 +819,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             alignment: Alignment.topRight,
                                             child: IconButton(
                                               icon: const Icon(Icons.cancel),
-                                              onPressed: _openCalendarFunc,
+                                              onPressed: _closeCalendarFunc,
                                             )),
                                       ),
                                       Padding(
@@ -794,41 +882,291 @@ class _HomeScreenState extends State<HomeScreen> {
                                               255, 204, 165, 107),
                                         ),
                                       ), //선 끝
-                                      eachDayCoin(
-                                        top: SizeConfig.defaultSize! * 8,
-                                        left: SizeConfig.defaultSize! * 3,
-                                        imageAsset: 'lib/images/oneCoin.png',
-                                        text: '100',
-                                      ),
-                                      eachDayCoin(
-                                          top: SizeConfig.defaultSize! * 8,
-                                          left: SizeConfig.defaultSize! * 16,
-                                          imageAsset: 'lib/images/oneCoin.png',
-                                          text: '200'),
-                                      eachDayCoin(
-                                          top: SizeConfig.defaultSize! * 8,
-                                          left: SizeConfig.defaultSize! * 29,
-                                          imageAsset: 'lib/images/oneCoin.png',
-                                          text: '200'),
-                                      eachDayCoin(
-                                          top: SizeConfig.defaultSize! * 22,
-                                          left: SizeConfig.defaultSize! * 3,
-                                          imageAsset: 'lib/images/oneCoin.png',
-                                          text: '300'),
-                                      eachDayCoin(
-                                          top: SizeConfig.defaultSize! * 22,
-                                          left: SizeConfig.defaultSize! * 16,
-                                          imageAsset: 'lib/images/oneCoin.png',
-                                          text: '400'),
-                                      // 22 29
-                                      eachDayCoin(
-                                          top: SizeConfig.defaultSize! * 22,
-                                          left: SizeConfig.defaultSize! * 29,
-                                          imageAsset: 'lib/images/oneCoin.png',
-                                          text: '500'),
-                                      // 8 42
+                                      //1일차
                                       Padding(
-                                        //100점
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.defaultSize! * 8,
+                                            left: SizeConfig.defaultSize! * 3),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 10,
+                                          height: SizeConfig.defaultSize! * 10,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 222, 220, 220),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height:
+                                                    SizeConfig.defaultSize! *
+                                                        0.7,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7,
+                                                    right: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7),
+                                                child: lastPointDay >= 1
+                                                    ? Image.asset(
+                                                        'lib/images/completedOneCoin.png')
+                                                    : Image.asset(
+                                                        'lib/images/oneCoin.png',
+                                                      ),
+                                              ),
+                                              Text(
+                                                '100',
+                                                style: TextStyle(
+                                                    fontSize: SizeConfig
+                                                            .defaultSize! *
+                                                        1.9,
+                                                    fontFamily: 'Lillita'),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      //2일차
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.defaultSize! * 8,
+                                            left: SizeConfig.defaultSize! * 16),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 10,
+                                          height: SizeConfig.defaultSize! * 10,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 222, 220, 220),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height:
+                                                    SizeConfig.defaultSize! *
+                                                        0.7,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7,
+                                                    right: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7),
+                                                child: lastPointDay >=
+                                                        2 // 내가 마지막으로 받은 날짜 >= 2
+                                                    ? Image.asset(
+                                                        'lib/images/completedOneCoin.png')
+                                                    : Image.asset(
+                                                        'lib/images/oneCoin.png',
+                                                      ),
+                                              ),
+                                              Text(
+                                                '200',
+                                                style: TextStyle(
+                                                    fontSize: SizeConfig
+                                                            .defaultSize! *
+                                                        1.9,
+                                                    fontFamily: 'Lillita'),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      //3일차
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.defaultSize! * 8,
+                                            left: SizeConfig.defaultSize! * 29),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 10,
+                                          height: SizeConfig.defaultSize! * 10,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 222, 220, 220),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height:
+                                                    SizeConfig.defaultSize! *
+                                                        0.7,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7,
+                                                    right: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7),
+                                                child: lastPointDay >= 3
+                                                    ? Image.asset(
+                                                        'lib/images/completedTwoCoins.png')
+                                                    : Image.asset(
+                                                        'lib/images/oneCoin.png',
+                                                      ),
+                                              ),
+                                              Text(
+                                                '200',
+                                                style: TextStyle(
+                                                    fontSize: SizeConfig
+                                                            .defaultSize! *
+                                                        1.9,
+                                                    fontFamily: 'Lillita'),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      //4일차
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.defaultSize! * 22,
+                                            left: SizeConfig.defaultSize! * 3),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 10,
+                                          height: SizeConfig.defaultSize! * 10,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 222, 220, 220),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height:
+                                                    SizeConfig.defaultSize! *
+                                                        0.7,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7,
+                                                    right: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7),
+                                                child: lastPointDay >= 4
+                                                    ? Image.asset(
+                                                        'lib/images/completedTwoCoins.png')
+                                                    : Image.asset(
+                                                        'lib/images/oneCoin.png',
+                                                      ),
+                                              ),
+                                              Text(
+                                                '300',
+                                                style: TextStyle(
+                                                    fontSize: SizeConfig
+                                                            .defaultSize! *
+                                                        1.9,
+                                                    fontFamily: 'Lillita'),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      //5일차
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.defaultSize! * 22,
+                                            left: SizeConfig.defaultSize! * 16),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 10,
+                                          height: SizeConfig.defaultSize! * 10,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 222, 220, 220),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height:
+                                                    SizeConfig.defaultSize! *
+                                                        0.7,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7,
+                                                    right: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7),
+                                                child: lastPointDay >= 5
+                                                    ? Image.asset(
+                                                        'lib/images/completedTwoCoins.png')
+                                                    : Image.asset(
+                                                        'lib/images/oneCoin.png',
+                                                      ),
+                                              ),
+                                              Text(
+                                                '400',
+                                                style: TextStyle(
+                                                    fontSize: SizeConfig
+                                                            .defaultSize! *
+                                                        1.9,
+                                                    fontFamily: 'Lillita'),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      // 6일차
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.defaultSize! * 22,
+                                            left: SizeConfig.defaultSize! * 29),
+                                        child: Container(
+                                          width: SizeConfig.defaultSize! * 10,
+                                          height: SizeConfig.defaultSize! * 10,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 222, 220, 220),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height:
+                                                    SizeConfig.defaultSize! *
+                                                        0.7,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7,
+                                                    right: SizeConfig
+                                                            .defaultSize! *
+                                                        1.7),
+                                                child: lastPointDay >= 6
+                                                    ? Image.asset(
+                                                        'lib/images/completedTwoCoins.png')
+                                                    : Image.asset(
+                                                        'lib/images/oneCoin.png',
+                                                      ),
+                                              ),
+                                              Text(
+                                                '500',
+                                                style: TextStyle(
+                                                    fontSize: SizeConfig
+                                                            .defaultSize! *
+                                                        1.9,
+                                                    fontFamily: 'Lillita'),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      // 7일차
+                                      Padding(
                                         padding: EdgeInsets.only(
                                             top: SizeConfig.defaultSize! * 8,
                                             left: SizeConfig.defaultSize! * 42),
@@ -857,9 +1195,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     right: SizeConfig
                                                             .defaultSize! *
                                                         1.7),
-                                                child: Image.asset(
-                                                  'lib/images/oneCoin.png',
-                                                ),
+                                                // 7일차 사용자?
+                                                child: lastPointDay >= 7
+                                                    ? Image.asset(
+                                                        'lib/images/completedTwoCoins.png')
+                                                    : Image.asset(
+                                                        'lib/images/oneCoin.png',
+                                                      ),
                                               ),
                                               Text(
                                                 '1000',
@@ -873,6 +1215,108 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                       ),
+                                      TextButton(
+                                          onPressed: () async {
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            DateTime currentDate =
+                                                DateTime.now();
+                                            print(currentDate);
+                                            String formattedDate =
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(currentDate);
+                                            int tmp = prefs
+                                                .getInt('availableGetPoint')!;
+                                            final scores = [
+                                              100,
+                                              200,
+                                              200,
+                                              300,
+                                              400,
+                                              500,
+                                              1000
+                                            ];
+                                            print(
+                                                '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
+                                            // print(
+                                            //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
+                                            print('마지막으로 받은 일차 $lastPointDay ');
+                                            print('현재 날짜 $formattedDate');
+                                            print(
+                                                '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
+                                            if (availableGetPoint == 0) {
+                                              print("여길 또 오나?");
+                                              // 딱 처음 사용자일 때만 적용됨
+                                              // 더이상 availableGetPoint는 0이 아니다
+                                              // 처음 접속한 사용자인 경우
+                                              prefs.setInt('availableGetPoint',
+                                                  2); // 다음에 받을 수 있는 건 2일차 포인트
+                                              prefs.setString('lastPointYMD',
+                                                  formattedDate); // 받은 날짜 저장
+                                              prefs.setInt('lastPointDay', 1);
+                                              setState(() {
+                                                lastPointDay = 1;
+                                                availableGetPoint = 2;
+                                              });
+                                              print('---');
+                                              print(lastPointDay);
+                                              print(availableGetPoint);
+                                              print('---');
+                                            }
+
+                                            if (formattedDate !=
+                                                    prefs.getString(
+                                                        'lastPointYMD') &&
+                                                tmp != lastPointDay &&
+                                                availableGetPoint != 0) {
+                                              // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
+                                              // 다를 경우에만 변화가 생긴다
+                                              // 포인트를 이미 받지 않은 상태여야 한다
+                                              setState(() {
+                                                // 포인트 받기
+                                                if (lastPointDay + 1 != 8) {
+                                                  // 내가 마지막으로 받은 게 6일차야 -> 7일차까지 업데이트가 되지
+                                                  lastPointDay += 1;
+                                                  print(tmp);
+                                                  prefs.setInt(
+                                                      'availableGetPoint',
+                                                      tmp + 1);
+                                                  prefs.setString(
+                                                      'lastPointYMD',
+                                                      formattedDate); // 시간 현재 시간으로 업데이트
+                                                  prefs.setInt('lastPointDay',
+                                                      lastPointDay);
+                                                } else {
+                                                  // 7일차가 되려고 하면
+                                                }
+                                              });
+                                            }
+                                            // Claim now를 누를 때 모든 포인트가 반영되도록
+                                            // 들어온 시간 파악: Calendar누를 때
+
+                                            //Claim now를 누르면,
+                                            // 최근 변경일을 파악하고 , 변경일이 하루 이상이면 변경시간을 저장해주고 포인트를 올려준다 그리고 completed 이미지로 바꿔준다
+                                            // 하루 이상 지나지 않으면 아무 반응이 없게 한다
+
+                                            // 사용자가 포인트를 받았는지 안 받았는지를 알아야 한다
+                                            // 그리고 변경일이 하루 이상 지났으면 업데이트해야하는 날짜에 테두리를 넣어줘야 한다
+
+                                            // 받을 수 있는 포인트 day : availableGetPoint //
+                                            // 마지막으로 받은 날짜: lastPointYMD // 2023년9월22일
+                                            // 마지막으로 받은 포인트의 일수: lastPointDay --> 1일차, 2일차, 3일차... --> 마지막 기록이 1일차이면 2일차 포인트를 받게 해야한다
+                                            // 현재 접속일: formattedDate
+                                            // if( lastPointDate와 현재 접속 시간이 하루 이상 차이 && 아직 포인트를 받지 않은 상태) => 포인트를 받는다
+                                            // 그렇지 않다면 동작하지 않게 한다
+                                            // availableGetPoint 는 0, lastPointScore 0이면 처리
+                                            // 2일차를 받을 수 있는 사용자 -> 마지막 받은 일차가 1일차 ? 업데이트
+                                            // 2일차 받을 수 있고 이미 2일차 받음? 클릭 안됨
+
+                                            // 처음에 0으로 세팅
+                                            // 날짜와의 차이를 계산....
+                                            // availableGetPoint 1 lastPointScore
+                                          },
+                                          child: const Text('CLAIM NOW'))
                                     ],
                                   ),
                                 ),
