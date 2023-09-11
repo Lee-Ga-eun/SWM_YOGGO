@@ -58,6 +58,7 @@ class _PurchaseState extends State<Purchase> {
         PurchaseDetails e = event[0];
         print(
             "📌 EVENT $e - ${e.status} - ${e.productID} - ${e.pendingCompletePurchase}");
+        final userCubit = context.watch<UserCubit>();
 
         /// 구매 여부 pendingCompletePurchase - 승인 true / 취소 false
         if (e.pendingCompletePurchase) {
@@ -75,12 +76,13 @@ class _PurchaseState extends State<Purchase> {
                 e.productID == 'product1:product1') {
               subSuccess();
               _sendSubSuccessEvent();
-              UserCubit().fetchUser();
+              userCubit.fetchUser();
               amplitude.setUserProperties({'subscribe': true});
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const RecInfo()));
             } else {
               paySuccess(e.productID.substring(7));
+              userCubit.fetchUser();
               setState(() {
                 paySuccessed = true;
               });
