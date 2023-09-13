@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/bookIntro/view/book_intro.dart';
 import 'package:yoggo/component/globalCubit/user/user_state.dart';
 import 'package:yoggo/component/home/viewModel/home_screen_book_model.dart';
-import 'package:yoggo/component/sign.dart';
 // import 'package:yoggo/component/sub.dart';
 import 'package:yoggo/component/shop.dart';
 import 'package:yoggo/component/rec_info.dart';
@@ -12,12 +11,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yoggo/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
-import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bookIntro/viewModel/book_intro_cubit.dart';
-import '../../sign_and.dart';
 import '../../voice.dart';
 import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -25,6 +22,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import '../../globalCubit/user/user_cubit.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -90,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
     bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
     bool haveClickedBook = prefs.getBool('haveClickedBook') ?? false;
     // bool haveClickedFairy = prefs.getBool('haveClickedFairy') ?? false;
-    print(prefs.getBool('haveClickedBook'));
     if (haveClickedBook) {
       setState(() {
         showFairy = haveClickedBook;
@@ -143,7 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
       availableGetPoint = 0;
     } else {
       availableGetPoint = prefs.getInt('availableGetPoint')!;
-      print('aaa $availableGetPoint');
     }
 
     if (prefs.getString('lastPointYMD') == null) {
@@ -168,32 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     DateTime currentTime = DateTime.now();
     formattedTime = DateFormat('yyyy-MM-dd').format(currentTime);
-    // 받을 수 있는 포인트 day : availableGetPoint // 1일차, 2일차 ...
-    // 마지막으로 받은 날짜: lastPointYMD // 2023년9월22일
-    // 마지막으로 받은 포인트의 일수: lastPointDay --> 1일차, 2일차, 3일차... --> 마지막 기록이 1일차이면 2일차 포인트를 받게 해야한다
-
-    // if (prefs.getInt('availableGetPoint') == null) {
-    //   // 첫사용자인 경우
-    //   prefs.setInt('availableGetPoint', 1); // 1일차 포인트를 받을 수 있음
-    // } else {
-    //   availableGetPoint = prefs.getInt('availableGetPoint')!;
-    // }
-
-    // if (prefs.getString('lastPointYMD') == null) {
-    //   // 내가 마지막으로 받은 날짜
-    //   prefs.setString('lastPointYMD', formattedTime); //
-    // } else {
-    //   lastPointYMD = prefs.getString('lastPointYMD')!;
-    // }
-    // if (prefs.getInt('lastPointDay') == null) {
-    //   // 내가 마지막으로 받은 일차
-    //   prefs.setInt('lastPointDay', 0); // 일차
-    // } else {
-    //   lastPointDay = prefs.getInt('lastPointDay')!;
-    // }
-
-    // lastPointDay가 7이면
-    print('lastPointDay $lastPointDay');
     if (lastPointDay == 7 && prefs.getString('lastPointYMD') != formattedTime) {
       //저장된 lastPointDay가 7이고 다음 날 들어왔으면 --> 즉 포인트 다시 리셋되어야 하면
       setState(() {
@@ -216,9 +187,27 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<String> plusPoint(int plusPoint) async {
+    final url = '${dotenv.get("API_SERVER")}point/plus';
+    final response = await http.post(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'point': plusPoint + 0}));
+    if (response.statusCode == 200) {
+      // UserCubit().fetchUser();
+      context.read<UserCubit>().fetchUser();
+      return response.statusCode.toString();
+    } else if (response.statusCode == 400) {
+      return json.decode(response.body)[0].toString();
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(lastPointDay);
     //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
@@ -319,85 +308,97 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                // if (openCalendar)
-                                //   Positioned.fill(
-                                //     child: GestureDetector(
-                                //       onTap: _openCalendarFunc,
-                                //       child: Container(
-                                //         color: const Color.fromARGB(
-                                //                 255, 251, 251, 251)
-                                //             .withOpacity(0.5), // 반투명 배경색 설정
-                                //       ),
-                                //     ),
-                                //   ),
-                                Positioned(
-                                  right: 70,
-                                  top: SizeConfig.defaultSize! * 2,
-                                  child: InkWell(
-                                    onTap: () {
-                                      _openCalendarFunc();
-                                    },
-                                    child: Image.asset(
-                                      'lib/images/calendar.png',
-                                      width: 4.7 *
-                                          SizeConfig.defaultSize!, // 이미지의 폭 설정
-                                      height: 4.7 *
-                                          SizeConfig.defaultSize!, // 이미지의 높이 설정
-                                    ),
-                                  ),
-                                ),
-                                userState.record && userState.purchase
+                                userState.purchase // 구독이면 캘린더 보여주지 않음
                                     ? Container()
-                                    //     : Expanded(
-                                    : showFairy
-                                        ? Positioned(
-                                            top: SizeConfig.defaultSize! * 1.2,
-                                            right:
-                                                SizeConfig.defaultSize! * 0.5,
+                                    : Positioned(
+                                        right: SizeConfig.defaultSize! * 12,
+                                        top: SizeConfig.defaultSize! * 2,
+                                        child: InkWell(
+                                          onTap: () {
+                                            _openCalendarFunc();
+                                          },
+                                          child: Image.asset(
+                                            'lib/images/calendar.png',
+                                            width: 4.7 *
+                                                SizeConfig
+                                                    .defaultSize!, // 이미지의 폭 설정
+                                            height: 4.7 *
+                                                SizeConfig
+                                                    .defaultSize!, // 이미지의 높이 설정
+                                          ),
+                                        ),
+                                      ),
+                                userState.purchase
+                                    ? Container()
+                                    : Positioned(
+                                        //구독이면 포인트 보여주지 않음
+                                        top: 2.2 * SizeConfig.defaultSize!,
+                                        right: 1 * SizeConfig.defaultSize!,
+                                        child: Stack(children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const Purchase()),
+                                              );
+                                            },
                                             child: Container(
-                                                child: GestureDetector(
-                                              onTap: () async {
-                                                _sendToolTipClickEvent();
-                                                SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                setState(() {
-                                                  showToolTip = false;
-                                                });
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const Purchase()),
-                                                );
-                                              },
-                                              child: Transform(
-                                                  // 좌우반전
-                                                  alignment: Alignment.center,
-                                                  transform: Matrix4.identity()
-                                                    ..scale(-1.0, 1.0),
-                                                  child: Image.asset(
-                                                    'lib/images/fairy.png',
-                                                    width: 50,
-                                                    height: 50,
-                                                  )),
-                                            )))
-                                        : Container(),
+                                              width:
+                                                  10 * SizeConfig.defaultSize!,
+                                              height:
+                                                  4 * SizeConfig.defaultSize!,
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      128, 255, 255, 255),
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(SizeConfig
+                                                              .defaultSize! *
+                                                          1))),
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 0.5 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                    ),
+                                                    SizedBox(
+                                                        width: 2 *
+                                                            SizeConfig
+                                                                .defaultSize!,
+                                                        child: Image.asset(
+                                                            'lib/images/oneCoin.png')),
+                                                    Container(
+                                                      width: 7 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      // decoration: BoxDecoration(color: Colors.blue),
+                                                      child: Text(
+                                                        '${userState.point + 0}',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'lilita',
+                                                            fontSize: SizeConfig
+                                                                    .defaultSize! *
+                                                                2),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    )
+                                                  ]),
+                                            ),
+                                          ),
+                                        ]),
+                                      ),
                               ],
                             ),
                           ),
-                          // SizedBox(
-                          //   height: SizeConfig.defaultSize! * 1.5,
-                          // ),
-                          // 배너 종료
                           Expanded(
-                            //첫 줄 시작
-                            // 즉 purhcase true/false로 나누고
-                            // true면 전부 푸는 코드, false면 title이 백설공주 || title이 성냥팔이소녀 || lock=false
-                            // userState의 purchase==true이면 잠금 없음
-                            // purchase가 false라면?
-                            // 백설공주, 성냥팔이소녀는 잠금 해제
-                            // lock!=true라면? (코인으로 산 경우) 잠금 해제
                             flex: SizeConfig.defaultSize!.toInt() * 4,
                             child: SingleChildScrollView(
                               child: Column(
@@ -781,7 +782,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               alignment: Alignment.center,
                               child: SizedBox(
                                 width: 55 * SizeConfig.defaultSize!,
-                                height: 34 * SizeConfig.defaultSize!,
+                                height: 35 * SizeConfig.defaultSize!,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.all(
@@ -794,7 +795,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Stack(
                                     children: [
                                       Container(
-                                        height: SizeConfig.defaultSize! * 6,
+                                        height: SizeConfig.defaultSize! * 4.5,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(
@@ -808,11 +809,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         //첫줄가로
                                         padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 0.4),
+                                            top: SizeConfig.defaultSize! * 0),
                                         child: Align(
                                             alignment: Alignment.topRight,
                                             child: IconButton(
-                                              icon: const Icon(Icons.cancel),
+                                              icon: const Icon(Icons.clear),
                                               onPressed: _closeCalendarFunc,
                                             )),
                                       ),
@@ -820,7 +821,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         //첫번째줄가로
                                         padding: EdgeInsets.only(
                                             left: SizeConfig.defaultSize! * 6,
-                                            top: SizeConfig.defaultSize! * 13),
+                                            top: SizeConfig.defaultSize! * 11),
                                         child: Container(
                                           height: SizeConfig.defaultSize! * 0.5,
                                           width: SizeConfig.defaultSize! * 30,
@@ -832,7 +833,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         //두번째줄가로
                                         padding: EdgeInsets.only(
                                             left: SizeConfig.defaultSize! * 6,
-                                            top: SizeConfig.defaultSize! * 20),
+                                            top: SizeConfig.defaultSize! * 17),
                                         child: Container(
                                           height: SizeConfig.defaultSize! * 0.5,
                                           width: SizeConfig.defaultSize! * 30,
@@ -844,7 +845,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         //두번째줄세로
                                         padding: EdgeInsets.only(
                                             left: SizeConfig.defaultSize! * 36,
-                                            top: SizeConfig.defaultSize! * 13),
+                                            top: SizeConfig.defaultSize! * 10),
                                         child: Container(
                                           width: SizeConfig.defaultSize! * 0.5,
                                           height: SizeConfig.defaultSize! * 7.5,
@@ -856,7 +857,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         //두번째줄세로
                                         padding: EdgeInsets.only(
                                             left: SizeConfig.defaultSize! * 6,
-                                            top: SizeConfig.defaultSize! * 20),
+                                            top: SizeConfig.defaultSize! * 17),
                                         child: Container(
                                           width: SizeConfig.defaultSize! * 0.5,
                                           height: SizeConfig.defaultSize! * 7,
@@ -868,7 +869,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         //세번째줄가로
                                         padding: EdgeInsets.only(
                                             left: SizeConfig.defaultSize! * 6,
-                                            top: SizeConfig.defaultSize! * 27),
+                                            top:
+                                                SizeConfig.defaultSize! * 23.2),
                                         child: Container(
                                           height: SizeConfig.defaultSize! * 0.5,
                                           width: SizeConfig.defaultSize! * 40,
@@ -877,346 +879,109 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ), //선 끝
                                       //1일차
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 8,
-                                            left: SizeConfig.defaultSize! * 3),
-                                        child: Container(
-                                          width: SizeConfig.defaultSize! * 10,
-                                          height: SizeConfig.defaultSize! * 10,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 222, 220, 220),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height:
-                                                    SizeConfig.defaultSize! *
-                                                        0.7,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7,
-                                                    right: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7),
-                                                child: lastPointDay >= 1
-                                                    ? Image.asset(
-                                                        'lib/images/completedOneCoin.png')
-                                                    : Image.asset(
-                                                        'lib/images/oneCoin.png',
-                                                      ),
-                                              ),
-                                              Text(
-                                                '100',
-                                                style: TextStyle(
-                                                    fontSize: SizeConfig
-                                                            .defaultSize! *
-                                                        1.9,
-                                                    fontFamily: 'Lillita'),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      eachDayPoint(
+                                          top: 6,
+                                          left: 3,
+                                          coinImage: 'lib/images/oneCoin.png',
+                                          compare: 1,
+                                          height: 10,
+                                          point: '100',
+                                          topPadding: 0.8),
                                       //2일차
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 8,
-                                            left: SizeConfig.defaultSize! * 16),
-                                        child: Container(
-                                          width: SizeConfig.defaultSize! * 10,
-                                          height: SizeConfig.defaultSize! * 10,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 222, 220, 220),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height:
-                                                    SizeConfig.defaultSize! *
-                                                        0.7,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7,
-                                                    right: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7),
-                                                child: lastPointDay >=
-                                                        2 // 내가 마지막으로 받은 날짜 >= 2
-                                                    ? Image.asset(
-                                                        'lib/images/completedOneCoin.png')
-                                                    : Image.asset(
-                                                        'lib/images/oneCoin.png',
-                                                      ),
-                                              ),
-                                              Text(
-                                                '200',
-                                                style: TextStyle(
-                                                    fontSize: SizeConfig
-                                                            .defaultSize! *
-                                                        1.9,
-                                                    fontFamily: 'Lillita'),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      eachDayPoint(
+                                          top: 6,
+                                          left: 16,
+                                          coinImage: 'lib/images/oneCoin.png',
+                                          compare: 2,
+                                          height: 10,
+                                          point: '100',
+                                          topPadding: 0.8),
                                       //3일차
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 8,
-                                            left: SizeConfig.defaultSize! * 29),
-                                        child: Container(
-                                          width: SizeConfig.defaultSize! * 10,
-                                          height: SizeConfig.defaultSize! * 10,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 222, 220, 220),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height:
-                                                    SizeConfig.defaultSize! *
-                                                        0.7,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7,
-                                                    right: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7),
-                                                child: lastPointDay >= 3
-                                                    ? Image.asset(
-                                                        'lib/images/completedTwoCoins.png')
-                                                    : Image.asset(
-                                                        'lib/images/oneCoin.png',
-                                                      ),
-                                              ),
-                                              Text(
-                                                '200',
-                                                style: TextStyle(
-                                                    fontSize: SizeConfig
-                                                            .defaultSize! *
-                                                        1.9,
-                                                    fontFamily: 'Lillita'),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      //4일차
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 22,
-                                            left: SizeConfig.defaultSize! * 3),
-                                        child: Container(
-                                          width: SizeConfig.defaultSize! * 10,
-                                          height: SizeConfig.defaultSize! * 10,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 222, 220, 220),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height:
-                                                    SizeConfig.defaultSize! *
-                                                        0.7,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7,
-                                                    right: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7),
-                                                child: lastPointDay >= 4
-                                                    ? Image.asset(
-                                                        'lib/images/completedTwoCoins.png')
-                                                    : Image.asset(
-                                                        'lib/images/oneCoin.png',
-                                                      ),
-                                              ),
-                                              Text(
-                                                '300',
-                                                style: TextStyle(
-                                                    fontSize: SizeConfig
-                                                            .defaultSize! *
-                                                        1.9,
-                                                    fontFamily: 'Lillita'),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      //5일차
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 22,
-                                            left: SizeConfig.defaultSize! * 16),
-                                        child: Container(
-                                          width: SizeConfig.defaultSize! * 10,
-                                          height: SizeConfig.defaultSize! * 10,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 222, 220, 220),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height:
-                                                    SizeConfig.defaultSize! *
-                                                        0.7,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7,
-                                                    right: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7),
-                                                child: lastPointDay >= 5
-                                                    ? Image.asset(
-                                                        'lib/images/completedTwoCoins.png')
-                                                    : Image.asset(
-                                                        'lib/images/oneCoin.png',
-                                                      ),
-                                              ),
-                                              Text(
-                                                '400',
-                                                style: TextStyle(
-                                                    fontSize: SizeConfig
-                                                            .defaultSize! *
-                                                        1.9,
-                                                    fontFamily: 'Lillita'),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      // 6일차
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 22,
-                                            left: SizeConfig.defaultSize! * 29),
-                                        child: Container(
-                                          width: SizeConfig.defaultSize! * 10,
-                                          height: SizeConfig.defaultSize! * 10,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 222, 220, 220),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height:
-                                                    SizeConfig.defaultSize! *
-                                                        0.7,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7,
-                                                    right: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7),
-                                                child: lastPointDay >= 6
-                                                    ? Image.asset(
-                                                        'lib/images/completedTwoCoins.png')
-                                                    : Image.asset(
-                                                        'lib/images/oneCoin.png',
-                                                      ),
-                                              ),
-                                              Text(
-                                                '500',
-                                                style: TextStyle(
-                                                    fontSize: SizeConfig
-                                                            .defaultSize! *
-                                                        1.9,
-                                                    fontFamily: 'Lillita'),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      eachDayPoint(
+                                          top: 6,
+                                          left: 29,
+                                          coinImage:
+                                              'lib/images/threeCoins.png',
+                                          compare: 3,
+                                          height: 10,
+                                          point: '300',
+                                          topPadding: 0.8),
+                                      eachDayPoint(
+                                          // 4일차
+                                          top: 18.5,
+                                          left: 3,
+                                          coinImage: 'lib/images/oneCoin.png',
+                                          compare: 4,
+                                          height: 10,
+                                          point: '100',
+                                          topPadding: 0.8),
+                                      eachDayPoint(
+                                          // 5일차
+                                          top: 18.5,
+                                          left: 16,
+                                          coinImage: 'lib/images/oneCoin.png',
+                                          compare: 5,
+                                          height: 10,
+                                          point: '100',
+                                          topPadding: 0.8),
+                                      eachDayPoint(
+                                          // 6일차
+                                          top: 18.5,
+                                          left: 29,
+                                          coinImage:
+                                              'lib/images/threeCoins.png',
+                                          compare: 6,
+                                          height: 10,
+                                          point: '300',
+                                          topPadding: 0.8),
                                       // 7일차
+                                      eachDayPoint(
+                                          // 6일차
+                                          top: 6,
+                                          left: 42,
+                                          coinImage: 'lib/images/treasure.png',
+                                          compare: 7,
+                                          height: 23,
+                                          point: '1000',
+                                          topPadding: 8),
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 8,
-                                            left: SizeConfig.defaultSize! * 42),
-                                        child: Container(
-                                          width: SizeConfig.defaultSize! * 10,
-                                          height: SizeConfig.defaultSize! * 24,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 222, 220, 220),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                height:
-                                                    SizeConfig.defaultSize! *
-                                                        0.7,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: SizeConfig
-                                                            .defaultSize! *
-                                                        1.7,
+                                            top: SizeConfig.defaultSize! * 29.2,
+                                            left: SizeConfig.defaultSize! * 19),
+                                        child: TextButton(
+                                          style: ButtonStyle(
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius
+                                                        .circular(SizeConfig
+                                                                .defaultSize! *
+                                                            2))),
+                                            padding: MaterialStatePropertyAll(
+                                                EdgeInsets.only(
                                                     right: SizeConfig
                                                             .defaultSize! *
-                                                        1.7),
-                                                // 7일차 사용자?
-                                                child: lastPointDay >= 7
-                                                    ? Image.asset(
-                                                        'lib/images/completedTwoCoins.png')
-                                                    : Image.asset(
-                                                        'lib/images/oneCoin.png',
-                                                      ),
-                                              ),
-                                              Text(
-                                                '1000',
-                                                style: TextStyle(
-                                                    fontSize: SizeConfig
+                                                        4,
+                                                    left: SizeConfig
                                                             .defaultSize! *
-                                                        1.9,
-                                                    fontFamily: 'Lilita'),
-                                              )
-                                            ],
+                                                        4,
+                                                    top:
+                                                        SizeConfig.defaultSize!,
+                                                    bottom: SizeConfig
+                                                        .defaultSize!)),
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(
+                                              const Color.fromARGB(
+                                                  255, 255, 169, 26),
+                                            ), // 배경색 설정
                                           ),
-                                        ),
-                                      ),
-                                      TextButton(
                                           onPressed: () async {
                                             SharedPreferences prefs =
                                                 await SharedPreferences
                                                     .getInstance();
                                             DateTime currentDate =
                                                 DateTime.now();
-                                            print(currentDate);
                                             String formattedDate =
                                                 DateFormat('yyyy-MM-dd')
                                                     .format(currentDate);
@@ -1224,13 +989,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 .getInt('availableGetPoint')!;
                                             final scores = [
                                               100,
-                                              200,
-                                              200,
+                                              100,
                                               300,
-                                              400,
-                                              500,
+                                              100,
+                                              100,
+                                              300,
                                               1000
                                             ];
+                                            // 포인트 증가 & 큐빗 반영
+
                                             print(
                                                 '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
                                             // print(
@@ -1239,25 +1006,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                             print('현재 날짜 $formattedDate');
                                             print(
                                                 '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
-                                            if (availableGetPoint == 0) {
-                                              print("여길 또 오나?");
-                                              // 딱 처음 사용자일 때만 적용됨
-                                              // 더이상 availableGetPoint는 0이 아니다
-                                              // 처음 접속한 사용자인 경우
-                                              prefs.setInt('availableGetPoint',
-                                                  2); // 다음에 받을 수 있는 건 2일차 포인트
-                                              prefs.setString('lastPointYMD',
-                                                  formattedDate); // 받은 날짜 저장
-                                              prefs.setInt('lastPointDay', 1);
-                                              setState(() {
-                                                lastPointDay = 1;
-                                                availableGetPoint = 2;
-                                              });
-                                              print('---');
-                                              print(lastPointDay);
-                                              print(availableGetPoint);
-                                              print('---');
-                                            }
 
                                             if (formattedDate !=
                                                     prefs.getString(
@@ -1268,11 +1016,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               // 다를 경우에만 변화가 생긴다
                                               // 포인트를 이미 받지 않은 상태여야 한다
                                               setState(() {
-                                                // 포인트 받기
                                                 if (lastPointDay + 1 != 8) {
-                                                  // 내가 마지막으로 받은 게 6일차야 -> 7일차까지 업데이트가 되지
                                                   lastPointDay += 1;
-                                                  print(tmp);
                                                   prefs.setInt(
                                                       'availableGetPoint',
                                                       tmp + 1);
@@ -1281,36 +1026,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       formattedDate); // 시간 현재 시간으로 업데이트
                                                   prefs.setInt('lastPointDay',
                                                       lastPointDay);
+                                                  plusPoint(
+                                                      scores[lastPointDay - 1]);
                                                 } else {
                                                   // 7일차가 되려고 하면
                                                 }
                                               });
                                             }
-                                            // Claim now를 누를 때 모든 포인트가 반영되도록
-                                            // 들어온 시간 파악: Calendar누를 때
-
-                                            //Claim now를 누르면,
-                                            // 최근 변경일을 파악하고 , 변경일이 하루 이상이면 변경시간을 저장해주고 포인트를 올려준다 그리고 completed 이미지로 바꿔준다
-                                            // 하루 이상 지나지 않으면 아무 반응이 없게 한다
-
-                                            // 사용자가 포인트를 받았는지 안 받았는지를 알아야 한다
-                                            // 그리고 변경일이 하루 이상 지났으면 업데이트해야하는 날짜에 테두리를 넣어줘야 한다
-
-                                            // 받을 수 있는 포인트 day : availableGetPoint //
-                                            // 마지막으로 받은 날짜: lastPointYMD // 2023년9월22일
-                                            // 마지막으로 받은 포인트의 일수: lastPointDay --> 1일차, 2일차, 3일차... --> 마지막 기록이 1일차이면 2일차 포인트를 받게 해야한다
-                                            // 현재 접속일: formattedDate
-                                            // if( lastPointDate와 현재 접속 시간이 하루 이상 차이 && 아직 포인트를 받지 않은 상태) => 포인트를 받는다
-                                            // 그렇지 않다면 동작하지 않게 한다
-                                            // availableGetPoint 는 0, lastPointScore 0이면 처리
-                                            // 2일차를 받을 수 있는 사용자 -> 마지막 받은 일차가 1일차 ? 업데이트
-                                            // 2일차 받을 수 있고 이미 2일차 받음? 클릭 안됨
-
-                                            // 처음에 0으로 세팅
-                                            // 날짜와의 차이를 계산....
-                                            // availableGetPoint 1 lastPointScore
+                                            if (availableGetPoint == 0) {
+                                              // 딱 처음 사용자일 때만 적용됨
+                                              // 더이상 availableGetPoint는 0이 아니다
+                                              // 처음 접속한 사용자인 경우
+                                              prefs.setInt('availableGetPoint',
+                                                  2); // 다음에 받을 수 있는 건 2일차 포인트
+                                              prefs.setString('lastPointYMD',
+                                                  formattedDate); // 받은 날짜 저장
+                                              prefs.setInt('lastPointDay', 1);
+                                              setState(() {
+                                                plusPoint(scores[0]);
+                                                lastPointDay = 1;
+                                                availableGetPoint = 2;
+                                              });
+                                            }
                                           },
-                                          child: const Text('CLAIM NOW'))
+                                          child: Text(
+                                            'CLAIM NOW',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize:
+                                                    SizeConfig.defaultSize! *
+                                                        1.9,
+                                                fontFamily: 'Lilita'),
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -1327,40 +1076,44 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  Padding eachDayCoin(
-      {required double top,
-      required double left,
-      required String imageAsset,
-      required String text}) {
+  Padding eachDayPoint(
+      {top, left, coinImage, compare, height, point, topPadding}) {
     return Padding(
-      //100점
-      padding: EdgeInsets.only(top: top, left: left),
+      padding: EdgeInsets.only(
+          top: SizeConfig.defaultSize! * top,
+          left: SizeConfig.defaultSize! * left),
       child: Container(
         width: SizeConfig.defaultSize! * 10,
-        height: SizeConfig.defaultSize! * 10,
+        height: SizeConfig.defaultSize! * height,
         decoration: const BoxDecoration(
             color: Color.fromARGB(255, 222, 220, 220),
             borderRadius: BorderRadius.all(Radius.circular(10))),
-        child: Column(
-          children: [
-            SizedBox(
-              height: SizeConfig.defaultSize! * 0.7,
+        child: Padding(
+          padding: EdgeInsets.only(
+              top: SizeConfig.defaultSize! * topPadding,
+              bottom: compare != 7 ? SizeConfig.defaultSize! * 0.5 : 0),
+          child: Stack(alignment: Alignment.topCenter, children: [
+            Image.asset(
+              coinImage,
+              height: SizeConfig.defaultSize! * 6,
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: SizeConfig.defaultSize! * 1.7,
-                  right: SizeConfig.defaultSize! * 1.7),
-              child: Image.asset(
-                imageAsset,
+            lastPointDay >= compare
+                ? Image.asset(
+                    'lib/images/completed.png',
+                    width: SizeConfig.defaultSize! * 8,
+                  )
+                : Container(),
+            Align(
+              alignment:
+                  compare != 7 ? Alignment.bottomCenter : Alignment.center,
+              child: Text(
+                point,
+                style: TextStyle(
+                    fontFamily: 'Lilita',
+                    fontSize: SizeConfig.defaultSize! * 1.9),
               ),
             ),
-            Text(
-              text,
-              style: TextStyle(
-                  fontSize: SizeConfig.defaultSize! * 1.9,
-                  fontFamily: 'Lilita'),
-            )
-          ],
+          ]),
         ),
       ),
     );
