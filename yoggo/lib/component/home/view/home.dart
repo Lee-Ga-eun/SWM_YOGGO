@@ -134,13 +134,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> saveRewardStatus() async {
     DateTime currentTime = DateTime.now();
 
-    formattedTime = DateFormat('yyyy-MM-dd').format(currentTime);
+    formattedTime = DateFormat('yyyy-MM-dd HH:mm').format(currentTime);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getInt('availableGetPoint') == null) {
       // 첫사용자인 경우
-      prefs.setInt('availableGetPoint', 0); // 1일차 포인트를 받을 수 있음
-      availableGetPoint = 0;
+      prefs.setInt('availableGetPoint', 1); // 1일차 포인트를 받을 수 있음
+      availableGetPoint = 1;
     } else {
       availableGetPoint = prefs.getInt('availableGetPoint')!;
     }
@@ -169,13 +169,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     DateTime currentTime = DateTime.now();
-    formattedTime = DateFormat('yyyy-MM-dd').format(currentTime);
+    formattedTime = DateFormat('yyyy-MM-dd HH:mm').format(currentTime);
+    lastPointYMD = prefs.getString('lastPointYMD')!;
+    availableGetPoint = prefs.getInt('availableGetPoint')!;
+    print(lastPointYMD);
+    print(formattedTime);
     if (lastPointDay == 7 && prefs.getString('lastPointYMD') != formattedTime) {
       //저장된 lastPointDay가 7이고 다음 날 들어왔으면 --> 즉 포인트 다시 리셋되어야 하면
       setState(() {
         lastPointDay = 0;
         prefs.setInt('lastPointDay', 0);
-        prefs.setInt('availableGetPoint', 0);
+        prefs.setInt('availableGetPoint', 1);
         lastPointDay = prefs.getInt('lastPointDay')!;
         availableGetPoint = prefs.getInt('availableGetPoint')!;
       });
@@ -948,7 +952,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           compare: 1,
                                           height: 10,
                                           point: '100',
-                                          topPadding: 0.8),
+                                          topPadding: 0.5,
+                                          lastPointYMD: lastPointYMD),
                                       //2일차
                                       eachDayPoint(
                                           top: 6,
@@ -957,7 +962,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           compare: 2,
                                           height: 10,
                                           point: '100',
-                                          topPadding: 0.8),
+                                          topPadding: 0.5,
+                                          lastPointYMD: lastPointYMD),
                                       //3일차
                                       eachDayPoint(
                                           top: 6,
@@ -967,35 +973,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                           compare: 3,
                                           height: 10,
                                           point: '300',
-                                          topPadding: 0.8),
+                                          topPadding: 0.5,
+                                          lastPointYMD: lastPointYMD),
                                       eachDayPoint(
                                           // 4일차
-                                          top: 18.5,
+                                          top: 18,
                                           left: 3,
                                           coinImage: 'lib/images/oneCoin.png',
                                           compare: 4,
                                           height: 10,
                                           point: '100',
-                                          topPadding: 0.8),
+                                          topPadding: 0.5,
+                                          lastPointYMD: lastPointYMD),
                                       eachDayPoint(
                                           // 5일차
-                                          top: 18.5,
+                                          top: 18,
                                           left: 16,
                                           coinImage: 'lib/images/oneCoin.png',
                                           compare: 5,
                                           height: 10,
                                           point: '100',
-                                          topPadding: 0.8),
+                                          topPadding: 0.5,
+                                          lastPointYMD: lastPointYMD),
                                       eachDayPoint(
                                           // 6일차
-                                          top: 18.5,
+                                          top: 18,
                                           left: 29,
                                           coinImage:
                                               'lib/images/threeCoins.png',
                                           compare: 6,
                                           height: 10,
                                           point: '300',
-                                          topPadding: 0.8),
+                                          topPadding: 0.5,
+                                          lastPointYMD: lastPointYMD),
                                       // 7일차
                                       eachDayPoint(
                                           // 6일차
@@ -1003,9 +1013,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           left: 42,
                                           coinImage: 'lib/images/treasure.png',
                                           compare: 7,
-                                          height: 23,
+                                          height: 22,
                                           point: '1000',
-                                          topPadding: 8),
+                                          topPadding: 6.5,
+                                          lastPointYMD: lastPointYMD),
                                       Padding(
                                         padding: EdgeInsets.only(
                                             top: SizeConfig.defaultSize! * 29.2,
@@ -1045,7 +1056,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             DateTime currentDate =
                                                 DateTime.now();
                                             String formattedDate =
-                                                DateFormat('yyyy-MM-dd')
+                                                DateFormat('yyyy-MM-dd HH:mm')
                                                     .format(currentDate);
                                             int tmp = prefs
                                                 .getInt('availableGetPoint')!;
@@ -1080,6 +1091,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               setState(() {
                                                 if (lastPointDay + 1 != 8) {
                                                   lastPointDay += 1;
+                                                  lastPointYMD = formattedDate;
+
                                                   prefs.setInt(
                                                       'availableGetPoint',
                                                       tmp + 1);
@@ -1106,10 +1119,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                               prefs.setInt('lastPointDay', 1);
                                               setState(() {
                                                 plusPoint(scores[0]);
+                                                lastPointYMD = formattedDate;
                                                 lastPointDay = 1;
                                                 availableGetPoint = 2;
                                               });
                                             }
+
+                                            print(lastPointDay);
+                                            print(availableGetPoint);
+                                            print(formattedDate);
                                           },
                                           child: Text(
                                             'CLAIM NOW',
@@ -1138,46 +1156,80 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  Padding eachDayPoint(
-      {top, left, coinImage, compare, height, point, topPadding}) {
+  Padding eachDayPoint({
+    top,
+    left,
+    coinImage,
+    compare,
+    height,
+    point,
+    topPadding,
+    lastPointYMD,
+  }) {
+    print(lastPointYMD +
+        formattedTime +
+        compare.toString() +
+        availableGetPoint.toString());
     return Padding(
       padding: EdgeInsets.only(
           top: SizeConfig.defaultSize! * top,
           left: SizeConfig.defaultSize! * left),
-      child: Container(
-        width: SizeConfig.defaultSize! * 10,
-        height: SizeConfig.defaultSize! * height,
-        decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 222, 220, 220),
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        child: Padding(
-          padding: EdgeInsets.only(
-              top: SizeConfig.defaultSize! * topPadding,
-              bottom: compare != 7 ? SizeConfig.defaultSize! * 0.5 : 0),
-          child: Stack(alignment: Alignment.topCenter, children: [
-            Image.asset(
-              coinImage,
-              height: SizeConfig.defaultSize! * 6,
-            ),
-            lastPointDay >= compare
-                ? Image.asset(
-                    'lib/images/completed.png',
-                    width: SizeConfig.defaultSize! * 8,
-                  )
-                : Container(),
-            Align(
-              alignment:
-                  compare != 7 ? Alignment.bottomCenter : Alignment.center,
-              child: Text(
-                point,
-                style: TextStyle(
-                    fontFamily: 'Lilita',
-                    fontSize: SizeConfig.defaultSize! * 1.9),
-              ),
-            ),
-          ]),
+      child: Stack(children: [
+        Container(
+          width: SizeConfig.defaultSize! * 10.5,
+          height: SizeConfig.defaultSize! * (height + 0.5),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: lastPointYMD != formattedTime &&
+                          compare == availableGetPoint
+                      ? [Color(0xFFFEEC9A), Color(0xFFF39E09)]
+                      : [
+                          Color.fromARGB(255, 222, 220, 220),
+                          Color.fromARGB(255, 222, 220, 220)
+                        ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
         ),
-      ),
+        Positioned(
+            top: SizeConfig.defaultSize! * 0.75,
+            left: SizeConfig.defaultSize! * 0.75,
+            child: Container(
+              width: SizeConfig.defaultSize! * 9,
+              height: SizeConfig.defaultSize! * (height - 1),
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 222, 220, 220),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: SizeConfig.defaultSize! * topPadding,
+                    bottom: compare != 7 ? SizeConfig.defaultSize! * 0 : 0),
+                child: Stack(alignment: Alignment.topCenter, children: [
+                  Image.asset(
+                    coinImage,
+                    height: SizeConfig.defaultSize! * 6,
+                  ),
+                  lastPointDay >= compare
+                      ? Image.asset(
+                          'lib/images/completed.png',
+                          width: SizeConfig.defaultSize! * 8,
+                        )
+                      : Container(),
+                  Align(
+                    alignment: compare != 7
+                        ? Alignment.bottomCenter
+                        : Alignment.center,
+                    child: Text(
+                      point,
+                      style: TextStyle(
+                          fontFamily: 'Lilita',
+                          fontSize: SizeConfig.defaultSize! * 1.9),
+                    ),
+                  ),
+                ]),
+              ),
+            ))
+      ]),
     );
   }
 
