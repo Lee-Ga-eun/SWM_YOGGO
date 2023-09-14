@@ -44,7 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool wantDelete = false;
   double dropdownHeight = 0.0;
   bool isDataFetched = false; // 데이터를 받아온 여부를 나타내는 플래그
-  bool showOverlay = false; // Initially show the overlay
+  bool showFirstOverlay = false; // Initially show the overlay
+  bool showSecondOverlay = false; // Initially show the overlay
   bool showBanner = false;
   bool showFairy = false;
   bool showToolTip = false;
@@ -97,7 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if (isFirstTime) {
       setState(() {
-        showOverlay = true;
+        showFirstOverlay = true;
+        showSecondOverlay = false;
       });
       // Set isFirstTime to false after showing overlay
       await prefs.setBool('isFirstTime', false);
@@ -162,6 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool openCalendar = false;
 
   void _openCalendarFunc() async {
+    setState(() {
+      showSecondOverlay = false;
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     DateTime currentTime = DateTime.now();
     formattedTime = DateFormat('yyyy-MM-dd').format(currentTime);
@@ -670,129 +675,147 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   ),
                   // )
                   GestureDetector(
+                      onTap: () {
+                        _sendHomeFirstClick();
+                        setState(() {
+                          // Toggle the value of showOverlay when the overlay is tapped
+                          showFirstOverlay = false;
+                          showSecondOverlay = true;
+                        });
+                      },
+                      child: Stack(children: [
+                        Visibility(
+                          visible: showFirstOverlay, // 첫번째 온보딩화면
+                          child: Stack(
+                            children: [
+                              Container(
+                                color: Colors.white.withOpacity(0.6),
+                              ),
+                              SafeArea(
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      flex: SizeConfig.defaultSize!.toInt(),
+                                      child: Container(),
+                                    ),
+                                    Expanded(
+                                        flex:
+                                            SizeConfig.defaultSize!.toInt() * 2,
+                                        child: Stack(
+                                          children: [
+                                            Positioned.fill(
+                                              left: SizeConfig.defaultSize!,
+                                              right: SizeConfig.defaultSize!,
+                                              // top: SizeConfig.defaultSize! * 10,
+                                              // 안내 글씨
+                                              child: Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: TextButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                      const Color.fromARGB(
+                                                          255, 255, 169, 26),
+                                                    ),
+                                                    padding:
+                                                        MaterialStateProperty.all<
+                                                            EdgeInsetsGeometry>(
+                                                      EdgeInsets.symmetric(
+                                                        vertical: SizeConfig
+                                                                .defaultSize! *
+                                                            2.1, // 수직 방향 패딩
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onPressed: null,
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                          width: SizeConfig
+                                                                  .defaultSize! *
+                                                              11),
+                                                      Text(
+                                                        'Hello, Welcome to LOVEL! \nHere, you can discover free books to read and 4,500 points that can \nunclock premium books. Please click on a book you like and start reading!',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Molengo',
+                                                            color: Colors.black,
+                                                            fontSize: SizeConfig
+                                                                    .defaultSize! *
+                                                                2),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: SizeConfig.defaultSize! * 0,
+                                              bottom:
+                                                  SizeConfig.defaultSize! * 6.8,
+                                              child: Image.asset(
+                                                'lib/images/fairy.png',
+                                                width: SizeConfig.defaultSize! *
+                                                    17,
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left:
+                                                  SizeConfig.defaultSize! * 42,
+                                              top: SizeConfig.defaultSize! * 2,
+                                              child: Image.asset(
+                                                'lib/images/overlayClick.png',
+                                                width: SizeConfig.defaultSize! *
+                                                    10,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ])),
+                  GestureDetector(
                     onTap: () {
-                      _sendHomeFirstClick();
+                      _sendHomeSecondClick();
+                      _openCalendarFunc();
                       setState(() {
-                        // Toggle the value of showOverlay when the overlay is tapped
-                        showOverlay = !showOverlay;
+                        showSecondOverlay = false;
                       });
                     },
                     child: Stack(children: [
                       Visibility(
-                        visible: showOverlay, // 첫번째 온보딩화면
+                        visible: !showFirstOverlay &&
+                            showSecondOverlay, // 두번째 온보딩화면(캘린더 가르키기)
                         child: Stack(
                           children: [
-                            Container(
-                              color: Colors.white.withOpacity(0.6),
-                            ),
-                            SafeArea(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    flex: SizeConfig.defaultSize!.toInt(),
-                                    child: Container(),
-                                  ),
-                                  Expanded(
-                                      flex: SizeConfig.defaultSize!.toInt() * 2,
-                                      child: Stack(
-                                        children: [
-                                          Positioned.fill(
-                                            left: SizeConfig.defaultSize!,
-                                            right: SizeConfig.defaultSize!,
-                                            // top: SizeConfig.defaultSize! * 10,
-                                            // 안내 글씨
-                                            child: Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: TextButton(
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(
-                                                    const Color.fromARGB(
-                                                        255, 255, 169, 26),
-                                                  ),
-                                                  padding: MaterialStateProperty
-                                                      .all<EdgeInsetsGeometry>(
-                                                    EdgeInsets.symmetric(
-                                                      vertical: SizeConfig
-                                                              .defaultSize! *
-                                                          2.1, // 수직 방향 패딩
-                                                    ),
-                                                  ),
-                                                ),
-                                                onPressed: null,
-                                                child: Row(
-                                                  children: [
-                                                    SizedBox(
-                                                        width: SizeConfig
-                                                                .defaultSize! *
-                                                            11),
-                                                    Text(
-                                                      'Hello, Welcome to LOVEL! \nHere, you can discover free books to read and 4,500 points that can \nunclock premium books. Please click on a book you like and start reading!',
-                                                      style: TextStyle(
-                                                          fontFamily: 'Molengo',
-                                                          color: Colors.black,
-                                                          fontSize: SizeConfig
-                                                                  .defaultSize! *
-                                                              2),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            left: SizeConfig.defaultSize! * 0,
-                                            bottom:
-                                                SizeConfig.defaultSize! * 6.8,
-                                            child: Image.asset(
-                                              'lib/images/fairy.png',
-                                              width:
-                                                  SizeConfig.defaultSize! * 17,
-                                            ),
-                                          ),
-                                          Positioned(
-                                            left: SizeConfig.defaultSize! * 42,
-                                            top: SizeConfig.defaultSize! * 2,
-                                            child: Image.asset(
-                                              'lib/images/overlayClick.png',
-                                              width:
-                                                  SizeConfig.defaultSize! * 10,
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: showOverlay, // 두번째 온보딩화면(캘린더 가르키기)
-                        child: Stack(
-                          children: [
-                            Container(
-                              color: Colors.white.withOpacity(0),
-                            ),
+                            // Container(
+                            //   color: Colors.white.withOpacity(0),
+                            // ),
                             SafeArea(
                                 child: Padding(
                               padding: EdgeInsets.only(
-                                  left: SizeConfig.defaultSize! * 44,
+                                  left: SizeConfig.defaultSize! * 46.5,
                                   top: SizeConfig.defaultSize! * 7),
                               child:
                                   Stack(alignment: Alignment.center, children: [
                                 Image.asset(
                                   'lib/images/textOrangeBubble.png',
-                                  width: SizeConfig.defaultSize! * 25,
+                                  width: SizeConfig.defaultSize! * 27,
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(
-                                      top: SizeConfig.defaultSize! * 1.9),
+                                      top: SizeConfig.defaultSize! * 1.2,
+                                      right: SizeConfig.defaultSize! * 0.8),
                                   child: Text(
                                     'You can earn points\nthrough attendance checks!',
                                     textAlign: TextAlign.center,
@@ -1522,8 +1545,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(8),
                 child: Stack(children: [
                   Container(
-                      width: SizeConfig.defaultSize! * 22,
-                      color: const Color.fromARGB(150, 225, 225, 225)),
+                    width: SizeConfig.defaultSize! * 22,
+                    color: Colors.white.withOpacity(0.6),
+                  ),
                   CachedNetworkImage(
                     imageUrl: book.thumbUrl,
                   ),
@@ -1568,7 +1592,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Container(
                   width: SizeConfig.defaultSize! * 22,
-                  color: const Color.fromARGB(150, 225, 225, 225),
+                  color: Colors.white.withOpacity(0.6),
                 ),
                 Align(
                   alignment: Alignment.topLeft,
@@ -1837,6 +1861,22 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       await amplitude.logEvent(
         'home_first_click',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHomeSecondClick() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'home_second_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'home_second_click',
         eventProperties: {},
       );
     } catch (e) {
