@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:amplitude_flutter/amplitude.dart' as Amp;
 import 'globalCubit/user/user_cubit.dart';
 import './rec_loading.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RecRe extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -67,7 +68,7 @@ class _RecReState extends State<RecRe> {
   }
 
   Future<int> getId() async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/id');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}user/id');
     var response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',

@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:amplitude_flutter/amplitude.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RecLoading extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -41,7 +42,7 @@ class _RecLoadingState extends State<RecLoading> {
     String recordName = audioUrl.split('/').last;
 
     final UserCubit userCubit;
-    var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}producer/record');
 
     var request = http.MultipartRequest('POST', url);
     request.headers['Authorization'] = 'Bearer $token';

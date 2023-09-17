@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:amplitude_flutter/amplitude.dart' as Amp;
 
 import 'globalCubit/user/user_cubit.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Rec extends StatefulWidget {
   final void Function(String path)? onStop;
@@ -85,7 +86,7 @@ class _RecState extends State<Rec> {
   }
 
   Future<int> getId() async {
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/id');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}user/id');
     var response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -94,28 +95,6 @@ class _RecState extends State<Rec> {
     var id = responseData[0];
     return id;
   }
-
-  // Future<void> sendRecord(audioUrl, recordName) async {
-  //   final UserCubit userCubit;
-  //   var url = Uri.parse('https://yoggo-server.fly.dev/producer/record');
-
-  //   var request = http.MultipartRequest('POST', url);
-  //   request.headers['Authorization'] = 'Bearer $token';
-  //   request.files.add(
-  //     await http.MultipartFile.fromPath('recordUrl', audioUrl,
-  //         contentType: MediaType('audio', 'x-wav')),
-  //   );
-  //   request.fields['recordName'] = recordName;
-  //   var response = await request.send();
-  //   if (response.statusCode == 200) {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     //await prefs.setBool('record', true);
-  //     //  await userCubit.fetchUser();
-  //     print('Record sent successfully');
-  //   } else {
-  //     print('Failed to send record. Status code: ${response.statusCode}');
-  //   }
-  // }
 
   Future<void> _start(userId, purchase, record) async {
     try {

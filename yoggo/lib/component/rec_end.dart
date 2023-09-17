@@ -36,56 +36,6 @@ class _RecEndState extends State<RecEnd> {
     // loadData(token);
   }
 
-  // Future<void> loadData(String token) async {
-  //   print('loadData');
-
-  //   try {
-  //     var response = await http.get(
-  //       Uri.parse('https://yoggo-server.fly.dev/user/inference'),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       print(data);
-  //       if (data != [] && data.isNotEmpty) {
-  //         print('성공');
-  //         // 데이터가 빈 값이 아닌 경우
-  //         setState(() {
-  //           isLoading = false;
-  //           completeInferenced = data;
-  //         });
-  //       } else {
-  //         // 데이터가 빈 값인 경우
-  //         setState(() {
-  //           isLoading = true;
-  //           //loadData(token);
-  //           Future.delayed(const Duration(seconds: 1), () {
-  //             loadData(token);
-  //           });
-  //         });
-  //       }
-  //     } else {
-  //       // 데이터 요청이 실패한 경우
-  //       // 오류 처리
-  //       setState(() {
-  //         print('오류');
-
-  //         isLoading = false;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     // 네트워크 오류 등 예외 처리
-  //     print(e);
-
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
-
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   final Amplitude amplitude = Amplitude.getInstance();
 
