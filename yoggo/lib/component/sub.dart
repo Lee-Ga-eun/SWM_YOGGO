@@ -17,6 +17,7 @@ import 'dart:io' show Platform;
 import 'globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Purchase extends StatefulWidget {
   const Purchase({super.key});
@@ -98,7 +99,7 @@ class _PurchaseState extends State<Purchase> {
     await getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('purchase', true);
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/successPurchase');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}user/successPurchase');
     var response = await http.post(
       url,
       headers: {

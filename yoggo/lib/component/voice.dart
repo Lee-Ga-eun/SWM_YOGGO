@@ -11,6 +11,7 @@ import 'globalCubit/user/user_state.dart';
 import 'home/view/home.dart';
 import 'rec_re.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class VoiceProfile extends StatefulWidget {
   // final String infenrencedVoice;
@@ -33,6 +34,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
   // void playAudio(String audioUrl) async {
   //   await audioPlayer.play(UrlSource(audioUrl));
   // }
+  @override
   void initState() {
     super.initState();
     getToken();
@@ -49,7 +51,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
 
   Future<void> getVoiceInfo(String token) async {
     var response = await http.get(
-      Uri.parse('https://yoggo-server.fly.dev/user/inference'),
+      Uri.parse('${dotenv.get("API_SERVER")}user/inference'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -150,7 +152,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                       )),
                   Expanded(
                       flex: 1,
-                      child: Container(color: Color.fromARGB(0, 0, 0, 0)))
+                      child: Container(color: const Color.fromARGB(0, 0, 0, 0)))
                 ]),
               ),
               Expanded(
@@ -281,7 +283,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                   _sendVoiceScriptClickEvent(
                                                       userState.voiceId);
                                                 },
-                                                child: Container(
+                                                child: SizedBox(
                                                   width: 50 *
                                                       SizeConfig.defaultSize!,
                                                   height: 16 *
@@ -333,7 +335,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                                                       .defaultSize!,
                                                               decoration:
                                                                   ShapeDecoration(
-                                                                color: Color(
+                                                                color: const Color(
                                                                     0xFFFFA91A),
                                                                 shape:
                                                                     RoundedRectangleBorder(
