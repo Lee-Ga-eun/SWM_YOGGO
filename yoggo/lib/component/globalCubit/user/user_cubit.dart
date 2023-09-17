@@ -4,6 +4,7 @@ import 'dart:convert';
 import './user_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 late String token;
 bool purchase = false;
@@ -27,7 +28,7 @@ class UserCubit extends Cubit<UserState> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
-      var url = Uri.parse('https://yoggo-server.fly.dev/user/myInfo');
+      var url = Uri.parse('${dotenv.get("API_SERVER")}user/myInfo');
       var response = await http.get(
         url,
         headers: {
@@ -137,7 +138,7 @@ class UserCubit extends Cubit<UserState> {
 //       SharedPreferences prefs = await SharedPreferences.getInstance();
 //       String? token = prefs.getString('token');
 
-//       var url = Uri.parse('https://yoggo-server.fly.dev/user/myInfo');
+//       var url = Uri.parse('${dotenv.get("API_SERVER")}user/myInfo');
 //       var response = await http.get(
 //         url,
 //         headers: {

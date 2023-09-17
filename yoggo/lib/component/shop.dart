@@ -20,6 +20,7 @@ import 'dart:io' show Platform;
 import 'globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Purchase extends StatefulWidget {
   const Purchase({super.key});
@@ -114,7 +115,7 @@ class _PurchaseState extends State<Purchase> {
     await getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('purchase', true);
-    var url = Uri.parse('https://yoggo-server.fly.dev/user/successPurchase');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}user/successPurchase');
     var response = await http.post(
       url,
       headers: {
@@ -177,7 +178,7 @@ class _PurchaseState extends State<Purchase> {
     await getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('purchase', true);
-    var url = Uri.parse('https://yoggo-server.fly.dev/point/plus');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}point/plus');
     var response = await http.post(url,
         headers: {
           'Content-Type': 'application/json',
@@ -321,7 +322,7 @@ class _PurchaseState extends State<Purchase> {
                           SizedBox(
                             width: 0.5 * SizeConfig.defaultSize!,
                           ),
-                          Container(
+                          SizedBox(
                               width: 2 * SizeConfig.defaultSize!,
                               child: Image.asset('lib/images/oneCoin.png')),
                           // SizedBox(
@@ -375,8 +376,8 @@ class _PurchaseState extends State<Purchase> {
                                             .withOpacity(0.6), // 그림자 색상 및 투명도
                                         spreadRadius: 0, // 그림자 확산 반경
                                         blurRadius: 3, // 그림자의 흐림 정도
-                                        offset:
-                                            Offset(5, 5), // 그림자의 위치 (가로, 세로)
+                                        offset: const Offset(
+                                            5, 5), // 그림자의 위치 (가로, 세로)
                                       ),
                                     ],
                                     // borderRadius: BorderRadius.circular(
@@ -393,8 +394,8 @@ class _PurchaseState extends State<Purchase> {
                                       child: Column(children: [
                                         Container(
                                           height: SizeConfig.defaultSize! * 4,
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
+                                          decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
                                                 255, 255, 167, 26),
                                             // borderRadius: BorderRadius.circular(
                                             // SizeConfig.defaultSize! * 1.15),
@@ -444,8 +445,8 @@ class _PurchaseState extends State<Purchase> {
                                                   6.8 * SizeConfig.defaultSize!,
                                               width:
                                                   12 * SizeConfig.defaultSize!,
-                                              decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
+                                              decoration: const BoxDecoration(
+                                                color: Color.fromARGB(
                                                     255, 255, 167, 26),
                                                 // borderRadius: BorderRadius.circular(
                                                 // SizeConfig.defaultSize! * 1.15),
@@ -517,7 +518,7 @@ class _PurchaseState extends State<Purchase> {
                                             height:
                                                 0.8 * SizeConfig.defaultSize!),
                                         Container(
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               // color: Colors.blue, // 배경색 설정
                                               ),
                                           child: SizedBox(
@@ -761,25 +762,25 @@ class _PurchaseState extends State<Purchase> {
                     width: wid * SizeConfig.defaultSize!,
                     height: hei * SizeConfig.defaultSize!,
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 255, 167, 26),
+                      color: const Color.fromARGB(255, 255, 167, 26),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.6), // 그림자 색상 및 투명도
                           spreadRadius: 0, // 그림자 확산 반경
                           blurRadius: 3, // 그림자의 흐림 정도
-                          offset: Offset(5, 5), // 그림자의 위치 (가로, 세로)
+                          offset: const Offset(5, 5), // 그림자의 위치 (가로, 세로)
                         ),
                       ],
                     ),
                   ),
                   SizedBox(
                       width: coinWid * SizeConfig.defaultSize!, //
-                      child: Image.asset('lib/images/${coinImage}.png')),
+                      child: Image.asset('lib/images/$coinImage.png')),
                   Positioned(
                       right: 0.5 * SizeConfig.defaultSize!,
                       bottom: 0.5 * SizeConfig.defaultSize!,
                       child: Text(
-                        '${coinNum}',
+                        '$coinNum',
                         style: TextStyle(
                             fontFamily: 'Lilita',
                             fontSize: SizeConfig.defaultSize! * 2.8),
@@ -798,12 +799,12 @@ class _PurchaseState extends State<Purchase> {
                           color: Colors.grey.withOpacity(0.6), // 그림자 색상 및 투명도
                           spreadRadius: 0, // 그림자 확산 반경
                           blurRadius: 3, // 그림자의 흐림 정도
-                          offset: Offset(5, 5), // 그림자의 위치 (가로, 세로)
+                          offset: const Offset(5, 5), // 그림자의 위치 (가로, 세로)
                         ),
                       ]),
                     ),
                     Text(
-                      '${price}',
+                      '$price',
                       style: TextStyle(
                           fontFamily: 'Molengo',
                           fontSize: SizeConfig.defaultSize! * 2.5),

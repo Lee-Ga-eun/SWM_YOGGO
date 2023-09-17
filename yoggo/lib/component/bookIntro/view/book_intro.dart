@@ -362,8 +362,8 @@ class _BookIntroState extends State<BookIntro> {
 
 //구매한 사람인지, 이 책이 인퍼런스되어 있는지 확인
   Future<String> purchaseInfo(String token) async {
-    var url = Uri.parse(
-        'https://yoggo-server.fly.dev/user/purchaseInfo/${widget.id}');
+    var url =
+        Uri.parse('${dotenv.get("API_SERVER")}user/purchaseInfo/${widget.id}');
     var response = await http.get(
       url,
       headers: {
@@ -1262,7 +1262,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                         .defaultSize!,
                                                                 decoration:
                                                                     ShapeDecoration(
-                                                                  color: Color(
+                                                                  color: const Color(
                                                                       0xFFFFA91A),
                                                                   shape:
                                                                       RoundedRectangleBorder(
@@ -1399,7 +1399,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                     .defaultSize!,
                                                             decoration:
                                                                 ShapeDecoration(
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xFFFFA91A),
                                                               shape:
                                                                   RoundedRectangleBorder(
@@ -1584,7 +1584,7 @@ class _BookIntroState extends State<BookIntro> {
               Visibility(
                 visible: buyPoints,
                 child: AlertDialog(
-                  title: Text('you need more ${lackingPoint} points!'),
+                  title: Text('you need more $lackingPoint points!'),
                   content: const Text('Click OK to go shop!'),
                   actions: [
                     TextButton(

@@ -10,13 +10,11 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/models/anonymous.dart';
-import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
 import 'component/globalCubit/user/user_cubit.dart';
 import 'component/globalCubit/user/user_state.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'dart:io' show Platform;
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -149,7 +147,7 @@ class _AppState extends State<App> {
         anonymousId: userCredential.user!.uid,
       );
 
-      var url = Uri.parse('https://yoggo-server.fly.dev/auth/anonymousLogin');
+      var url = Uri.parse('${dotenv.get("API_SERVER")}auth/anonymousLogin');
       var response = await http.post(url,
           headers: {'Content-Type': 'application/json'},
           body: json.encode(user.toJson()));

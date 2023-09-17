@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var tokens = prefs.getString('token')!;
     var response = await http.get(
-      Uri.parse('https://yoggo-server.fly.dev/auth/delete'),
+      Uri.parse('${dotenv.get("API_SERVER")}auth/delete'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $tokens',
@@ -1182,14 +1182,14 @@ class _HomeScreenState extends State<HomeScreen> {
               gradient: LinearGradient(
                   colors: lastPointYMD != formattedTime &&
                           compare == availableGetPoint
-                      ? [Color(0xFFFEEC9A), Color(0xFFF39E09)]
+                      ? [const Color(0xFFFEEC9A), const Color(0xFFF39E09)]
                       : [
-                          Color.fromARGB(255, 222, 220, 220),
-                          Color.fromARGB(255, 222, 220, 220)
+                          const Color.fromARGB(255, 222, 220, 220),
+                          const Color.fromARGB(255, 222, 220, 220)
                         ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter),
-              borderRadius: BorderRadius.all(Radius.circular(15))),
+              borderRadius: const BorderRadius.all(Radius.circular(15))),
         ),
         Positioned(
             top: SizeConfig.defaultSize! * 0.75,

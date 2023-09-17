@@ -14,6 +14,7 @@ import 'package:yoggo/size_config.dart';
 import '../component/globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginAnd extends StatefulWidget {
   const LoginAnd({Key? key}) : super(key: key);
@@ -58,7 +59,7 @@ class _LoginAndState extends State<LoginAnd> {
       );
 
       //googleUser.authentication.accessToken을 넘겨라 -> verify를 google에 해라. -> token을 다시 넘겨줘라
-      var url = Uri.parse('https://yoggo-server.fly.dev/auth/login');
+      var url = Uri.parse('${dotenv.get("API_SERVER")}auth/login');
       var response = await http.post(url,
           headers: {'Content-Type': 'application/json'},
           body: json.encode(user.toJson()));
@@ -133,7 +134,7 @@ class _LoginAndState extends State<LoginAnd> {
         provider: 'apple',
       );
     }
-    var url = Uri.parse('https://yoggo-server.fly.dev/auth/applelogin');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}auth/applelogin');
     var response = await http.post(url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode(user.toJson()));
@@ -262,7 +263,7 @@ class _LoginAndState extends State<LoginAnd> {
                                 'lib/images/logo-google.png', // 본인의 이미지 경로로 변경
                                 height: 24.0,
                               ),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Text(
                                 'Continue with Google',
                                 style: TextStyle(

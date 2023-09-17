@@ -55,7 +55,7 @@ class DataRepository {
   //   // home screen에서 책 목록들
   //   if (!_bookIntroLoaded) {
   //     final response = await http
-  //         .get(Uri.parse('https://yoggo-server.fly.dev/content/$contentId'));
+  //         .get(Uri.parse('${dotenv.get("API_SERVER")}content/$contentId'));
 
   //     if (response.statusCode == 200) {
   //       final jsonData = json.decode(response.body) as List<dynamic>;
