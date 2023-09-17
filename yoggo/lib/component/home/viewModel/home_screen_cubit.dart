@@ -68,7 +68,7 @@ class DataCubit extends Cubit<List<HomeScreenBookModel>> {
 //     if (!_isLoaded) {
 //       // 데이터를 로드하지 않았을 경우에만 로드
 //       final response =
-//           await http.get(Uri.parse('https://yoggo-server.fly.dev/content/all'));
+//           await http.get(Uri.parse('${dotenv.get("API_SERVER")}content/all'));
 //       if (response.statusCode == 200) {
 //         final jsonData = json.decode(response.body) as List<dynamic>;
 //         final data = jsonData.map((item) => BookModel.fromJson(item)).toList();
