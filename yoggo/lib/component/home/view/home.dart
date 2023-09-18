@@ -426,8 +426,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
                                       child: ListView.separated(
                                         scrollDirection: Axis.horizontal,
-                                        // itemCount: state.length,
-                                        itemCount: 4,
+                                        itemCount: state.length,
+                                        //  itemCount: 4,
                                         itemBuilder: (context, index) {
                                           var book = state[index];
                                           return GestureDetector(
@@ -512,112 +512,65 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ), //첫 줄 종료
-                                  SizedBox(
-                                    //두 번째 줄 시작
-                                    height: SizeConfig.defaultSize! * 36,
-                                    child: BlocProvider(
-                                        create: (context) => DataCubit(
-                                            dataRepository)
-                                          ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
-                                        child: ListView.separated(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: state.length - 4,
-                                          itemBuilder: (context, index) {
-                                            var book = state[index + 4];
-                                            return GestureDetector(
-                                              onTap: () async {
-                                                _sendBookClickEvent(book.id);
-                                                SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                await prefs.setBool(
-                                                    'haveClickedBook', true);
-                                                setState(() {
-                                                  showFairy = true;
-                                                });
-                                                // showFairy = true;
-                                                // print(showFairy);
-                                                // userState.purchase == true ||
-                                                //         book.lock == false ||
-                                                //         (book.title ==
-                                                //                 'Snow White and the Seven Dwarfs' ||
-                                                //             book.title ==
-                                                //                 'The Little Match Girl') // 구독자인지 확인하기 and 포인트로 푼 책인지 확인하기
-                                                //     ?
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BlocProvider(
-                                                      create: (context) =>
-                                                          // BookIntroCubit(),
-                                                          // DataCubit()..loadHomeBookData()
-                                                          BookIntroCubit(
-                                                              dataRepository)
-                                                            ..loadBookIntroData(
-                                                                book.id),
-                                                      child: BookIntro(
-                                                        title: book.title,
-                                                        thumb: book.thumbUrl,
-                                                        id: book.id,
-                                                        summary: book.summary,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                                // : Navigator.push(
-                                                //     //구독자가 아니면 purchase로 보낸다?
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //       builder: (context) =>
-                                                //           userState.purchase
-                                                //               ? BlocProvider(
-                                                //                   create: (context) =>
-                                                //                       // BookIntroCubit(),
-                                                //                       // DataCubit()..loadHomeBookData()
-                                                //                       BookIntroCubit()..loadBookIntroData(book.id),
-                                                //                   child:
-                                                //                       BookIntro(
-                                                //                     title: book
-                                                //                         .title,
-                                                //                     thumb: book
-                                                //                         .thumbUrl,
-                                                //                     id: book
-                                                //                         .id,
-                                                //                     summary:
-                                                //                         book.summary,
-                                                //                   ),
-                                                //                 )
-                                                //               : const Purchase(),
-                                                //     ));
-                                                //   BlocProvider(
-                                                // create: (context) =>
-                                                //     // BookIntroCubit(),
-                                                //     // DataCubit()..loadHomeBookData()
-                                                //     BookIntroCubit()
-                                                //       ..loadBookIntroData(
-                                                //           book.id),
-                                                // child: BookIntro(
-                                                //   title: book.title,
-                                                //   thumb: book.thumbUrl,
-                                                //   id: book.id,
-                                                //   summary: book.summary,
-                                                // ),
-                                                //   ),
-                                              },
-                                              child: book.lock &&
-                                                      !userState.purchase
-                                                  // 사용자가 포인트로 책을 풀었거나, 무료 공개 책이면 lock 해제
-                                                  ? lockedBook(book)
-                                                  : unlockedBook(book), //구독자아님
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) =>
-                                              SizedBox(
-                                                  width: 2 *
-                                                      SizeConfig.defaultSize!),
-                                        )),
-                                  ),
+                                  // SizedBox(
+                                  //   //두 번째 줄 시작
+                                  //   height: SizeConfig.defaultSize! * 36,
+                                  //   child: BlocProvider(
+                                  //       create: (context) => DataCubit(
+                                  //           dataRepository)
+                                  //         ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
+                                  //       child: ListView.separated(
+                                  //         scrollDirection: Axis.horizontal,
+                                  //         itemCount: state.length - 4,
+                                  //         itemBuilder: (context, index) {
+                                  //           var book = state[index + 4];
+                                  //           return GestureDetector(
+                                  //             onTap: () async {
+                                  //               _sendBookClickEvent(book.id);
+                                  //               SharedPreferences prefs =
+                                  //                   await SharedPreferences
+                                  //                       .getInstance();
+                                  //               await prefs.setBool(
+                                  //                   'haveClickedBook', true);
+                                  //               setState(() {
+                                  //                 showFairy = true;
+                                  //               });
+
+                                  //               Navigator.push(
+                                  //                 context,
+                                  //                 MaterialPageRoute(
+                                  //                   builder: (context) =>
+                                  //                       BlocProvider(
+                                  //                     create: (context) =>
+
+                                  //                         BookIntroCubit(
+                                  //                             dataRepository)
+                                  //                           ..loadBookIntroData(
+                                  //                               book.id),
+                                  //                     child: BookIntro(
+                                  //                       title: book.title,
+                                  //                       thumb: book.thumbUrl,
+                                  //                       id: book.id,
+                                  //                       summary: book.summary,
+                                  //                     ),
+                                  //                   ),
+                                  //                 ),
+                                  //               );
+
+                                  //             },
+                                  //             child: book.lock &&
+                                  //                     !userState.purchase
+                                  //                 // 사용자가 포인트로 책을 풀었거나, 무료 공개 책이면 lock 해제
+                                  //                 ? lockedBook(book)
+                                  //                 : unlockedBook(book), //구독자아님
+                                  //           );
+                                  //         },
+                                  //         separatorBuilder: (context, index) =>
+                                  //             SizedBox(
+                                  //                 width: 2 *
+                                  //                     SizeConfig.defaultSize!),
+                                  //       )),
+                                  // ),
                                   // 아래 줄에 또 다른 책을 추가하고 싶으면 주석을 해지하면 됨
                                   // Container(
                                   //   color: Colors.yellow,
