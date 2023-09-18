@@ -101,7 +101,7 @@ class _PurchaseState extends State<Purchase> {
     Future(fetch);
     super.initState();
     getToken();
-    _sendSubViewEvent();
+    _sendShopViewEvent();
   }
 
   Future<void> getToken() async {
@@ -273,6 +273,7 @@ class _PurchaseState extends State<Purchase> {
               right: 11.5 * SizeConfig.defaultSize!,
               child: GestureDetector(
                   onTap: () async {
+                    _sendAlreadysubClickEvent(userState.point);
                     try {
                       CustomerInfo customerInfo =
                           await Purchases.restorePurchases();
@@ -359,7 +360,7 @@ class _PurchaseState extends State<Purchase> {
                         child: GestureDetector(
                             onTap: () async {
                               // 버튼 클릭 시 동작
-                              _sendSubPayClickEvent();
+                              _sendSubClickEvent(userState.point, 'basic');
                               await subStart();
                             },
                             child: SizedBox(
@@ -673,7 +674,8 @@ class _PurchaseState extends State<Purchase> {
                 coinImage: 'oneCoin',
                 coinWid: 6,
                 coinNum: 3000,
-                price: '\$ 2.99'),
+                price: '\$ 2.99',
+                pointNow: userState.point),
             pointGood(
                 top: 7.5,
                 right: 3.5,
@@ -682,7 +684,8 @@ class _PurchaseState extends State<Purchase> {
                 coinImage: 'twoCoins',
                 coinWid: 8.5,
                 coinNum: 6000,
-                price: '\$ 4.99'),
+                price: '\$ 4.99',
+                pointNow: userState.point),
             pointGood(
                 top: 23,
                 right: 21.5,
@@ -691,7 +694,8 @@ class _PurchaseState extends State<Purchase> {
                 coinImage: 'threeCoins',
                 coinWid: 10,
                 coinNum: 10000,
-                price: '\$ 8.99'),
+                price: '\$ 8.99',
+                pointNow: userState.point),
             pointGood(
                 top: 23,
                 right: 3.5,
@@ -700,7 +704,8 @@ class _PurchaseState extends State<Purchase> {
                 coinImage: 'fiveCoins',
                 coinWid: 14.5,
                 coinNum: 15000,
-                price: '\$ 9.99'),
+                price: '\$ 9.99',
+                pointNow: userState.point),
             Positioned(
                 top: 5 * SizeConfig.defaultSize!,
                 right: 10.5 * SizeConfig.defaultSize!,
@@ -726,6 +731,7 @@ class _PurchaseState extends State<Purchase> {
               child: IconButton(
                 icon: Icon(Icons.clear, size: 3 * SizeConfig.defaultSize!),
                 onPressed: () {
+                  _sendShopXClickEvent(userState.point);
                   Navigator.of(context).pop();
                 },
               ),
@@ -744,13 +750,14 @@ class _PurchaseState extends State<Purchase> {
       required String coinImage,
       required double coinWid,
       required int coinNum,
-      required price}) {
+      required price,
+      required int pointNow}) {
     return Positioned(
         top: top * SizeConfig.defaultSize!,
         right: right * SizeConfig.defaultSize!,
         child: GestureDetector(
           onTap: () async {
-            _sendSubPayClickEvent();
+            _sendBuyPointClickEvent(pointNow, coinNum, price);
             payCashToPoint(coinNum);
           },
           child: Column(
@@ -815,30 +822,30 @@ class _PurchaseState extends State<Purchase> {
         ));
   }
 
-  Future<void> _sendSubViewEvent() async {
+  Future<void> _sendShopViewEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'sub_view',
+        name: 'shop_view',
         parameters: <String, dynamic>{},
       );
-      await amplitude.logEvent('sub_view', eventProperties: {});
+      await amplitude.logEvent('shop_view', eventProperties: {});
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
     }
   }
 
-  Future<void> _sendSubPayClickEvent() async {
+  Future<void> _sendSubClickEvent(pointNow, plan) async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
-        name: 'sub_pay_click',
-        parameters: <String, dynamic>{},
+        name: 'shop_sub_click',
+        parameters: <String, dynamic>{'point_now': pointNow},
       );
       await amplitude.logEvent(
-        'sub_pay_click',
-        eventProperties: {},
+        'shop_sub_click',
+        eventProperties: {'point_now': pointNow},
       );
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
@@ -874,4 +881,86 @@ class _PurchaseState extends State<Purchase> {
       print('Failed to log event: $e');
     }
   }
+
+  Future<void> _sendAlreadysubClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'shop_alreadysub_click',
+        parameters: <String, dynamic>{'point_now': pointNow},
+      );
+      await amplitude.logEvent('shop_alreadysub_click',
+          eventProperties: {'point_now': pointNow});
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBuyPointClickEvent(pointNow, pointWant, price) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'shop_buy_point_click',
+        parameters: <String, dynamic>{
+          'point_now': pointNow,
+          'point_want': pointWant,
+          'price': price
+        },
+      );
+      await amplitude.logEvent('shop_buy_point_click', eventProperties: {
+        'point_now': pointNow,
+        'point_want': pointWant,
+        'price': price
+      });
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendShopXClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'shop_x_click',
+        parameters: <String, dynamic>{'point_now': pointNow},
+      );
+      await amplitude
+          .logEvent('shop_x_click', eventProperties: {'point_now': pointNow});
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  // Future<void> _sendAlreadysubClickEvent(pointNow) async {
+  //   try {
+  //     // 이벤트 로깅
+  //     await analytics.logEvent(
+  //       name: 'shop_alreadysub_click',
+  //       parameters: <String, dynamic>{'point_now': pointNow},
+  //     );
+  //     await amplitude.logEvent('shop_alreadysub_click',
+  //         eventProperties: {'point_now': pointNow});
+  //   } catch (e) {
+  //     // 이벤트 로깅 실패 시 에러 출력
+  //     print('Failed to log event: $e');
+  //   }
+  // }
+
+  // Future<void> _sendAlreadysubClickEvent(pointNow) async {
+  //   try {
+  //     // 이벤트 로깅
+  //     await analytics.logEvent(
+  //       name: 'shop_alreadysub_click',
+  //       parameters: <String, dynamic>{'point_now': pointNow},
+  //     );
+  //     await amplitude.logEvent('shop_alreadysub_click',
+  //         eventProperties: {'point_now': pointNow});
+  //   } catch (e) {
+  //     // 이벤트 로깅 실패 시 에러 출력
+  //     print('Failed to log event: $e');
+  //   }
+  // }
 }
