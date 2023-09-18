@@ -841,7 +841,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 onPressed: () {
                                                   _sendCalXClickEvent(
                                                       userState.point);
-                                                  _closeCalendarFunc;
+                                                  _closeCalendarFunc();
                                                 })),
                                       ),
                                       Padding(

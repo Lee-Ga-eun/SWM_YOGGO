@@ -59,7 +59,6 @@ class _PurchaseState extends State<Purchase> {
         PurchaseDetails e = event[0];
         print(
             "📌 EVENT $e - ${e.status} - ${e.productID} - ${e.pendingCompletePurchase}");
-        final userCubit = context.watch<UserCubit>();
 
         /// 구매 여부 pendingCompletePurchase - 승인 true / 취소 false
         if (e.pendingCompletePurchase) {
@@ -77,13 +76,14 @@ class _PurchaseState extends State<Purchase> {
                 e.productID == 'product1:product1') {
               subSuccess();
               _sendSubSuccessEvent();
-              userCubit.fetchUser();
+              context.read<UserCubit>().fetchUser();
               amplitude.setUserProperties({'subscribe': true});
+
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const RecInfo()));
             } else {
               paySuccess(e.productID.substring(7));
-              userCubit.fetchUser();
+              context.read<UserCubit>().fetchUser();
               setState(() {
                 paySuccessed = true;
               });
@@ -125,7 +125,7 @@ class _PurchaseState extends State<Purchase> {
     );
     if (response.statusCode == 200) {
       // _sendSubSuccessEvent();
-      print('정보 등록 완료');
+      print('정보 등록 완료 1');
     } else {
       _sendSubFailEvent(response.statusCode);
       throw Exception('Failed to start inference');
@@ -139,12 +139,11 @@ class _PurchaseState extends State<Purchase> {
         var product = offerings.getOffering("default")!.availablePackages;
         CustomerInfo customerInfo = await Purchases.purchasePackage(product[0]);
         EntitlementInfo? entitlement = customerInfo.entitlements.all['pro'];
-        final appData = AppData();
-        appData.entitlementIsActive = entitlement?.isActive ?? false;
-        if (entitlement!.isActive) {
-          subSuccess();
-        }
-        subSuccess();
+        // final appData = AppData();
+        // appData.entitlementIsActive = entitlement?.isActive ?? false;
+        // if (entitlement!.isActive) {
+        //   subSuccess();
+        // }
         // Display packages for sale
       }
     } catch (e) {
@@ -187,7 +186,8 @@ class _PurchaseState extends State<Purchase> {
         body: jsonEncode({'point': toInt(points)}));
     if (response.statusCode == 200) {
       // _sendSubSuccessEvent();
-      print('정보 등록 완료');
+      print('정보 등록 완료 2');
+      context.read<UserCubit>().fetchUser();
     } else {
       _sendSubFailEvent(response.statusCode);
       throw Exception('Failed to start inference');
