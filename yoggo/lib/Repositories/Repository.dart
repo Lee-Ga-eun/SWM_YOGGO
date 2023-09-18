@@ -43,6 +43,16 @@ class DataRepository {
         final jsonData = json.decode(response.body) as List<dynamic>;
         final data =
             jsonData.map((item) => HomeScreenBookModel.fromJson(item)).toList();
+        data.sort((a, b) {
+          if (a.lock == b.lock) {
+            return 0;
+          } else if (a.lock) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+
         _loadedHomeScreenData = data;
         _isLoaded = true;
       }
