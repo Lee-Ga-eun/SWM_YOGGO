@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> saveRewardStatus() async {
     DateTime currentTime = DateTime.now();
 
-    formattedTime = DateFormat('yyyy-MM-dd HH:mm').format(currentTime);
+    formattedTime = DateFormat('yyyy-MM-dd').format(currentTime);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getInt('availableGetPoint') == null) {
@@ -169,11 +169,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     DateTime currentTime = DateTime.now();
-    formattedTime = DateFormat('yyyy-MM-dd HH:mm').format(currentTime);
+    formattedTime = DateFormat('yyyy-MM-dd').format(currentTime);
     lastPointYMD = prefs.getString('lastPointYMD')!;
     availableGetPoint = prefs.getInt('availableGetPoint')!;
-    print(lastPointYMD);
-    print(formattedTime);
+    // print(lastPointYMD);
+    // print(formattedTime);
     if (lastPointDay == 7 && prefs.getString('lastPointYMD') != formattedTime) {
       //저장된 lastPointDay가 7이고 다음 날 들어왔으면 --> 즉 포인트 다시 리셋되어야 하면
       setState(() {
@@ -305,6 +305,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   top: SizeConfig.defaultSize! * 2,
                                   child: InkWell(
                                     onTap: () {
+                                      userCubit.fetchUser();
+
                                       _sendHbgClickEvent();
                                       _scaffoldKey.currentState?.openDrawer();
                                     },
@@ -422,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         // itemCount: state.length,
                                         itemCount: 4,
                                         itemBuilder: (context, index) {
-                                          final book = state[index];
+                                          var book = state[index];
                                           return GestureDetector(
                                             onTap: () async {
                                               _sendBookClickEvent(book.id);
@@ -519,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           scrollDirection: Axis.horizontal,
                                           itemCount: state.length - 4,
                                           itemBuilder: (context, index) {
-                                            final book = state[index + 4];
+                                            var book = state[index + 4];
                                             return GestureDetector(
                                               onTap: () async {
                                                 _sendBookClickEvent(book.id);
@@ -1056,7 +1058,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             DateTime currentDate =
                                                 DateTime.now();
                                             String formattedDate =
-                                                DateFormat('yyyy-MM-dd HH:mm')
+                                                DateFormat('yyyy-MM-dd')
                                                     .format(currentDate);
                                             int tmp = prefs
                                                 .getInt('availableGetPoint')!;
@@ -1125,9 +1127,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               });
                                             }
 
-                                            print(lastPointDay);
-                                            print(availableGetPoint);
-                                            print(formattedDate);
+                                            // print(lastPointDay);
+                                            // print(availableGetPoint);
+                                            // print(formattedDate);
                                           },
                                           child: Text(
                                             'CLAIM NOW',
@@ -1166,10 +1168,10 @@ class _HomeScreenState extends State<HomeScreen> {
     topPadding,
     lastPointYMD,
   }) {
-    print(lastPointYMD +
-        formattedTime +
-        compare.toString() +
-        availableGetPoint.toString());
+    // print(lastPointYMD +
+    //     formattedTime +
+    //     compare.toString() +
+    //     availableGetPoint.toString());
     return Padding(
       padding: EdgeInsets.only(
           top: SizeConfig.defaultSize! * top,
@@ -1648,10 +1650,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Align(
                   alignment: Alignment.topLeft,
-                  child: Image.asset(
-                    'lib/images/locked.png',
-                    width: 80,
-                  ),
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.defaultSize! * 0.5,
+                          top: SizeConfig.defaultSize! * 0.5),
+                      child: Image.asset(
+                        'lib/images/locked.png',
+                        width: SizeConfig.defaultSize! * 6,
+                      )),
                 )
               ]),
             ),
