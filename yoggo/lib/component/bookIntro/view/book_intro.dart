@@ -863,7 +863,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                         left: 0 *
                                                                             SizeConfig.defaultSize!),
                                                                     child: Image.asset(
-                                                                        'lib/images/icons/grinning-face-uc.png',
+                                                                        'lib/images/icons/grinning-face-c.png',
                                                                         height: SizeConfig.defaultSize! *
                                                                             6.5,
                                                                         colorBlendMode:
