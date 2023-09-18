@@ -6,8 +6,8 @@ import 'dart:convert';
 
 class BookPageCubit extends Cubit<List<BookPageModel>> {
   static final Map<int, List<BookPageModel>> _dataMap = {}; // Map으로 변경
-  BookPageCubit() : super([]);
-
+  final DataRepository dataRepository;
+  BookPageCubit(this.dataRepository) : super([]);
   void loadBookPageData(int contentVoiceId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -23,7 +23,7 @@ class BookPageCubit extends Cubit<List<BookPageModel>> {
     }
 
     // Shared Preferences에 저장된 데이터가 없는 경우, API를 호출하여 데이터를 가져옵니다.
-    final data = await DataRepository.bookPageRepository(contentVoiceId);
+    final data = await dataRepository.bookPageRepository(contentVoiceId);
     final serializedData =
         data.map((item) => json.encode(item.toJson())).toList();
     _dataMap[contentVoiceId] = data; // 가져온 데이터를 Map에 저장합니다.

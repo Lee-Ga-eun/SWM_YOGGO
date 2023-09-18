@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoggo/Repositories/Repository.dart';
 import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/models/anonymous.dart';
 import 'package:yoggo/size_config.dart';
@@ -89,6 +90,7 @@ void main() async {
       MultiBlocProvider(
         providers: [
           BlocProvider<UserCubit>.value(value: userCubit),
+          RepositoryProvider(create: (context) => DataRepository())
           // Add more Cubits here if needed
         ],
         child: const App(),

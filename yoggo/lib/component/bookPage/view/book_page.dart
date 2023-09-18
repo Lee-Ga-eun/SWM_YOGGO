@@ -10,6 +10,7 @@ import 'dart:async';
 import 'package:yoggo/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../Repositories/Repository.dart';
 import '../../book_end.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -141,158 +142,160 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
+    final dataRepository = RepositoryProvider.of<DataRepository>(context);
     SizeConfig().init(context);
-    return BlocProvider(
-        create: (context) =>
-            BookPageCubit()..loadBookPageData(widget.contentVoiceId),
-        child: BlocBuilder<BookPageCubit, List<BookPageModel>>(
-            builder: (context, bookPage) {
-          if (bookPage.isEmpty) {
-            return Scaffold(
-              body: Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('lib/images/bkground.png'),
-                    fit: BoxFit.cover,
+    return BlocProvider(create: (context) {
+      final bookPageCubit = BookPageCubit(dataRepository);
+      bookPageCubit.loadBookPageData(widget.contentVoiceId);
+      return bookPageCubit;
+    }, child: BlocBuilder<BookPageCubit, List<BookPageModel>>(
+        builder: (context, bookPage) {
+      if (bookPage.isEmpty) {
+        return Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/images/bkground.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(
+              // 로딩 화면
+              child: LoadingAnimationWidget.fourRotatingDots(
+                color: const Color.fromARGB(255, 255, 169, 26),
+                size: SizeConfig.defaultSize! * 10,
+              ),
+            ),
+          ),
+        );
+      } else {
+        _sendBookPageViewEvent(widget.contentVoiceId, widget.contentId,
+            widget.voiceId, currentPageIndex + 1);
+        return WillPopScope(
+          child: Scaffold(
+            body: Stack(
+              children: [
+                // 현재 페이지 위젯
+                Visibility(
+                  visible: true,
+                  child: PageWidget(
+                    // page: currentPageIndex < widget.lastPage
+                    //     ? bookPage[currentPageIndex]
+                    //     : bookPage[widget.lastPage - 1],
+                    text: currentPageIndex < widget.lastPage
+                        ? bookPage[currentPageIndex].text
+                        : bookPage[widget.lastPage - 1].text,
+                    imageUrl: currentPageIndex < widget.lastPage
+                        ? bookPage[currentPageIndex].imageUrl
+                        : bookPage[widget.lastPage - 1].imageUrl,
+                    position: currentPageIndex < widget.lastPage
+                        ? bookPage[currentPageIndex].position
+                        : bookPage[widget.lastPage - 1].position,
+                    audioUrl: bookPage[currentPageIndex].audioUrl,
+                    realCurrent: true,
+                    currentPage: currentPageIndex,
+                    audioPlayer: audioPlayer,
+                    pauseFunction: pauseFunction,
+                    previousPage: previousPage,
+                    currentPageIndex: currentPageIndex,
+                    nextPage: nextPage,
+                    lastPage: widget.lastPage,
+                    voiceId: widget.voiceId,
+                    contentVoiceId: widget.contentVoiceId,
+                    contentId: widget.contentId,
+                    isSelected: widget.isSelected,
+                    dispose: dispose,
+                    stopAudio: stopAudio,
                   ),
                 ),
-                child: Center(
-                  // 로딩 화면
-                  child: LoadingAnimationWidget.fourRotatingDots(
-                    color: const Color.fromARGB(255, 255, 169, 26),
-                    size: SizeConfig.defaultSize! * 10,
+                // 다음 페이지 위젯
+                Offstage(
+                  offstage: true, // 화면에 보이지 않도록 설정
+                  child: PageWidget(
+                    text: currentPageIndex < widget.lastPage
+                        ? currentPageIndex == widget.lastPage - 1
+                            ? bookPage[currentPageIndex].text
+                            : bookPage[currentPageIndex + 1].text
+                        : bookPage[widget.lastPage - 1].text,
+                    imageUrl: currentPageIndex < widget.lastPage
+                        ? currentPageIndex == widget.lastPage - 1
+                            ? bookPage[currentPageIndex].imageUrl
+                            : bookPage[currentPageIndex + 1].imageUrl
+                        : bookPage[widget.lastPage - 1].imageUrl,
+                    position: currentPageIndex < widget.lastPage
+                        ? currentPageIndex == widget.lastPage - 1
+                            ? bookPage[currentPageIndex].position
+                            : bookPage[currentPageIndex + 1].position
+                        : bookPage[widget.lastPage - 1].position,
+                    //text: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].text:bookPage[currentPageIndex+1].text,
+                    //  imageUrl: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].imageUrl:bookPage[currentPageIndex+1].imageUrl,
+                    //  position: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].position:bookPage[currentPageIndex+1].position,
+                    realCurrent: false,
+                    audioUrl: currentPageIndex != widget.lastPage - 1
+                        ? bookPage[currentPageIndex + 1].audioUrl
+                        : bookPage[currentPageIndex].audioUrl,
+                    currentPage: currentPageIndex != widget.lastPage - 1
+                        ? currentPageIndex + 1
+                        : currentPageIndex,
+                    audioPlayer: audioPlayer,
+                    pauseFunction: pauseFunction,
+                    previousPage: previousPage,
+                    currentPageIndex: currentPageIndex,
+                    nextPage: nextPage,
+                    lastPage: widget.lastPage,
+                    voiceId: widget.voiceId,
+                    contentVoiceId: widget.contentVoiceId,
+                    contentId: widget.contentId,
+                    isSelected: widget.isSelected,
+                    dispose: dispose,
+                    stopAudio: stopAudio,
                   ),
                 ),
-              ),
-            );
-          } else {
-            _sendBookPageViewEvent(widget.contentVoiceId, widget.contentId,
-                widget.voiceId, currentPageIndex + 1);
-            return WillPopScope(
-              child: Scaffold(
-                body: Stack(
-                  children: [
-                    // 현재 페이지 위젯
-                    Visibility(
-                      visible: true,
-                      child: PageWidget(
-                        // page: currentPageIndex < widget.lastPage
-                        //     ? bookPage[currentPageIndex]
-                        //     : bookPage[widget.lastPage - 1],
-                        text: currentPageIndex < widget.lastPage
-                            ? bookPage[currentPageIndex].text
-                            : bookPage[widget.lastPage - 1].text,
-                        imageUrl: currentPageIndex < widget.lastPage
-                            ? bookPage[currentPageIndex].imageUrl
-                            : bookPage[widget.lastPage - 1].imageUrl,
-                        position: currentPageIndex < widget.lastPage
-                            ? bookPage[currentPageIndex].position
-                            : bookPage[widget.lastPage - 1].position,
-                        audioUrl: bookPage[currentPageIndex].audioUrl,
-                        realCurrent: true,
-                        currentPage: currentPageIndex,
-                        audioPlayer: audioPlayer,
-                        pauseFunction: pauseFunction,
-                        previousPage: previousPage,
-                        currentPageIndex: currentPageIndex,
-                        nextPage: nextPage,
-                        lastPage: widget.lastPage,
-                        voiceId: widget.voiceId,
-                        contentVoiceId: widget.contentVoiceId,
-                        contentId: widget.contentId,
-                        isSelected: widget.isSelected,
-                        dispose: dispose,
-                        stopAudio: stopAudio,
-                      ),
-                    ),
-                    // 다음 페이지 위젯
-                    Offstage(
-                      offstage: true, // 화면에 보이지 않도록 설정
-                      child: PageWidget(
-                        text: currentPageIndex < widget.lastPage
-                            ? currentPageIndex == widget.lastPage - 1
-                                ? bookPage[currentPageIndex].text
-                                : bookPage[currentPageIndex + 1].text
-                            : bookPage[widget.lastPage - 1].text,
-                        imageUrl: currentPageIndex < widget.lastPage
-                            ? currentPageIndex == widget.lastPage - 1
-                                ? bookPage[currentPageIndex].imageUrl
-                                : bookPage[currentPageIndex + 1].imageUrl
-                            : bookPage[widget.lastPage - 1].imageUrl,
-                        position: currentPageIndex < widget.lastPage
-                            ? currentPageIndex == widget.lastPage - 1
-                                ? bookPage[currentPageIndex].position
-                                : bookPage[currentPageIndex + 1].position
-                            : bookPage[widget.lastPage - 1].position,
-                        //text: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].text:bookPage[currentPageIndex+1].text,
-                        //  imageUrl: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].imageUrl:bookPage[currentPageIndex+1].imageUrl,
-                        //  position: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].position:bookPage[currentPageIndex+1].position,
-                        realCurrent: false,
-                        audioUrl: currentPageIndex != widget.lastPage - 1
-                            ? bookPage[currentPageIndex + 1].audioUrl
-                            : bookPage[currentPageIndex].audioUrl,
-                        currentPage: currentPageIndex != widget.lastPage - 1
-                            ? currentPageIndex + 1
-                            : currentPageIndex,
-                        audioPlayer: audioPlayer,
-                        pauseFunction: pauseFunction,
-                        previousPage: previousPage,
-                        currentPageIndex: currentPageIndex,
-                        nextPage: nextPage,
-                        lastPage: widget.lastPage,
-                        voiceId: widget.voiceId,
-                        contentVoiceId: widget.contentVoiceId,
-                        contentId: widget.contentId,
-                        isSelected: widget.isSelected,
-                        dispose: dispose,
-                        stopAudio: stopAudio,
-                      ),
-                    ),
-                    Offstage(
-                      offstage: true, // 화면에 보이지 않도록 설정
-                      child: PageWidget(
-                        // page: currentPageIndex != 0
-                        //     ? pages[currentPageIndex - 1]
-                        //     : pages[0],
-                        text: currentPageIndex != 0
-                            ? bookPage[currentPageIndex].text
-                            : bookPage[currentPageIndex + 1].text,
-                        imageUrl: currentPageIndex != 0
-                            ? bookPage[currentPageIndex].imageUrl
-                            : bookPage[currentPageIndex + 1].imageUrl,
-                        position: currentPageIndex != 0
-                            ? bookPage[currentPageIndex].position
-                            : bookPage[currentPageIndex + 1].position,
-                        realCurrent: false,
-                        audioUrl: currentPageIndex != 0
-                            ? bookPage[currentPageIndex - 1].audioUrl
-                            : bookPage[0].audioUrl,
-                        currentPage: currentPageIndex,
-                        audioPlayer: audioPlayer,
-                        pauseFunction: pauseFunction,
-                        previousPage: previousPage,
-                        currentPageIndex: currentPageIndex,
-                        nextPage: nextPage,
-                        lastPage: widget.lastPage,
-                        voiceId: widget.voiceId,
-                        contentVoiceId: widget.contentVoiceId,
-                        contentId: widget.contentId,
-                        isSelected: widget.isSelected,
-                        dispose: dispose,
-                        stopAudio: stopAudio,
-                      ),
-                    ),
-                  ],
+                Offstage(
+                  offstage: true, // 화면에 보이지 않도록 설정
+                  child: PageWidget(
+                    // page: currentPageIndex != 0
+                    //     ? pages[currentPageIndex - 1]
+                    //     : pages[0],
+                    text: currentPageIndex != 0
+                        ? bookPage[currentPageIndex].text
+                        : bookPage[currentPageIndex + 1].text,
+                    imageUrl: currentPageIndex != 0
+                        ? bookPage[currentPageIndex].imageUrl
+                        : bookPage[currentPageIndex + 1].imageUrl,
+                    position: currentPageIndex != 0
+                        ? bookPage[currentPageIndex].position
+                        : bookPage[currentPageIndex + 1].position,
+                    realCurrent: false,
+                    audioUrl: currentPageIndex != 0
+                        ? bookPage[currentPageIndex - 1].audioUrl
+                        : bookPage[0].audioUrl,
+                    currentPage: currentPageIndex,
+                    audioPlayer: audioPlayer,
+                    pauseFunction: pauseFunction,
+                    previousPage: previousPage,
+                    currentPageIndex: currentPageIndex,
+                    nextPage: nextPage,
+                    lastPage: widget.lastPage,
+                    voiceId: widget.voiceId,
+                    contentVoiceId: widget.contentVoiceId,
+                    contentId: widget.contentId,
+                    isSelected: widget.isSelected,
+                    dispose: dispose,
+                    stopAudio: stopAudio,
+                  ),
                 ),
-                // ),
-              ),
-              onWillPop: () {
-                stopAudio();
-                return Future.value(true);
-              },
-            );
-          }
-        }));
+              ],
+            ),
+            // ),
+          ),
+          onWillPop: () {
+            stopAudio();
+            return Future.value(true);
+          },
+        );
+      }
+    }));
   }
 
   Future<void> _sendBookPageViewEvent(

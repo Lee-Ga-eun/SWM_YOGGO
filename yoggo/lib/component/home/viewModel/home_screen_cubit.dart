@@ -1,16 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import './home_screen_book_model.dart';
-import '../../../repositories/Repository.dart';
+import '../../../Repositories/Repository.dart';
 
 class DataCubit extends Cubit<List<HomeScreenBookModel>> {
-  final DataRepository repository = DataRepository();
+  final DataRepository dataRepository;
 
-  DataCubit() : super([]);
+  DataCubit(this.dataRepository) : super([]);
 
   void loadHomeBookData() async {
     // final data = await repository.loadData();
-    final data = await DataRepository.loadHomeBookRepository();
+    print('load home screen');
+    final data = await dataRepository.loadHomeBookRepository();
     print(data);
     if (data != state) {
       emit(data);

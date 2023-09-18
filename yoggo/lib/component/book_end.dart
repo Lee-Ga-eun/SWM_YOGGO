@@ -10,7 +10,7 @@ import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/bookPage/view/book_page.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/size_config.dart';
-import 'package:yoggo/component/sub.dart';
+import 'package:yoggo/component/shop.dart';
 
 import 'globalCubit/user/user_cubit.dart';
 
@@ -112,7 +112,8 @@ class _BookEndState extends State<BookEnd> {
                             widget.contentId,
                             widget.voiceId,
                           );
-                          Navigator.push(
+                          Navigator.of(context).pop();
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => BookPage(
@@ -144,7 +145,10 @@ class _BookEndState extends State<BookEnd> {
                           );
                           Navigator.of(context)
                               .popUntil((route) => route.isFirst);
-
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                            return HomeScreen(); // HomeScreen은 이동하려는 첫 번째 페이지입니다.
+                          }));
                           // Navigator.push(
                           //   context,
                           //   MaterialPageRoute(
