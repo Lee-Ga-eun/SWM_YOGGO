@@ -330,6 +330,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                         top: SizeConfig.defaultSize! * 2,
                                         child: InkWell(
                                           onTap: () {
+                                            lastPointYMD == formattedTime
+                                                ? _sendCalClickEvent(
+                                                    userState.point,
+                                                    availableGetPoint,
+                                                    'Already Claimed')
+                                                : _sendCalClickEvent(
+                                                    userState.point,
+                                                    availableGetPoint,
+                                                    'Not Claimed Yet');
                                             _openCalendarFunc();
                                           },
                                           child: Image.asset(
@@ -352,6 +361,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Stack(children: [
                                           GestureDetector(
                                             onTap: () {
+                                              _sendHomePointClickEvent(
+                                                  userState.point);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -631,7 +642,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // )
                   GestureDetector(
                       onTap: () {
-                        _sendHomeFirstClick();
+                        _sendHomeFirstClickEvent();
                         setState(() {
                           // Toggle the value of showOverlay when the overlay is tapped
                           showFirstOverlay = false;
@@ -741,7 +752,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ])),
                   GestureDetector(
                     onTap: () {
-                      _sendHomeSecondClick();
+                      _sendHomeCalTooltipClickEvent();
+                      // _sendHomeSecondClickEvent();
                       _openCalendarFunc();
                       setState(() {
                         showSecondOverlay = false;
@@ -825,9 +837,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Align(
                                             alignment: Alignment.topRight,
                                             child: IconButton(
-                                              icon: const Icon(Icons.clear),
-                                              onPressed: _closeCalendarFunc,
-                                            )),
+                                                icon: const Icon(Icons.clear),
+                                                onPressed: () {
+                                                  _sendCalXClickEvent(
+                                                      userState.point);
+                                                  _closeCalendarFunc;
+                                                })),
                                       ),
                                       Padding(
                                         //첫번째줄가로
@@ -996,6 +1011,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ), // 배경색 설정
                                           ),
                                           onPressed: () async {
+                                            _sendCalClaimClickEvent(
+                                                userState.point);
                                             SharedPreferences prefs =
                                                 await SharedPreferences
                                                     .getInstance();
@@ -1854,7 +1871,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHomeFirstClick() async {
+  Future<void> _sendHomeFirstClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
@@ -1870,7 +1887,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _sendHomeSecondClick() async {
+  Future<void> _sendHomeSecondClickEvent() async {
     try {
       // 이벤트 로깅
       await analytics.logEvent(
@@ -1880,6 +1897,94 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'home_second_click',
         eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendCalClaimClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'cal_claim_click',
+        parameters: <String, dynamic>{'point_now': pointNow},
+      );
+      await amplitude.logEvent(
+        'cal_claim_click',
+        eventProperties: {'point_now': pointNow},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendCalXClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'cal_x_click',
+        parameters: <String, dynamic>{'point_now': pointNow},
+      );
+      await amplitude.logEvent(
+        'cal_x_click',
+        eventProperties: {'point_now': pointNow},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendCalClickEvent(pointNow, dayNow, alreadyClaimed) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'cal_click',
+        parameters: <String, dynamic>{
+          'point_now': pointNow,
+          'day_now': dayNow,
+          'already_claimed': alreadyClaimed
+        },
+      );
+      await amplitude.logEvent(
+        'cal_click',
+        eventProperties: {
+          'point_now': pointNow,
+          'day_now': dayNow,
+          'already_claimed': alreadyClaimed
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHomeCalTooltipClickEvent() async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'home_cal_tooltip_click',
+        parameters: <String, dynamic>{},
+      );
+      await amplitude.logEvent(
+        'home_cal_tooltip_click',
+        eventProperties: {},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendHomePointClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'home_point_click',
+        parameters: <String, dynamic>{'point_now': pointNow},
+      );
+      await amplitude.logEvent(
+        'home_point_click',
+        eventProperties: {'point_now': pointNow},
       );
     } catch (e) {
       print('Failed to log event: $e');
