@@ -3,7 +3,9 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/rec_info.dart';
+import '../../../Repositories/Repository.dart';
 import '../../bookPage/view/book_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -444,6 +446,7 @@ class _BookIntroState extends State<BookIntro> {
   Widget build(BuildContext context) {
     final bookIntroCubit = context.read<BookIntroCubit>();
     bookIntroCubit.loadBookIntroData(widget.id);
+    final dataRepository = RepositoryProvider.of<DataRepository>(context);
     return BlocBuilder<BookIntroCubit, List<BookIntroModel>>(
         builder: (context, bookIntro) {
       final userCubit = context.watch<UserCubit>();
@@ -517,7 +520,14 @@ class _BookIntroState extends State<BookIntro> {
                                             widget.id,
                                           );
                                           audioPlayer.stop();
-                                          Navigator.of(context).pop();
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                                return HomeScreen(); // YourPage는 현재 페이지의 클래스명 또는 위젯입니다.
+                                              },
+                                            ),
+                                          );
                                         },
                                       )
                                     ])),
@@ -1221,7 +1231,8 @@ class _BookIntroState extends State<BookIntro> {
                                                 alignment: Alignment.topCenter,
                                                 // right: SizeConfig.defaultSize! * 12,
                                                 // top: SizeConfig.defaultSize! * 1.4,
-                                                child: bookIntro.first.lock
+                                                child: bookIntro.first.lock &&
+                                                        !userState.purchase
                                                     ? InkWell(
                                                         onTap: () async {
                                                           userCubit.fetchUser();

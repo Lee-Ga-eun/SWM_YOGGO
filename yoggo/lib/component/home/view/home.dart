@@ -14,6 +14,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../Repositories/Repository.dart';
 import '../../bookIntro/viewModel/book_intro_cubit.dart';
 import '../../voice.dart';
 import '../viewModel/home_screen_cubit.dart';
@@ -220,12 +221,14 @@ class _HomeScreenState extends State<HomeScreen> {
     //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
+    final dataRepository = RepositoryProvider.of<DataRepository>(context);
+
     SizeConfig().init(context);
     _sendHomeViewEvent();
 
     return BlocProvider(
-        create: (context) =>
-            DataCubit()..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
+        create: (context) => DataCubit(dataRepository)
+          ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
         // child: DataList(
         //   record:
         //   purchase:
@@ -309,6 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                       _sendHbgClickEvent();
                                       _scaffoldKey.currentState?.openDrawer();
+                                      userCubit.fetchUser();
                                     },
                                     child: Image.asset(
                                       'lib/images/hamburger.png',
@@ -417,7 +421,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   SizedBox(
                                     height: SizeConfig.defaultSize! * 29,
                                     child: BlocProvider(
-                                      create: (context) => DataCubit()
+                                      create: (context) => DataCubit(
+                                          dataRepository)
                                         ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
                                       child: ListView.separated(
                                         scrollDirection: Axis.horizontal,
@@ -454,7 +459,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     create: (context) =>
                                                         // BookIntroCubit(),
                                                         // DataCubit()..loadHomeBookData()
-                                                        BookIntroCubit()
+                                                        BookIntroCubit(
+                                                            dataRepository)
                                                           ..loadBookIntroData(
                                                               book.id),
                                                     child: BookIntro(
@@ -492,16 +498,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               //               : const Purchase(),
                                               //     ));
                                             }, //onTap 종료
-                                            child: userState.purchase == true
-                                                ? unlockedBook(book)
-                                                : (book.title ==
-                                                            'Snow White and the Seven Dwarfs' ||
-                                                        book.title ==
-                                                            'The Little Match Girl' ||
-                                                        book.lock !=
-                                                            true) // 사용자가 포인트로 책을 풀었거나, 무료 공개 책이면 lock 해제
-                                                    ? unlockedBook(book)
-                                                    : lockedBook(book), //구독자아님
+                                            child: book.lock &&
+                                                    !userState.purchase
+                                                // 사용자가 포인트로 책을 풀었거나, 무료 공개 책이면 lock 해제
+                                                ? lockedBook(book)
+                                                : unlockedBook(book), //구독자아님
                                           );
                                         },
                                         separatorBuilder: (context, index) =>
@@ -515,7 +516,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     //두 번째 줄 시작
                                     height: SizeConfig.defaultSize! * 36,
                                     child: BlocProvider(
-                                        create: (context) => DataCubit()
+                                        create: (context) => DataCubit(
+                                            dataRepository)
                                           ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
                                         child: ListView.separated(
                                           scrollDirection: Axis.horizontal,
@@ -550,7 +552,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       create: (context) =>
                                                           // BookIntroCubit(),
                                                           // DataCubit()..loadHomeBookData()
-                                                          BookIntroCubit()
+                                                          BookIntroCubit(
+                                                              dataRepository)
                                                             ..loadBookIntroData(
                                                                 book.id),
                                                       child: BookIntro(
@@ -602,18 +605,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 // ),
                                                 //   ),
                                               },
-                                              child: userState.purchase == true
-                                                  ? unlockedBook(book)
-                                                  // : lockedBook(book),
-                                                  : (book.title ==
-                                                              'Snow White and the Seven Dwarfs' ||
-                                                          book.title ==
-                                                              'The Little Match Girl' ||
-                                                          book.lock !=
-                                                              true) // 사용자가 포인트로 책을 풀었거나, 무료 공개 책이면 lock 해제
-                                                      ? unlockedBook(book)
-                                                      : lockedBook(
-                                                          book), //구독자아님
+                                              child: book.lock &&
+                                                      !userState.purchase
+                                                  // 사용자가 포인트로 책을 풀었거나, 무료 공개 책이면 lock 해제
+                                                  ? lockedBook(book)
+                                                  : unlockedBook(book), //구독자아님
                                             );
                                           },
                                           separatorBuilder: (context, index) =>
@@ -804,14 +800,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             showSecondOverlay, // 두번째 온보딩화면(캘린더 가르키기)
                         child: Stack(
                           children: [
-                            // Container(
-                            //   color: Colors.white.withOpacity(0),
-                            // ),
-                            SafeArea(
-                                child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: SizeConfig.defaultSize! * 46.5,
-                                  top: SizeConfig.defaultSize! * 7),
+                            Positioned(
+                              right: 11.7 * SizeConfig.defaultSize!,
+                              top: 6.5 * SizeConfig.defaultSize!,
                               child:
                                   Stack(alignment: Alignment.center, children: [
                                 Image.asset(
@@ -831,7 +822,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 )
                               ]),
-                            )),
+                            ),
                           ],
                         ),
                       ),

@@ -9,15 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DataRepository {
   static bool _isLoaded = false;
+  static bool _isChanged = false;
+
   static const bool _bookIntroLoaded = false;
 
   static List<HomeScreenBookModel> _loadedHomeScreenData = [];
 
-  static Future<List<HomeScreenBookModel>> loadHomeBookRepository() async {
+  Future<List<HomeScreenBookModel>> loadHomeBookRepository() async {
     // home screen에서 책 목록들
-    if (!_isLoaded) {
+    if (!_isLoaded || _isChanged) {
       await dotenv.load(fileName: ".env");
-
       // final response =
       //     // // release 버전
       //     await http.get(Uri.parse(dotenv.get("API_SERVER") + 'content/all'));
@@ -33,6 +34,7 @@ class DataRepository {
           'Authorization': 'Bearer $token',
         },
       );
+      _isChanged = false;
       //
 
       // // dev 버전
@@ -74,7 +76,7 @@ class DataRepository {
   static final List<BookIntroModel> _loadedBookIntroData = [];
   static final List<int> _loadedBookNumber = [];
 
-  static Future<List<BookIntroModel>> bookIntroRepository(int contentId) async {
+  Future<List<BookIntroModel>> bookIntroRepository(int contentId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     if (_loadedBookNumber.contains(contentId)) {
@@ -103,8 +105,7 @@ class DataRepository {
     }
   }
 
-  static Future<List<BookIntroModel>> bookIntroRepository2(
-      int contentId) async {
+  Future<List<BookIntroModel>> bookIntroRepository2(int contentId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     if (_loadedBookNumber.contains(contentId)) {
@@ -122,7 +123,9 @@ class DataRepository {
       final jsonData = json.decode(response.body) as List<dynamic>;
       final data =
           jsonData.map((item) => BookIntroModel.fromJson(item)).toList();
-      _loadedBookIntroData.addAll(data); // 로드한 데이터를 저장
+      _loadedBookIntroData.addAll(data);
+      _isChanged = true;
+      // 로드한 데이터를 저장
       return data;
     } else {
       return []; // 에러 발생 시 빈 리스트 리턴
@@ -133,8 +136,7 @@ class DataRepository {
   static final Map<int, List<BookPageModel>> _loadedBookPageDataMap = {};
   static final List<int> _loadedBookPageNumber = [];
 
-  static Future<List<BookPageModel>> bookPageRepository(
-      int contentVoiceId) async {
+  Future<List<BookPageModel>> bookPageRepository(int contentVoiceId) async {
     if (_loadedBookPageNumber.contains(contentVoiceId)) {
       // 이미 로드한 데이터가 있다면 해당 contentVoiceId에 맞는 데이터를 추출하여 리턴
       return _loadedBookPageDataMap[contentVoiceId] ?? [];
