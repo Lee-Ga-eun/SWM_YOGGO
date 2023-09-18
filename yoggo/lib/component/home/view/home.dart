@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // 마지막으로 받은 날짜: lastPointYMD // 2023년9월22일
   // 마지막으로 받은 포인트의 일수: lastPointDay --> 1일차, 2일차, 3일차... --> 마지막 기록이 1일차이면 2일차 포인트를 받게 해야한다
   late int availableGetPoint;
-  late String lastPointYMD;
+  String lastPointYMD = '';
   int lastPointDay = -1;
   String formattedTime = '';
   // @override
@@ -148,8 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (prefs.getString('lastPointYMD') == null) {
       // 내가 마지막으로 받은 날짜
-      prefs.setString('lastPointYMD', formattedTime); //
-      lastPointYMD = formattedTime;
+      prefs.setString('lastPointYMD', ''); //
+      lastPointYMD = '';
     } else {
       lastPointYMD = prefs.getString('lastPointYMD')!;
     }
@@ -1101,7 +1101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 }
                                               });
                                             }
-                                            if (availableGetPoint == 0) {
+                                            if (availableGetPoint == 1) {
                                               // 딱 처음 사용자일 때만 적용됨
                                               // 더이상 availableGetPoint는 0이 아니다
                                               // 처음 접속한 사용자인 경우
