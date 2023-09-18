@@ -334,6 +334,29 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
+  Future<void> _sendBookBuyClickEvent(pointNow, contentId) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'book_buy_click',
+        parameters: <String, dynamic>{
+          'point_now': pointNow,
+          'contentId': contentId,
+        },
+      );
+      amplitude.logEvent(
+        'book_buy_click',
+        eventProperties: {
+          'point_now': pointNow,
+          'contentId': contentId,
+        },
+      );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
   Future<void> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -1235,6 +1258,9 @@ class _BookIntroState extends State<BookIntro> {
                                                         !userState.purchase
                                                     ? InkWell(
                                                         onTap: () async {
+                                                          _sendBookBuyClickEvent(
+                                                              userState.point,
+                                                              contentId);
                                                           userCubit.fetchUser();
                                                           if (userState.point <
                                                               3000) {
