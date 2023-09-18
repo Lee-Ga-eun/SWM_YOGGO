@@ -12,7 +12,6 @@ class DataCubit extends Cubit<List<HomeScreenBookModel>> {
     // final data = await repository.loadData();
     print('load home screen');
     final data = await dataRepository.loadHomeBookRepository();
-    print(data);
     if (data != state) {
       emit(data);
     }
