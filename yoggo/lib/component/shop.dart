@@ -81,7 +81,7 @@ class _PurchaseState extends State<Purchase> {
             if (e.productID == 'monthly_ios' ||
                 e.productID == 'product1:product1' ||
                 e.productID == 'product1') {
-              subSuccess();
+              //subSuccess();
               _sendSubSuccessEvent();
               context.read<UserCubit>().fetchUser();
               amplitude.setUserProperties({'subscribe': true});
@@ -105,10 +105,10 @@ class _PurchaseState extends State<Purchase> {
 
   @override
   void initState() {
-    Future(fetch);
     super.initState();
     getToken();
     _sendShopViewEvent();
+    Future(fetch);
   }
 
   Future<void> getToken() async {
