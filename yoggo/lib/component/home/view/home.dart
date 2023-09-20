@@ -843,16 +843,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         //첫줄가로
                                         padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 0),
+                                          top: SizeConfig.defaultSize! * 0.9,
+                                          left: SizeConfig.defaultSize! * 1.5,
+                                        ),
                                         child: Align(
-                                            alignment: Alignment.topRight,
-                                            child: IconButton(
-                                                icon: const Icon(Icons.clear),
-                                                onPressed: () {
-                                                  _sendCalXClickEvent(
-                                                      userState.point);
-                                                  _closeCalendarFunc();
-                                                })),
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              'Attend daily and claim your rewards!',
+                                              style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize: 2.2 *
+                                                    SizeConfig.defaultSize!,
+                                              ),
+                                            )),
+                                      ),
+                                      Padding(
+                                        //첫줄가로
+                                        padding: EdgeInsets.only(
+                                          top: SizeConfig.defaultSize! * 0.8,
+                                          right: SizeConfig.defaultSize! * 1.5,
+                                          left: SizeConfig.defaultSize! * 0.8,
+                                          bottom: SizeConfig.defaultSize! * 0.8,
+                                        ),
+                                        child: Align(
+                                          alignment: Alignment.topRight,
+                                          child: GestureDetector(
+                                              child: Icon(Icons.clear,
+                                                  size: 3 *
+                                                      SizeConfig.defaultSize!),
+                                              onTap: () {
+                                                _sendCalXClickEvent(
+                                                    userState.point);
+                                                _closeCalendarFunc();
+                                              }),
+                                        ),
                                       ),
                                       Padding(
                                         //첫번째줄가로
@@ -988,128 +1012,136 @@ class _HomeScreenState extends State<HomeScreen> {
                                           point: '1000',
                                           topPadding: 6.5,
                                           lastPointYMD: lastPointYMD),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: SizeConfig.defaultSize! * 29.2,
-                                            left: SizeConfig.defaultSize! * 19),
-                                        child: TextButton(
-                                          style: ButtonStyle(
-                                            shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius
-                                                        .circular(SizeConfig
-                                                                .defaultSize! *
-                                                            2))),
-                                            padding: MaterialStatePropertyAll(
-                                                EdgeInsets.only(
-                                                    right: SizeConfig
-                                                            .defaultSize! *
-                                                        4,
-                                                    left: SizeConfig
-                                                            .defaultSize! *
-                                                        4,
-                                                    top:
-                                                        SizeConfig.defaultSize!,
-                                                    bottom: SizeConfig
-                                                        .defaultSize!)),
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                    Color>(
-                                              const Color.fromARGB(
-                                                  255, 255, 169, 26),
-                                            ), // 배경색 설정
-                                          ),
-                                          onPressed: () async {
-                                            _sendCalClaimClickEvent(
-                                                userState.point);
-                                            SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            DateTime currentDate =
-                                                DateTime.now();
-                                            String formattedDate =
-                                                DateFormat('yyyy-MM-dd')
-                                                    .format(currentDate);
-                                            int tmp = prefs
-                                                .getInt('availableGetPoint')!;
-                                            final scores = [
-                                              100,
-                                              100,
-                                              300,
-                                              100,
-                                              100,
-                                              300,
-                                              1000
-                                            ];
-                                            // 포인트 증가 & 큐빗 반영
+                                      Container(
+                                        // padding: EdgeInsets.only(
+                                        //     top: SizeConfig.defaultSize! * 29,
+                                        //     left: SizeConfig.defaultSize! * 19),
+                                        child: Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: TextButton(
+                                            style: ButtonStyle(
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius
+                                                          .circular(SizeConfig
+                                                                  .defaultSize! *
+                                                              2))),
+                                              padding: MaterialStatePropertyAll(
+                                                  EdgeInsets.only(
+                                                      right: SizeConfig
+                                                              .defaultSize! *
+                                                          4,
+                                                      left: SizeConfig
+                                                              .defaultSize! *
+                                                          4,
+                                                      top: 0.2 *
+                                                          SizeConfig
+                                                              .defaultSize!,
+                                                      bottom: 0.2 *
+                                                          SizeConfig
+                                                              .defaultSize!)),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                      Color>(
+                                                const Color.fromARGB(
+                                                    255, 255, 169, 26),
+                                              ), // 배경색 설정
+                                            ),
+                                            onPressed: () async {
+                                              _sendCalClaimClickEvent(
+                                                  userState.point);
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              DateTime currentDate =
+                                                  DateTime.now();
+                                              String formattedDate =
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(currentDate);
+                                              int tmp = prefs
+                                                  .getInt('availableGetPoint')!;
+                                              final scores = [
+                                                100,
+                                                100,
+                                                300,
+                                                100,
+                                                100,
+                                                300,
+                                                1000
+                                              ];
+                                              // 포인트 증가 & 큐빗 반영
 
-                                            print(
-                                                '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
-                                            // print(
-                                            //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
-                                            print('마지막으로 받은 일차 $lastPointDay ');
-                                            print('현재 날짜 $formattedDate');
-                                            print(
-                                                '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
+                                              print(
+                                                  '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
+                                              // print(
+                                              //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
+                                              print(
+                                                  '마지막으로 받은 일차 $lastPointDay ');
+                                              print('현재 날짜 $formattedDate');
+                                              print(
+                                                  '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
 
-                                            if (formattedDate !=
-                                                    prefs.getString(
-                                                        'lastPointYMD') &&
-                                                tmp != lastPointDay &&
-                                                availableGetPoint != 1) {
-                                              // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
-                                              // 다를 경우에만 변화가 생긴다
-                                              // 포인트를 이미 받지 않은 상태여야 한다
-                                              setState(() {
-                                                if (lastPointDay + 1 != 8) {
-                                                  lastPointDay += 1;
-                                                  lastPointYMD = formattedDate;
+                                              if (formattedDate !=
+                                                      prefs.getString(
+                                                          'lastPointYMD') &&
+                                                  tmp != lastPointDay &&
+                                                  availableGetPoint != 1) {
+                                                // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
+                                                // 다를 경우에만 변화가 생긴다
+                                                // 포인트를 이미 받지 않은 상태여야 한다
+                                                setState(() {
+                                                  if (lastPointDay + 1 != 8) {
+                                                    lastPointDay += 1;
+                                                    lastPointYMD =
+                                                        formattedDate;
 
-                                                  prefs.setInt(
-                                                      'availableGetPoint',
-                                                      tmp + 1);
-                                                  prefs.setString(
-                                                      'lastPointYMD',
-                                                      formattedDate); // 시간 현재 시간으로 업데이트
-                                                  prefs.setInt('lastPointDay',
-                                                      lastPointDay);
-                                                  plusPoint(
-                                                      scores[lastPointDay - 1]);
-                                                } else {
-                                                  // 7일차가 되려고 하면
-                                                }
-                                              });
-                                            }
-                                            if (availableGetPoint == 1) {
-                                              // 1일차를 받아야 하는 사용자일 때만 적용됨
-                                              // 처음 접속한 사용자인 경우
-                                              prefs.setInt('availableGetPoint',
-                                                  2); // 다음에 받을 수 있는 건 2일차 포인트
-                                              prefs.setString('lastPointYMD',
-                                                  formattedDate); // 받은 날짜 저장
-                                              prefs.setInt('lastPointDay', 1);
-                                              availableGetPoint = 2;
-                                              setState(() {
-                                                plusPoint(scores[0]);
-                                                lastPointYMD = formattedDate;
-                                                lastPointDay = 1;
+                                                    prefs.setInt(
+                                                        'availableGetPoint',
+                                                        tmp + 1);
+                                                    prefs.setString(
+                                                        'lastPointYMD',
+                                                        formattedDate); // 시간 현재 시간으로 업데이트
+                                                    prefs.setInt('lastPointDay',
+                                                        lastPointDay);
+                                                    plusPoint(scores[
+                                                        lastPointDay - 1]);
+                                                  } else {
+                                                    // 7일차가 되려고 하면
+                                                  }
+                                                });
+                                              }
+                                              if (availableGetPoint == 1) {
+                                                // 1일차를 받아야 하는 사용자일 때만 적용됨
+                                                // 처음 접속한 사용자인 경우
+                                                prefs.setInt(
+                                                    'availableGetPoint',
+                                                    2); // 다음에 받을 수 있는 건 2일차 포인트
+                                                prefs.setString('lastPointYMD',
+                                                    formattedDate); // 받은 날짜 저장
+                                                prefs.setInt('lastPointDay', 1);
                                                 availableGetPoint = 2;
-                                              });
-                                            }
+                                                setState(() {
+                                                  plusPoint(scores[0]);
+                                                  lastPointYMD = formattedDate;
+                                                  lastPointDay = 1;
+                                                  availableGetPoint = 2;
+                                                });
+                                              }
 
-                                            // print(lastPointDay);
-                                            // print(availableGetPoint);
-                                            // print(formattedDate);
-                                          },
-                                          child: Text(
-                                            'CLAIM NOW',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize:
-                                                    SizeConfig.defaultSize! *
-                                                        1.9,
-                                                fontFamily: 'Lilita'),
+                                              // print(lastPointDay);
+                                              // print(availableGetPoint);
+                                              // print(formattedDate);
+                                            },
+                                            child: Text(
+                                              'CLAIM NOW',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize:
+                                                      SizeConfig.defaultSize! *
+                                                          2.2,
+                                                  fontFamily: 'Lilita'),
+                                            ),
                                           ),
                                         ),
                                       )

@@ -1621,8 +1621,8 @@ class _BookIntroState extends State<BookIntro> {
               Visibility(
                 visible: buyPoints,
                 child: AlertDialog(
-                  title: Text('you need more $lackingPoint points!'),
-                  content: const Text('Click OK to go shop!'),
+                  title: Text('You need $lackingPoint more points'),
+                  content: const Text('Click OK to go shop'),
                   actions: [
                     TextButton(
                       onPressed: () {
