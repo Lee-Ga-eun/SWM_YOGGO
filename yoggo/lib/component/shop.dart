@@ -288,7 +288,7 @@ class _PurchaseState extends State<Purchase> {
           children: [
             // ios 앱 심사를 위한 restore 버튼 시작
             Positioned(
-              top: 1.2 * SizeConfig.defaultSize!,
+              top: 2 * SizeConfig.defaultSize!,
               right: 11.5 * SizeConfig.defaultSize!,
               child: GestureDetector(
                   onTap: () async {
@@ -375,7 +375,7 @@ class _PurchaseState extends State<Purchase> {
             ),
             // ios 앱 심사를 위한 restore 버튼 끝
             Positioned(
-              top: 1.2 * SizeConfig.defaultSize!,
+              top: 2 * SizeConfig.defaultSize!,
               right: 1 * SizeConfig.defaultSize!,
               child: Stack(children: [
                 Container(
@@ -919,7 +919,7 @@ class _PurchaseState extends State<Purchase> {
                           ))
                     ],
                   ),
-                  Stack(alignment: Alignment.topCenter, children: [
+                  Stack(alignment: Alignment.center, children: [
                     Container(
                       width: 17 / 100 * sw,
                       height: 7.5 / 100 * sh,
