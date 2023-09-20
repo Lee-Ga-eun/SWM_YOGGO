@@ -430,7 +430,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 children: [
                                   SizedBox(
-                                    height: SizeConfig.defaultSize! * 29,
+                                    height: SizeConfig.defaultSize! * 30,
                                     child: BlocProvider(
                                       create: (context) => DataCubit(
                                           dataRepository)
