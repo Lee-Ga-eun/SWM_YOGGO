@@ -282,6 +282,7 @@ class _PurchaseState extends State<Purchase> {
               right: 11.5 * SizeConfig.defaultSize!,
               child: GestureDetector(
                   onTap: () async {
+                    print('tap');
                     _sendAlreadysubClickEvent(userState.point);
                     try {
                       CustomerInfo customerInfo =
@@ -291,6 +292,7 @@ class _PurchaseState extends State<Purchase> {
                       if (entitlement != null) {
                         if (entitlement.isActive) {
                           subSuccess();
+                          print('suc');
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -298,11 +300,13 @@ class _PurchaseState extends State<Purchase> {
                             ),
                           );
                         } else {
+                          print('fail');
+
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Error'),
+                                // title: Text('Sorry'),
                                 content: Text(
                                     'No subscription information registered.'),
                                 actions: <Widget>[
@@ -319,6 +323,26 @@ class _PurchaseState extends State<Purchase> {
                         }
                       }
                     } on PlatformException {
+                      print('andriod');
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            // title: Text('Sorry'),
+                            content:
+                                Text('No subscription information registered.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Close'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
                       // Error restoring purchases
                     }
                   },
@@ -398,7 +422,7 @@ class _PurchaseState extends State<Purchase> {
                           },
                           child: SizedBox(
                             width: 0.46 * sw,
-                            height: 0.75 * sh,
+                            height: 0.78 * sh,
                             child: Column(
                               children: [
                                 Container(
@@ -420,7 +444,7 @@ class _PurchaseState extends State<Purchase> {
                                   ),
                                 ),
                                 Container(
-                                  height: 0.65 * sh,
+                                  height: 0.68 * sh,
                                   color: Colors.white,
                                   child: Align(
                                     alignment: Alignment.center,
@@ -679,7 +703,7 @@ class _PurchaseState extends State<Purchase> {
                 child: Stack(children: [
                   SizedBox(
                     width: 0.46 * sw,
-                    height: 0.75 * sh,
+                    height: 0.78 * sh,
                     child: Container(
                         decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255)
@@ -806,7 +830,7 @@ class _PurchaseState extends State<Purchase> {
     ));
   }
 
-  Positioned pointGood(
+  GestureDetector pointGood(
       {
       //required double top,
       // required double right,
@@ -818,119 +842,115 @@ class _PurchaseState extends State<Purchase> {
       required price,
       required int pointNow,
       required String flag}) {
-    return Positioned(
+    return GestureDetector(
         // top: top * SizeConfig.defaultSize!,
         // right: right * SizeConfig.defaultSize!,
-        child: GestureDetector(
-      onTap: () async {
-        _sendBuyPointClickEvent(pointNow, coinNum, price);
-        payCashToPoint(coinNum);
-      },
-      child: Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 0.012 * sh,
-              left: 2.8 / 100 * sw,
-              // right: 1.4 /
-              //     100 *
-              //     (MediaQuery.of(context).size.width -
-              //         MediaQuery.of(context).padding.left -
-              //         MediaQuery.of(context).padding.right),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Stack(
-                  alignment: Alignment.bottomRight, // 자식 위젯을 중앙 정렬
-                  children: [
-                    Container(
-                      width: (18) / 100 * sw,
-                      height: (25.5) / 100 * sh,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(0, 255, 0, 255),
+        onTap: () async {
+          _sendBuyPointClickEvent(pointNow, coinNum, price);
+          payCashToPoint(coinNum);
+        },
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 0.012 * sh,
+                // left: 0.5 / 100 * sw,
+                // right: 0.8 / 100 * sw,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Stack(
+                    alignment: Alignment.bottomRight, // 자식 위젯을 중앙 정렬
+                    children: [
+                      Container(
+                        width: 0.208 * sw,
+                        height: (25.5) / 100 * sh,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(0, 255, 0, 255),
+                        ),
                       ),
-                    ),
-                    Stack(
-                        alignment: Alignment.center, // 자식 위젯을 중앙 정렬
+                      Stack(
+                          alignment: Alignment.center, // 자식 위젯을 중앙 정렬
 
-                        children: [
-                          Container(
-                            width: 17 / 100 * sw,
-                            height: (20) / 100 * sh,
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 167, 26),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey
-                                      .withOpacity(0.6), // 그림자 색상 및 투명도
-                                  spreadRadius: 0, // 그림자 확산 반경
-                                  blurRadius: 3, // 그림자의 흐림 정도
-                                  offset:
-                                      const Offset(5, 5), // 그림자의 위치 (가로, 세로)
-                                ),
-                              ],
+                          children: [
+                            Container(
+                              width: 17 / 100 * sw,
+                              height: (20) / 100 * sh,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 255, 167, 26),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey
+                                        .withOpacity(0.6), // 그림자 색상 및 투명도
+                                    spreadRadius: 0, // 그림자 확산 반경
+                                    blurRadius: 3, // 그림자의 흐림 정도
+                                    offset:
+                                        const Offset(5, 5), // 그림자의 위치 (가로, 세로)
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                              width: (coinWid - 1) / 100 * sw, //
-                              child: Image.asset('lib/images/$coinImage.png')),
-                        ]),
-                    Positioned(
-                        right: 0.5 * SizeConfig.defaultSize!,
-                        bottom: 0.5 * SizeConfig.defaultSize!,
-                        child: Text(
-                          '$coinNum',
-                          style: TextStyle(
-                            fontFamily: 'Lilita',
-                            fontSize: 2.8 / 100 * sw,
-                          ),
-                        ))
-                  ],
-                ),
-                Stack(alignment: Alignment.topCenter, children: [
-                  Container(
-                    width: 17 / 100 * sw,
-                    height: 7.5 / 100 * sh,
-                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.6), // 그림자 색상 및 투명도
-                        spreadRadius: 0, // 그림자 확산 반경
-                        blurRadius: 3, // 그림자의 흐림 정도
-                        offset: const Offset(5, 5), // 그림자의 위치 (가로, 세로)
-                      ),
-                    ]),
+                            SizedBox(
+                                width: (coinWid - 1) / 100 * sw, //
+                                child:
+                                    Image.asset('lib/images/$coinImage.png')),
+                          ]),
+                      Positioned(
+                          right: 0.5 * SizeConfig.defaultSize!,
+                          bottom: 0.5 * SizeConfig.defaultSize!,
+                          child: Text(
+                            '$coinNum',
+                            style: TextStyle(
+                              fontFamily: 'Lilita',
+                              fontSize: 2.8 / 100 * sw,
+                            ),
+                          ))
+                    ],
                   ),
-                  Text(
-                    '$price',
-                    style: TextStyle(
-                      fontFamily: 'Molengo',
-                      fontSize: 2.5 / 100 * sw,
+                  Stack(alignment: Alignment.topCenter, children: [
+                    Container(
+                      width: 17 / 100 * sw,
+                      height: 7.5 / 100 * sh,
+                      decoration:
+                          BoxDecoration(color: Colors.white, boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.6), // 그림자 색상 및 투명도
+                          spreadRadius: 0, // 그림자 확산 반경
+                          blurRadius: 3, // 그림자의 흐림 정도
+                          offset: const Offset(5, 5), // 그림자의 위치 (가로, 세로)
+                        ),
+                      ]),
                     ),
-                  )
-                ]),
-              ],
+                    Text(
+                      '$price',
+                      style: TextStyle(
+                        fontFamily: 'Molengo',
+                        fontSize: 2.5 / 100 * sw,
+                      ),
+                    )
+                  ]),
+                ],
+              ),
             ),
-          ),
-          flag == 'mostPopular'
-              ? Positioned(
-                  top: 2.8 / 100 * sh,
-                  left: 1.25 / 100 * sw,
-                  child: SizedBox(
-                      width: 11 / 100 * sw,
-                      child: Image.asset('lib/images/mostPopular.png')))
-              : flag == 'specialPromotion'
-                  ? Positioned(
-                      top: 2.8 / 100 * sh,
-                      left: 1.65 / 100 * sw,
-                      child: SizedBox(
-                          width: 10.4 / 100 * sw,
-                          child:
-                              Image.asset('lib/images/specialPromotion.png')))
-                  : Container(),
-        ],
-      ),
-    ));
+            flag == 'mostPopular'
+                ? Positioned(
+                    top: 2.8 / 100 * sh,
+                    left: 1.25 / 100 * sw,
+                    child: SizedBox(
+                        width: 11 / 100 * sw,
+                        child: Image.asset('lib/images/mostPopular.png')))
+                : flag == 'specialPromotion'
+                    ? Positioned(
+                        top: 2.8 / 100 * sh,
+                        left: 1.65 / 100 * sw,
+                        child: SizedBox(
+                            width: 10.4 / 100 * sw,
+                            child:
+                                Image.asset('lib/images/specialPromotion.png')))
+                    : Container(),
+          ],
+        ));
   }
 
   Future<void> _sendShopViewEvent() async {
