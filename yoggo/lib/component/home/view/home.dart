@@ -760,37 +760,47 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     },
                     child: Stack(children: [
-                      Visibility(
-                        visible: !showFirstOverlay &&
-                            showSecondOverlay, // 두번째 온보딩화면(캘린더 가르키기)
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              right: 11.7 * SizeConfig.defaultSize!,
-                              top: 6.5 * SizeConfig.defaultSize!,
-                              child:
-                                  Stack(alignment: Alignment.center, children: [
-                                Image.asset(
-                                  'lib/images/textOrangeBubble.png',
-                                  width: SizeConfig.defaultSize! * 27,
+                      SafeArea(
+                          minimum: EdgeInsets.only(
+                            left: 3 * SizeConfig.defaultSize!,
+                            right: 3 * SizeConfig.defaultSize!,
+                          ),
+                          child: Visibility(
+                            visible: !showFirstOverlay &&
+                                showSecondOverlay, // 두번째 온보딩화면(캘린더 가르키기)
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  right: 5 * SizeConfig.defaultSize!,
+                                  top: 6.5 * SizeConfig.defaultSize!,
+                                  child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'lib/images/textOrangeBubble.png',
+                                          width: SizeConfig.defaultSize! * 27,
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                              top:
+                                                  SizeConfig.defaultSize! * 1.2,
+                                              right: SizeConfig.defaultSize! *
+                                                  0.8),
+                                          child: Text(
+                                            'You can earn points\nthrough attendance checks!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontFamily: 'Molengo',
+                                                fontSize:
+                                                    SizeConfig.defaultSize! *
+                                                        2),
+                                          ),
+                                        )
+                                      ]),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      top: SizeConfig.defaultSize! * 1.2,
-                                      right: SizeConfig.defaultSize! * 0.8),
-                                  child: Text(
-                                    'You can earn points\nthrough attendance checks!',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Molengo',
-                                        fontSize: SizeConfig.defaultSize! * 2),
-                                  ),
-                                )
-                              ]),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                          )),
                     ]),
                   ),
                   if (openCalendar)
@@ -1047,7 +1057,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     prefs.getString(
                                                         'lastPointYMD') &&
                                                 tmp != lastPointDay &&
-                                                availableGetPoint != 0) {
+                                                availableGetPoint != 1) {
                                               // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
                                               // 다를 경우에만 변화가 생긴다
                                               // 포인트를 이미 받지 않은 상태여야 한다
@@ -1072,14 +1082,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                               });
                                             }
                                             if (availableGetPoint == 1) {
-                                              // 딱 처음 사용자일 때만 적용됨
-                                              // 더이상 availableGetPoint는 0이 아니다
+                                              // 1일차를 받아야 하는 사용자일 때만 적용됨
                                               // 처음 접속한 사용자인 경우
                                               prefs.setInt('availableGetPoint',
                                                   2); // 다음에 받을 수 있는 건 2일차 포인트
                                               prefs.setString('lastPointYMD',
                                                   formattedDate); // 받은 날짜 저장
                                               prefs.setInt('lastPointDay', 1);
+                                              availableGetPoint = 2;
                                               setState(() {
                                                 plusPoint(scores[0]);
                                                 lastPointYMD = formattedDate;

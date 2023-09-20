@@ -118,6 +118,7 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     initialize();
+    context.read<UserCubit>().fetchUser();
     getToken();
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
