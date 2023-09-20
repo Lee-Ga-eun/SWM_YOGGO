@@ -200,12 +200,20 @@ class _AppState extends State<App> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaleFactor: 1.0), // 텍스트 스케일 팩터를 1로 설정
+          child: child!,
+        );
+      },
       home: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
           //if (!state.isDataFetched) {
           //isDataFetched = true --> 데이터 불러왔단 뜻
           //return const SplashScreen(); //token이 없는 경우
           //} else {
+
           if (state.isDataFetched) {
             OneSignal.shared.setExternalUserId(state.userId.toString());
             Amplitude.getInstance().setUserProperties(

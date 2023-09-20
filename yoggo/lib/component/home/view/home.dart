@@ -430,7 +430,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 children: [
                                   SizedBox(
-                                    height: SizeConfig.defaultSize! * 29,
+                                    height: SizeConfig.defaultSize! * 30,
                                     child: BlocProvider(
                                       create: (context) => DataCubit(
                                           dataRepository)
@@ -841,7 +841,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 onPressed: () {
                                                   _sendCalXClickEvent(
                                                       userState.point);
-                                                  _closeCalendarFunc;
+                                                  _closeCalendarFunc();
                                                 })),
                                       ),
                                       Padding(
