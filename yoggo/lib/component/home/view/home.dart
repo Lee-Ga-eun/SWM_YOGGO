@@ -860,17 +860,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         //첫줄가로
                                         padding: EdgeInsets.only(
-                                          top: SizeConfig.defaultSize! * 0.8,
-                                          right: SizeConfig.defaultSize! * 1.5,
-                                          left: SizeConfig.defaultSize! * 0.8,
-                                          bottom: SizeConfig.defaultSize! * 0.8,
-                                        ),
+                                            top: SizeConfig.defaultSize! * 0.8,
+                                            right:
+                                                SizeConfig.defaultSize! * 1.5),
                                         child: Align(
                                           alignment: Alignment.topRight,
                                           child: GestureDetector(
-                                              child: Icon(Icons.clear,
-                                                  size: 3 *
-                                                      SizeConfig.defaultSize!),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.5,
+                                                    bottom: SizeConfig
+                                                            .defaultSize! *
+                                                        1.5),
+                                                child: Icon(Icons.clear,
+                                                    size: 3 *
+                                                        SizeConfig
+                                                            .defaultSize!),
+                                              ),
                                               onTap: () {
                                                 _sendCalXClickEvent(
                                                     userState.point);
