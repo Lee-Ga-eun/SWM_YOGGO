@@ -44,16 +44,17 @@ class AppData {
 class _PurchaseState extends State<Purchase> {
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   List<ProductDetails> view = [];
+
   late String token;
   bool paySuccessed = false;
   Future fetch() async {
     final bool available = await InAppPurchase.instance.isAvailable();
     if (available) {
       // 제품 정보를 로드
-      const Set<String> ids = <String>{'product1'};
-      ProductDetailsResponse res =
-          await InAppPurchase.instance.queryProductDetails(ids);
-      view = res.productDetails;
+      // const Set<String> ids = <String>{'product1'};
+      // ProductDetailsResponse res =
+      //     await InAppPurchase.instance.queryProductDetails(ids);
+      // view = res.productDetails;
 
       _inAppPurchase.purchaseStream.listen((List<PurchaseDetails> event) {
         PurchaseDetails e = event[0];
@@ -65,15 +66,18 @@ class _PurchaseState extends State<Purchase> {
           if (!mounted) return;
           _inAppPurchase.completePurchase(e);
           if (e.status == PurchaseStatus.error) {
+            print(e.error);
             return;
           }
           if (e.status == PurchaseStatus.canceled) {
+            print(e.error);
             return;
           }
           if (e.status == PurchaseStatus.purchased ||
               e.status == PurchaseStatus.restored) {
             if (e.productID == 'monthly_ios' ||
-                e.productID == 'product1:product1') {
+                e.productID == 'product1:product1' ||
+                e.productID == 'product1') {
               subSuccess();
               _sendSubSuccessEvent();
               context.read<UserCubit>().fetchUser();
@@ -126,6 +130,7 @@ class _PurchaseState extends State<Purchase> {
     if (response.statusCode == 200) {
       // _sendSubSuccessEvent();
       print('정보 등록 완료 1');
+      context.read<UserCubit>().fetchUser();
     } else {
       _sendSubFailEvent(response.statusCode);
       throw Exception('Failed to start inference');
@@ -196,13 +201,18 @@ class _PurchaseState extends State<Purchase> {
 
   Future<void> payCashToPoint(points) async {
     try {
-      Offerings offerings = await Purchases.getOfferings();
-      if (offerings.getOffering("point")!.availablePackages.isNotEmpty) {
-        var product =
-            offerings.getOffering("point")!.getPackage("points-$points")!;
-        CustomerInfo customerInfo = await Purchases.purchasePackage(product);
-      }
+      Set<String> _kIds = <String>{"points_$points"};
+      final ProductDetailsResponse response =
+          await InAppPurchase.instance.queryProductDetails(_kIds);
+
+      if (response.notFoundIDs.isNotEmpty) print('제품 없다');
+      final ProductDetails productDetails = response.productDetails.first;
+      // Saved earlier from queryProductDetails().
+      final PurchaseParam purchaseParam =
+          PurchaseParam(productDetails: productDetails);
+      InAppPurchase.instance.buyConsumable(purchaseParam: purchaseParam);
     } catch (e) {
+      print(e);
       // optional error handling
     }
 
@@ -281,6 +291,7 @@ class _PurchaseState extends State<Purchase> {
                           customerInfo.entitlements.all['pro'];
                       if (entitlement != null) {
                         if (entitlement.isActive) {
+                          print('restore success');
                           subSuccess();
                         }
                       }
