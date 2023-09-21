@@ -222,6 +222,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final userCubit = context.watch<UserCubit>();
     final dataCubit = context.watch<DataCubit>();
 
+    final sw = (MediaQuery.of(context).size.width -
+        MediaQuery.of(context).padding.left -
+        MediaQuery.of(context).padding.right);
+    final sh = (MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom);
+
     final userState = userCubit.state;
     final dataRepository = RepositoryProvider.of<DataRepository>(context);
 
@@ -1022,9 +1029,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           topPadding: 6.5,
                                           lastPointYMD: lastPointYMD),
                                       Container(
-                                        // padding: EdgeInsets.only(
-                                        //     top: SizeConfig.defaultSize! * 29,
-                                        //     left: SizeConfig.defaultSize! * 19),
+                                        padding: EdgeInsets.only(
+                                          // top: SizeConfig.defaultSize! * 1,
+                                          bottom: SizeConfig.defaultSize! * 0.9,
+                                        ),
+                                        // left: SizeConfig.defaultSize! * 19),
                                         child: Align(
                                           alignment: Alignment.bottomCenter,
                                           child: TextButton(
@@ -1032,10 +1041,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               shape: MaterialStateProperty.all<
                                                       RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius
-                                                          .circular(SizeConfig
-                                                                  .defaultSize! *
-                                                              2))),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              0.3 * sh))),
                                               padding: MaterialStatePropertyAll(
                                                   EdgeInsets.only(
                                                       right: SizeConfig
@@ -1044,12 +1052,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       left: SizeConfig
                                                               .defaultSize! *
                                                           4,
-                                                      top: 0.2 *
-                                                          SizeConfig
-                                                              .defaultSize!,
-                                                      bottom: 0.2 *
-                                                          SizeConfig
-                                                              .defaultSize!)),
+                                                      top: 0.018 * sh,
+                                                      bottom: 0.018 * sh)),
                                               backgroundColor:
                                                   MaterialStateProperty.all<
                                                       Color>(
