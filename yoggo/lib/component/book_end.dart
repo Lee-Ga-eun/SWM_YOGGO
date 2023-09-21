@@ -145,10 +145,7 @@ class _BookEndState extends State<BookEnd> {
                           );
                           Navigator.of(context)
                               .popUntil((route) => route.isFirst);
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) {
-                            return HomeScreen(); // HomeScreen은 이동하려는 첫 번째 페이지입니다.
-                          }));
+
                           // Navigator.push(
                           //   context,
                           //   MaterialPageRoute(

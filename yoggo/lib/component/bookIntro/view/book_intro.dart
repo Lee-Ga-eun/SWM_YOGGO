@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/home/view/home.dart';
+import 'package:yoggo/component/home/viewModel/home_screen_cubit.dart';
 import 'package:yoggo/component/rec_info.dart';
 import '../../../Repositories/Repository.dart';
 import '../../bookPage/view/book_page.dart';
@@ -468,6 +469,7 @@ class _BookIntroState extends State<BookIntro> {
   @override
   Widget build(BuildContext context) {
     final bookIntroCubit = context.read<BookIntroCubit>();
+    final dataCubit = context.read<DataCubit>();
     bookIntroCubit.loadBookIntroData(widget.id);
     final dataRepository = RepositoryProvider.of<DataRepository>(context);
     return BlocBuilder<BookIntroCubit, List<BookIntroModel>>(
@@ -543,14 +545,8 @@ class _BookIntroState extends State<BookIntro> {
                                             widget.id,
                                           );
                                           audioPlayer.stop();
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) {
-                                                return HomeScreen(); // YourPage는 현재 페이지의 클래스명 또는 위젯입니다.
-                                              },
-                                            ),
-                                          );
+                                          Navigator.popUntil(context,
+                                              (route) => route.isFirst);
                                         },
                                       )
                                     ])),
@@ -1283,6 +1279,8 @@ class _BookIntroState extends State<BookIntro> {
                                                                     widget.id);
                                                             userCubit
                                                                 .fetchUser();
+                                                            dataCubit
+                                                                .loadHomeBookData();
                                                           }
                                                         },
                                                         child:
