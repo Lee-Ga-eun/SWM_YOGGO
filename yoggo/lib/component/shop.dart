@@ -97,7 +97,6 @@ class _PurchaseState extends State<Purchase> {
                   ),
                 );
               } else {
-                Navigator.pop(context);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -322,6 +321,7 @@ class _PurchaseState extends State<Purchase> {
                           subSuccess();
                           if (userState.record) {
                             Navigator.pop(context);
+
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -329,7 +329,6 @@ class _PurchaseState extends State<Purchase> {
                               ),
                             );
                           } else {
-                            Navigator.pop(context);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
