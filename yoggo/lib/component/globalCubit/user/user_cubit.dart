@@ -121,6 +121,38 @@ class UserCubit extends Cubit<UserState> {
     );
     return Future.value();
   }
+
+  Future<void> successSubscribe() {
+    if (state.record) {
+      emit(UserState(
+          userId: state.userId,
+          userName: state.userName,
+          email: state.email,
+          purchase: true,
+          record: state.record,
+          login: state.login,
+          point: state.point,
+          isDataFetched: state.isDataFetched,
+          voiceId: state.voiceId,
+          voiceName: state.voiceName,
+          voiceIcon: state.voiceIcon,
+          inferenceUrl: state.inferenceUrl));
+    } else {
+      emit(
+        UserState(
+          userId: state.userId,
+          userName: state.userName,
+          email: state.email,
+          purchase: true,
+          record: state.record,
+          login: state.login,
+          point: state.point,
+          isDataFetched: state.isDataFetched,
+        ),
+      );
+    }
+    return Future.value();
+  }
 }
 
 

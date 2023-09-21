@@ -84,11 +84,12 @@ class _PurchaseState extends State<Purchase> {
                 e.productID == 'product1') {
               //subSuccess();
               _sendSubSuccessEvent();
-              context.read<UserCubit>().fetchUser();
+              context.read<UserCubit>().successSubscribe();
               amplitude.setUserProperties({'subscribe': true});
               final userState = context.read<UserCubit>().state;
 
               if (userState.record) {
+                Navigator.pop(context);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -96,6 +97,7 @@ class _PurchaseState extends State<Purchase> {
                   ),
                 );
               } else {
+                Navigator.pop(context);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -318,8 +320,8 @@ class _PurchaseState extends State<Purchase> {
                         if (entitlement.isActive) {
                           print('restore success');
                           subSuccess();
-                          print('suc');
                           if (userState.record) {
+                            Navigator.pop(context);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -327,6 +329,7 @@ class _PurchaseState extends State<Purchase> {
                               ),
                             );
                           } else {
+                            Navigator.pop(context);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
