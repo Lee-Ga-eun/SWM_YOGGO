@@ -65,13 +65,8 @@ class _RecInfoState extends State<RecInfo> {
                             icon: Icon(Icons.clear,
                                 size: 3 * SizeConfig.defaultSize!),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                // 설득 & 광고 페이지로 가야하는데 일단은 홈으로 빠지게 하겠음
-                                MaterialPageRoute(
-                                  builder: (context) => const HomeScreen(),
-                                ),
-                              );
+                              Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);
                             },
                           )
                         ]),

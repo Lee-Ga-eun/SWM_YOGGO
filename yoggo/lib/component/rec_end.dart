@@ -156,11 +156,10 @@ class _RecEndState extends State<RecEnd> {
                                     .then((accepted) {
                                   print("Accepted permission: $accepted");
                                 });
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HomeScreen()),
-                                );
+
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
+
                                 //    }
                               },
                               child: Container(

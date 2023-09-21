@@ -61,6 +61,50 @@ class DataRepository {
     return _loadedHomeScreenData;
   }
 
+  Future<List<HomeScreenBookModel>> changeHomeBookRepository() async {
+    // home screen에서 책 목록들
+    // final response =
+    //     // // release 버전
+    //     await http.get(Uri.parse(dotenv.get("API_SERVER") + 'content/all'));
+
+    // release 버전
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    var url = Uri.parse('${dotenv.get("API_SERVER")}content/v2');
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    _isChanged = false;
+    //
+
+    // // dev 버전
+    // await http.get(Uri.parse('${dotenv.get("API_SERVER")}content/dev'));
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      final data =
+          jsonData.map((item) => HomeScreenBookModel.fromJson(item)).toList();
+      data.sort((a, b) {
+        if (a.lock == b.lock) {
+          return 0;
+        } else if (a.lock) {
+          print(a.id);
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+
+      _loadedHomeScreenData = data;
+      _isLoaded = true;
+    }
+
+    return _loadedHomeScreenData;
+  }
+
   // static Future<List<BookIntroModel>> bookIntroRepository(
   //     // 홈 > 책 하나 클릭한 상태
   //     int contentId) async {

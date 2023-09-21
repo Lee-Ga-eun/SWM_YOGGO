@@ -220,6 +220,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final userCubit = context.watch<UserCubit>();
+    final dataCubit = context.watch<DataCubit>();
+
     final userState = userCubit.state;
     final dataRepository = RepositoryProvider.of<DataRepository>(context);
 
@@ -227,8 +229,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _sendHomeViewEvent();
 
     return BlocProvider(
-        create: (context) => DataCubit(dataRepository)
-          ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
+        create: (context) =>
+            dataCubit..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
         // child: DataList(
         //   record:
         //   purchase:
@@ -432,8 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   SizedBox(
                                     height: SizeConfig.defaultSize! * 30,
                                     child: BlocProvider(
-                                      create: (context) => DataCubit(
-                                          dataRepository)
+                                      create: (context) => dataCubit
                                         ..loadHomeBookData(), // DataCubit 생성 및 데이터 로드
                                       child: ListView.separated(
                                         scrollDirection: Axis.horizontal,
