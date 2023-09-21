@@ -40,7 +40,7 @@ void main() async {
   // 디폴트 값은 dev입니다
 
   String mode = 'dev';
-  // String mode = 'rel';
+  //String mode = 'rel';
 
   // 사용자 Cubit을 초기화합니다.
   await dotenv.load(fileName: ".env");

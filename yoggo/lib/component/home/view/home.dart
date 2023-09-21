@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/bookIntro/view/book_intro.dart';
 import 'package:yoggo/component/globalCubit/user/user_state.dart';
@@ -1462,6 +1466,55 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 2 * SizeConfig.defaultSize!,
                       ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.all(0.5 * SizeConfig.defaultSize!),
+                          child: Text(
+                            'Invite Friends',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 1.8 * SizeConfig.defaultSize!,
+                              fontFamily: 'Molengo',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                        onTap: () async {
+                          final result = await Share.shareWithResult(
+                              "LOVEL - Fairy Tales with Voice\n📚 Read Fairy tales with your voice 🦄\n\nPlayStore : https://play.google.com/store/apps/details?id=com.sayit.yoggo\n\nAppStore : https://apps.apple.com/us/app/LOVEL/id6454792622");
+
+                          if (result.status == ShareResultStatus.success) {
+                            print('Thank you for sharing our application!');
+                          }
+                        },
+                      ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.all(0.5 * SizeConfig.defaultSize!),
+                          child: Text(
+                            Platform.isAndroid
+                                ? 'Rate on PlayStore'
+                                : 'Rate on AppStore',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 1.8 * SizeConfig.defaultSize!,
+                              fontFamily: 'Molengo',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                        onTap: () async {
+                          final InAppReview inAppReview = InAppReview.instance;
+
+                          if (await inAppReview.isAvailable()) {
+                            inAppReview.requestReview();
+                          }
+                        },
+                      )
                       // IconButton(
                       //     onPressed: () {
                       //       Navigator.push(
