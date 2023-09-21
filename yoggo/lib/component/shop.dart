@@ -12,6 +12,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/sign.dart';
 import 'package:yoggo/component/rec_info.dart';
 import 'package:yoggo/component/sign_and.dart';
@@ -83,11 +84,27 @@ class _PurchaseState extends State<Purchase> {
                 e.productID == 'product1') {
               //subSuccess();
               _sendSubSuccessEvent();
-              context.read<UserCubit>().fetchUser();
+              context.read<UserCubit>().successSubscribe();
               amplitude.setUserProperties({'subscribe': true});
+              final userState = context.read<UserCubit>().state;
 
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const RecInfo()));
+              if (userState.record) {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
+              } else {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RecInfo(),
+                  ),
+                );
+              }
             } else {
               paySuccess(e.productID.substring(7));
               context.read<UserCubit>().fetchUser();
@@ -303,13 +320,23 @@ class _PurchaseState extends State<Purchase> {
                         if (entitlement.isActive) {
                           print('restore success');
                           subSuccess();
-                          print('suc');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RecInfo(),
-                            ),
-                          );
+                          if (userState.record) {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
+                          } else {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RecInfo(),
+                              ),
+                            );
+                          }
                         } else {
                           print('fail');
 
