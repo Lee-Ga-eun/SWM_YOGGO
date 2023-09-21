@@ -7,6 +7,8 @@ import 'package:yoggo/component/home/viewModel/home_screen_book_model.dart';
 import 'package:yoggo/component/bookPage/viewModel/book_page_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../component/bookIntro/viewModel/book_voice_model.dart';
+
 class DataRepository {
   static bool _isLoaded = false;
   static bool _isChanged = false;
@@ -180,6 +182,27 @@ class DataRepository {
       _loadedBookIntroData.addAll(data);
       _isChanged = true;
       // 로드한 데이터를 저장
+      return data;
+    } else {
+      return []; // 에러 발생 시 빈 리스트 리턴
+    }
+  }
+
+  Future<List<BookVoiceModel>> bookVoiceRepository(int contentId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${dotenv.get("API_SERVER")}content/?????????'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      final data =
+          jsonData.map((item) => BookVoiceModel.fromJson(item)).toList();
       return data;
     } else {
       return []; // 에러 발생 시 빈 리스트 리턴
