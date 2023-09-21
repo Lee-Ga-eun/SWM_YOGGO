@@ -10,6 +10,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/Repositories/Repository.dart';
 import 'package:yoggo/component/home/view/home.dart';
+import 'package:yoggo/component/home/viewModel/home_screen_cubit.dart';
 import 'package:yoggo/models/anonymous.dart';
 import 'package:yoggo/size_config.dart';
 import 'component/globalCubit/user/user_cubit.dart';
@@ -82,6 +83,9 @@ void main() async {
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   final userCubit = UserCubit();
+  final dataRepository = DataRepository();
+  final dataCubit = DataCubit(dataRepository);
+
   initPlatformState();
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
@@ -90,7 +94,9 @@ void main() async {
       MultiBlocProvider(
         providers: [
           BlocProvider<UserCubit>.value(value: userCubit),
-          RepositoryProvider(create: (context) => DataRepository())
+          RepositoryProvider(create: (context) => dataRepository),
+          BlocProvider<DataCubit>.value(value: dataCubit),
+
           // Add more Cubits here if needed
         ],
         child: const App(),
