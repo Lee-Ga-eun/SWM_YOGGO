@@ -121,13 +121,9 @@ class _VoiceProfileState extends State<VoiceProfile> {
                                   onPressed: () {
                                     audioPlayer.stop();
                                     dispose();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const HomeScreen(),
-                                      ),
-                                    );
+
+                                    Navigator.of(context)
+                                        .popUntil((route) => route.isFirst);
                                   },
                                 ),
                               )

@@ -547,6 +547,11 @@ class _BookIntroState extends State<BookIntro> {
                                           audioPlayer.stop();
                                           Navigator.popUntil(context,
                                               (route) => route.isFirst);
+                                          // Navigator.pushReplacement(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             HomeScreen()));
                                         },
                                       )
                                     ])),
@@ -1280,7 +1285,7 @@ class _BookIntroState extends State<BookIntro> {
                                                             userCubit
                                                                 .fetchUser();
                                                             dataCubit
-                                                                .loadHomeBookData();
+                                                                .changeHomeBookData();
                                                           }
                                                         },
                                                         child:

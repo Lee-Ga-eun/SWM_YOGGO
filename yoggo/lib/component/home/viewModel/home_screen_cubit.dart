@@ -16,6 +16,14 @@ class DataCubit extends Cubit<List<HomeScreenBookModel>> {
       emit(data);
     }
   }
+
+  void changeHomeBookData() async {
+    // final data = await repository.loadData();
+    print('change home screen');
+    final data = await dataRepository.changeHomeBookRepository();
+    print(data);
+    emit(data);
+  }
 }
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:http/http.dart' as http;
