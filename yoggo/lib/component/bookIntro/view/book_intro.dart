@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yoggo/component/bookIntro/viewModel/book_voice_cubit.dart';
 import 'package:yoggo/component/bookIntro/viewModel/book_voice_model.dart';
-import 'package:yoggo/component/home/view/home.dart';
 import 'package:yoggo/component/home/viewModel/home_screen_cubit.dart';
 import 'package:yoggo/component/rec_info.dart';
 import '../../../Repositories/Repository.dart';
@@ -79,7 +78,7 @@ class _BookIntroState extends State<BookIntro> {
   //bool canChanged = true;
   // int lastPage = 0;
   final audioPlayer = AudioPlayer();
-  late BookVoiceModel clickedVoice;
+  //late BookVoiceModel clickedVoice;
 
   @override
   void dispose() {
@@ -121,6 +120,8 @@ class _BookIntroState extends State<BookIntro> {
       } else {}
     }
   }
+
+  BookVoiceModel? clickedVoice;
 
   late int contentId;
   //late BookVoiceCubit bookVoiceCubit;
@@ -484,8 +485,8 @@ class _BookIntroState extends State<BookIntro> {
 
   @override
   Widget build(BuildContext context) {
-    final bookIntroCubit = context.read<BookIntroCubit>();
-    final bookVoiceCubit = context.read<BookVoiceCubit>();
+    final bookIntroCubit = context.watch<BookIntroCubit>();
+    final bookVoiceCubit = context.watch<BookVoiceCubit>();
     final dataCubit = context.read<DataCubit>();
 
     final dataRepository = RepositoryProvider.of<DataRepository>(context);
@@ -497,7 +498,7 @@ class _BookIntroState extends State<BookIntro> {
       SizeConfig().init(context);
       return BlocBuilder<BookVoiceCubit, List<BookVoiceModel>>(
           builder: (context, voiceState) {
-        if (bookIntro.isEmpty || voiceState.isEmpty) {
+        if (bookIntro.isEmpty || voiceState.isEmpty || clickedVoice == null) {
           return Scaffold(
             body: Container(
               decoration: const BoxDecoration(
@@ -519,7 +520,9 @@ class _BookIntroState extends State<BookIntro> {
           final String title = bookIntro.first.title;
           List<dynamic> voices = [];
           voices = bookIntro.first.voice;
-          int cvi = clickedVoice.contentVoiceId;
+
+          int cvi = clickedVoice!.contentVoiceId;
+
           final int lastPage = bookIntro.first.last;
           return Scaffold(
               backgroundColor: const Color(0xFFF1ECC9).withOpacity(1),
@@ -1473,7 +1476,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                           contentId,
                                                                           vi,
                                                                         ),
-                                                                        print(clickedVoice
+                                                                        print(clickedVoice!
                                                                             .voiceName),
                                                                         Navigator
                                                                             .push(
@@ -1482,7 +1485,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                             builder: (context) =>
                                                                                 BookPage(
                                                                               // 다음 화면으로 contetnVoiceId를 가지고 이동
-                                                                              contentVoiceId: clickedVoice.contentVoiceId,
+                                                                              contentVoiceId: clickedVoice!.contentVoiceId,
                                                                               voiceId: vi,
                                                                               contentId: contentId,
                                                                               lastPage: lastPage,
@@ -1504,7 +1507,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                           contentId,
                                                                           vi,
                                                                         ),
-                                                                        print(clickedVoice
+                                                                        print(clickedVoice!
                                                                             .voiceName),
                                                                         Navigator
                                                                             .push(
@@ -1513,7 +1516,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                             builder: (context) =>
                                                                                 BookPage(
                                                                               // 다음 화면으로 contetnVoiceId를 가지고 이동
-                                                                              contentVoiceId: clickedVoice.contentVoiceId,
+                                                                              contentVoiceId: clickedVoice!.contentVoiceId,
                                                                               voiceId: vi,
                                                                               contentId: contentId,
                                                                               lastPage: lastPage,
@@ -1829,7 +1832,7 @@ class _BookIntroState extends State<BookIntro> {
                             onPressed: () {
                               // 1초 후에 다음 페이지로 이동
                               startInference(token);
-                              cvi = clickedVoice.contentVoiceId;
+                              cvi = clickedVoice!.contentVoiceId;
                               //   setState(() {
                               wantInference.value = false;
                               // });
