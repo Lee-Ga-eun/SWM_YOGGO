@@ -55,7 +55,6 @@ class _BookIntroState extends State<BookIntro> {
   ValueNotifier<bool> wantInference = ValueNotifier<bool>(false);
   ValueNotifier<bool> wantRecord = ValueNotifier<bool>(false);
 
-  late BookVoiceCubit bookVoiceCubit;
   //static bool isClicked1 = false;
   //static bool isClicked2 = false;
   bool isPurchased = false;
@@ -79,7 +78,6 @@ class _BookIntroState extends State<BookIntro> {
   int vi = 0;
   //bool canChanged = true;
   // int lastPage = 0;
-  int contentId = 1;
   final audioPlayer = AudioPlayer();
 
   @override
@@ -123,17 +121,19 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
+  late int contentId;
+  late BookVoiceCubit bookVoiceCubit;
   @override
   void initState() {
     super.initState();
     UserCubit().fetchUser();
+
     //  cvi = 0;
-
     final dataRepository = RepositoryProvider.of<DataRepository>(context);
-    BookVoiceCubit bookVoiceCubit = BookVoiceCubit(dataRepository);
+    bookVoiceCubit = BookVoiceCubit(dataRepository);
+    contentId = widget.id;
     bookVoiceCubit.loadBookVoiceData(contentId);
-
-    contentId = widget.id; // contentId는 init에서
+    // contentId = widget.id; // contentId는 init에서
     // fetchPageData();
     getToken();
     _sendBookIntroViewEvent(widget.id);
@@ -457,6 +457,7 @@ class _BookIntroState extends State<BookIntro> {
           isLoading = false;
           completeInference = true;
         });
+        context.read<BookVoiceCubit>().changeBookVoiceData(contentId);
         canChanged.value = true;
         return true;
       } else {
@@ -478,11 +479,13 @@ class _BookIntroState extends State<BookIntro> {
     final bookIntroCubit = context.read<BookIntroCubit>();
     final dataCubit = context.read<DataCubit>();
 
+    final dataRepository = RepositoryProvider.of<DataRepository>(context);
     bookIntroCubit.loadBookIntroData(widget.id);
     return MultiBlocProvider(
         providers: [
           BlocProvider<BookVoiceCubit>(
-            create: (context) => bookVoiceCubit,
+            create: (context) =>
+                BookVoiceCubit(dataRepository)..loadBookVoiceData(contentId),
           ),
           // BlocProvider<BlocB>(
           //   create: (BuildContext context) => BlocB(),
@@ -721,13 +724,10 @@ class _BookIntroState extends State<BookIntro> {
                                                               .defaultSize! *
                                                           3),
                                                 ),
-                                                child: BlocConsumer<
+                                                child: BlocBuilder<
                                                         BookVoiceCubit,
                                                         List<BookVoiceModel>>(
-                                                    listener:
-                                                        (context, voiceState) {
-                                                  print('im state $voiceState');
-                                                }, builder:
+                                                    builder:
                                                         (context, voiceState) {
                                                   return Row(
                                                     //  mainAxisAlignment: MainAxisAlignment.center,
@@ -740,6 +740,8 @@ class _BookIntroState extends State<BookIntro> {
                                                                       // no start Inference
                                                                       onTap:
                                                                           () {
+                                                                        bookVoiceCubit
+                                                                            .changeBookVoiceData(contentId);
                                                                         _sendBookMyVoiceClickEvent(
                                                                           contentId,
                                                                         );
@@ -776,6 +778,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                               contentId,
                                                                             );
 
+                                                                            bookVoiceCubit.changeBookVoiceData(contentId);
                                                                             setState(() {
                                                                               canChanged.value = false;
                                                                               completeInference = false;
@@ -811,6 +814,9 @@ class _BookIntroState extends State<BookIntro> {
                                                                           // complete Inference : 책 인퍼런스 완료된 상태
                                                                           onTap:
                                                                               () {
+                                                                            bookVoiceCubit.changeBookVoiceData(contentId);
+                                                                            bookVoiceCubit.clickBookVoiceData(contentId,
+                                                                                voiceState[0].voiceId);
                                                                             _sendBookMyVoiceClickEvent(
                                                                               contentId,
                                                                             );
@@ -943,6 +949,11 @@ class _BookIntroState extends State<BookIntro> {
                                                       GestureDetector(
                                                         //Jolly
                                                         onTap: () {
+                                                          bookVoiceCubit
+                                                              .clickBookVoiceData(
+                                                                  contentId,
+                                                                  voices[0][
+                                                                      'voiceId']); //clicked 바꾸기
                                                           Platform.isAndroid
                                                               ? audioPlayer.play(
                                                                   AssetSource(
@@ -1042,6 +1053,11 @@ class _BookIntroState extends State<BookIntro> {
                                                       // Morgan
                                                       GestureDetector(
                                                         onTap: () {
+                                                          bookVoiceCubit
+                                                              .clickBookVoiceData(
+                                                                  contentId,
+                                                                  voices[1][
+                                                                      'voiceId']);
                                                           Platform.isAndroid
                                                               ? audioPlayer.play(
                                                                   AssetSource(
@@ -1142,6 +1158,12 @@ class _BookIntroState extends State<BookIntro> {
                                                       // Eric
                                                       GestureDetector(
                                                         onTap: () {
+                                                          // clicked는 유지하고 voice 정보만 바꾸기
+                                                          bookVoiceCubit
+                                                              .clickBookVoiceData(
+                                                                  contentId,
+                                                                  voices[2][
+                                                                      'voiceId']);
                                                           Platform.isAndroid
                                                               ? audioPlayer.play(
                                                                   AssetSource(

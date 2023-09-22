@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:yoggo/component/bookIntro/viewModel/book_intro_model.dart';
 import 'dart:convert';
@@ -93,7 +94,6 @@ class DataRepository {
         if (a.lock == b.lock) {
           return 0;
         } else if (a.lock) {
-          print(a.id);
           return 1;
         } else {
           return -1;
@@ -188,6 +188,8 @@ class DataRepository {
     }
   }
 
+  static final Map<int, List<BookVoiceModel>> _loadedBookVoiceData = {};
+
   Future<List<BookVoiceModel>> bookVoiceRepository(int contentId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
@@ -200,15 +202,50 @@ class DataRepository {
       },
     );
     if (response.statusCode == 200) {
-      print("📚 book voice model");
       final jsonData = json.decode(response.body) as List<dynamic>;
       final data = jsonData
           .map((item) => BookVoiceModel.fromJson(
               {...item, 'clicked': item['voiceId'] == 1 ? true : false}))
           .toList();
+      _loadedBookVoiceData[contentId] = data;
       return data;
     } else {
       return []; // 에러 발생 시 빈 리스트 리턴
+    }
+  }
+
+  Future<List<BookVoiceModel>> changeBookVoiceRepository(int contentId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    List<BookVoiceModel>? exData = _loadedBookVoiceData[contentId];
+    if (exData != null) {
+      final response = await http.get(
+        Uri.parse('${dotenv.get("API_SERVER")}content/voice/$contentId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body) as List<dynamic>;
+
+        final data = jsonData.map((item) {
+          bool clicked = false;
+          for (var exItem in exData!) {
+            if (exItem.voiceId == item['voiceId']) {
+              clicked = exItem.clicked;
+              break;
+            }
+          }
+          return BookVoiceModel.fromJson({...item, 'clicked': clicked});
+        }).toList();
+        _loadedBookVoiceData[contentId] = data;
+        return data;
+      } else {
+        return [];
+      }
+    } else {
+      return await bookVoiceRepository(contentId); // 에러 발생 시 빈 리스트 리턴
     }
   }
 

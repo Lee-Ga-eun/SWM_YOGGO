@@ -21,6 +21,7 @@ class BookVoiceCubit extends Cubit<List<BookVoiceModel>> {
     // final serializedData =
     //     data.map((item) => json.encode(item.toJson())).toList();
     // _dataMap[contentId] = data; // 가져온 데이터를 Map에 저장합니다.
+    print("📚 load voice: $data");
     emit(data);
   }
 
@@ -37,10 +38,22 @@ class BookVoiceCubit extends Cubit<List<BookVoiceModel>> {
         item.clicked = false;
       }
     });
+    print("📌 click voice: $data");
     emit(data);
     return clickedVoice;
   }
 
 //my Voice 다시 받아올 때!
-  Future<void> changeBookVoiceData(int contentId, int clickedId) async {}
+  Future<void> changeBookVoiceData(int contentId) async {
+    //final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (contentId == null) {
+      return;
+    }
+    final data = await dataRepository.changeBookVoiceRepository(contentId);
+    // final serializedData =
+    //     data.map((item) => json.encode(item.toJson())).toList();
+    // _dataMap[contentId] = data; // 가져온 데이터를 Map에 저장합니다.
+    print("🔄 change voice: $data");
+    emit(data);
+  }
 }
