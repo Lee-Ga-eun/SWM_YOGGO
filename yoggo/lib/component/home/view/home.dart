@@ -20,6 +20,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../Repositories/Repository.dart';
 import '../../bookIntro/viewModel/book_intro_cubit.dart';
+import '../../bookIntro/viewModel/book_voice_cubit.dart';
 import '../../voice.dart';
 import '../viewModel/home_screen_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -477,23 +478,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BlocProvider(
-                                                    create: (context) =>
-                                                        // BookIntroCubit(),
-                                                        // DataCubit()..loadHomeBookData()
-                                                        BookIntroCubit(
-                                                            dataRepository)
-                                                          ..loadBookIntroData(
-                                                              book.id),
-                                                    child: BookIntro(
-                                                      title: book.title,
-                                                      thumb: book.thumbUrl,
-                                                      id: book.id,
-                                                      summary: book.summary,
-                                                    ),
-                                                  ),
-                                                ),
+                                                    builder:
+                                                        (context) =>
+                                                            MultiBlocProvider(
+                                                              providers: [
+                                                                BlocProvider<
+                                                                    BookVoiceCubit>(
+                                                                  create: (context) => BookVoiceCubit(
+                                                                      dataRepository)
+                                                                    ..loadBookVoiceData(
+                                                                        book.id),
+                                                                ),
+                                                                BlocProvider<
+                                                                    BookIntroCubit>(
+                                                                  create: (context) =>
+                                                                      // BookIntroCubit(),
+                                                                      // DataCubit()..loadHomeBookData()
+                                                                      BookIntroCubit(dataRepository)..loadBookIntroData(book.id),
+                                                                )
+                                                              ],
+                                                              child: BookIntro(
+                                                                title:
+                                                                    book.title,
+                                                                thumb: book
+                                                                    .thumbUrl,
+                                                                id: book.id,
+                                                                summary: book
+                                                                    .summary,
+                                                              ),
+                                                            )),
                                               );
                                               // : Navigator.push(
                                               //     //구독자가 아니면 purchase로 보낸다?
