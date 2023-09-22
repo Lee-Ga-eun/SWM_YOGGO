@@ -193,24 +193,27 @@ class DataRepository {
   Future<List<BookVoiceModel>> bookVoiceRepository(int contentId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-
-    final response = await http.get(
-      Uri.parse('${dotenv.get("API_SERVER")}content/voice/$contentId'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body) as List<dynamic>;
-      final data = jsonData
-          .map((item) => BookVoiceModel.fromJson(
-              {...item, 'clicked': item['voiceId'] == 1 ? true : false}))
-          .toList();
-      _loadedBookVoiceData[contentId] = data;
-      return data;
+    if (_loadedBookVoiceData.containsKey(contentId)) {
+      return _loadedBookVoiceData[contentId] as List<BookVoiceModel>;
     } else {
-      return []; // 에러 발생 시 빈 리스트 리턴
+      final response = await http.get(
+        Uri.parse('${dotenv.get("API_SERVER")}content/voice/$contentId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body) as List<dynamic>;
+        final data = jsonData
+            .map((item) => BookVoiceModel.fromJson(
+                {...item, 'clicked': item['voiceId'] == 1 ? true : false}))
+            .toList();
+        _loadedBookVoiceData[contentId] = data;
+        return data;
+      } else {
+        return []; // 에러 발생 시 빈 리스트 리턴
+      }
     }
   }
 
@@ -245,7 +248,7 @@ class DataRepository {
         return [];
       }
     } else {
-      return await bookVoiceRepository(contentId); // 에러 발생 시 빈 리스트 리턴
+      return bookVoiceRepository(contentId); // 에러 발생 시 빈 리스트 리턴
     }
   }
 

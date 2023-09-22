@@ -12,17 +12,23 @@ class BookVoiceCubit extends Cubit<List<BookVoiceModel>> {
 
   BookVoiceCubit(this.dataRepository) : super([]);
 
-  Future<void> loadBookVoiceData(int? contentId) async {
+  Future<BookVoiceModel?> loadBookVoiceData(int contentId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (contentId == null) {
-      return;
-    }
     final data = await dataRepository.bookVoiceRepository(contentId);
     // final serializedData =
     //     data.map((item) => json.encode(item.toJson())).toList();
     // _dataMap[contentId] = data; // 가져온 데이터를 Map에 저장합니다.
+    BookVoiceModel? clickedVoice;
+
+    for (var item in data) {
+      if (item.clicked == true) {
+        clickedVoice = item;
+        break;
+      }
+    }
     print("📚 load voice: $data");
     emit(data);
+    return clickedVoice;
   }
 
 //voice 클릭 시
