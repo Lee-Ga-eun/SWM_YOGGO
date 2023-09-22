@@ -12,18 +12,35 @@ class BookVoiceCubit extends Cubit<List<BookVoiceModel>> {
 
   BookVoiceCubit(this.dataRepository) : super([]);
 
-  void loadBookVoiceData(int? contentId) async {
+  Future<void> loadBookVoiceData(int? contentId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (contentId == null) {
       return;
     }
-
-    // 여기 수정 필요!! 레포지토리 만들어야 합니당
     final data = await dataRepository.bookVoiceRepository(contentId);
-    final serializedData =
-        data.map((item) => json.encode(item.toJson())).toList();
-    _dataMap[contentId] = data; // 가져온 데이터를 Map에 저장합니다.
-
+    // final serializedData =
+    //     data.map((item) => json.encode(item.toJson())).toList();
+    // _dataMap[contentId] = data; // 가져온 데이터를 Map에 저장합니다.
     emit(data);
   }
+
+//voice 클릭 시
+  Future<BookVoiceModel?> clickBookVoiceData(
+      int contentId, int clickedId) async {
+    List<BookVoiceModel> data = state;
+    BookVoiceModel? clickedVoice;
+    data.forEach((item) {
+      if (item.voiceId == clickedId) {
+        item.clicked = true;
+        clickedVoice = item;
+      } else {
+        item.clicked = false;
+      }
+    });
+    emit(data);
+    return clickedVoice;
+  }
+
+//my Voice 다시 받아올 때!
+  Future<void> changeBookVoiceData(int contentId, int clickedId) async {}
 }
