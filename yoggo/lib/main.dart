@@ -137,7 +137,7 @@ class _AppState extends State<App> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userToken = prefs.getString('token');
-      print('hihi');
+      print('userToken: $userToken');
     });
   }
 

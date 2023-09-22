@@ -8,13 +8,13 @@ class BookVoiceModel extends Equatable {
   final int contentVoiceId;
   final int voiceId;
   final String voiceName;
-  //final bool able;
+  bool clicked;
 
-  const BookVoiceModel({
+  BookVoiceModel({
     required this.contentVoiceId,
     required this.voiceId,
     required this.voiceName,
-    //required this.able,
+    this.clicked = false,
   });
 
   factory BookVoiceModel.fromJson(Map<String, dynamic> json) =>
@@ -23,5 +23,5 @@ class BookVoiceModel extends Equatable {
   Map<String, dynamic> toJson() => _$BookVoiceModelToJson(this);
 
   @override
-  List<Object?> get props => [contentVoiceId, voiceId, voiceName]; //, able];
+  List<Object?> get props => [contentVoiceId, voiceId, voiceName, clicked];
 }

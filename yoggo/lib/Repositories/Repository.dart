@@ -193,16 +193,19 @@ class DataRepository {
     String? token = prefs.getString('token');
 
     final response = await http.get(
-      Uri.parse('${dotenv.get("API_SERVER")}content/?????????'),
+      Uri.parse('${dotenv.get("API_SERVER")}content/voice/$contentId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
     if (response.statusCode == 200) {
+      print("📚 book voice model");
       final jsonData = json.decode(response.body) as List<dynamic>;
-      final data =
-          jsonData.map((item) => BookVoiceModel.fromJson(item)).toList();
+      final data = jsonData
+          .map((item) => BookVoiceModel.fromJson(
+              {...item, 'clicked': item['voiceId'] == 1 ? true : false}))
+          .toList();
       return data;
     } else {
       return []; // 에러 발생 시 빈 리스트 리턴
