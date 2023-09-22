@@ -217,6 +217,25 @@ class DataRepository {
     }
   }
 
+  Future<List<BookVoiceModel>> clickBookVoiceRepository(
+      int contentId, int clickedId) async {
+    if (_loadedBookVoiceData.containsKey(contentId) &&
+        _loadedBookVoiceData[contentId] != null) {
+      final data = _loadedBookVoiceData[contentId];
+      for (var item in data!) {
+        if (item.voiceId == clickedId) {
+          item.clicked = true;
+        } else {
+          item.clicked = false;
+        }
+      }
+      _loadedBookVoiceData[contentId] = data;
+      return data;
+    } else {
+      return bookVoiceRepository(contentId); // 에러 발생 시 빈 리스트 리턴
+    }
+  }
+
   Future<List<BookVoiceModel>> changeBookVoiceRepository(int contentId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');

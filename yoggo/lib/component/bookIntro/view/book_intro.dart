@@ -490,17 +490,6 @@ class _BookIntroState extends State<BookIntro> {
 
     final dataRepository = RepositoryProvider.of<DataRepository>(context);
     bookIntroCubit.loadBookIntroData(widget.id);
-    // return MultiBlocProvider(
-    //     providers: [
-    //       BlocProvider<BookVoiceCubit>(
-    //         create: (context) =>
-    //             BookVoiceCubit(dataRepository)..loadBookVoiceData(contentId),
-    //       ),
-    //       // BlocProvider<BlocB>(
-    //       //   create: (BuildContext context) => BlocB(),
-    //       // ),
-    //     ],
-    //     child:
     return BlocBuilder<BookIntroCubit, List<BookIntroModel>>(
         builder: (context, bookIntro) {
       final userCubit = context.watch<UserCubit>();
@@ -714,30 +703,26 @@ class _BookIntroState extends State<BookIntro> {
                                         Column(
                                           children: [
                                             Container(
-                                              width:
-                                                  SizeConfig.defaultSize! * 34,
-                                              padding: EdgeInsets.only(
-                                                  left:
-                                                      SizeConfig.defaultSize! *
-                                                          1.2,
-                                                  top: SizeConfig.defaultSize!,
-                                                  bottom:
-                                                      SizeConfig.defaultSize!),
-                                              // color: Colors.red,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white
-                                                    .withOpacity(0.4),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        SizeConfig
-                                                                .defaultSize! *
-                                                            3),
-                                              ),
-                                              child: BlocBuilder<BookVoiceCubit,
-                                                      List<BookVoiceModel>>(
-                                                  builder:
-                                                      (context, voiceState) {
-                                                return Row(
+                                                width: SizeConfig.defaultSize! *
+                                                    34,
+                                                padding: EdgeInsets.only(
+                                                    left: SizeConfig
+                                                            .defaultSize! *
+                                                        1.2,
+                                                    top:
+                                                        SizeConfig.defaultSize!,
+                                                    bottom: SizeConfig
+                                                        .defaultSize!),
+                                                // color: Colors.red,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white
+                                                      .withOpacity(0.4),
+                                                  borderRadius: BorderRadius
+                                                      .circular(SizeConfig
+                                                              .defaultSize! *
+                                                          3),
+                                                ),
+                                                child: Row(
                                                   //  mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     userState.purchase
@@ -832,10 +817,11 @@ class _BookIntroState extends State<BookIntro> {
                                                                             () async {
                                                                           bookVoiceCubit
                                                                               .changeBookVoiceData(contentId);
-
-                                                                          clickedVoice = await bookVoiceCubit.clickBookVoiceData(
+                                                                          bookVoiceCubit.clickBookVoiceData(
                                                                               contentId,
-                                                                              voiceState[0].voiceId) as BookVoiceModel;
+                                                                              voiceState[0].voiceId);
+                                                                          clickedVoice =
+                                                                              await bookVoiceCubit.loadClickedBookVoiceData(contentId) as BookVoiceModel;
                                                                           _sendBookMyVoiceClickEvent(
                                                                             contentId,
                                                                           );
@@ -991,11 +977,13 @@ class _BookIntroState extends State<BookIntro> {
                                                         vi = voiceState[1]
                                                             .voiceId;
 
+                                                        bookVoiceCubit
+                                                            .clickBookVoiceData(
+                                                                contentId, 1);
                                                         clickedVoice =
                                                             await bookVoiceCubit
-                                                                    .clickBookVoiceData(
-                                                                        contentId,
-                                                                        vi)
+                                                                    .loadClickedBookVoiceData(
+                                                                        contentId)
                                                                 as BookVoiceModel; //clicked 바꾸기
                                                         Platform.isAndroid
                                                             ? audioPlayer.play(
@@ -1099,11 +1087,13 @@ class _BookIntroState extends State<BookIntro> {
 
                                                         vi = voiceState[2]
                                                             .voiceId;
+                                                        bookVoiceCubit
+                                                            .clickBookVoiceData(
+                                                                contentId, vi);
                                                         clickedVoice =
                                                             await bookVoiceCubit
-                                                                    .clickBookVoiceData(
-                                                                        contentId,
-                                                                        vi)
+                                                                    .loadClickedBookVoiceData(
+                                                                        contentId)
                                                                 as BookVoiceModel;
                                                         Platform.isAndroid
                                                             ? audioPlayer.play(
@@ -1208,11 +1198,13 @@ class _BookIntroState extends State<BookIntro> {
                                                           vi = voiceState[3]
                                                               .voiceId;
                                                           // clicked는 유지하고 voice 정보만 바꾸기
-
+                                                          bookVoiceCubit
+                                                              .clickBookVoiceData(
+                                                                  contentId,
+                                                                  vi);
                                                           clickedVoice = await bookVoiceCubit
-                                                                  .clickBookVoiceData(
-                                                                      contentId,
-                                                                      vi)
+                                                                  .loadClickedBookVoiceData(
+                                                                      contentId)
                                                               as BookVoiceModel;
                                                           Platform.isAndroid
                                                               ? audioPlayer.play(
@@ -1308,9 +1300,9 @@ class _BookIntroState extends State<BookIntro> {
                                                         //),
                                                         ),
                                                   ],
-                                                );
-                                              }),
-                                            ),
+                                                ) //;
+                                                // }),
+                                                ),
                                           ],
                                         ),
                                         SizedBox(
