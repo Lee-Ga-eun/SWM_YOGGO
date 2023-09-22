@@ -78,7 +78,6 @@ class _BookIntroState extends State<BookIntro> {
   int vi = 0;
   //bool canChanged = true;
   // int lastPage = 0;
-  int contentId = 1;
   final audioPlayer = AudioPlayer();
 
   @override
@@ -122,13 +121,19 @@ class _BookIntroState extends State<BookIntro> {
     }
   }
 
+  late int contentId;
+  late BookVoiceCubit bookVoiceCubit;
   @override
   void initState() {
     super.initState();
     UserCubit().fetchUser();
-    //  cvi = 0;
 
-    contentId = widget.id; // contentId는 init에서
+    //  cvi = 0;
+    final dataRepository = RepositoryProvider.of<DataRepository>(context);
+    bookVoiceCubit = BookVoiceCubit(dataRepository);
+    contentId = widget.id;
+    bookVoiceCubit.loadBookVoiceData(contentId);
+    // contentId = widget.id; // contentId는 init에서
     // fetchPageData();
     getToken();
     _sendBookIntroViewEvent(widget.id);
@@ -724,9 +729,6 @@ class _BookIntroState extends State<BookIntro> {
                                                         List<BookVoiceModel>>(
                                                     builder:
                                                         (context, voiceState) {
-                                                  final bookVoiceCubit = context
-                                                      .read<BookVoiceCubit>;
-
                                                   return Row(
                                                     //  mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
@@ -738,7 +740,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                       // no start Inference
                                                                       onTap:
                                                                           () {
-                                                                        bookVoiceCubit()
+                                                                        bookVoiceCubit
                                                                             .changeBookVoiceData(contentId);
                                                                         _sendBookMyVoiceClickEvent(
                                                                           contentId,
@@ -776,7 +778,7 @@ class _BookIntroState extends State<BookIntro> {
                                                                               contentId,
                                                                             );
 
-                                                                            bookVoiceCubit().changeBookVoiceData(contentId);
+                                                                            bookVoiceCubit.changeBookVoiceData(contentId);
                                                                             setState(() {
                                                                               canChanged.value = false;
                                                                               completeInference = false;
@@ -812,8 +814,8 @@ class _BookIntroState extends State<BookIntro> {
                                                                           // complete Inference : 책 인퍼런스 완료된 상태
                                                                           onTap:
                                                                               () {
-                                                                            bookVoiceCubit().changeBookVoiceData(contentId);
-                                                                            bookVoiceCubit().clickBookVoiceData(contentId,
+                                                                            bookVoiceCubit.changeBookVoiceData(contentId);
+                                                                            bookVoiceCubit.clickBookVoiceData(contentId,
                                                                                 voiceState[0].voiceId);
                                                                             _sendBookMyVoiceClickEvent(
                                                                               contentId,
@@ -947,7 +949,7 @@ class _BookIntroState extends State<BookIntro> {
                                                       GestureDetector(
                                                         //Jolly
                                                         onTap: () {
-                                                          bookVoiceCubit()
+                                                          bookVoiceCubit
                                                               .clickBookVoiceData(
                                                                   contentId,
                                                                   voices[0][
@@ -1051,7 +1053,7 @@ class _BookIntroState extends State<BookIntro> {
                                                       // Morgan
                                                       GestureDetector(
                                                         onTap: () {
-                                                          bookVoiceCubit()
+                                                          bookVoiceCubit
                                                               .clickBookVoiceData(
                                                                   contentId,
                                                                   voices[1][
@@ -1157,7 +1159,7 @@ class _BookIntroState extends State<BookIntro> {
                                                       GestureDetector(
                                                         onTap: () {
                                                           // clicked는 유지하고 voice 정보만 바꾸기
-                                                          bookVoiceCubit()
+                                                          bookVoiceCubit
                                                               .clickBookVoiceData(
                                                                   contentId,
                                                                   voices[2][
