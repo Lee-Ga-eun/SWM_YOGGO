@@ -32,29 +32,30 @@ class BookVoiceCubit extends Cubit<List<BookVoiceModel>> {
   }
 
 //voice 클릭 시
-  Future<BookVoiceModel?> clickBookVoiceData(
-      int contentId, int clickedId) async {
-    List<BookVoiceModel> data = state;
-    BookVoiceModel? clickedVoice;
-    data.forEach((item) {
-      if (item.voiceId == clickedId) {
-        item.clicked = true;
-        clickedVoice = item;
-      } else {
-        item.clicked = false;
-      }
-    });
+  Future<void> clickBookVoiceData(int contentId, int clickedId) async {
+    final data =
+        await dataRepository.clickBookVoiceRepository(contentId, clickedId);
+
     print("📌 click voice: $data");
     emit(data);
+  }
+
+  //voice 클릭 시
+  Future<BookVoiceModel?> loadClickedBookVoiceData(int contentId) async {
+    List<BookVoiceModel> data = state;
+    BookVoiceModel? clickedVoice;
+    for (var item in data) {
+      if (item.clicked == true) {
+        clickedVoice = item;
+        break;
+      }
+    }
     return clickedVoice;
   }
 
 //my Voice 다시 받아올 때!
   Future<void> changeBookVoiceData(int contentId) async {
     //final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (contentId == null) {
-      return;
-    }
     final data = await dataRepository.changeBookVoiceRepository(contentId);
     // final serializedData =
     //     data.map((item) => json.encode(item.toJson())).toList();
