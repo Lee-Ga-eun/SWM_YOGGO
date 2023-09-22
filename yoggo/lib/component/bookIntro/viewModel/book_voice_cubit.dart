@@ -1,9 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yoggo/component/bookIntro/viewModel/book_intro_model.dart';
 import '../../../Repositories/Repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import '../../home/viewModel/home_screen_cubit.dart';
 import 'book_voice_model.dart';
 
 class BookVoiceCubit extends Cubit<List<BookVoiceModel>> {
@@ -36,7 +33,7 @@ class BookVoiceCubit extends Cubit<List<BookVoiceModel>> {
     final data =
         await dataRepository.clickBookVoiceRepository(contentId, clickedId);
 
-    print("📌 click voice: $data");
+    // print("📌 click voice: $data");
     emit(data);
   }
 
@@ -50,6 +47,8 @@ class BookVoiceCubit extends Cubit<List<BookVoiceModel>> {
         break;
       }
     }
+    //print(clickedVoice);
+    emit(data);
     return clickedVoice;
   }
 
