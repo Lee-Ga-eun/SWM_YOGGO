@@ -1686,8 +1686,8 @@ class _BookIntroState extends State<BookIntro> {
                   visible: wantPurchase,
                   child: AlertDialog(
                     title: const Text('Register your voice!'),
-                    content:
-                        const Text('Click OK to go to register your voice.'),
+                    content: const Text(
+                        'After purchasing a subscription, you can register your voice.'),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -1699,7 +1699,7 @@ class _BookIntroState extends State<BookIntro> {
                             });
                           });
                         },
-                        child: const Text('later'),
+                        child: const Text('Dismiss'),
                       ),
                       TextButton(
                         onPressed: () {
@@ -1713,7 +1713,7 @@ class _BookIntroState extends State<BookIntro> {
                             );
                           });
                         },
-                        child: const Text('OK'),
+                        child: const Text('Subscribe'),
                       ),
                     ],
                   ),
@@ -1721,8 +1721,9 @@ class _BookIntroState extends State<BookIntro> {
                 Visibility(
                   visible: buyPoints,
                   child: AlertDialog(
-                    title: Text('You need $lackingPoint more points'),
-                    content: const Text('Click OK to go shop'),
+                    title: const Text('Insufficient Points'),
+                    content: Text(
+                        'You require an additional $lackingPoint points.\nPlease consider purchasing additional points.'),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -1734,7 +1735,7 @@ class _BookIntroState extends State<BookIntro> {
                             });
                           });
                         },
-                        child: const Text('later'),
+                        child: const Text('Dismiss'),
                       ),
                       TextButton(
                         onPressed: () {
@@ -1748,7 +1749,7 @@ class _BookIntroState extends State<BookIntro> {
                             );
                           });
                         },
-                        child: const Text('OK'),
+                        child: const Text('Purchase'),
                       ),
                     ],
                   ),
@@ -1761,7 +1762,7 @@ class _BookIntroState extends State<BookIntro> {
                       child: AlertDialog(
                         title: const Text('Register your voice!'),
                         content: const Text(
-                            'After registering your voice, listen to the book with your voice.'),
+                            'After registering your voice, you can listen to the book using your voice.'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -1770,7 +1771,7 @@ class _BookIntroState extends State<BookIntro> {
                                 wantRecord.value = false;
                               });
                             },
-                            child: const Text('later'),
+                            child: const Text('Dismiss'),
                           ),
                           TextButton(
                             onPressed: () {
@@ -1783,7 +1784,7 @@ class _BookIntroState extends State<BookIntro> {
                                 );
                               });
                             },
-                            child: const Text('OK'),
+                            child: const Text('Register'),
                           ),
                         ],
                       ),
@@ -1793,9 +1794,9 @@ class _BookIntroState extends State<BookIntro> {
                 Visibility(
                   visible: !completeInference,
                   child: AlertDialog(
-                    title: const Text('Please wait a minute.'),
+                    title: const Text('Please wait a moment.'),
                     content: const Text(
-                        "We're making a book with your voice. \nIf you want to read the book right now, please choose a different voice actor!"),
+                        "We're making a book with your voice. \nIf you want to listen to it now, please select a different voice actor!"),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -1815,9 +1816,10 @@ class _BookIntroState extends State<BookIntro> {
                     return Visibility(
                       visible: value,
                       child: AlertDialog(
-                        title: const Text('Read this book with your voice'),
+                        title:
+                            const Text('Create an Audiobook with Your Voice'),
                         content: const Text(
-                          "You can make this book with your voice. \nDo you want to make it?",
+                          "You can listen to this book with your voice.\nWould you like to proceed?",
                         ),
                         actions: [
                           TextButton(
