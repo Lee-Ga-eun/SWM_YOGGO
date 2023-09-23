@@ -39,8 +39,8 @@ void main() async {
   // Amplitude Event 수집을 위해서 꼭 개발 모드(dev)인지 릴리즈 모드(rel)인지 설정하고 앱을 실행하도록 해요
   // 디폴트 값은 dev입니다
 
-  String mode = 'dev';
-  //String mode = 'rel';
+  //String mode = 'dev';
+  String mode = 'rel';
 
   // 사용자 Cubit을 초기화합니다.
   await dotenv.load(fileName: ".env");
@@ -120,6 +120,7 @@ class _AppState extends State<App> {
   bool _initialized = false;
   Future<void>? anonymousLoginFuture;
   String? userToken;
+  bool? hasToken;
   @override
   void initState() {
     super.initState();
@@ -137,7 +138,7 @@ class _AppState extends State<App> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userToken = prefs.getString('token');
-      print('userToken: $userToken');
+      hasToken = prefs.getBool('hasToken');
     });
   }
 
@@ -148,7 +149,7 @@ class _AppState extends State<App> {
     });
   }
 
-  Future<void> anonymousLogin(BuildContext context) async {
+  Future<void> anonymousLogin() async {
     try {
       final userCredential = await FirebaseAuth.instance.signInAnonymously();
       print("Signed in with temporary account.");
@@ -172,6 +173,7 @@ class _AppState extends State<App> {
         await prefs.setBool('purchase', purchase);
         await prefs.setBool('record', record);
         await prefs.setString('username', username);
+        await prefs.setBool('hasToken', true);
 
         UserCubit userCubit = context.read<UserCubit>();
 
@@ -227,11 +229,10 @@ class _AppState extends State<App> {
                 {'subscribe': state.purchase, 'record': state.record});
             // 여기서 User Property 다시 한번 설정해주기 ~~
           }
-          if (userToken != null) {
-            print(userToken);
+          if (userToken != null && hasToken == true) {
             return const HomeScreen();
           } else {
-            anonymousLoginFuture ??= anonymousLogin(context);
+            anonymousLoginFuture ??= anonymousLogin();
             return FutureBuilder(
               future: anonymousLoginFuture,
               builder: (BuildContext context, AsyncSnapshot<void> snapshot) {

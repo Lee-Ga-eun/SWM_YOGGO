@@ -100,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         showFairy = haveClickedBook;
       });
-      print('showFairy');
     }
     if (isFirstTime) {
       setState(() {
@@ -170,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool openCalendar = false;
 
   void _openCalendarFunc() async {
+    print(token);
     setState(() {
       showSecondOverlay = false;
     });
