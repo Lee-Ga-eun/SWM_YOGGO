@@ -148,7 +148,7 @@ class _PurchaseState extends State<Purchase> {
     );
     if (response.statusCode == 200) {
       // _sendSubSuccessEvent();
-      print('정보 등록 완료 1');
+      print('구독 성공 완료');
       context.read<UserCubit>().fetchUser();
     } else {
       _sendSubFailEvent(response.statusCode);
@@ -210,11 +210,11 @@ class _PurchaseState extends State<Purchase> {
         body: jsonEncode({'point': toInt(points)}));
     if (response.statusCode == 200) {
       // _sendSubSuccessEvent();
-      print('정보 등록 완료 2');
+      print('포인트 구매 완료');
       context.read<UserCubit>().fetchUser();
     } else {
-      _sendSubFailEvent(response.statusCode);
-      throw Exception('Failed to start inference');
+      //_sendSubFailEvent(response.statusCode);
+      throw Exception('Failed to buy point');
     }
   }
 
@@ -308,7 +308,6 @@ class _PurchaseState extends State<Purchase> {
               right: 11.5 * SizeConfig.defaultSize!,
               child: GestureDetector(
                   onTap: () async {
-                    print('tap');
                     _sendAlreadysubClickEvent(userState.point);
                     try {
                       CustomerInfo customerInfo =
@@ -338,7 +337,6 @@ class _PurchaseState extends State<Purchase> {
                           }
                         } else {
                           print('fail');
-
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -359,7 +357,6 @@ class _PurchaseState extends State<Purchase> {
                         }
                       }
                     } on PlatformException {
-                      print('andriod');
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
