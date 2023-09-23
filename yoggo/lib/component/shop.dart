@@ -344,8 +344,7 @@ class _PurchaseState extends State<Purchase> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 // title: Text('Sorry'),
-                                content: Text(
-                                    'No subscription information registered.'),
+                                content: Text('No subscription found.'),
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text('Close'),
@@ -366,8 +365,7 @@ class _PurchaseState extends State<Purchase> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             // title: Text('Sorry'),
-                            content:
-                                Text('No subscription information registered.'),
+                            content: Text('No subscription found.'),
                             actions: <Widget>[
                               TextButton(
                                 child: Text('Close'),
@@ -605,10 +603,10 @@ class _PurchaseState extends State<Purchase> {
                                                 // color: Colors.blue, // 배경색 설정
                                                 ),
                                             child: SizedBox(
-                                                width: 32 *
+                                                width: 0.4 * sw, //35 *
+                                                //SizeConfig.defaultSize!,
+                                                height: 3.3 *
                                                     SizeConfig.defaultSize!,
-                                                height:
-                                                    3 * SizeConfig.defaultSize!,
                                                 child: SingleChildScrollView(
                                                   child: Platform.isAndroid
                                                       ? Column(
@@ -617,7 +615,7 @@ class _PurchaseState extends State<Purchase> {
                                                                   .center,
                                                           children: [
                                                               Text(
-                                                                "After free trial, LOVEL monthly subscription is \$5.99.",
+                                                                "After free trial, LOVEL monthly subscription is \$5.99.\nYou can cancel this subscription at any time if you wish.",
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:

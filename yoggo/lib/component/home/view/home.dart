@@ -626,39 +626,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  Visibility(
-                    visible: wantDelete,
-                    child: AlertDialog(
-                      title: const Text('Delete Account'),
-                      content:
-                          const Text('Do you want to DELETE your account?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            // 1초 후에 다음 페이지로 이동
-                            userCubit.logout();
-                            OneSignal.shared.removeExternalUserId();
-                            deleteAccount();
-                            Future.delayed(const Duration(seconds: 1), () {
-                              setState(() {
-                                wantDelete = false;
-                              });
-                            });
-                          },
-                          child: const Text('YES'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // 1초 후에 다음 페이지로 이동
-                            setState(() {
-                              wantDelete = false;
-                            });
-                          },
-                          child: const Text('No'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Visibility(
+                  //   visible: wantDelete,
+                  //   child: AlertDialog(
+                  //     title: const Text('Delete Account'),
+                  //     content:
+                  //         const Text('Do you want to DELETE your account?'),
+                  //     actions: [
+                  //       TextButton(
+                  //         onPressed: () {
+                  //           // 1초 후에 다음 페이지로 이동
+                  //           userCubit.logout();
+                  //           OneSignal.shared.removeExternalUserId();
+                  //           deleteAccount();
+                  //           Future.delayed(const Duration(seconds: 1), () {
+                  //             setState(() {
+                  //               wantDelete = false;
+                  //             });
+                  //           });
+                  //         },
+                  //         child: const Text('YES'),
+                  //       ),
+                  //       TextButton(
+                  //         onPressed: () {
+                  //           // 1초 후에 다음 페이지로 이동
+                  //           setState(() {
+                  //             wantDelete = false;
+                  //           });
+                  //         },
+                  //         child: const Text('No'),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   // Container(
                   //   color: Colors.white.withOpacity(0.6),
                   //   child: GestureDetector(
@@ -728,7 +728,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   .defaultSize! *
                                                               11),
                                                       Text(
-                                                        'Hello, Welcome to LOVEL! \nHere, you can discover free books to read and 4,500 points that can \nunclock premium books. Please click on a book you like and start reading!',
+                                                        'Hello, Welcome to LOVEL! \nHere, you can discover free books to read and 4,500 points that can \nunlock premium books. Please click on a book you like and start reading!',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Molengo',
@@ -1134,6 +1134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         formattedDate); // 시간 현재 시간으로 업데이트
                                                     prefs.setInt('lastPointDay',
                                                         lastPointDay);
+                                                    _sendCalClaimSuccessEvent(
+                                                        userState.point,
+                                                        lastPointDay,
+                                                        scores[
+                                                            lastPointDay - 1]);
                                                     plusPoint(scores[
                                                         lastPointDay - 1]);
                                                   } else {
@@ -1153,6 +1158,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 availableGetPoint = 2;
                                                 setState(() {
                                                   plusPoint(scores[0]);
+                                                  _sendCalClaimSuccessEvent(
+                                                      userState.point,
+                                                      1,
+                                                      scores[0]);
                                                   lastPointYMD = formattedDate;
                                                   lastPointDay = 1;
                                                   availableGetPoint = 2;
@@ -1479,6 +1488,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 2 * SizeConfig.defaultSize!,
                       ),
+                      /* 친구에게 string 공유
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
@@ -1503,6 +1513,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                       ),
+                      */
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
@@ -2034,6 +2045,27 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'cal_claim_click',
         eventProperties: {'point_now': pointNow},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendCalClaimSuccessEvent(pointNow, dayNow, pointGet) async {
+    try {
+      // 이벤트 로깅
+      await analytics
+          .logEvent(name: 'cal_claim_success', parameters: <String, dynamic>{
+        'point_now': pointNow,
+        'day_now': dayNow,
+      });
+      await amplitude.logEvent(
+        'cal_claim_success',
+        eventProperties: {
+          'point_now': pointNow,
+          'day_now': dayNow,
+          'point_get': pointGet
+        },
       );
     } catch (e) {
       print('Failed to log event: $e');

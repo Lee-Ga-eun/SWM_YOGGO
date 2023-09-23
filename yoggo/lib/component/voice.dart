@@ -447,7 +447,7 @@ class _VoiceProfileState extends State<VoiceProfile> {
           ),
           backgroundColor: Colors.white.withOpacity(0.9),
           title: Text(
-            'If you record again, the previous voice will be deleted.\nYou need to recreate books with a new voice.\nWould you like to continue?',
+            "If you record again, the previous voice will be deleted.\nyou'll need to recreate the books using the new voice\nDo you want to continue?",
             style: TextStyle(
               fontSize: SizeConfig.defaultSize! * 2.5,
               fontFamily: 'Molengo',
