@@ -673,6 +673,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           showFirstOverlay = false;
                           showSecondOverlay = true;
                         });
+                        // OneSignal.Notifications.requestPermission(true);
                       },
                       child: Stack(children: [
                         Visibility(
@@ -1167,7 +1168,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   availableGetPoint = 2;
                                                 });
                                               }
-
+                                              if (OneSignal.Notifications
+                                                      .permission !=
+                                                  true) {
+                                                OneSignal.Notifications
+                                                    .requestPermission(true);
+                                              }
                                               // print(lastPointDay);
                                               // print(availableGetPoint);
                                               // print(formattedDate);
@@ -1535,7 +1541,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           final InAppReview inAppReview = InAppReview.instance;
 
                           if (await inAppReview.isAvailable()) {
+                            print('available');
                             inAppReview.requestReview();
+                            //inAppReview.openStoreListing();
                           }
                         },
                       )
