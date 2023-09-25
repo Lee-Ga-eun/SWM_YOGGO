@@ -523,7 +523,7 @@ class _PurchaseState extends State<Purchase> {
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                  '✅ Read with your voice\n✅ Unlock all books\n✅ 7-days FREE trial',
+                                                  '✅ Read with your voice\n✅ Unlock all books\n✅ 7-day FREE trial',
                                                   style: TextStyle(
                                                       fontFamily: 'Molengo',
                                                       fontSize: 1.5 *
@@ -543,69 +543,70 @@ class _PurchaseState extends State<Purchase> {
                                                   // borderRadius: BorderRadius.circular(
                                                   // SizeConfig.defaultSize! * 1.15),
                                                 ),
-                                                child: Column(
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: SizeConfig
-                                                                  .defaultSize! *
-                                                              0.8),
-                                                      child: Text(
-                                                        '1 week free, then',
-                                                        style: TextStyle(
-                                                            color: const Color
-                                                                    .fromARGB(
-                                                                200, 0, 0, 0),
-                                                            fontFamily:
-                                                                'Molengo',
-                                                            // decoration:
-                                                            //     TextDecoration
-                                                            //         .lineThrough,
-                                                            fontSize: 1.5 *
-                                                                SizeConfig
-                                                                    .defaultSize!),
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          '\$5.99',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 2.6 *
-                                                                SizeConfig
-                                                                    .defaultSize!,
-                                                            fontFamily:
-                                                                'Molengo',
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets.only(
-                                                              top: SizeConfig
-                                                                      .defaultSize! *
-                                                                  0.5),
-                                                          child: Text(
-                                                            '/mo',
-                                                            //  textAlign: TextAlign.start,
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            '\$5.99',
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.black,
-                                                              fontSize: 2 *
+                                                              fontSize: 2.8 *
                                                                   SizeConfig
                                                                       .defaultSize!,
                                                               fontFamily:
                                                                   'Molengo',
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                          Padding(
+                                                            padding: EdgeInsets.only(
+                                                                top: SizeConfig
+                                                                        .defaultSize! *
+                                                                    1.8),
+                                                            child: Text(
+                                                              '/mo',
+                                                              //  textAlign: TextAlign.start,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 2 *
+                                                                    SizeConfig
+                                                                        .defaultSize!,
+                                                                fontFamily:
+                                                                    'Molengo',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Text(
+                                                        '\$19.99',
+                                                        style: TextStyle(
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                136,
+                                                                0,
+                                                                0,
+                                                                0),
+                                                            fontFamily:
+                                                                'Molengo',
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                            fontSize: 1.5 *
+                                                                SizeConfig
+                                                                    .defaultSize!),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -630,7 +631,7 @@ class _PurchaseState extends State<Purchase> {
                                                                   .center,
                                                           children: [
                                                               Text(
-                                                                "After free trial, LOVEL monthly subscription is \$5.99.\nYou can cancel this subscription at any time if you wish.",
+                                                                "After 7-day free trial, LOVEL monthly subscription is \$5.99.\nYou can cancel this subscription at any time if you wish.",
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
@@ -664,7 +665,7 @@ class _PurchaseState extends State<Purchase> {
                                                                           .black,
                                                                     ),
                                                                     text:
-                                                                        "Subscription Terms: After a 7-day free trial, LOVEL monthly subscription is \$5.99, automatically renews unless turned off in Account Settings at least 24h before current period ends. Payment is charged to your iTunes account. By tapping Continue, you agree to our ",
+                                                                        "Subscription Terms: After 7-day free trial, LOVEL monthly subscription is \$5.99, automatically renews unless turned off in Account Settings at least 24h before current period ends. Payment is charged to your iTunes account. By tapping Continue, you agree to our ",
                                                                   ),
                                                                   TextSpan(
                                                                     text:
