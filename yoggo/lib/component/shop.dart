@@ -355,6 +355,25 @@ class _PurchaseState extends State<Purchase> {
                             },
                           );
                         }
+                      } else {
+                        print("entitlement: ${entitlement}");
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              // title: Text('Sorry'),
+                              content: Text('No subscription found.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       }
                     } on PlatformException {
                       showDialog(
