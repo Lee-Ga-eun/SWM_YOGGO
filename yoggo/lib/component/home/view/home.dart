@@ -1494,7 +1494,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 2 * SizeConfig.defaultSize!,
                       ),
-                      /* 친구에게 string 공유
+                      // 친구에게 string 공유
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
@@ -1519,7 +1519,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                       ),
-                      */
+
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
@@ -1540,7 +1540,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () async {
                           final InAppReview inAppReview = InAppReview.instance;
 
-                         if (await inAppReview.isAvailable()) {
+                          if (await inAppReview.isAvailable()) {
                             print('available');
                             Platform.isIOS
                                 ? inAppReview.requestReview()
