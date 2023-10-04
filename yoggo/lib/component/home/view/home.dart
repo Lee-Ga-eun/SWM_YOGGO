@@ -1540,10 +1540,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () async {
                           final InAppReview inAppReview = InAppReview.instance;
 
-                          if (await inAppReview.isAvailable()) {
+                         if (await inAppReview.isAvailable()) {
                             print('available');
-                            inAppReview.requestReview();
-                            //inAppReview.openStoreListing();
+                            Platform.isIOS
+                                ? inAppReview.requestReview()
+                                : inAppReview.openStoreListing();
                           }
                         },
                       )
