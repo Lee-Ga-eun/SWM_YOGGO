@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -67,6 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
   //   super.didChangeDependencies();
   // }
 
+  RewardedAd? _rewardedAd;
+  bool _isAdLoaded = false;
+
+  // final String _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+
   @override
   void initState() {
     super.initState();
@@ -75,7 +82,49 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.delayed(Duration.zero, () async {
       await saveRewardStatus();
     });
+    // _loadAd();
   }
+
+  // void _loadAd() {
+  //   RewardedAd.load(
+  //       adUnitId: _adUnitId,
+  //       request: AdRequest(),
+  //       rewardedAdLoadCallback: RewardedAdLoadCallback(
+  //         onAdLoaded: (RewardedAd ad) {
+  //           print('Ad was loaded.');
+  //           _rewardedAd = ad;
+
+  //           // final serverSideVerificationOptions = ServerSideVerificationOptions(
+  //           //     customData: 'SAMPLE_CUSTOM_DATA_STRING');
+  //           // RewardedAd.setServerSideVerificationOptions(
+  //           //     serverSideVerificationOptions);
+
+  //           // ad.fullScreenContentCallback = FullScreenContentCallback(
+  //           //   onAdClicked: () {
+  //           //     print('Ad was clicked.');
+  //           //   },
+  //           //   onAdDismissedFullScreenContent: () {
+  //           //     print('Ad dismissed fullscreen content.');
+  //           //     rewardedAd = null;
+  //           //   },
+  //           //   onAdFailedToShowFullScreenContent: (AdError error) {
+  //           //     print('Ad failed to show fullscreen content: $error');
+  //           //     rewardedAd = null;
+  //           //   },
+  //           //   onAdImpression: () {
+  //           //     print('Ad recorded an impression.');
+  //           //   },
+  //           //   onAdShowedFullScreenContent: () {
+  //           //     print('Ad showed fullscreen content.');
+  //           //   },
+  //           // );
+  //         },
+  //         onAdFailedToLoad: (LoadAdError error) {
+  //           print('Ad failed to load: $error');
+  //           _rewardedAd = null;
+  //         },
+  //       ));
+  // }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
@@ -673,6 +722,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           showFirstOverlay = false;
                           showSecondOverlay = true;
                         });
+                        // OneSignal.Notifications.requestPermission(true);
                       },
                       child: Stack(children: [
                         Visibility(
@@ -1042,7 +1092,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           coinImage: 'lib/images/treasure.png',
                                           compare: 7,
                                           height: 22,
-                                          point: '1000',
+                                          point: '500',
                                           topPadding: 6.5,
                                           lastPointYMD: lastPointYMD),
                                       Container(
@@ -1053,137 +1103,337 @@ class _HomeScreenState extends State<HomeScreen> {
                                         // left: SizeConfig.defaultSize! * 19),
                                         child: Align(
                                           alignment: Alignment.bottomCenter,
-                                          child: TextButton(
-                                            style: ButtonStyle(
-                                              shape: MaterialStateProperty.all<
-                                                      RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              0.3 * sh))),
-                                              padding: MaterialStatePropertyAll(
-                                                  EdgeInsets.only(
-                                                      right: SizeConfig
-                                                              .defaultSize! *
-                                                          4,
-                                                      left: SizeConfig
-                                                              .defaultSize! *
-                                                          4,
-                                                      top: 0.018 * sh,
-                                                      bottom: 0.018 * sh)),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                      Color>(
-                                                const Color.fromARGB(
-                                                    255, 255, 169, 26),
-                                              ), // 배경색 설정
-                                            ),
-                                            onPressed: () async {
-                                              _sendCalClaimClickEvent(
-                                                  userState.point);
-                                              SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
-                                              DateTime currentDate =
-                                                  DateTime.now();
-                                              String formattedDate =
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(currentDate);
-                                              int tmp = prefs
-                                                  .getInt('availableGetPoint')!;
-                                              final scores = [
-                                                100,
-                                                100,
-                                                300,
-                                                100,
-                                                100,
-                                                300,
-                                                1000
-                                              ];
-                                              // 포인트 증가 & 큐빗 반영
+                                          child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                    shape: MaterialStateProperty.all<
+                                                            RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        0.3 *
+                                                                            sh))),
+                                                    padding: MaterialStatePropertyAll(
+                                                        EdgeInsets.only(
+                                                            right: SizeConfig
+                                                                    .defaultSize! *
+                                                                3,
+                                                            left: SizeConfig
+                                                                    .defaultSize! *
+                                                                3,
+                                                            top: 0.018 * sh,
+                                                            bottom:
+                                                                0.018 * sh)),
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                      const Color.fromARGB(
+                                                          255, 255, 169, 26),
+                                                    ), // 배경색 설정
+                                                  ),
+                                                  onPressed: () async {
+                                                    _sendCalClaimClickEvent(
+                                                        userState.point);
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    DateTime currentDate =
+                                                        DateTime.now();
+                                                    String formattedDate =
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(
+                                                                currentDate);
+                                                    int tmp = prefs.getInt(
+                                                        'availableGetPoint')!;
+                                                    final scores = [
+                                                      100,
+                                                      100,
+                                                      300,
+                                                      100,
+                                                      100,
+                                                      300,
+                                                      500
+                                                    ];
+                                                    // 포인트 증가 & 큐빗 반영
 
-                                              print(
-                                                  '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
-                                              // print(
-                                              //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
-                                              print(
-                                                  '마지막으로 받은 일차 $lastPointDay ');
-                                              print('현재 날짜 $formattedDate');
-                                              print(
-                                                  '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
+                                                    print(
+                                                        '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
+                                                    // print(
+                                                    //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
+                                                    print(
+                                                        '마지막으로 받은 일차 $lastPointDay ');
+                                                    print(
+                                                        '현재 날짜 $formattedDate');
+                                                    print(
+                                                        '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
 
-                                              if (formattedDate !=
-                                                      prefs.getString(
-                                                          'lastPointYMD') &&
-                                                  tmp != lastPointDay &&
-                                                  availableGetPoint != 1) {
-                                                // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
-                                                // 다를 경우에만 변화가 생긴다
-                                                // 포인트를 이미 받지 않은 상태여야 한다
-                                                setState(() {
-                                                  if (lastPointDay + 1 != 8) {
-                                                    lastPointDay += 1;
-                                                    lastPointYMD =
-                                                        formattedDate;
+                                                    if (formattedDate !=
+                                                            prefs.getString(
+                                                                'lastPointYMD') &&
+                                                        tmp != lastPointDay &&
+                                                        availableGetPoint !=
+                                                            1) {
+                                                      // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
+                                                      // 다를 경우에만 변화가 생긴다
+                                                      // 포인트를 이미 받지 않은 상태여야 한다
+                                                      setState(() {
+                                                        if (lastPointDay + 1 !=
+                                                            8) {
+                                                          lastPointDay += 1;
+                                                          lastPointYMD =
+                                                              formattedDate;
 
-                                                    prefs.setInt(
-                                                        'availableGetPoint',
-                                                        tmp + 1);
-                                                    prefs.setString(
-                                                        'lastPointYMD',
-                                                        formattedDate); // 시간 현재 시간으로 업데이트
-                                                    prefs.setInt('lastPointDay',
-                                                        lastPointDay);
-                                                    _sendCalClaimSuccessEvent(
-                                                        userState.point,
-                                                        lastPointDay,
-                                                        scores[
-                                                            lastPointDay - 1]);
-                                                    plusPoint(scores[
-                                                        lastPointDay - 1]);
-                                                  } else {
-                                                    // 7일차가 되려고 하면
-                                                  }
-                                                });
-                                              }
-                                              if (availableGetPoint == 1) {
-                                                // 1일차를 받아야 하는 사용자일 때만 적용됨
-                                                // 처음 접속한 사용자인 경우
-                                                prefs.setInt(
-                                                    'availableGetPoint',
-                                                    2); // 다음에 받을 수 있는 건 2일차 포인트
-                                                prefs.setString('lastPointYMD',
-                                                    formattedDate); // 받은 날짜 저장
-                                                prefs.setInt('lastPointDay', 1);
-                                                availableGetPoint = 2;
-                                                setState(() {
-                                                  plusPoint(scores[0]);
-                                                  _sendCalClaimSuccessEvent(
-                                                      userState.point,
-                                                      1,
-                                                      scores[0]);
-                                                  lastPointYMD = formattedDate;
-                                                  lastPointDay = 1;
-                                                  availableGetPoint = 2;
-                                                });
-                                              }
+                                                          prefs.setInt(
+                                                              'availableGetPoint',
+                                                              tmp + 1);
+                                                          prefs.setString(
+                                                              'lastPointYMD',
+                                                              formattedDate); // 시간 현재 시간으로 업데이트
+                                                          prefs.setInt(
+                                                              'lastPointDay',
+                                                              lastPointDay);
+                                                          _sendCalClaimSuccessEvent(
+                                                              userState.point,
+                                                              lastPointDay,
+                                                              scores[
+                                                                  lastPointDay -
+                                                                      1]);
+                                                          plusPoint(scores[
+                                                              lastPointDay -
+                                                                  1]);
+                                                        } else {
+                                                          // 7일차가 되려고 하면
+                                                        }
+                                                      });
+                                                    }
+                                                    if (availableGetPoint ==
+                                                        1) {
+                                                      // 1일차를 받아야 하는 사용자일 때만 적용됨
+                                                      // 처음 접속한 사용자인 경우
+                                                      prefs.setInt(
+                                                          'availableGetPoint',
+                                                          2); // 다음에 받을 수 있는 건 2일차 포인트
+                                                      prefs.setString(
+                                                          'lastPointYMD',
+                                                          formattedDate); // 받은 날짜 저장
+                                                      prefs.setInt(
+                                                          'lastPointDay', 1);
+                                                      availableGetPoint = 2;
+                                                      setState(() {
+                                                        plusPoint(scores[0]);
+                                                        _sendCalClaimSuccessEvent(
+                                                            userState.point,
+                                                            1,
+                                                            scores[0]);
+                                                        lastPointYMD =
+                                                            formattedDate;
+                                                        lastPointDay = 1;
+                                                        availableGetPoint = 2;
+                                                      });
+                                                    }
+                                                    if (OneSignal.Notifications
+                                                            .permission !=
+                                                        true) {
+                                                      OneSignal.Notifications
+                                                          .requestPermission(
+                                                              true);
+                                                    }
+                                                  },
+                                                  child: Text(
+                                                    'CLAIM NOW',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: SizeConfig
+                                                                .defaultSize! *
+                                                            2.2,
+                                                        fontFamily: 'Lilita'),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: sh * 0.02,
+                                                ),
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                    shape: MaterialStateProperty.all<
+                                                            RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        0.3 *
+                                                                            sh))),
+                                                    padding: MaterialStatePropertyAll(
+                                                        EdgeInsets.only(
+                                                            right: SizeConfig
+                                                                    .defaultSize! *
+                                                                3,
+                                                            left: SizeConfig
+                                                                    .defaultSize! *
+                                                                3,
+                                                            top: 0.018 * sh,
+                                                            bottom:
+                                                                0.018 * sh)),
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                      Color.fromARGB(
+                                                          225, 255, 77, 0),
+                                                    ), // 배경색 설정
+                                                  ),
+                                                  onPressed: () async {
+                                                    _sendCalClaimClickEvent(
+                                                        userState.point);
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    DateTime currentDate =
+                                                        DateTime.now();
+                                                    String formattedDate =
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(
+                                                                currentDate);
+                                                    int tmp = prefs.getInt(
+                                                        'availableGetPoint')!;
+                                                    final scores = [
+                                                      100,
+                                                      100,
+                                                      300,
+                                                      100,
+                                                      100,
+                                                      300,
+                                                      500
+                                                    ];
+                                                    // 포인트 증가 & 큐빗 반영
 
-                                              // print(lastPointDay);
-                                              // print(availableGetPoint);
-                                              // print(formattedDate);
-                                            },
-                                            child: Text(
-                                              'CLAIM NOW',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize:
-                                                      SizeConfig.defaultSize! *
-                                                          2.2,
-                                                  fontFamily: 'Lilita'),
-                                            ),
-                                          ),
+                                                    print(
+                                                        '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
+                                                    // print(
+                                                    //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
+                                                    print(
+                                                        '마지막으로 받은 일차 $lastPointDay ');
+                                                    print(
+                                                        '현재 날짜 $formattedDate');
+                                                    print(
+                                                        '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
+
+                                                    if (formattedDate !=
+                                                            prefs.getString(
+                                                                'lastPointYMD') &&
+                                                        tmp != lastPointDay &&
+                                                        availableGetPoint !=
+                                                            1) {
+                                                      // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
+                                                      // 다를 경우에만 변화가 생긴다
+                                                      // 포인트를 이미 받지 않은 상태여야 한다
+                                                      setState(() {
+                                                        if (lastPointDay + 1 !=
+                                                            8) {
+                                                          lastPointDay += 1;
+                                                          lastPointYMD =
+                                                              formattedDate;
+
+                                                          prefs.setInt(
+                                                              'availableGetPoint',
+                                                              tmp + 1);
+                                                          prefs.setString(
+                                                              'lastPointYMD',
+                                                              formattedDate); // 시간 현재 시간으로 업데이트
+                                                          prefs.setInt(
+                                                              'lastPointDay',
+                                                              lastPointDay);
+                                                          _sendCalClaimSuccessEvent(
+                                                              userState.point,
+                                                              lastPointDay,
+                                                              scores[
+                                                                  lastPointDay -
+                                                                      1]);
+                                                          plusPoint(scores[
+                                                              lastPointDay -
+                                                                  1]);
+                                                          _isAdLoaded
+                                                              ? null
+                                                              : _loadRewardedAd(
+                                                                  scores[
+                                                                      lastPointDay -
+                                                                          1]);
+                                                        } else {
+                                                          // 7일차가 되려고 하면
+                                                        }
+                                                      });
+                                                    }
+                                                    if (availableGetPoint ==
+                                                        1) {
+                                                      // 1일차를 받아야 하는 사용자일 때만 적용됨
+                                                      // 처음 접속한 사용자인 경우
+                                                      prefs.setInt(
+                                                          'availableGetPoint',
+                                                          2); // 다음에 받을 수 있는 건 2일차 포인트
+                                                      prefs.setString(
+                                                          'lastPointYMD',
+                                                          formattedDate); // 받은 날짜 저장
+                                                      prefs.setInt(
+                                                          'lastPointDay', 1);
+                                                      availableGetPoint = 2;
+                                                      setState(() {
+                                                        plusPoint(scores[0]);
+                                                        _isAdLoaded
+                                                            ? null
+                                                            : _loadRewardedAd(
+                                                                scores[0]);
+                                                        _sendCalClaimSuccessEvent(
+                                                            userState.point,
+                                                            1,
+                                                            scores[0]);
+                                                        lastPointYMD =
+                                                            formattedDate;
+                                                        lastPointDay = 1;
+                                                        availableGetPoint = 2;
+                                                      });
+                                                    }
+                                                    if (OneSignal.Notifications
+                                                            .permission !=
+                                                        true) {
+                                                      OneSignal.Notifications
+                                                          .requestPermission(
+                                                              true);
+                                                    }
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Image.asset(
+                                                        'lib/images/slate1.png',
+                                                        width: 0.03 * sw,
+                                                      ),
+                                                      Text(
+                                                        '  DOUBLE REWARD',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: SizeConfig
+                                                                    .defaultSize! *
+                                                                2.2,
+                                                            fontFamily:
+                                                                'Lilita'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ]),
                                         ),
-                                      )
+                                      ),
+
+                                      // ElevatedButton(
+                                      //     child: Text("Show Rewarded Ad"),
+                                      //     onPressed: () async {
+                                      //       _isAdLoaded
+                                      //           ? null
+                                      //           : _loadRewardedAd(70);
+                                      //     })
                                     ],
                                   ),
                                 ),
@@ -1198,6 +1448,65 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ));
+  }
+
+  void _loadRewardedAd(int rewardPoint) {
+    RewardedAd.load(
+      adUnitId: Platform.isIOS
+          ? "ca-app-pub-6637884967909793/7985054428"
+          : "ca-app-pub-6637884967909793/2799890940",
+      // "ca-app-pub-3940256099942544/5224354917", // test
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          print('Ad was loaded.');
+          _rewardedAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (RewardedAd ad) =>
+                print('Ad showed fullscreen content.'),
+            onAdDismissedFullScreenContent: (RewardedAd ad) {
+              print('Ad dismissed fullscreen content.');
+              setState(() {
+                _isAdLoaded = false;
+              });
+              _rewardedAd = null;
+            },
+            onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+              print('Ad failed to show fullscreen content.');
+              _rewardedAd = null;
+            },
+            onAdImpression: (RewardedAd ad) =>
+                print('Ad recorded an impression.'),
+          );
+
+          setState(() {
+            _isAdLoaded = true;
+          });
+
+          _showRewardedAd(rewardPoint);
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('Ad failed to load: $error');
+          _rewardedAd = null;
+        },
+      ),
+    );
+  }
+
+  void _showRewardedAd(int rewardPoint) {
+    if (_rewardedAd == null) {
+      print('The rewarded ad wasn\'t ready yet.');
+
+      return;
+    }
+    _rewardedAd!.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+      print(reward.amount);
+      plusPoint(rewardPoint);
+      print('User earned the reward.');
+      // 여기에서 reward를 처리할 수 있습니다.
+    });
   }
 
   Padding eachDayPoint({
@@ -1488,12 +1797,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 2 * SizeConfig.defaultSize!,
                       ),
-                      /* 친구에게 string 공유
+                      // 친구에게 string 공유
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
-                          padding:
-                              EdgeInsets.all(0.5 * SizeConfig.defaultSize!),
+                          padding: EdgeInsets.only(
+                              bottom: 0.5 * SizeConfig.defaultSize!,
+                              right: 0.5 * SizeConfig.defaultSize!,
+                              top: 0.5 * SizeConfig.defaultSize!),
                           child: Text(
                             'Invite Friends',
                             style: TextStyle(
@@ -1506,19 +1817,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onTap: () async {
                           final result = await Share.shareWithResult(
-                              "LOVEL - Fairy Tales with Voice\n📚 Read Fairy tales with your voice 🦄\n\nPlayStore : https://play.google.com/store/apps/details?id=com.sayit.yoggo\n\nAppStore : https://apps.apple.com/us/app/LOVEL/id6454792622");
+                              "LOVEL - Fairy Tales with Your Voice\n📚 The best app for busy parents 👨‍👩‍👧‍👦\n\nPlayStore : https://play.google.com/store/apps/details?id=com.sayit.yoggo\n\nAppStore : https://apps.apple.com/us/app/LOVEL/id6454792622");
 
                           if (result.status == ShareResultStatus.success) {
                             print('Thank you for sharing our application!');
                           }
                         },
                       ),
-                      */
+
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
-                          padding:
-                              EdgeInsets.all(0.5 * SizeConfig.defaultSize!),
+                          padding: EdgeInsets.only(
+                              bottom: 0.5 * SizeConfig.defaultSize!,
+                              right: 0.5 * SizeConfig.defaultSize!,
+                              top: 0.5 * SizeConfig.defaultSize!),
                           child: Text(
                             Platform.isAndroid
                                 ? 'Rate on PlayStore'
@@ -1535,7 +1848,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           final InAppReview inAppReview = InAppReview.instance;
 
                           if (await inAppReview.isAvailable()) {
-                            inAppReview.requestReview();
+                            print('available');
+                            inAppReview.openStoreListing(
+                                appStoreId: '6454792622');
                           }
                         },
                       )

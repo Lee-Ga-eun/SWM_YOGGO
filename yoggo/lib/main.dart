@@ -19,28 +19,28 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'dart:io' show Platform;
-import 'package:purchases_flutter/purchases_flutter.dart';
+//import 'package:purchases_flutter/purchases_flutter.dart';
 
 Future<void> initPlatformState() async {
-  await Purchases.setLogLevel(
-      LogLevel.debug); // Purchases.setDebugLogsEnabled(true);
+  // await Purchases.setLogLevel(
+  //     LogLevel.debug); // Purchases.setDebugLogsEnabled(true);
 
-  PurchasesConfiguration? configuration;
+  // PurchasesConfiguration? configuration;
 
-  if (Platform.isAndroid) {
-    configuration = PurchasesConfiguration('goog_wxdljqWvkKNlMpVlNSZjKnqVtQc');
-  } else if (Platform.isIOS) {
-    configuration = PurchasesConfiguration('appl_wPyySWQHJfhExnkjSTliaVxgpMx');
-  }
-  await Purchases.configure(configuration!); // Anonymous App User IDs
+  // if (Platform.isAndroid) {
+  //   configuration = PurchasesConfiguration('goog_wxdljqWvkKNlMpVlNSZjKnqVtQc');
+  // } else if (Platform.isIOS) {
+  //   configuration = PurchasesConfiguration('appl_wPyySWQHJfhExnkjSTliaVxgpMx');
+  // }
+  // await Purchases.configure(configuration!); // Anonymous App User IDs
 }
 
 void main() async {
   // Amplitude Event 수집을 위해서 꼭 개발 모드(dev)인지 릴리즈 모드(rel)인지 설정하고 앱을 실행하도록 해요
   // 디폴트 값은 dev입니다
 
-  //String mode = 'dev';
-  String mode = 'rel';
+  String mode = 'dev';
+  //String mode = 'rel';
 
   // 사용자 Cubit을 초기화합니다.
   await dotenv.load(fileName: ".env");
@@ -48,23 +48,25 @@ void main() async {
       .ensureInitialized(); // ensureInitialized()를 호출하여 바인딩 초기화
 
 //Remove this method to stop OneSignal Debugging
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   // OneSignal.shared.setAppId(dotenv.get("ONESIGNAL"));
   Platform.isAndroid
-      ? OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_android"))
-      : OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_ios"));
+      ? OneSignal.initialize(dotenv.get("ONESIGNAL_android"))
+      : OneSignal.initialize(dotenv.get("ONESIGNAL_ios"));
   // OneSignal.shared.setAppId('2d42b96d-78df-43fe-b6d1-3899c3684ac5'); //ios
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
   // OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
   //   print("Accepted permission: $accepted");
   // });
+  // OneSignal.Notifications.requestPermission(true);
 
-  await OneSignal.shared.getDeviceState().then(
-        (value) => {
-          print('::::: one signal :::: ${value!.userId}'),
-        },
-      );
+  // await OneSignal.User.getDeviceState().then(
+  //       (value) => {
+  //         print('::::: one signal :::: ${value!.userId}'),
+  //       },
+  //     );
   // final Amplitude amplitude = Amplitude.getInstance();
   final Amplitude amplitude = Amplitude.getInstance();
 
@@ -181,11 +183,11 @@ class _AppState extends State<App> {
 
         final state = userCubit.state;
         if (state.isDataFetched) {
-          OneSignal.shared.setExternalUserId(state.userId.toString());
+          OneSignal.login(state.userId.toString());
           Amplitude.getInstance().setUserId(state.userId.toString());
           Amplitude.getInstance()
               .setUserProperties({'subscribe': purchase, 'record': record});
-          LogInResult result = await Purchases.logIn(state.userId.toString());
+          //LogInResult result = await Purchases.logIn(state.userId.toString());
         }
       } else {
         // 로그인 실패
@@ -224,7 +226,7 @@ class _AppState extends State<App> {
           //} else {
 
           if (state.isDataFetched) {
-            OneSignal.shared.setExternalUserId(state.userId.toString());
+            OneSignal.login(state.userId.toString());
             Amplitude.getInstance().setUserProperties(
                 {'subscribe': state.purchase, 'record': state.record});
             // 여기서 User Property 다시 한번 설정해주기 ~~
