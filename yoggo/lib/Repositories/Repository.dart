@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../component/bookIntro/viewModel/book_voice_model.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'dart:typed_data'; // Uint8List 사용을 위한 import
+// Uint8List 사용을 위한 import
 import 'dart:io'; // File 클래스를 사용하기 위한 import
 
 class DataRepository {
@@ -274,10 +274,45 @@ class DataRepository {
     }
   }
 
+  Future<String> getCachedOrFetch(String url) async {
+    String parsedUrl = Uri.parse(url).path;
+    final cacheLocate =
+        await cacheManager.getFileFromCache(parsedUrl); // 이미지 캐시 매니저
+    String filePath = '';
+    if (cacheLocate == null) {
+      File file = await cacheManager.getSingleFile(url, key: parsedUrl);
+      filePath = file.path;
+    } else {
+      filePath = '${cacheLocate.file}';
+      filePath = filePath.replaceFirst("LocalFile: ", "");
+    }
+    return filePath;
+  }
+
+  Future<BookPageModel> fetchBookPage(dynamic element) async {
+    String imageUrl = element["imageUrl"];
+    String audioUrl = element["audioUrl"];
+
+    final result = await Future.wait(
+        [getCachedOrFetch(imageUrl), getCachedOrFetch(audioUrl)]);
+
+    var bookPageModel = BookPageModel(
+      contentVoiceId: element["contentVoiceId"],
+      imageLocalPath: result[0],
+      audioLocalPath: result[1],
+      pageNum: element["pageNum"],
+      text: element['text'],
+      imageUrl: element['imageUrl'],
+      position: element['position'],
+      audioUrl: element['audioUrl'],
+    );
+    return bookPageModel;
+  }
+
 // book page
   static final Map<int, List<BookPageModel>> _loadedBookPageDataMap = {};
   static final List<int> _loadedBookPageNumber = [];
-
+  static final cacheManager = DefaultCacheManager();
   Future<List<BookPageModel>> bookPageRepository(int contentVoiceId) async {
     // if (_loadedBookPageNumber.contains(contentVoiceId)) {
     //   // 이미 로드한 데이터가 있다면 해당 contentVoiceId에 맞는 데이터를 추출하여 리턴
@@ -289,59 +324,14 @@ class DataRepository {
         '${dotenv.get("API_SERVER")}content/page?contentVoiceId=$contentVoiceId'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List<dynamic>;
-      final bookPageData = <BookPageModel>[];
-      final futures = <Future<void>>[];
+      //final bookPageData = <BookPageModel>[];
+      final futures = <Future<BookPageModel>>[];
 
       for (var element in jsonData) {
-        String imageUrl = element["imageUrl"];
-        String audioUrl = element["audioUrl"];
-        var parseImageUrl = Uri.parse(imageUrl).path;
-        var parseAudioUrl = Uri.parse(audioUrl).path;
-        Uint8List fileBytes = Uint8List.fromList(response.bodyBytes);
-        String imageFilePath = '';
-        String audioFilePath = '';
-
-        final imageFuture = DefaultCacheManager()
-            .getFileFromCache(parseImageUrl) // 이미지 캐시 매니저
-            .then((cacheLocate) async {
-          if (cacheLocate == null) {
-            File file = await DefaultCacheManager()
-                .getSingleFile(imageUrl, key: parseImageUrl);
-            imageFilePath = file.path;
-          } else {
-            imageFilePath = '${cacheLocate.file}';
-            imageFilePath = imageFilePath.replaceFirst("LocalFile: ", "");
-          }
-        });
-
-        final audioFuture = DefaultCacheManager()
-            .getFileFromCache(parseAudioUrl) // 오디오 캐시 매니저
-            .then((cacheLocate) async {
-          if (cacheLocate == null) {
-            File file = await DefaultCacheManager()
-                .getSingleFile(audioUrl, key: parseAudioUrl);
-            audioFilePath = file.path;
-          } else {
-            audioFilePath = '${cacheLocate.file}';
-            audioFilePath = audioFilePath.replaceFirst("LocalFile: ", "");
-          }
-        });
-
-        await Future.wait([imageFuture, audioFuture]);
-
-        var bookPageModel = BookPageModel(
-          contentVoiceId: element["contentVoiceId"],
-          imageLocalPath: imageFilePath,
-          audioLocalPath: audioFilePath,
-          pageNum: element["pageNum"],
-          text: element['text'],
-          imageUrl: element['imageUrl'],
-          position: element['position'],
-          audioUrl: element['audioUrl'],
-        );
-
-        bookPageData.add(bookPageModel);
+        futures.add(fetchBookPage(element));
       }
+      final bookPageData = await Future.wait(futures);
+
       bookPageData.sort((a, b) => a.pageNum.compareTo(b.pageNum));
 
       _loadedBookPageDataMap[contentVoiceId] = bookPageData;
