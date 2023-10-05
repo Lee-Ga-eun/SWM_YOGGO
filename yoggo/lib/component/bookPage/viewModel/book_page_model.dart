@@ -11,6 +11,8 @@ class BookPageModel extends Equatable {
   final String imageUrl;
   final int position;
   final String audioUrl;
+  final String imageLocalPath;
+  final String audioLocalPath;
 
   const BookPageModel({
     required this.contentVoiceId,
@@ -19,6 +21,8 @@ class BookPageModel extends Equatable {
     required this.imageUrl,
     required this.position,
     required this.audioUrl,
+    required this.imageLocalPath,
+    required this.audioLocalPath,
   });
 
   factory BookPageModel.fromJson(Map<String, dynamic> json) =>
@@ -27,7 +31,15 @@ class BookPageModel extends Equatable {
   Map<String, dynamic> toJson() => _$BookPageModelToJson(this);
 
   @override
-  List<Object?> get props =>
-      [contentVoiceId, pageNum, text, imageUrl, position, audioUrl];
+  List<Object?> get props => [
+        contentVoiceId,
+        pageNum,
+        text,
+        imageUrl,
+        position,
+        audioUrl,
+        imageLocalPath,
+        audioLocalPath
+      ];
 }
  // 위와 같이 모든 코드를 작성하고 flutter pub run build_runner build --delete-conflicting-outputs를 해야 g.dart파일이 만들어진다
