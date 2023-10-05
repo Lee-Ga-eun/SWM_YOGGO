@@ -13,7 +13,7 @@ import 'package:yoggo/models/user.dart';
 import 'package:yoggo/size_config.dart';
 import '../component/globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
+//import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Login extends StatefulWidget {
@@ -88,7 +88,7 @@ class _LoginState extends State<Login> {
           amplitude.setUserId(state.userId.toString());
           amplitude
               .setUserProperties({'subscribe': purchase, 'record': record});
-          LogInResult result = await Purchases.logIn(state.userId.toString());
+          //LogInResult result = await Purchases.logIn(state.userId.toString());
           Navigator.of(context).pop();
           // Navigator.push(
           //   context,
@@ -162,7 +162,7 @@ class _LoginState extends State<Login> {
         OneSignal.login(state.userId.toString());
         amplitude.setUserId(state.userId.toString());
         amplitude.setUserProperties({'subscribe': purchase, 'record': record});
-        LogInResult result = await Purchases.logIn(state.userId.toString());
+        //LogInResult result = await Purchases.logIn(state.userId.toString());
         Navigator.of(context).pop();
       }
     }
