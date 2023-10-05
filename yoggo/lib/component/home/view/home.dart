@@ -1801,8 +1801,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
-                          padding:
-                              EdgeInsets.all(0.5 * SizeConfig.defaultSize!),
+                          padding: EdgeInsets.only(
+                              bottom: 0.5 * SizeConfig.defaultSize!,
+                              right: 0.5 * SizeConfig.defaultSize!,
+                              top: 0.5 * SizeConfig.defaultSize!),
                           child: Text(
                             'Invite Friends',
                             style: TextStyle(
@@ -1826,8 +1828,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
-                          padding:
-                              EdgeInsets.all(0.5 * SizeConfig.defaultSize!),
+                          padding: EdgeInsets.only(
+                              bottom: 0.5 * SizeConfig.defaultSize!,
+                              right: 0.5 * SizeConfig.defaultSize!,
+                              top: 0.5 * SizeConfig.defaultSize!),
                           child: Text(
                             Platform.isAndroid
                                 ? 'Rate on PlayStore'
