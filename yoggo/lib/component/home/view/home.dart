@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showSecondOverlay = false; // Initially show the overlay
   bool showBanner = false;
   bool showFairy = false;
+  bool neverRequestedPermission = false;
   bool showToolTip = false;
   // 받을 수 있는 포인트 day : availableGetPoint // 1일차, 2일차 ...
   // 마지막으로 받은 날짜: lastPointYMD // 2023년9월22일
@@ -144,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
     bool haveClickedBook = prefs.getBool('haveClickedBook') ?? false;
+    neverRequestedPermission = true;
     // bool haveClickedFairy = prefs.getBool('haveClickedFairy') ?? false;
     if (haveClickedBook) {
       setState(() {
@@ -183,6 +185,41 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void pointFunction() {
     // AppBar 아이콘 클릭
+  }
+  Future<void> claimSuccess() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DateTime currentDate = DateTime.now();
+    String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
+    int tmp = prefs.getInt('availableGetPoint')!;
+
+    // 포인트 증가 & 큐빗 반영
+
+    print('다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
+    // print(
+    //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
+    print('마지막으로 받은 일차 $lastPointDay ');
+    print('현재 날짜 $formattedDate');
+    print('마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
+
+    if (formattedDate != prefs.getString('lastPointYMD') &&
+        tmp != lastPointDay) {
+      // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
+      // 다를 경우에만 변화가 생긴다
+      // 포인트를 이미 받지 않은 상태여야 한다
+      prefs.setInt('availableGetPoint', tmp + 1);
+      prefs.setString('lastPointYMD', formattedDate); // 시간 현재 시간으로 업데이트
+      prefs.setInt('lastPointDay', lastPointDay);
+      var userState = context.read<UserCubit>().state;
+
+      _sendCalClaimSuccessEvent(
+          userState.point, lastPointDay, scores[lastPointDay]);
+      plusPoint(scores[lastPointDay]);
+      setState(() {
+        lastPointDay += 1;
+        lastPointYMD = formattedDate;
+        availableGetPoint = tmp + 1;
+      });
+    }
   }
 
   Future<void> saveRewardStatus() async {
@@ -270,6 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  final scores = [100, 100, 300, 100, 100, 300, 500];
   @override
   Widget build(BuildContext context) {
     //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -1140,109 +1178,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   onPressed: () async {
                                                     _sendCalClaimClickEvent(
                                                         userState.point);
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    DateTime currentDate =
-                                                        DateTime.now();
-                                                    String formattedDate =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(
-                                                                currentDate);
-                                                    int tmp = prefs.getInt(
-                                                        'availableGetPoint')!;
-                                                    final scores = [
-                                                      100,
-                                                      100,
-                                                      300,
-                                                      100,
-                                                      100,
-                                                      300,
-                                                      500
-                                                    ];
-                                                    // 포인트 증가 & 큐빗 반영
-
-                                                    print(
-                                                        '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
-                                                    // print(
-                                                    //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
-                                                    print(
-                                                        '마지막으로 받은 일차 $lastPointDay ');
-                                                    print(
-                                                        '현재 날짜 $formattedDate');
-                                                    print(
-                                                        '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
-
-                                                    if (formattedDate !=
-                                                            prefs.getString(
-                                                                'lastPointYMD') &&
-                                                        tmp != lastPointDay &&
-                                                        availableGetPoint !=
-                                                            1) {
-                                                      // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
-                                                      // 다를 경우에만 변화가 생긴다
-                                                      // 포인트를 이미 받지 않은 상태여야 한다
-                                                      setState(() {
-                                                        if (lastPointDay + 1 !=
-                                                            8) {
-                                                          lastPointDay += 1;
-                                                          lastPointYMD =
-                                                              formattedDate;
-
-                                                          prefs.setInt(
-                                                              'availableGetPoint',
-                                                              tmp + 1);
-                                                          prefs.setString(
-                                                              'lastPointYMD',
-                                                              formattedDate); // 시간 현재 시간으로 업데이트
-                                                          prefs.setInt(
-                                                              'lastPointDay',
-                                                              lastPointDay);
-                                                          _sendCalClaimSuccessEvent(
-                                                              userState.point,
-                                                              lastPointDay,
-                                                              scores[
-                                                                  lastPointDay -
-                                                                      1]);
-                                                          plusPoint(scores[
-                                                              lastPointDay -
-                                                                  1]);
-                                                        } else {
-                                                          // 7일차가 되려고 하면
-                                                        }
-                                                      });
-                                                    }
-                                                    if (availableGetPoint ==
-                                                        1) {
-                                                      // 1일차를 받아야 하는 사용자일 때만 적용됨
-                                                      // 처음 접속한 사용자인 경우
-                                                      prefs.setInt(
-                                                          'availableGetPoint',
-                                                          2); // 다음에 받을 수 있는 건 2일차 포인트
-                                                      prefs.setString(
-                                                          'lastPointYMD',
-                                                          formattedDate); // 받은 날짜 저장
-                                                      prefs.setInt(
-                                                          'lastPointDay', 1);
-                                                      availableGetPoint = 2;
-                                                      setState(() {
-                                                        plusPoint(scores[0]);
-                                                        _sendCalClaimSuccessEvent(
-                                                            userState.point,
-                                                            1,
-                                                            scores[0]);
-                                                        lastPointYMD =
-                                                            formattedDate;
-                                                        lastPointDay = 1;
-                                                        availableGetPoint = 2;
-                                                      });
-                                                    }
+                                                    claimSuccess();
+                                                    // 원 시그널 permission request 어디서 보여줄지 고민하기
                                                     if (OneSignal.Notifications
-                                                            .permission !=
-                                                        true) {
+                                                                .permission !=
+                                                            true &&
+                                                        neverRequestedPermission) {
                                                       OneSignal.Notifications
                                                           .requestPermission(
                                                               true);
+                                                      neverRequestedPermission =
+                                                          false;
                                                     }
                                                   },
                                                   child: Text(
@@ -1300,108 +1246,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 currentDate);
                                                     int tmp = prefs.getInt(
                                                         'availableGetPoint')!;
-                                                    final scores = [
-                                                      100,
-                                                      100,
-                                                      300,
-                                                      100,
-                                                      100,
-                                                      300,
-                                                      500
-                                                    ];
-                                                    // 포인트 증가 & 큐빗 반영
-
-                                                    print(
-                                                        '다음 받을 수 있는 일차 $tmp'); // 다음날 받을 수 있는
-                                                    // print(
-                                                    //     '다음 날 받게 될 포인트 점수 ${scores[availableGetPoint - 1]}');
-                                                    print(
-                                                        '마지막으로 받은 일차 $lastPointDay ');
-                                                    print(
-                                                        '현재 날짜 $formattedDate');
-                                                    print(
-                                                        '마지막으로 받은 시간 ${prefs.getString('lastPointYMD')}');
 
                                                     if (formattedDate !=
                                                             prefs.getString(
                                                                 'lastPointYMD') &&
-                                                        tmp != lastPointDay &&
-                                                        availableGetPoint !=
-                                                            1) {
-                                                      // 지금 접속한 날짜와 마지막으로 포인트 받은 날짜가 동일하면 아무것도 일어나지 않는다
-                                                      // 다를 경우에만 변화가 생긴다
-                                                      // 포인트를 이미 받지 않은 상태여야 한다
-                                                      setState(() {
-                                                        if (lastPointDay + 1 !=
-                                                            8) {
-                                                          lastPointDay += 1;
-                                                          lastPointYMD =
-                                                              formattedDate;
-
-                                                          prefs.setInt(
-                                                              'availableGetPoint',
-                                                              tmp + 1);
-                                                          prefs.setString(
-                                                              'lastPointYMD',
-                                                              formattedDate); // 시간 현재 시간으로 업데이트
-                                                          prefs.setInt(
-                                                              'lastPointDay',
-                                                              lastPointDay);
-                                                          _sendCalClaimSuccessEvent(
-                                                              userState.point,
-                                                              lastPointDay,
-                                                              scores[
-                                                                  lastPointDay -
-                                                                      1]);
-                                                          plusPoint(scores[
-                                                              lastPointDay -
-                                                                  1]);
-                                                          _isAdLoaded
-                                                              ? null
-                                                              : _loadRewardedAd(
-                                                                  scores[
-                                                                      lastPointDay -
-                                                                          1]);
-                                                        } else {
-                                                          // 7일차가 되려고 하면
-                                                        }
-                                                      });
-                                                    }
-                                                    if (availableGetPoint ==
-                                                        1) {
-                                                      // 1일차를 받아야 하는 사용자일 때만 적용됨
-                                                      // 처음 접속한 사용자인 경우
-                                                      prefs.setInt(
-                                                          'availableGetPoint',
-                                                          2); // 다음에 받을 수 있는 건 2일차 포인트
-                                                      prefs.setString(
-                                                          'lastPointYMD',
-                                                          formattedDate); // 받은 날짜 저장
-                                                      prefs.setInt(
-                                                          'lastPointDay', 1);
-                                                      availableGetPoint = 2;
-                                                      setState(() {
-                                                        plusPoint(scores[0]);
-                                                        _isAdLoaded
-                                                            ? null
-                                                            : _loadRewardedAd(
-                                                                scores[0]);
-                                                        _sendCalClaimSuccessEvent(
-                                                            userState.point,
-                                                            1,
-                                                            scores[0]);
-                                                        lastPointYMD =
-                                                            formattedDate;
-                                                        lastPointDay = 1;
-                                                        availableGetPoint = 2;
-                                                      });
-                                                    }
-                                                    if (OneSignal.Notifications
-                                                            .permission !=
-                                                        true) {
-                                                      OneSignal.Notifications
-                                                          .requestPermission(
-                                                              true);
+                                                        tmp != lastPointDay) {
+                                                      _isAdLoaded
+                                                          ? null
+                                                          : _loadRewardedAd();
                                                     }
                                                   },
                                                   child: Row(
@@ -1450,7 +1302,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  void _loadRewardedAd(int rewardPoint) {
+  void _loadRewardedAd() {
     RewardedAd.load(
       adUnitId: Platform.isIOS
           ? "ca-app-pub-6637884967909793/7985054428"
@@ -1484,7 +1336,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _isAdLoaded = true;
           });
 
-          _showRewardedAd(rewardPoint);
+          _showRewardedAd();
         },
         onAdFailedToLoad: (LoadAdError error) {
           print('Ad failed to load: $error');
@@ -1494,7 +1346,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showRewardedAd(int rewardPoint) {
+  void _showRewardedAd() {
     if (_rewardedAd == null) {
       print('The rewarded ad wasn\'t ready yet.');
 
@@ -1503,8 +1355,13 @@ class _HomeScreenState extends State<HomeScreen> {
     _rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print(reward.amount);
-      plusPoint(rewardPoint);
+      claimSuccess();
+
+      plusPoint(scores[lastPointDay - 1]);
       print('User earned the reward.');
+      if (OneSignal.Notifications.permission != true) {
+        OneSignal.Notifications.requestPermission(true);
+      }
       // 여기에서 reward를 처리할 수 있습니다.
     });
   }
@@ -1801,10 +1658,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
-                          padding: EdgeInsets.only(
-                              bottom: 0.5 * SizeConfig.defaultSize!,
-                              right: 0.5 * SizeConfig.defaultSize!,
-                              top: 0.5 * SizeConfig.defaultSize!),
+                          padding:
+                              EdgeInsets.all(0.5 * SizeConfig.defaultSize!),
                           child: Text(
                             'Invite Friends',
                             style: TextStyle(
@@ -1828,10 +1683,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         child: Padding(
-                          padding: EdgeInsets.only(
-                              bottom: 0.5 * SizeConfig.defaultSize!,
-                              right: 0.5 * SizeConfig.defaultSize!,
-                              top: 0.5 * SizeConfig.defaultSize!),
+                          padding:
+                              EdgeInsets.all(0.5 * SizeConfig.defaultSize!),
                           child: Text(
                             Platform.isAndroid
                                 ? 'Rate on PlayStore'
