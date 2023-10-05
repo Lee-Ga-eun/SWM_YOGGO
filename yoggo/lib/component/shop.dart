@@ -23,7 +23,7 @@ import 'dart:io' show Platform;
 
 import 'globalCubit/user/user_cubit.dart';
 import 'package:amplitude_flutter/amplitude.dart';
-//import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Purchase extends StatefulWidget {
@@ -157,22 +157,22 @@ class _PurchaseState extends State<Purchase> {
   }
 
   Future<void> subStart() async {
-    // try {
-    //   Offerings? offerings = await Purchases.getOfferings();
-    //   if (offerings.getOffering("default")!.availablePackages.isNotEmpty) {
-    //     var product = offerings.getOffering("default")!.availablePackages;
-    //     CustomerInfo customerInfo = await Purchases.purchasePackage(product[0]);
-    //     EntitlementInfo? entitlement = customerInfo.entitlements.all['pro'];
-    //     // final appData = AppData();
-    //     // appData.entitlementIsActive = entitlement?.isActive ?? false;
-    //     // if (entitlement!.isActive) {
-    //     //   subSuccess();
-    //     // }
-    //     // Display packages for sale
-    //   }
-    // } catch (e) {
-    //   // optional error handling
-    // }
+    try {
+      Offerings? offerings = await Purchases.getOfferings();
+      if (offerings.getOffering("default")!.availablePackages.isNotEmpty) {
+        var product = offerings.getOffering("default")!.availablePackages;
+        CustomerInfo customerInfo = await Purchases.purchasePackage(product[0]);
+        EntitlementInfo? entitlement = customerInfo.entitlements.all['pro'];
+        // final appData = AppData();
+        // appData.entitlementIsActive = entitlement?.isActive ?? false;
+        // if (entitlement!.isActive) {
+        //   subSuccess();
+        // }
+        // Display packages for sale
+      }
+    } catch (e) {
+      // optional error handling
+    }
 
     // const Set<String> products = {'product1'};
     // final ProductDetailsResponse response =
@@ -209,7 +209,10 @@ class _PurchaseState extends State<Purchase> {
         },
         body: jsonEncode({'point': toInt(points)}));
     if (response.statusCode == 200) {
-      // _sendSubSuccessEvent();
+      var userState = context.read<UserCubit>().state;
+
+      _sendBuyPointSuccessEvent(userState.point, points);
+
       print('포인트 구매 완료');
       context.read<UserCubit>().fetchUser();
     } else {
@@ -310,71 +313,71 @@ class _PurchaseState extends State<Purchase> {
                   onTap: () async {
                     _sendAlreadysubClickEvent(userState.point);
                     try {
-                      // CustomerInfo customerInfo =
-                      //     await Purchases.restorePurchases();
-                      // EntitlementInfo? entitlement =
-                      //     customerInfo.entitlements.all['pro'];
-                      // if (entitlement != null) {
-                      //   if (entitlement.isActive) {
-                      //     print('restore success');
-                      //     subSuccess();
-                      //     if (userState.record) {
-                      //       Navigator.pop(context);
+                      CustomerInfo customerInfo =
+                          await Purchases.restorePurchases();
+                      EntitlementInfo? entitlement =
+                          customerInfo.entitlements.all['pro'];
+                      if (entitlement != null) {
+                        if (entitlement.isActive) {
+                          print('restore success');
+                          subSuccess();
+                          if (userState.record) {
+                            Navigator.pop(context);
 
-                      //       Navigator.pushReplacement(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //           builder: (context) => const HomeScreen(),
-                      //         ),
-                      //       );
-                      //     } else {
-                      //       Navigator.pushReplacement(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //           builder: (context) => const RecInfo(),
-                      //         ),
-                      //       );
-                      //     }
-                      //   } else {
-                      //     print('fail');
-                      //     showDialog(
-                      //       context: context,
-                      //       builder: (BuildContext context) {
-                      //         return AlertDialog(
-                      //           // title: Text('Sorry'),
-                      //           content: Text('No subscription found.'),
-                      //           actions: <Widget>[
-                      //             TextButton(
-                      //               child: Text('Close'),
-                      //               onPressed: () {
-                      //                 Navigator.of(context).pop();
-                      //               },
-                      //             ),
-                      //           ],
-                      //         );
-                      //       },
-                      //     );
-                      //   }
-                      // } else {
-                      //   print("entitlement: ${entitlement}");
-                      //   showDialog(
-                      //     context: context,
-                      //     builder: (BuildContext context) {
-                      //       return AlertDialog(
-                      //         // title: Text('Sorry'),
-                      //         content: Text('No subscription found.'),
-                      //         actions: <Widget>[
-                      //           TextButton(
-                      //             child: Text('Close'),
-                      //             onPressed: () {
-                      //               Navigator.of(context).pop();
-                      //             },
-                      //           ),
-                      //         ],
-                      //       );
-                      //     },
-                      //   );
-                      // }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RecInfo(),
+                              ),
+                            );
+                          }
+                        } else {
+                          print('fail');
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                // title: Text('Sorry'),
+                                content: Text('No subscription found.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Close'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      } else {
+                        print("entitlement: ${entitlement}");
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              // title: Text('Sorry'),
+                              content: Text('No subscription found.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                     } on PlatformException {
                       showDialog(
                         context: context,
@@ -1029,6 +1032,26 @@ class _PurchaseState extends State<Purchase> {
         'shop_sub_click',
         eventProperties: {'point_now': pointNow},
       );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBuyPointSuccessEvent(pointNow, pointWant) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'shop_buy_point_success',
+        parameters: <String, dynamic>{
+          'point_now': pointNow,
+          'point_want': pointWant,
+        },
+      );
+      await amplitude.logEvent('shop_buy_point_success', eventProperties: {
+        'point_now': pointNow,
+        'point_want': pointWant,
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');

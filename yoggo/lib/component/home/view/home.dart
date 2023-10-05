@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // 포인트를 이미 받지 않은 상태여야 한다
       prefs.setInt('availableGetPoint', tmp + 1);
       prefs.setString('lastPointYMD', formattedDate); // 시간 현재 시간으로 업데이트
-      prefs.setInt('lastPointDay', lastPointDay);
+      prefs.setInt('lastPointDay', lastPointDay + 1);
       var userState = context.read<UserCubit>().state;
 
       _sendCalClaimSuccessEvent(
@@ -1180,16 +1180,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         userState.point);
                                                     claimSuccess();
                                                     // 원 시그널 permission request 어디서 보여줄지 고민하기
-                                                    if (OneSignal.Notifications
-                                                                .permission !=
-                                                            true &&
-                                                        neverRequestedPermission) {
-                                                      OneSignal.Notifications
-                                                          .requestPermission(
-                                                              true);
-                                                      neverRequestedPermission =
-                                                          false;
-                                                    }
+                                                    OneSignal.shared
+                                                        .promptUserForPushNotificationPermission()
+                                                        .then((accepted) {
+                                                      print(
+                                                          "Accepted permission: $accepted");
+                                                    });
+                                                    // if (OneSignal.Notifications
+                                                    //             .permission !=
+                                                    //         true &&
+                                                    //     neverRequestedPermission) {
+                                                    //   OneSignal.Notifications
+                                                    //       .requestPermission(
+                                                    //           true);
+                                                    //   neverRequestedPermission =
+                                                    //       false;
+                                                    // }
                                                   },
                                                   child: Text(
                                                     'CLAIM NOW',
@@ -1201,80 +1207,80 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontFamily: 'Lilita'),
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: sh * 0.02,
-                                                ),
-                                                TextButton(
-                                                  style: ButtonStyle(
-                                                    shape: MaterialStateProperty.all<
-                                                            RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        0.3 *
-                                                                            sh))),
-                                                    padding: MaterialStatePropertyAll(
-                                                        EdgeInsets.only(
-                                                            right: SizeConfig
-                                                                    .defaultSize! *
-                                                                3,
-                                                            left: SizeConfig
-                                                                    .defaultSize! *
-                                                                3,
-                                                            top: 0.018 * sh,
-                                                            bottom:
-                                                                0.018 * sh)),
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all<Color>(
-                                                      Color.fromARGB(
-                                                          225, 255, 77, 0),
-                                                    ), // 배경색 설정
-                                                  ),
-                                                  onPressed: () async {
-                                                    _sendCalClaimClickEvent(
-                                                        userState.point);
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    DateTime currentDate =
-                                                        DateTime.now();
-                                                    String formattedDate =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(
-                                                                currentDate);
-                                                    int tmp = prefs.getInt(
-                                                        'availableGetPoint')!;
+                                                // SizedBox(
+                                                //   width: sh * 0.02,
+                                                // ),
+                                                //  TextButton(
+                                                //   style: ButtonStyle(
+                                                //     shape: MaterialStateProperty.all<
+                                                //             RoundedRectangleBorder>(
+                                                //         RoundedRectangleBorder(
+                                                //             borderRadius:
+                                                //                 BorderRadius
+                                                //                     .circular(
+                                                //                         0.3 *
+                                                //                             sh))),
+                                                //     padding: MaterialStatePropertyAll(
+                                                //         EdgeInsets.only(
+                                                //             right: SizeConfig
+                                                //                     .defaultSize! *
+                                                //                 3,
+                                                //             left: SizeConfig
+                                                //                     .defaultSize! *
+                                                //                 3,
+                                                //             top: 0.018 * sh,
+                                                //             bottom:
+                                                //                 0.018 * sh)),
+                                                //     backgroundColor:
+                                                //         MaterialStateProperty
+                                                //             .all<Color>(
+                                                //       Color.fromARGB(
+                                                //           225, 255, 77, 0),
+                                                //     ), // 배경색 설정
+                                                //   ),
+                                                //   onPressed: () async {
+                                                //     _sendCalClaimClickEvent(
+                                                //         userState.point);
+                                                //     SharedPreferences prefs =
+                                                //         await SharedPreferences
+                                                //             .getInstance();
+                                                //     DateTime currentDate =
+                                                //         DateTime.now();
+                                                //     String formattedDate =
+                                                //         DateFormat('yyyy-MM-dd')
+                                                //             .format(
+                                                //                 currentDate);
+                                                //     int tmp = prefs.getInt(
+                                                //         'availableGetPoint')!;
 
-                                                    if (formattedDate !=
-                                                            prefs.getString(
-                                                                'lastPointYMD') &&
-                                                        tmp != lastPointDay) {
-                                                      _isAdLoaded
-                                                          ? null
-                                                          : _loadRewardedAd();
-                                                    }
-                                                  },
-                                                  child: Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        'lib/images/slate1.png',
-                                                        width: 0.03 * sw,
-                                                      ),
-                                                      Text(
-                                                        '  DOUBLE REWARD',
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: SizeConfig
-                                                                    .defaultSize! *
-                                                                2.2,
-                                                            fontFamily:
-                                                                'Lilita'),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
+                                                //     if (formattedDate !=
+                                                //             prefs.getString(
+                                                //                 'lastPointYMD') &&
+                                                //         tmp != lastPointDay) {
+                                                //       _isAdLoaded
+                                                //           ? null
+                                                //           : _loadRewardedAd();
+                                                //     }
+                                                //   },
+                                                //   child: Row(
+                                                //     children: [
+                                                //       Image.asset(
+                                                //         'lib/images/slate1.png',
+                                                //         width: 0.03 * sw,
+                                                //       ),
+                                                //       Text(
+                                                //         '  DOUBLE REWARD',
+                                                //         style: TextStyle(
+                                                //             color: Colors.black,
+                                                //             fontSize: SizeConfig
+                                                //                     .defaultSize! *
+                                                //                 2.2,
+                                                //             fontFamily:
+                                                //                 'Lilita'),
+                                                //       ),
+                                                //     ],
+                                                //   ),
+                                                // ),
                                               ]),
                                         ),
                                       ),
@@ -1359,9 +1365,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
       plusPoint(scores[lastPointDay - 1]);
       print('User earned the reward.');
-      if (OneSignal.Notifications.permission != true) {
-        OneSignal.Notifications.requestPermission(true);
-      }
+      OneSignal.shared
+          .promptUserForPushNotificationPermission()
+          .then((accepted) {
+        print("Accepted permission: $accepted");
+      });
+      // if (OneSignal.Notifications.permission != true true &&
+      //     neverRequestedPermission) {
+      //   OneSignal.Notifications.requestPermission(true);
+      //   neverRequestedPermission = false;
+      // }
       // 여기에서 reward를 처리할 수 있습니다.
     });
   }
@@ -1671,6 +1684,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         onTap: () async {
+                          _sendInviteFriendsClickEvent(userState.point);
                           final result = await Share.shareWithResult(
                               "LOVEL - Fairy Tales with Your Voice\n📚 The best app for busy parents 👨‍👩‍👧‍👦\n\nPlayStore : https://play.google.com/store/apps/details?id=com.sayit.yoggo\n\nAppStore : https://apps.apple.com/us/app/LOVEL/id6454792622");
 
@@ -1699,7 +1713,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onTap: () async {
                           final InAppReview inAppReview = InAppReview.instance;
-
+                          _sendAppReviewClickEvent(userState.point);
                           if (await inAppReview.isAvailable()) {
                             print('available');
                             inAppReview.openStoreListing(
@@ -2306,6 +2320,42 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'home_point_click',
         eventProperties: {'point_now': pointNow},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendInviteFriendsClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics
+          .logEvent(name: 'invite_friends_click', parameters: <String, dynamic>{
+        'point_now': pointNow,
+      });
+      await amplitude.logEvent(
+        'invite_friends_click',
+        eventProperties: {
+          'point_now': pointNow,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendAppReviewClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics
+          .logEvent(name: 'app_review_click', parameters: <String, dynamic>{
+        'point_now': pointNow,
+      });
+      await amplitude.logEvent(
+        'app_review_click',
+        eventProperties: {
+          'point_now': pointNow,
+        },
       );
     } catch (e) {
       print('Failed to log event: $e');

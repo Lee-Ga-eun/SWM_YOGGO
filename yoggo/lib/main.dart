@@ -19,20 +19,20 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'dart:io' show Platform;
-//import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 Future<void> initPlatformState() async {
-  // await Purchases.setLogLevel(
-  //     LogLevel.debug); // Purchases.setDebugLogsEnabled(true);
+  await Purchases.setLogLevel(
+      LogLevel.debug); // Purchases.setDebugLogsEnabled(true);
 
-  // PurchasesConfiguration? configuration;
+  PurchasesConfiguration? configuration;
 
-  // if (Platform.isAndroid) {
-  //   configuration = PurchasesConfiguration('goog_wxdljqWvkKNlMpVlNSZjKnqVtQc');
-  // } else if (Platform.isIOS) {
-  //   configuration = PurchasesConfiguration('appl_wPyySWQHJfhExnkjSTliaVxgpMx');
-  // }
-  // await Purchases.configure(configuration!); // Anonymous App User IDs
+  if (Platform.isAndroid) {
+    configuration = PurchasesConfiguration('goog_wxdljqWvkKNlMpVlNSZjKnqVtQc');
+  } else if (Platform.isIOS) {
+    configuration = PurchasesConfiguration('appl_wPyySWQHJfhExnkjSTliaVxgpMx');
+  }
+  await Purchases.configure(configuration!); // Anonymous App User IDs
 }
 
 void main() async {
@@ -49,11 +49,13 @@ void main() async {
 
 //Remove this method to stop OneSignal Debugging
 
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  // OneSignal.shared.setAppId(dotenv.get("ONESIGNAL"));
+  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   Platform.isAndroid
-      ? OneSignal.initialize(dotenv.get("ONESIGNAL_android"))
-      : OneSignal.initialize(dotenv.get("ONESIGNAL_ios"));
+      ? OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_android"))
+      : OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_ios"));
+
+  // ? OneSignal.initialize(dotenv.get("ONESIGNAL_android"))
+  // : OneSignal.initialize(dotenv.get("ONESIGNAL_ios"));
   // OneSignal.shared.setAppId('2d42b96d-78df-43fe-b6d1-3899c3684ac5'); //ios
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
@@ -183,11 +185,11 @@ class _AppState extends State<App> {
 
         final state = userCubit.state;
         if (state.isDataFetched) {
-          OneSignal.login(state.userId.toString());
+          OneSignal.shared.setExternalUserId(state.userId.toString());
           Amplitude.getInstance().setUserId(state.userId.toString());
           Amplitude.getInstance()
               .setUserProperties({'subscribe': purchase, 'record': record});
-          //LogInResult result = await Purchases.logIn(state.userId.toString());
+          LogInResult result = await Purchases.logIn(state.userId.toString());
         }
       } else {
         // 로그인 실패
@@ -226,7 +228,7 @@ class _AppState extends State<App> {
           //} else {
 
           if (state.isDataFetched) {
-            OneSignal.login(state.userId.toString());
+            OneSignal.shared.setExternalUserId(state.userId.toString());
             Amplitude.getInstance().setUserProperties(
                 {'subscribe': state.purchase, 'record': state.record});
             // 여기서 User Property 다시 한번 설정해주기 ~~
