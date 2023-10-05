@@ -1123,10 +1123,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         EdgeInsets.only(
                                                             right: SizeConfig
                                                                     .defaultSize! *
-                                                                4,
+                                                                3,
                                                             left: SizeConfig
                                                                     .defaultSize! *
-                                                                4,
+                                                                3,
                                                             top: 0.018 * sh,
                                                             bottom:
                                                                 0.018 * sh)),
@@ -1272,18 +1272,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         EdgeInsets.only(
                                                             right: SizeConfig
                                                                     .defaultSize! *
-                                                                4,
+                                                                3,
                                                             left: SizeConfig
                                                                     .defaultSize! *
-                                                                4,
+                                                                3,
                                                             top: 0.018 * sh,
                                                             bottom:
                                                                 0.018 * sh)),
                                                     backgroundColor:
                                                         MaterialStateProperty
                                                             .all<Color>(
-                                                      const Color.fromARGB(
-                                                          255, 255, 169, 26),
+                                                      Color.fromARGB(
+                                                          225, 255, 77, 0),
                                                     ), // 배경색 설정
                                                   ),
                                                   onPressed: () async {
@@ -1356,6 +1356,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           plusPoint(scores[
                                                               lastPointDay -
                                                                   1]);
+                                                          _isAdLoaded
+                                                              ? null
+                                                              : _loadRewardedAd(
+                                                                  scores[
+                                                                      lastPointDay -
+                                                                          1]);
                                                         } else {
                                                           // 7일차가 되려고 하면
                                                         }
@@ -1376,6 +1382,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       availableGetPoint = 2;
                                                       setState(() {
                                                         plusPoint(scores[0]);
+                                                        _isAdLoaded
+                                                            ? null
+                                                            : _loadRewardedAd(
+                                                                scores[0]);
                                                         _sendCalClaimSuccessEvent(
                                                             userState.point,
                                                             1,
@@ -1393,10 +1403,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           .requestPermission(
                                                               true);
                                                     }
-
-                                                    // _isAdLoaded
-                                                    //     ? _showRewardedAd
-                                                    //     : _loadRewardedAd;
                                                   },
                                                   child: Row(
                                                     children: [
@@ -1421,14 +1427,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
 
-                                      ElevatedButton(
-                                          child: Text("Show Rewarded Ad"),
-                                          onPressed: _isAdLoaded
-                                              ? null
-                                              // _showRewardedAd
-                                              : _loadRewardedAd
-                                          // _showRewardedAd()
-                                          ),
+                                      // ElevatedButton(
+                                      //     child: Text("Show Rewarded Ad"),
+                                      //     onPressed: () async {
+                                      //       _isAdLoaded
+                                      //           ? null
+                                      //           : _loadRewardedAd(70);
+                                      //     })
                                     ],
                                   ),
                                 ),
@@ -1445,7 +1450,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  void _loadRewardedAd() {
+  void _loadRewardedAd(int rewardPoint) {
     RewardedAd.load(
       adUnitId: Platform.isIOS
           ? "ca-app-pub-6637884967909793/7985054428"
@@ -1479,7 +1484,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _isAdLoaded = true;
           });
 
-          _showRewardedAd();
+          _showRewardedAd(rewardPoint);
         },
         onAdFailedToLoad: (LoadAdError error) {
           print('Ad failed to load: $error');
@@ -1489,7 +1494,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showRewardedAd() {
+  void _showRewardedAd(int rewardPoint) {
     if (_rewardedAd == null) {
       print('The rewarded ad wasn\'t ready yet.');
 
@@ -1498,7 +1503,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print(reward.amount);
-      // 여기서 보상 api 호출
+      plusPoint(rewardPoint);
       print('User earned the reward.');
       // 여기에서 reward를 처리할 수 있습니다.
     });
@@ -1810,7 +1815,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onTap: () async {
                           final result = await Share.shareWithResult(
-                              "LOVEL - Fairy Tales with Voice\n📚 Read Fairy tales with your voice 🦄\n\nPlayStore : https://play.google.com/store/apps/details?id=com.sayit.yoggo\n\nAppStore : https://apps.apple.com/us/app/LOVEL/id6454792622");
+                              "LOVEL - Fairy Tales with Your Voice\n📚 The best app for busy parents 👨‍👩‍👧‍👦\n\nPlayStore : https://play.google.com/store/apps/details?id=com.sayit.yoggo\n\nAppStore : https://apps.apple.com/us/app/LOVEL/id6454792622");
 
                           if (result.status == ShareResultStatus.success) {
                             print('Thank you for sharing our application!');
@@ -1840,9 +1845,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           if (await inAppReview.isAvailable()) {
                             print('available');
-                            Platform.isIOS
-                                ? inAppReview.requestReview()
-                                : inAppReview.openStoreListing();
+                            inAppReview.openStoreListing(
+                                appStoreId: '6454792622');
                           }
                         },
                       )
