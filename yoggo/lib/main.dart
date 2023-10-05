@@ -19,20 +19,20 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'dart:io' show Platform;
-//import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 Future<void> initPlatformState() async {
-  // await Purchases.setLogLevel(
-  //     LogLevel.debug); // Purchases.setDebugLogsEnabled(true);
+  await Purchases.setLogLevel(
+      LogLevel.debug); // Purchases.setDebugLogsEnabled(true);
 
-  // PurchasesConfiguration? configuration;
+  PurchasesConfiguration? configuration;
 
-  // if (Platform.isAndroid) {
-  //   configuration = PurchasesConfiguration('goog_wxdljqWvkKNlMpVlNSZjKnqVtQc');
-  // } else if (Platform.isIOS) {
-  //   configuration = PurchasesConfiguration('appl_wPyySWQHJfhExnkjSTliaVxgpMx');
-  // }
-  // await Purchases.configure(configuration!); // Anonymous App User IDs
+  if (Platform.isAndroid) {
+    configuration = PurchasesConfiguration('goog_wxdljqWvkKNlMpVlNSZjKnqVtQc');
+  } else if (Platform.isIOS) {
+    configuration = PurchasesConfiguration('appl_wPyySWQHJfhExnkjSTliaVxgpMx');
+  }
+  await Purchases.configure(configuration!); // Anonymous App User IDs
 }
 
 void main() async {
@@ -187,7 +187,7 @@ class _AppState extends State<App> {
           Amplitude.getInstance().setUserId(state.userId.toString());
           Amplitude.getInstance()
               .setUserProperties({'subscribe': purchase, 'record': record});
-          //LogInResult result = await Purchases.logIn(state.userId.toString());
+          LogInResult result = await Purchases.logIn(state.userId.toString());
         }
       } else {
         // 로그인 실패

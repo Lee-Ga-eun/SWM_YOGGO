@@ -1201,80 +1201,80 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontFamily: 'Lilita'),
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: sh * 0.02,
-                                                ),
-                                                TextButton(
-                                                  style: ButtonStyle(
-                                                    shape: MaterialStateProperty.all<
-                                                            RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        0.3 *
-                                                                            sh))),
-                                                    padding: MaterialStatePropertyAll(
-                                                        EdgeInsets.only(
-                                                            right: SizeConfig
-                                                                    .defaultSize! *
-                                                                3,
-                                                            left: SizeConfig
-                                                                    .defaultSize! *
-                                                                3,
-                                                            top: 0.018 * sh,
-                                                            bottom:
-                                                                0.018 * sh)),
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all<Color>(
-                                                      Color.fromARGB(
-                                                          225, 255, 77, 0),
-                                                    ), // 배경색 설정
-                                                  ),
-                                                  onPressed: () async {
-                                                    _sendCalClaimClickEvent(
-                                                        userState.point);
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    DateTime currentDate =
-                                                        DateTime.now();
-                                                    String formattedDate =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(
-                                                                currentDate);
-                                                    int tmp = prefs.getInt(
-                                                        'availableGetPoint')!;
+                                                // SizedBox(
+                                                //   width: sh * 0.02,
+                                                // ),
+                                                //  TextButton(
+                                                //   style: ButtonStyle(
+                                                //     shape: MaterialStateProperty.all<
+                                                //             RoundedRectangleBorder>(
+                                                //         RoundedRectangleBorder(
+                                                //             borderRadius:
+                                                //                 BorderRadius
+                                                //                     .circular(
+                                                //                         0.3 *
+                                                //                             sh))),
+                                                //     padding: MaterialStatePropertyAll(
+                                                //         EdgeInsets.only(
+                                                //             right: SizeConfig
+                                                //                     .defaultSize! *
+                                                //                 3,
+                                                //             left: SizeConfig
+                                                //                     .defaultSize! *
+                                                //                 3,
+                                                //             top: 0.018 * sh,
+                                                //             bottom:
+                                                //                 0.018 * sh)),
+                                                //     backgroundColor:
+                                                //         MaterialStateProperty
+                                                //             .all<Color>(
+                                                //       Color.fromARGB(
+                                                //           225, 255, 77, 0),
+                                                //     ), // 배경색 설정
+                                                //   ),
+                                                //   onPressed: () async {
+                                                //     _sendCalClaimClickEvent(
+                                                //         userState.point);
+                                                //     SharedPreferences prefs =
+                                                //         await SharedPreferences
+                                                //             .getInstance();
+                                                //     DateTime currentDate =
+                                                //         DateTime.now();
+                                                //     String formattedDate =
+                                                //         DateFormat('yyyy-MM-dd')
+                                                //             .format(
+                                                //                 currentDate);
+                                                //     int tmp = prefs.getInt(
+                                                //         'availableGetPoint')!;
 
-                                                    if (formattedDate !=
-                                                            prefs.getString(
-                                                                'lastPointYMD') &&
-                                                        tmp != lastPointDay) {
-                                                      _isAdLoaded
-                                                          ? null
-                                                          : _loadRewardedAd();
-                                                    }
-                                                  },
-                                                  child: Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        'lib/images/slate1.png',
-                                                        width: 0.03 * sw,
-                                                      ),
-                                                      Text(
-                                                        '  DOUBLE REWARD',
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: SizeConfig
-                                                                    .defaultSize! *
-                                                                2.2,
-                                                            fontFamily:
-                                                                'Lilita'),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
+                                                //     if (formattedDate !=
+                                                //             prefs.getString(
+                                                //                 'lastPointYMD') &&
+                                                //         tmp != lastPointDay) {
+                                                //       _isAdLoaded
+                                                //           ? null
+                                                //           : _loadRewardedAd();
+                                                //     }
+                                                //   },
+                                                //   child: Row(
+                                                //     children: [
+                                                //       Image.asset(
+                                                //         'lib/images/slate1.png',
+                                                //         width: 0.03 * sw,
+                                                //       ),
+                                                //       Text(
+                                                //         '  DOUBLE REWARD',
+                                                //         style: TextStyle(
+                                                //             color: Colors.black,
+                                                //             fontSize: SizeConfig
+                                                //                     .defaultSize! *
+                                                //                 2.2,
+                                                //             fontFamily:
+                                                //                 'Lilita'),
+                                                //       ),
+                                                //     ],
+                                                //   ),
+                                                // ),
                                               ]),
                                         ),
                                       ),
