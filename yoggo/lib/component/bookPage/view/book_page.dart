@@ -9,12 +9,13 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:yoggo/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../Repositories/Repository.dart';
 import '../../book_end.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../globalCubit/user/user_cubit.dart';
+import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class BookPage extends StatefulWidget {
   final int contentVoiceId; //detail_screen에서 받아오는 것들
@@ -64,9 +65,14 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
   final Amplitude amplitude = Amplitude.getInstance();
 
   Future<void> fetchAllBookPages() async {
+    await dotenv.load(fileName: ".env");
     // API에서 모든 책 페이지 데이터를 불러와 pages 리스트에 저장
-    final response = await http.get(Uri.parse(
-        'https://yoggo-server.fly.dev/content/page?contentVoiceId=${widget.contentVoiceId}'));
+    final url =
+        '${dotenv.get("API_SERVER")}content/page?contentVoiceId=${widget.contentVoiceId}';
+    final response = await http.get(Uri.parse(url));
+
+    // final response = await http.get(Uri.parse(
+    //     'https://yoggo-server.fly.dev/content/page?contentVoiceId=${widget.contentVoiceId}'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       if (jsonData is List<dynamic>) {
@@ -185,13 +191,18 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
                     text: currentPageIndex < widget.lastPage
                         ? bookPage[currentPageIndex].text
                         : bookPage[widget.lastPage - 1].text,
-                    imageUrl: currentPageIndex < widget.lastPage
-                        ? bookPage[currentPageIndex].imageUrl
-                        : bookPage[widget.lastPage - 1].imageUrl,
+                    // imageUrl: currentPageIndex < widget.lastPage
+                    //     ? bookPage[currentPageIndex].imageUrl
+                    //     : bookPage[widget.lastPage - 1].imageUrl,
+
                     position: currentPageIndex < widget.lastPage
                         ? bookPage[currentPageIndex].position
                         : bookPage[widget.lastPage - 1].position,
                     audioUrl: bookPage[currentPageIndex].audioUrl,
+                    audioPath: bookPage[currentPageIndex].audioLocalPath,
+                    filePath: currentPageIndex < widget.lastPage
+                        ? bookPage[currentPageIndex].imageLocalPath
+                        : bookPage[widget.lastPage - 1].imageLocalPath,
                     realCurrent: true,
                     currentPage: currentPageIndex,
                     audioPlayer: audioPlayer,
@@ -217,16 +228,21 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
                             ? bookPage[currentPageIndex].text
                             : bookPage[currentPageIndex + 1].text
                         : bookPage[widget.lastPage - 1].text,
-                    imageUrl: currentPageIndex < widget.lastPage
-                        ? currentPageIndex == widget.lastPage - 1
-                            ? bookPage[currentPageIndex].imageUrl
-                            : bookPage[currentPageIndex + 1].imageUrl
-                        : bookPage[widget.lastPage - 1].imageUrl,
+                    // imageUrl: currentPageIndex < widget.lastPage
+                    //     ? currentPageIndex == widget.lastPage - 1
+                    //         ? bookPage[currentPageIndex].imageUrl
+                    //         : bookPage[currentPageIndex + 1].imageUrl
+                    //    : bookPage[widget.lastPage - 1].imageUrl,
                     position: currentPageIndex < widget.lastPage
                         ? currentPageIndex == widget.lastPage - 1
                             ? bookPage[currentPageIndex].position
                             : bookPage[currentPageIndex + 1].position
                         : bookPage[widget.lastPage - 1].position,
+                    filePath: currentPageIndex < widget.lastPage
+                        ? currentPageIndex == widget.lastPage - 1
+                            ? bookPage[currentPageIndex].imageLocalPath
+                            : bookPage[currentPageIndex + 1].imageLocalPath
+                        : bookPage[widget.lastPage - 1].imageLocalPath,
                     //text: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].text:bookPage[currentPageIndex+1].text,
                     //  imageUrl: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].imageUrl:bookPage[currentPageIndex+1].imageUrl,
                     //  position: currentPageIndex<widget.lastPage? bookPage[currentPageIndex].position:bookPage[currentPageIndex+1].position,
@@ -234,6 +250,9 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
                     audioUrl: currentPageIndex != widget.lastPage - 1
                         ? bookPage[currentPageIndex + 1].audioUrl
                         : bookPage[currentPageIndex].audioUrl,
+                    audioPath: currentPageIndex != widget.lastPage - 1
+                        ? bookPage[currentPageIndex + 1].audioLocalPath
+                        : bookPage[currentPageIndex].audioLocalPath,
                     currentPage: currentPageIndex != widget.lastPage - 1
                         ? currentPageIndex + 1
                         : currentPageIndex,
@@ -260,9 +279,9 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
                     text: currentPageIndex != 0
                         ? bookPage[currentPageIndex].text
                         : bookPage[currentPageIndex + 1].text,
-                    imageUrl: currentPageIndex != 0
-                        ? bookPage[currentPageIndex].imageUrl
-                        : bookPage[currentPageIndex + 1].imageUrl,
+                    // imageUrl: currentPageIndex != 0
+                    //     ? bookPage[currentPageIndex].imageUrl
+                    //     : bookPage[currentPageIndex + 1].imageUrl,
                     position: currentPageIndex != 0
                         ? bookPage[currentPageIndex].position
                         : bookPage[currentPageIndex + 1].position,
@@ -270,6 +289,12 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
                     audioUrl: currentPageIndex != 0
                         ? bookPage[currentPageIndex - 1].audioUrl
                         : bookPage[0].audioUrl,
+                    audioPath: currentPageIndex != 0
+                        ? bookPage[currentPageIndex - 1].audioLocalPath
+                        : bookPage[0].audioLocalPath,
+                    filePath: currentPageIndex != 0
+                        ? bookPage[currentPageIndex].imageLocalPath
+                        : bookPage[currentPageIndex + 1].imageLocalPath,
                     currentPage: currentPageIndex,
                     audioPlayer: audioPlayer,
                     pauseFunction: pauseFunction,
@@ -355,7 +380,7 @@ class _BookPageState extends State<BookPage> with WidgetsBindingObserver {
 class PageWidget extends StatefulWidget {
   //final Map<String, dynamic> page;
   final String text;
-  final String imageUrl;
+  // final String imageUrl;
   final int position;
   final String audioUrl;
   final int currentPage;
@@ -374,12 +399,14 @@ class PageWidget extends StatefulWidget {
   final bool isSelected;
   final dispose;
   final stopAudio;
+  final String filePath;
+  final audioPath;
 
   const PageWidget({
     Key? key,
     //  required this.page,
     required this.text,
-    required this.imageUrl,
+    //  required this.imageUrl,
     required this.position,
     required this.audioUrl,
     required this.currentPage,
@@ -398,6 +425,8 @@ class PageWidget extends StatefulWidget {
     this.record,
     required this.dispose,
     required this.stopAudio,
+    required this.filePath,
+    required this.audioPath,
   }) : super(key: key);
 
   @override
@@ -413,21 +442,33 @@ class _PageWidgetState extends State<PageWidget> {
     final userCubit = context.watch<UserCubit>();
     final userState = userCubit.state;
     SizeConfig().init(context);
-    void playAudio(String audioUrl) async {
+    // print('지금 나와야하는 그림 ${widget.filePath}');
+    // var nowImage = widget.filePath;
+    var nowImage = '';
+    if (widget.realCurrent == true) {
+      nowImage = widget.filePath.replaceAll("'", "");
+      //nowImage = widget.filePath;
+    }
+    void playAudio() async {
       if (widget.realCurrent) {
         await widget.audioPlayer.stop();
-        await widget.audioPlayer.play(UrlSource(audioUrl));
+        // String filePath =
+        //await widget.audioPlayer.play(UrlSource(audioUrl));
+        //await widget.audioPlayer.play(DeviceFileSource(filePath));
+        String filePath = widget.audioPath.replaceAll("'", "");
+        if (Platform.isAndroid) {
+          // String filePath = widget.audioPath.replaceAll("'", "");
+          await widget.audioPlayer.play(DeviceFileSource(filePath));
+        } else {
+          await widget.audioPlayer.play(DeviceFileSource(filePath));
+          // await widget.audioPlayer.play(UrlSource(widget.audioUrl));
+        }
       }
     }
 
-    playAudio(widget.audioUrl);
-    //final text = widget.page['text'] as String;
-    //final imageUrl = widget.page['imageUrl'];
-    //final imagePostion = widget.page['position'];
+    playAudio();
+    //playAudio(widget.audioUrl);
 
-    CachedNetworkImage(
-      imageUrl: widget.imageUrl,
-    );
     return Scaffold(
       body: Stack(
         children: [
@@ -519,10 +560,14 @@ class _PageWidgetState extends State<PageWidget> {
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(20),
-                                          child: CachedNetworkImage(
-                                            imageUrl: widget.imageUrl,
-                                            fit: BoxFit.cover,
-                                          ),
+                                          child: Image(
+                                              image: FileImage(File(nowImage))),
+                                          //File('/Users/iga-eun/Library/Developer/CoreSimulator/Devices/7F898527-8EDA-4F3B-8DB7-7540CDC6DC56/data/Containers/Data/Application/149D45B5-47F9-4354-8392-AA13CFEB73FD/Library/Caches/libCachedImageData/c7e8f7f0-5c10-11ee-bf53-17b03fffd053.png'))),
+                                          //   File('/Users/iga-eun/Library/Developer/CoreSimulator/Devices/7F898527-8EDA-4F3B-8DB7-7540CDC6DC56/data/Containers/Data/Application/51BD51C0-88A3-4805-BDEE-B9DA1AE95AEA/Library/Caches/libCachedImageData/c63ef170-5c10-11ee-bf53-17b03fffd053.png'))),
+                                          // CachedNetworkImage(
+                                          //   imageUrl: widget.imageUrl,
+                                          //   fit: BoxFit.cover,
+                                          // ),
                                         ),
                                       ),
                                     ],
@@ -576,10 +621,15 @@ class _PageWidgetState extends State<PageWidget> {
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(20),
-                                          child: CachedNetworkImage(
-                                            imageUrl: widget.imageUrl,
-                                            fit: BoxFit.cover,
-                                          ),
+                                          child: Image(
+                                              image: FileImage(File(
+                                            nowImage,
+                                            //'/Users/iga-eun/Library/Developer/CoreSimulator/Devices/7F898527-8EDA-4F3B-8DB7-7540CDC6DC56/data/Containers/Data/Application/149D45B5-47F9-4354-8392-AA13CFEB73FD/Library/Caches/libCachedImageData/c7e8f7f0-5c10-11ee-bf53-17b03fffd053.png',
+                                          ))),
+                                          // CachedNetworkImage(
+                                          //   imageUrl: widget.imageUrl,
+                                          //   fit: BoxFit.cover,
+                                          // ),
                                         ),
                                       ),
                                     ],

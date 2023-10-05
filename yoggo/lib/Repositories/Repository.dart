@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:yoggo/component/bookIntro/viewModel/book_intro_model.dart';
 import 'dart:convert';
@@ -9,6 +8,9 @@ import 'package:yoggo/component/bookPage/viewModel/book_page_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../component/bookIntro/viewModel/book_voice_model.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'dart:typed_data'; // Uint8List 사용을 위한 import
+import 'dart:io'; // File 클래스를 사용하기 위한 import
 
 class DataRepository {
   static bool _isLoaded = false;
@@ -155,6 +157,7 @@ class DataRepository {
       final data =
           jsonData.map((item) => BookIntroModel.fromJson(item)).toList();
       _loadedBookIntroData.addAll(data); // 로드한 데이터를 저장
+
       return data;
     } else {
       return []; // 에러 발생 시 빈 리스트 리턴
@@ -253,7 +256,7 @@ class DataRepository {
 
         final data = jsonData.map((item) {
           bool clicked = false;
-          for (var exItem in exData!) {
+          for (var exItem in exData) {
             if (exItem.voiceId == item['voiceId']) {
               clicked = exItem.clicked;
               break;
@@ -276,19 +279,72 @@ class DataRepository {
   static final List<int> _loadedBookPageNumber = [];
 
   Future<List<BookPageModel>> bookPageRepository(int contentVoiceId) async {
-    if (_loadedBookPageNumber.contains(contentVoiceId)) {
-      // 이미 로드한 데이터가 있다면 해당 contentVoiceId에 맞는 데이터를 추출하여 리턴
-      return _loadedBookPageDataMap[contentVoiceId] ?? [];
-    }
+    // if (_loadedBookPageNumber.contains(contentVoiceId)) {
+    //   // 이미 로드한 데이터가 있다면 해당 contentVoiceId에 맞는 데이터를 추출하여 리턴
+    //   return _loadedBookPageDataMap[contentVoiceId] ?? [];
+    // }
 
     _loadedBookPageNumber.add(contentVoiceId);
     final response = await http.get(Uri.parse(
         '${dotenv.get("API_SERVER")}content/page?contentVoiceId=$contentVoiceId'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List<dynamic>;
-      final bookPageData =
-          jsonData.map((item) => BookPageModel.fromJson(item)).toList();
-      _loadedBookPageDataMap[contentVoiceId] = bookPageData; // 로드한 데이터를 저장
+      final bookPageData = <BookPageModel>[];
+      final futures = <Future<void>>[];
+
+      for (var element in jsonData) {
+        String imageUrl = element["imageUrl"];
+        String audioUrl = element["audioUrl"];
+        var parseImageUrl = Uri.parse(imageUrl).path;
+        var parseAudioUrl = Uri.parse(audioUrl).path;
+        Uint8List fileBytes = Uint8List.fromList(response.bodyBytes);
+        String imageFilePath = '';
+        String audioFilePath = '';
+
+        final imageFuture = DefaultCacheManager()
+            .getFileFromCache(parseImageUrl) // 이미지 캐시 매니저
+            .then((cacheLocate) async {
+          if (cacheLocate == null) {
+            File file = await DefaultCacheManager()
+                .getSingleFile(imageUrl, key: parseImageUrl);
+            imageFilePath = file.path;
+          } else {
+            imageFilePath = '${cacheLocate.file}';
+            imageFilePath = imageFilePath.replaceFirst("LocalFile: ", "");
+          }
+        });
+
+        final audioFuture = DefaultCacheManager()
+            .getFileFromCache(parseAudioUrl) // 오디오 캐시 매니저
+            .then((cacheLocate) async {
+          if (cacheLocate == null) {
+            File file = await DefaultCacheManager()
+                .getSingleFile(audioUrl, key: parseAudioUrl);
+            audioFilePath = file.path;
+          } else {
+            audioFilePath = '${cacheLocate.file}';
+            audioFilePath = audioFilePath.replaceFirst("LocalFile: ", "");
+          }
+        });
+
+        await Future.wait([imageFuture, audioFuture]);
+
+        var bookPageModel = BookPageModel(
+          contentVoiceId: element["contentVoiceId"],
+          imageLocalPath: imageFilePath,
+          audioLocalPath: audioFilePath,
+          pageNum: element["pageNum"],
+          text: element['text'],
+          imageUrl: element['imageUrl'],
+          position: element['position'],
+          audioUrl: element['audioUrl'],
+        );
+
+        bookPageData.add(bookPageModel);
+      }
+      bookPageData.sort((a, b) => a.pageNum.compareTo(b.pageNum));
+
+      _loadedBookPageDataMap[contentVoiceId] = bookPageData;
       return bookPageData;
     } else {
       return []; // 에러 발생 시 빈 리스트 리턴

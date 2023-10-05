@@ -14,6 +14,8 @@ BookPageModel _$BookPageModelFromJson(Map<String, dynamic> json) =>
       imageUrl: json['imageUrl'] as String,
       position: json['position'] as int,
       audioUrl: json['audioUrl'] as String,
+      imageLocalPath: json['imageLocalPath'] as String,
+      audioLocalPath: json['audioLocalPath'] as String,
     );
 
 Map<String, dynamic> _$BookPageModelToJson(BookPageModel instance) =>
@@ -24,4 +26,6 @@ Map<String, dynamic> _$BookPageModelToJson(BookPageModel instance) =>
       'imageUrl': instance.imageUrl,
       'position': instance.position,
       'audioUrl': instance.audioUrl,
+      'imageLocalPath': instance.imageLocalPath,
+      'audioLocalPath': instance.audioLocalPath,
     };
