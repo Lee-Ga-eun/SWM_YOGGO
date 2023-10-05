@@ -209,7 +209,10 @@ class _PurchaseState extends State<Purchase> {
         },
         body: jsonEncode({'point': toInt(points)}));
     if (response.statusCode == 200) {
-      // _sendSubSuccessEvent();
+      var userState = context.read<UserCubit>().state;
+
+      _sendBuyPointSuccessEvent(userState.point, points);
+
       print('포인트 구매 완료');
       context.read<UserCubit>().fetchUser();
     } else {
@@ -1029,6 +1032,26 @@ class _PurchaseState extends State<Purchase> {
         'shop_sub_click',
         eventProperties: {'point_now': pointNow},
       );
+    } catch (e) {
+      // 이벤트 로깅 실패 시 에러 출력
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendBuyPointSuccessEvent(pointNow, pointWant) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'shop_buy_point_success',
+        parameters: <String, dynamic>{
+          'point_now': pointNow,
+          'point_want': pointWant,
+        },
+      );
+      await amplitude.logEvent('shop_buy_point_success', eventProperties: {
+        'point_now': pointNow,
+        'point_want': pointWant,
+      });
     } catch (e) {
       // 이벤트 로깅 실패 시 에러 출력
       print('Failed to log event: $e');
