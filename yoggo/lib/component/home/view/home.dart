@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // 포인트를 이미 받지 않은 상태여야 한다
       prefs.setInt('availableGetPoint', tmp + 1);
       prefs.setString('lastPointYMD', formattedDate); // 시간 현재 시간으로 업데이트
-      prefs.setInt('lastPointDay', lastPointDay);
+      prefs.setInt('lastPointDay', lastPointDay + 1);
       var userState = context.read<UserCubit>().state;
 
       _sendCalClaimSuccessEvent(
@@ -1671,6 +1671,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         onTap: () async {
+                          _sendInviteFriendsClickEvent(userState.point);
                           final result = await Share.shareWithResult(
                               "LOVEL - Fairy Tales with Your Voice\n📚 The best app for busy parents 👨‍👩‍👧‍👦\n\nPlayStore : https://play.google.com/store/apps/details?id=com.sayit.yoggo\n\nAppStore : https://apps.apple.com/us/app/LOVEL/id6454792622");
 
@@ -1699,7 +1700,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onTap: () async {
                           final InAppReview inAppReview = InAppReview.instance;
-
+                          _sendAppReviewClickEvent(userState.point);
                           if (await inAppReview.isAvailable()) {
                             print('available');
                             inAppReview.openStoreListing(
@@ -2306,6 +2307,42 @@ class _HomeScreenState extends State<HomeScreen> {
       await amplitude.logEvent(
         'home_point_click',
         eventProperties: {'point_now': pointNow},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendInviteFriendsClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics
+          .logEvent(name: 'invite_friends_click', parameters: <String, dynamic>{
+        'point_now': pointNow,
+      });
+      await amplitude.logEvent(
+        'invite_friends_click',
+        eventProperties: {
+          'point_now': pointNow,
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendAppReviewClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics
+          .logEvent(name: 'app_review_click', parameters: <String, dynamic>{
+        'point_now': pointNow,
+      });
+      await amplitude.logEvent(
+        'app_review_click',
+        eventProperties: {
+          'point_now': pointNow,
+        },
       );
     } catch (e) {
       print('Failed to log event: $e');
