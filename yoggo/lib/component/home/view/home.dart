@@ -186,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void pointFunction() {
     // AppBar 아이콘 클릭
   }
-  Future<void> claimSuccess() async {
+  Future<void> claimSuccess(int multiple) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     DateTime currentDate = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
@@ -212,8 +212,8 @@ class _HomeScreenState extends State<HomeScreen> {
       var userState = context.read<UserCubit>().state;
 
       _sendCalClaimSuccessEvent(
-          userState.point, lastPointDay, scores[lastPointDay]);
-      plusPoint(scores[lastPointDay]);
+          userState.point, lastPointDay, scores[lastPointDay] * multiple);
+      plusPoint(scores[lastPointDay] * multiple);
       setState(() {
         lastPointDay += 1;
         lastPointYMD = formattedDate;
@@ -1178,7 +1178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   onPressed: () async {
                                                     _sendCalClaimClickEvent(
                                                         userState.point);
-                                                    claimSuccess();
+                                                    claimSuccess(1);
                                                     // 원 시그널 permission request 어디서 보여줄지 고민하기
                                                     OneSignal.shared
                                                         .promptUserForPushNotificationPermission()
@@ -1207,91 +1207,83 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontFamily: 'Lilita'),
                                                   ),
                                                 ),
-                                                // SizedBox(
-                                                //   width: sh * 0.02,
-                                                // ),
-                                                //  TextButton(
-                                                //   style: ButtonStyle(
-                                                //     shape: MaterialStateProperty.all<
-                                                //             RoundedRectangleBorder>(
-                                                //         RoundedRectangleBorder(
-                                                //             borderRadius:
-                                                //                 BorderRadius
-                                                //                     .circular(
-                                                //                         0.3 *
-                                                //                             sh))),
-                                                //     padding: MaterialStatePropertyAll(
-                                                //         EdgeInsets.only(
-                                                //             right: SizeConfig
-                                                //                     .defaultSize! *
-                                                //                 3,
-                                                //             left: SizeConfig
-                                                //                     .defaultSize! *
-                                                //                 3,
-                                                //             top: 0.018 * sh,
-                                                //             bottom:
-                                                //                 0.018 * sh)),
-                                                //     backgroundColor:
-                                                //         MaterialStateProperty
-                                                //             .all<Color>(
-                                                //       Color.fromARGB(
-                                                //           225, 255, 77, 0),
-                                                //     ), // 배경색 설정
-                                                //   ),
-                                                //   onPressed: () async {
-                                                //     _sendCalClaimClickEvent(
-                                                //         userState.point);
-                                                //     SharedPreferences prefs =
-                                                //         await SharedPreferences
-                                                //             .getInstance();
-                                                //     DateTime currentDate =
-                                                //         DateTime.now();
-                                                //     String formattedDate =
-                                                //         DateFormat('yyyy-MM-dd')
-                                                //             .format(
-                                                //                 currentDate);
-                                                //     int tmp = prefs.getInt(
-                                                //         'availableGetPoint')!;
+                                                SizedBox(
+                                                  width: sh * 0.02,
+                                                ),
+                                                TextButton(
+                                                  style: ButtonStyle(
+                                                    shape: MaterialStateProperty.all<
+                                                            RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        0.3 *
+                                                                            sh))),
+                                                    padding: MaterialStatePropertyAll(
+                                                        EdgeInsets.only(
+                                                            right: SizeConfig
+                                                                    .defaultSize! *
+                                                                3,
+                                                            left: SizeConfig
+                                                                    .defaultSize! *
+                                                                3,
+                                                            top: 0.018 * sh,
+                                                            bottom:
+                                                                0.018 * sh)),
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                      Color.fromARGB(
+                                                          225, 255, 77, 0),
+                                                    ), // 배경색 설정
+                                                  ),
+                                                  onPressed: () async {
+                                                    _sendCalClaimClickEvent(
+                                                        userState.point);
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    DateTime currentDate =
+                                                        DateTime.now();
+                                                    String formattedDate =
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(
+                                                                currentDate);
+                                                    int tmp = prefs.getInt(
+                                                        'availableGetPoint')!;
 
-                                                //     if (formattedDate !=
-                                                //             prefs.getString(
-                                                //                 'lastPointYMD') &&
-                                                //         tmp != lastPointDay) {
-                                                //       _isAdLoaded
-                                                //           ? null
-                                                //           : _loadRewardedAd();
-                                                //     }
-                                                //   },
-                                                //   child: Row(
-                                                //     children: [
-                                                //       Image.asset(
-                                                //         'lib/images/slate1.png',
-                                                //         width: 0.03 * sw,
-                                                //       ),
-                                                //       Text(
-                                                //         '  DOUBLE REWARD',
-                                                //         style: TextStyle(
-                                                //             color: Colors.black,
-                                                //             fontSize: SizeConfig
-                                                //                     .defaultSize! *
-                                                //                 2.2,
-                                                //             fontFamily:
-                                                //                 'Lilita'),
-                                                //       ),
-                                                //     ],
-                                                //   ),
-                                                // ),
+                                                    if (formattedDate !=
+                                                            prefs.getString(
+                                                                'lastPointYMD') &&
+                                                        tmp != lastPointDay) {
+                                                      _isAdLoaded
+                                                          ? null
+                                                          : _loadRewardedAd();
+                                                    }
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Image.asset(
+                                                        'lib/images/slate1.png',
+                                                        width: 0.03 * sw,
+                                                      ),
+                                                      Text(
+                                                        '  DOUBLE REWARD',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: SizeConfig
+                                                                    .defaultSize! *
+                                                                2.2,
+                                                            fontFamily:
+                                                                'Lilita'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ]),
                                         ),
                                       ),
-
-                                      // ElevatedButton(
-                                      //     child: Text("Show Rewarded Ad"),
-                                      //     onPressed: () async {
-                                      //       _isAdLoaded
-                                      //           ? null
-                                      //           : _loadRewardedAd(70);
-                                      //     })
                                     ],
                                   ),
                                 ),
@@ -1361,9 +1353,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print(reward.amount);
-      claimSuccess();
-
-      plusPoint(scores[lastPointDay - 1]);
+      claimSuccess(2);
       print('User earned the reward.');
       OneSignal.shared
           .promptUserForPushNotificationPermission()
@@ -2236,11 +2226,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _sendCalClaimSuccessEvent(pointNow, dayNow, pointGet) async {
     try {
       // 이벤트 로깅
-      await analytics
-          .logEvent(name: 'cal_claim_success', parameters: <String, dynamic>{
-        'point_now': pointNow,
-        'day_now': dayNow,
-      });
+      await analytics.logEvent(
+          name: 'cal_claim_success',
+          parameters: <String, dynamic>{
+            'point_now': pointNow,
+            'day_now': dayNow,
+            'point_get': pointGet
+          });
       await amplitude.logEvent(
         'cal_claim_success',
         eventProperties: {
