@@ -210,9 +210,11 @@ class _HomeScreenState extends State<HomeScreen> {
       prefs.setString('lastPointYMD', formattedDate); // 시간 현재 시간으로 업데이트
       prefs.setInt('lastPointDay', lastPointDay + 1);
       var userState = context.read<UserCubit>().state;
-
-      _sendCalClaimSuccessEvent(
-          userState.point, lastPointDay, scores[lastPointDay] * multiple);
+      multiple == 1
+          ? _sendCalClaimSuccessEvent(
+              userState.point, lastPointDay, scores[lastPointDay] * multiple)
+          : _sendCalClaimAdSuccessEvent(
+              userState.point, lastPointDay, scores[lastPointDay] * multiple);
       plusPoint(scores[lastPointDay] * multiple);
       setState(() {
         lastPointDay += 1;
@@ -1239,7 +1241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ), // 배경색 설정
                                                   ),
                                                   onPressed: () async {
-                                                    _sendCalClaimClickEvent(
+                                                    _sendCalClaimAdClickEvent(
                                                         userState.point);
                                                     SharedPreferences prefs =
                                                         await SharedPreferences
@@ -2223,6 +2225,22 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _sendCalClaimAdClickEvent(pointNow) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+        name: 'cal_claim_ad_click',
+        parameters: <String, dynamic>{'point_now': pointNow},
+      );
+      await amplitude.logEvent(
+        'cal_claim_ad_click',
+        eventProperties: {'point_now': pointNow},
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
   Future<void> _sendCalClaimSuccessEvent(pointNow, dayNow, pointGet) async {
     try {
       // 이벤트 로깅
@@ -2235,6 +2253,29 @@ class _HomeScreenState extends State<HomeScreen> {
           });
       await amplitude.logEvent(
         'cal_claim_success',
+        eventProperties: {
+          'point_now': pointNow,
+          'day_now': dayNow,
+          'point_get': pointGet
+        },
+      );
+    } catch (e) {
+      print('Failed to log event: $e');
+    }
+  }
+
+  Future<void> _sendCalClaimAdSuccessEvent(pointNow, dayNow, pointGet) async {
+    try {
+      // 이벤트 로깅
+      await analytics.logEvent(
+          name: 'cal_claim_ad_success',
+          parameters: <String, dynamic>{
+            'point_now': pointNow,
+            'day_now': dayNow,
+            'point_get': pointGet
+          });
+      await amplitude.logEvent(
+        'cal_claim_ad_success',
         eventProperties: {
           'point_now': pointNow,
           'day_now': dayNow,
