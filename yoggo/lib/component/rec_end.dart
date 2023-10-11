@@ -151,19 +151,20 @@ class _RecEndState extends State<RecEnd> {
                               onTap: () async {
                                 //   await userCubit.fetchUser();
                                 //if (userState.record) {
-                                OneSignal.shared
-                                    .promptUserForPushNotificationPermission()
-                                    .then((accepted) {
-                                  print("Accepted permission: $accepted");
-                                });
-                                // if (OneSignal.Notifications.permission !=
-                                //     true) {
-                                //   OneSignal.Notifications.requestPermission(
-                                //           true)
-                                //       .then((accepted) {
-                                //     print("Accepted permission: $accepted");
-                                //   });
-                                // }
+
+                                // OneSignal.shared
+                                //     .promptUserForPushNotificationPermission()
+                                //     .then((accepted) {
+                                //   print("Accepted permission: $accepted");
+                                // });
+                                if (OneSignal.Notifications.permission !=
+                                    true) {
+                                  OneSignal.Notifications.requestPermission(
+                                          true)
+                                      .then((accepted) {
+                                    print("Accepted permission: $accepted");
+                                  });
+                                }
 
                                 Navigator.of(context)
                                     .popUntil((route) => route.isFirst);

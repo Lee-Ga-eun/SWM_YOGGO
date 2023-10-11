@@ -49,12 +49,12 @@ void main() async {
 
 //Remove this method to stop OneSignal Debugging
 
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  Platform.isAndroid
-      ? OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_android"))
-      : OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_ios"));
-
-  // ? OneSignal.initialize(dotenv.get("ONESIGNAL_android"))
+  //OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  // Platform.isAndroid
+  //     ? OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_android"))
+  //     : OneSignal.shared.setAppId(dotenv.get("ONESIGNAL_ios"));
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize(dotenv.get("ONESIGNAL_android"));
   // : OneSignal.initialize(dotenv.get("ONESIGNAL_ios"));
   // OneSignal.shared.setAppId('2d42b96d-78df-43fe-b6d1-3899c3684ac5'); //ios
 
@@ -185,7 +185,9 @@ class _AppState extends State<App> {
 
         final state = userCubit.state;
         if (state.isDataFetched) {
-          OneSignal.shared.setExternalUserId(state.userId.toString());
+          OneSignal.login(state.userId.toString());
+
+          //OneSignal.shared.setExternalUserId(state.userId.toString());
           Amplitude.getInstance().setUserId(state.userId.toString());
           Amplitude.getInstance()
               .setUserProperties({'subscribe': purchase, 'record': record});
@@ -228,7 +230,8 @@ class _AppState extends State<App> {
           //} else {
 
           if (state.isDataFetched) {
-            OneSignal.shared.setExternalUserId(state.userId.toString());
+            OneSignal.login(state.userId.toString());
+            //OneSignal.shared.setExternalUserId(state.userId.toString());
             Amplitude.getInstance().setUserProperties(
                 {'subscribe': state.purchase, 'record': state.record});
             // 여기서 User Property 다시 한번 설정해주기 ~~

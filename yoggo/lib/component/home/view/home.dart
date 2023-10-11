@@ -1182,22 +1182,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         userState.point);
                                                     claimSuccess(1);
                                                     // 원 시그널 permission request 어디서 보여줄지 고민하기
-                                                    OneSignal.shared
-                                                        .promptUserForPushNotificationPermission()
-                                                        .then((accepted) {
-                                                      print(
-                                                          "Accepted permission: $accepted");
-                                                    });
-                                                    // if (OneSignal.Notifications
-                                                    //             .permission !=
-                                                    //         true &&
-                                                    //     neverRequestedPermission) {
-                                                    //   OneSignal.Notifications
-                                                    //       .requestPermission(
-                                                    //           true);
-                                                    //   neverRequestedPermission =
-                                                    //       false;
-                                                    // }
+                                                    // OneSignal.shared
+                                                    //     .promptUserForPushNotificationPermission()
+                                                    //     .then((accepted) {
+                                                    //   print(
+                                                    //       "Accepted permission: $accepted");
+                                                    // });
+                                                    if (OneSignal.Notifications
+                                                                .permission !=
+                                                            true &&
+                                                        neverRequestedPermission) {
+                                                      OneSignal.Notifications
+                                                          .requestPermission(
+                                                              true);
+                                                      neverRequestedPermission =
+                                                          false;
+                                                    }
                                                   },
                                                   child: Text(
                                                     'CLAIM NOW',
@@ -1357,16 +1357,16 @@ class _HomeScreenState extends State<HomeScreen> {
       print(reward.amount);
       claimSuccess(2);
       print('User earned the reward.');
-      OneSignal.shared
-          .promptUserForPushNotificationPermission()
-          .then((accepted) {
-        print("Accepted permission: $accepted");
-      });
-      // if (OneSignal.Notifications.permission != true true &&
-      //     neverRequestedPermission) {
-      //   OneSignal.Notifications.requestPermission(true);
-      //   neverRequestedPermission = false;
-      // }
+      // OneSignal.shared
+      //     .promptUserForPushNotificationPermission()
+      //     .then((accepted) {
+      //   print("Accepted permission: $accepted");
+      // });
+      if (OneSignal.Notifications.permission != true &&
+          neverRequestedPermission) {
+        OneSignal.Notifications.requestPermission(true);
+        neverRequestedPermission = false;
+      }
       // 여기에서 reward를 처리할 수 있습니다.
     });
   }

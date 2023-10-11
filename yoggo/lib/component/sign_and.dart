@@ -84,7 +84,8 @@ class _LoginAndState extends State<LoginAnd> {
         await userCubit.fetchUser();
         final state = userCubit.state;
         if (state.isDataFetched) {
-          OneSignal.shared.setExternalUserId(state.userId.toString());
+          OneSignal.login(state.userId.toString());
+          //OneSignal.shared.setExternalUserId(state.userId.toString());
           amplitude.setUserId(state.userId.toString());
           amplitude
               .setUserProperties({'subscribe': purchase, 'record': record});
@@ -159,7 +160,8 @@ class _LoginAndState extends State<LoginAnd> {
       await userCubit.fetchUser();
       final state = userCubit.state;
       if (state.isDataFetched) {
-        OneSignal.shared.setExternalUserId(state.userId.toString());
+        OneSignal.login(state.userId.toString());
+        //OneSignal.shared.setExternalUserId(state.userId.toString());
         amplitude.setUserId(state.userId.toString());
         amplitude.setUserProperties({'subscribe': purchase, 'record': record});
         LogInResult result = await Purchases.logIn(state.userId.toString());

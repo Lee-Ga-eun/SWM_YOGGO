@@ -634,7 +634,7 @@ class _PurchaseState extends State<Purchase> {
                                                                   .center,
                                                           children: [
                                                               Text(
-                                                                "After 7-day free trial, LOVEL monthly subscription is \$5.99.\nYou can cancel this subscription at any time if you wish.",
+                                                                "After 7-day free trial, LOVEL monthly subscription is \$5.99. You can cancel this subscription at any time if you wish.",
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
